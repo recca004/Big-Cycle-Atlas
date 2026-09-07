@@ -1,0 +1,12 @@
+{
+  "countries": [
+    { "iso3": "USA", "iso2": "US", "name": "United States", "region": "Americas" },
+    { "iso3": "CHN", "iso2": "CN", "name": "China", "region": "Asia" },
+    { "iso3": "CHE", "iso2": "CH", "name": "Switzerland", "region": "Europe" },
+    { "iso3": "DEU", "iso2": "DE", "name": "Germany", "region": "Europe" },
+    { "iso3": "FRA", "iso2": "FR", "name": "France", "region": "Europe" },
+    { "iso3": "GBR", "iso2": "GB", "name": "United Kingdom", "region": "Europe" },
+    { "iso3": "JPN", "iso2": "JP", "name": "Japan", "region": "Asia" },
+    { "iso3": "IND", "iso2": "IN", "name": "India", "region": "Asia" }
+  ]
+}

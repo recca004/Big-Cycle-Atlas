@@ -12,17 +12,33 @@ Desktop.ini
 # Logs
 *.log
 
+# Project-specific
+design.md
+
 # Env / secrets
 .env
 .env.*
 !.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+next-env.d.ts
 
 # Build artifacts
 [Tt]emp/
 [Bb]uild/
 [Dd]ist/
 [Oo]bj/
-out/
 
-# Dependencies
-node_modules/
+# Database
+*.sqlite3
+*.db

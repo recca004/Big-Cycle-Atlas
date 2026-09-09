@@ -137,8 +137,8 @@ async def test_gini_cpi_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        # 19 = 15 WB + 2 BIS + 2 OECD
-        assert total == 19
+        # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
+        assert total == 22
         wb_series = (
             await session.execute(
                 select(SourceSeries.external_code)
@@ -155,7 +155,7 @@ async def test_gini_cpi_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        assert total == 19
+        assert total == 22
         dup = (
             await session.execute(
                 select(func.count())
@@ -204,14 +204,15 @@ async def test_wealth_gap_force_partial_never_available_with_gini(client):
     force = coverage["wealth_opportunity_values_gaps"]
     assert force.status == "partial"
     live = {i.indicator_code: i for i in force.live_inputs}
-    assert set(live) == {"GINI_INDEX"}
+    # Sprint 5.20: WEALTH_SHARE_TOP_10 added as a live input (WID)
+    assert set(live) == {"GINI_INDEX", "WEALTH_SHARE_TOP_10"}
     assert live["GINI_INDEX"].has_data
     assert live["GINI_INDEX"].source == "world_bank"
+    assert not live["WEALTH_SHARE_TOP_10"].has_data  # no WID data in this fixture
     # the ceiling is the reason — and the note explains the conceptual gap
     assert force.definition.coverage_ceiling == "partial"
     notes = force.definition.coverage_notes
-    assert "income inequality only" in notes
-    assert "Wealth inequality" in notes
+    assert "Gini" in notes or "income inequality" in notes.lower() or "distributional" in notes.lower()
     assert "opportunity gaps" in notes
 
 

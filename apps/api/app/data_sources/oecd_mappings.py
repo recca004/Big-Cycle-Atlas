@@ -129,9 +129,69 @@ UNIT_LABOUR_COST_GROWTH = OecdMapping(
     ),
 )
 
+TERTIARY_ATTAINMENT_25_34 = OecdMapping(
+    indicator_code="TERTIARY_ATTAINMENT_25_34",
+    agency_id="OECD.EDU.IMEP",
+    dataflow_id="DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA",
+    version="1.0",
+    # 17 dimensions — ALL fixed, NO wildcards. Verified live 2026-09-10.
+    # STATISTICAL_OPERATION=OBS (observed only, excludes SE standard error).
+    # INCOME=_Z, MIGRATION_AGE=_Z, DURATION_UNEMP=_Z, WORK_TIME_ARNGMNT=_Z
+    # are "Not applicable" codes (not _T) — using _T here returns 422.
+    sdmx_key_template=(
+        "{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z."
+        "ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A"
+    ),
+    external_code=(
+        "EAG_LSO_NEAC/"
+        "{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z."
+        "ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A"
+    ),
+    external_name=(
+        "Tertiary educational attainment, age 25-34, total population "
+        "(ISCED 5-8, % of population in same sex and age)"
+    ),
+    external_unit="percent",
+    frequency="annual",
+    transform_notes=(
+        "OECD EAG LSO NEAC dataflow (agency OECD.EDU.IMEP, v1.0): "
+        "Adults' educational attainment distribution. Tertiary attainment "
+        "(ISCED11A_5T8) for age 25-34, total sex (_T), observed values only "
+        "(STATISTICAL_OPERATION=OBS — excludes SE standard error rows). "
+        "Percentage of population in the same sex and age group "
+        "(UNIT_MEASURE=PT_POP_SEX_AGE). Annual. Sprint 5.20 Part A: Y25T34 "
+        "selected over Y25T64 because 25-34 represents recent cohorts and is "
+        "more responsive to the current education system. Coverage is NOT "
+        "materially worse than Y25T64 (verified live 2026-09-10). Attainment "
+        "!= enrollment — this is a distinct concept from TERTIARY_ENROLLMENT. "
+        "CHN has only 1 data point (2010); IND has 11 sparse data points "
+        "(2011-2023). Missing years remain missing — never zero-filled or "
+        "forward-filled."
+    ),
+    expected_dims=(
+        ("SEX", "_T"),
+        ("AGE", "Y25T34"),
+        ("ATTAINMENT_LEV", "ISCED11A_5T8"),
+        ("EDUCATION_FIELD", "_T"),
+        ("MEASURE", "POP"),
+        ("INCOME", "_Z"),
+        ("BIRTH_PLACE", "_T"),
+        ("MIGRATION_AGE", "_Z"),
+        ("EDU_STATUS", "ED_NED"),
+        ("LABOUR_FORCE_STATUS", "POP"),
+        ("DURATION_UNEMP", "_Z"),
+        ("UNIT_MEASURE", "PT_POP_SEX_AGE"),
+        ("STATISTICAL_OPERATION", "OBS"),
+        ("WORK_TIME_ARNGMNT", "_Z"),
+        ("QUESTIONNAIRE", "NEAC"),
+        ("FREQ", "A"),
+    ),
+)
+
 OECD_MAPPINGS: tuple[OecdMapping, ...] = (
     LABOUR_PRODUCTIVITY_PER_HOUR,
     UNIT_LABOUR_COST_GROWTH,
+    TERTIARY_ATTAINMENT_25_34,
 )
 
 # OECD REF_AREA uses ISO3 codes. Verified 2026-09-08 against actual data

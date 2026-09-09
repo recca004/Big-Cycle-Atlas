@@ -771,6 +771,12 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         # OECD (2)
         "LABOUR_PRODUCTIVITY_PER_HOUR",
         "UNIT_LABOUR_COST_GROWTH",
+        # IMF (1)
+        "GOVERNMENT_DEBT_GDP",
+        # OECD education (1)
+        "TERTIARY_ATTAINMENT_25_34",
+        # WID (1)
+        "WEALTH_SHARE_TOP_10",
     }
 )
 
@@ -1122,6 +1128,74 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "CHN/IND: no ULC — their force score must compute from "
                 "available inputs only (lower confidence), never zero-fill "
                 "the missing ULC."
+            ),
+        ),
+        # -- IMF ---------------------------------------------------------------
+        NormalizationSpec(
+            indicator_code="GOVERNMENT_DEBT_GDP",
+            direction=IndicatorStrengthDirection.contextual,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "General-government gross debt as % of GDP (IMF WEO "
+                "GGXWDG_NGDP, Sprint 5.19). CONTEXTUAL_DEFERRED level — "
+                "debt sustainability depends on interest cost, currency, "
+                "maturity, fiscal capacity, monetary sovereignty, and growth. "
+                "No 'higher debt = weaker' monotonic curve is approved. "
+                "Feeds the Indebtedness force as a raw coverage input only — "
+                "no force score exists. Registry momentum windows (3, 5) "
+                "stay UNAPPROVED (momentum None)."
+            ),
+        ),
+        # -- OECD Education ----------------------------------------------------
+        NormalizationSpec(
+            indicator_code="TERTIARY_ATTAINMENT_25_34",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.monotonic_positive,
+            relative_family=NormalizationFamily.cross_sectional_relative,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            relative_comparable=True,
+            notes=(
+                "Tertiary educational attainment, age 25-34 (OECD EAG LSO "
+                "NEAC, ISCED 5-8, % of population, Sprint 5.20). Direction: "
+                "higher attainment = stronger education system. "
+                "MONOTONIC_POSITIVE direction is defensible, but NO numeric "
+                "curve is approved — no tracked_8 min-max, no percentile "
+                "fallback, no executable level score. Attainment != "
+                "enrollment. CHN (1 data point) and IND (11 sparse) have "
+                "incomplete coverage. Feeds the PARTIAL-capped Education "
+                "force (one tertiary series cannot make Education AVAILABLE)."
+            ),
+        ),
+        # -- WID ---------------------------------------------------------------
+        NormalizationSpec(
+            indicator_code="WEALTH_SHARE_TOP_10",
+            direction=IndicatorStrengthDirection.negative,
+            level_family=NormalizationFamily.monotonic_negative,
+            relative_family=NormalizationFamily.cross_sectional_relative,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(5,),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            relative_comparable=True,
+            notes=(
+                "Top 10% net personal wealth share (WID shwealj992 p90p100, "
+                "Sprint 5.20). Direction: higher share = greater wealth "
+                "concentration = weaker. MONOTONIC_NEGATIVE direction is "
+                "defensible, but NO numeric curve is approved — '100 - "
+                "share*100' is NOT an approved mapping. Raw provider "
+                "fraction (0-1) stored unchanged. data_quality preserved in "
+                "raw_payload but NOT used for filtering (official semantics "
+                "unverified). Feeds the PARTIAL-capped Wealth / opportunity "
+                "/ values gaps force (DEC-009 ceiling — wealth share does "
+                "not address opportunity or values/social gaps)."
             ),
         ),
     )

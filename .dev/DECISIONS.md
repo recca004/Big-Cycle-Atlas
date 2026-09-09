@@ -440,3 +440,555 @@ The Sprint 5.5 §10 factor table mixed indicator trust with force completeness, 
 ### Impact
 
 NO production code changed; NO migration executed; NOTHING ingested; no confidence number exists; confidence stays None on every signal; no force scores/weights/phases; no public API change; model version stays normalization-v0.6 (all Sprint 5.12 numerical outputs unchanged — pytest 318 green). NORMALIZATION.md §10 rewritten (10.1 permanent rules / 10.2 indicator confidence / 10.3 force confidence), §17 items 6 and 9 updated, Sprint 5.13 status section + storage decision matrix + Sprint 5.14 spec added; DATA_SOURCES.md WGI uncertainty line updated with the verified facts. **Sprint 5.14 spec (pending owner acceptance):** (1) Alembic migration for `indicator_diagnostics` (no SourceSeries rows); (2) a WB fetch path for `GOV_WGI_{dim}.SC_LB/.SC_UB/.SR` persisting ONLY into the diagnostics table (never `persist_observations`), idempotent + revision-aware, recorded as IngestionRun; (3) a derived-layer lookup helper (diagnostics at the ALIGNED source period, latest vintage; missing → None); (4) nothing else — no confidence formula, no NormalizedSignal change, no model-version bump, no public API.
+
+## DEC-023 — WGI numeric indicator confidence: DEFERRED (no defensible calibration basis exists yet)
+
+Date: 2026-09-09
+Status: Accepted (Sprint 5.16 — methodology / empirical research sprint)
+
+### Decision
+
+Sprint 5.16 conducted the empirical confidence calibration audit for the
+WGI x3 (RULE_OF_LAW / CONTROL_OF_CORRUPTION / POLITICAL_STABILITY_WGI_SCORE)
+using the 624 aligned score/diagnostic rows imported in Sprint 5.15. The
+verdict is **DEFER_NUMERIC_CONFIDENCE** — a durable methodology decision,
+not a postponement of an obvious answer. Atlas cannot yet define a
+defensible numeric indicator confidence for the WGI x3.
+
+The deferral is based on six empirical findings from the read-only profile
+(`apps/api/scripts/wgi_confidence_profile.py`):
+
+1. **CI width and SR are highly informationally redundant** (pooled
+   Pearson -0.829, Spearman -0.797; per-dimension -0.85 to -0.97). More
+   sources -> narrower CI, monotonically. Combining both in a confidence
+   formula would double-count the same measurement-uncertainty signal;
+   using only one discards the other. No evidence basis exists to choose
+   one as the sole input or to weight them in a joint formula without
+   double-counting.
+2. **Dimension differences are substantial and unexplained.** RL has the
+   narrowest CI (median 9.23) and most sources (median 12); PV has the
+   widest CI (median 13.88) and fewest sources (median 8.5); CC is in
+   between. A pooled calibration would systematically assign PV lower
+   confidence than RL; a per-dimension calibration would need a
+   per-dimension evidence basis that does not exist. The profile cannot
+   distinguish genuine measurement-quality differences from inherent
+   concept difficulty.
+3. **Temporal trends make empirical calibration leaky or drifting.** SR
+   increases over time (Pearson 0.543 vs year; median 6 in 1996 to 10.5 in
+   2024); CI width decreases over time (implied by the strong SR-width
+   negative correlation). Full-history calibration leaks future
+   distribution information; expanding-window calibration is as-of safe
+   but makes confidence drift as measurement systems improve. A fixed
+   mapping avoids leakage but is arbitrary without an external
+   calibration basis.
+4. **No external calibration basis exists** for mapping raw CI width (or
+   SR) to a 0-1 confidence value. Any mapping (linear, percentile, rank)
+   would be an arbitrary choice without evidence — the exact failure mode
+   this project's methodology forbids (DEC-022: "no arbitrary numeric
+   provider-quality constants").
+5. **Freshness composition is unresolved.** No composition rule
+   (multiplication, weighted arithmetic mean, weighted geometric mean,
+   minimum/bottleneck, or separate diagnostics without scalar
+   composition) has an evidence basis. The permanent rules (confidence !=
+   freshness, confidence != strength, missing != perfect != zero)
+   constrain the choice but do not resolve it.
+6. **A single scalar confidence would hide dimension-specific trust.**
+   The eventual confidence architecture should be per-dimension
+   (level_confidence / relative_confidence / momentum_confidence), not
+   one scalar — but that schema decision is not this sprint's work.
+
+Boundary clipping (Part 4): 9/624 (1.4%) upper-clipped (UB >= 100); 0
+lower-clipped; all 9 are CHE. Clipping is rare and concentrated; the
+distortion is small but must be documented as a known limitation of raw
+CI width. Score vs width (Part 5): pooled Pearson 0.080 — essentially no
+correlation; a width-based confidence would NOT systematically penalize
+high or low governance scores.
+
+### What is NOT deferred
+
+- The Sprint 5.13/DEC-022 permanent rules remain locked (confidence !=
+  strength, confidence != freshness, missing != perfect != zero, no
+  arbitrary provider-quality constants).
+- The Sprint 5.14/5.15 diagnostics storage and ingestion remain
+  implemented and live (1872 rows in `indicator_diagnostics`).
+- The Sprint 5.16 transaction hardening (connection_invalidated
+  propagation) is implemented and regression-tested.
+- The diagnostics remain INPUT DATA for a future confidence formula;
+  they are not deleted or deprecated.
+
+### What additional evidence / data / methodology is required
+
+Before numeric confidence can be defensibly implemented, the following
+must be resolved:
+
+- An external calibration basis for mapping raw CI width (or SR) to a
+  0-1 confidence value (e.g. WB/WGI methodology documentation on the
+  relationship between CI width and estimate reliability; or a
+  peer-reviewed calibration study).
+- A decision on whether confidence is pooled across WGI dimensions or
+  per-dimension — and if per-dimension, a per-dimension evidence basis.
+- A decision on the calibration window (fixed mapping vs expanding
+  own-history vs expanding cross-country) — and if empirical, an
+  as-of-safe expanding-window design that does not drift.
+- A decision on the freshness composition rule with an evidence basis.
+- A decision on whether confidence is one scalar or per-dimension.
+- Resolution of the CI-width / SR redundancy: which is the primary
+  measurement-uncertainty input, and how (if at all) the other
+  contributes without double-counting.
+
+### Reason
+
+The Sprint 5.16 empirical profile found that the two available
+measurement-uncertainty diagnostics (CI width and SR) are highly
+redundant, that dimension and temporal differences are substantial and
+unexplained, and that no external calibration basis exists for a numeric
+mapping. Inventing a numeric formula now would be fake precision —
+exactly the failure mode this project's methodology forbids (DEC-018,
+DEC-020, DEC-022). Deferral is the honest outcome; it preserves the
+diagnostics as input data and the permanent rules as constraints without
+publishing an undefensible number.
+
+### Impact
+
+NO numeric confidence was implemented; NO NormalizedSignal output
+changed; the model version stays **normalization-v0.6**; `confidence`
+stays None everywhere; `backtest_safe` stays False. The read-only profile
+script `apps/api/scripts/wgi_confidence_profile.py` is added (descriptive
+statistics only — no scores, no writes, not proof of economic truth).
+The transaction hardening in `wgi_diagnostic_ingestion.py`
+(connection_invalidated propagation) is implemented with focused
+regression coverage. NORMALIZATION.md Sprint 5.16 section + decision
+matrix + verdict added; §17 item 6 updated; this DEC-023 added. No
+migration; nothing persisted; no public API; no force scores/weights/
+phases; no frontend change. The diagnostics remain confidence INPUT
+DATA only; the Sprint 5.14 boundary caution and the Sprint 5.13
+permanent rules apply to every future use.
+
+## DEC-024 — Gini numeric level: DEFERRED (no defensible calibration universe or comparability basis exists yet)
+
+Date: 2026-09-09
+Status: Accepted (Sprint 5.17 — methodology / empirical research sprint)
+
+### Decision
+
+Sprint 5.17 conducted the Gini calibration universe + comparability audit
+for GINI_INDEX (World Bank SI.POV.GINI). The verdict is **DEFER_GINI_LEVEL**
+— a durable methodology decision, not a postponement of an obvious answer.
+Atlas cannot yet defensibly map World Bank GINI_INDEX into an Atlas 0–100
+INDICATOR strength level.
+
+The deferral is based on six findings from the read-only profile
+(`apps/api/scripts/gini_calibration_profile.py`) and the WB/PIP methodology
+documentation:
+
+1. **Survey-concept comparability is insufficient.** SI.POV.GINI mixes
+   income-based surveys (high-income economies: USA/CHE/DEU/FRA/GBR/JPN,
+   via LIS/EU-SILC, after-tax income) and consumption-based surveys
+   (CHN/IND and most low- and middle-income countries). OWID states:
+   "consumption tends to be more evenly distributed than income" — so
+   consumption Gini is systematically LOWER than income Gini for the same
+   true inequality. This is visible in the tracked_8 data: IND
+   (consumption) median 27.7 vs USA (income) median 40.8. **The WB API
+   does NOT expose a per-observation welfare-concept tag**, so no
+   defensible automated adjustment is possible. A single global curve
+   would conflate a measurement-concept difference with a true inequality
+   difference.
+2. **tracked_8 is NOT a defensible calibration universe.** The tracked_8
+   range (25.5–43.7) is a narrow subset of the world distribution
+   (20.2–71.1, 171 countries, 2430 country-year observations). tracked_8
+   is 8 countries, not a global inequality distribution. tracked_8
+   calibration is permanently rejected.
+3. **The global distribution is not stable enough for one fixed curve.**
+   Country composition shifts materially by decade (2 -> 160 -> 115
+   countries). Decade medians vary (34–39). A fixed full-history pooled
+   percentile would encode future information and composition changes.
+4. **No defensible midpoint semantics exists.** level_score=50 has no
+   approved interpretation: global median shifts over time; no
+   authoritative raw-Gini threshold exists; historical median leaks future.
+   Without a defensible midpoint, no monotonic curve (logistic,
+   piecewise-linear, saturating) can be calibrated.
+5. **No external calibration basis exists** for fixed raw-Gini thresholds.
+   Any threshold (e.g. "Gini 40 = level 50") would be an arbitrary choice
+   without evidence — the failure mode DEC-018 explicitly rejected.
+6. **As-of safety requires an expanding-window design that doesn't drift
+   — unresolved.** Full-history leaks future; same-year is sparse
+   (2025 n=4); expanding drifts as coverage/concept mix changes. Release
+   dates remain unavailable, so backtest_safe stays False even for a
+   period-safe calibration.
+
+### What is NOT deferred
+
+- The DEC-018 direction confirmation (MONOTONIC_NEGATIVE) remains.
+- `100 - Gini` remains NOT approved.
+- tracked_8 min/max calibration remains explicitly rejected.
+- The freshness policy (DEC-013, irregular class) remains the one source
+  of truth; no parameter changes.
+- The Wealth / opportunity / values gaps force stays PARTIAL (DEC-009).
+- GINI_INDEX raw data stays live and imported (187 obs, tracked_8).
+
+### What additional evidence / data / methodology is required
+
+Before a Gini level can be defensibly implemented, the following must be
+resolved:
+
+- A welfare-concept metadata source (per-observation income vs
+  consumption tag) OR an authoritative welfare-concept adjustment
+  methodology OR a decision to calibrate income-based and consumption-based
+  Gini separately.
+- A decision on the calibration universe (expanding global vs same-year vs
+  a fixed externally-justified reference distribution) — tracked_8 is
+  permanently rejected.
+- A defensible midpoint semantics (what does level_score=50 mean?) —
+  requiring an external calibration basis or a normative threshold
+  authority.
+- An as-of-safe expanding-window design that handles composition drift
+  (if expanding global is chosen).
+- A sparse-year fallback rule (if same-year is chosen).
+- Resolution of whether income-based and consumption-based Gini need
+  separate calibration curves.
+
+### Reason
+
+The Sprint 5.17 audit found that the WB Gini series mixes two
+systematically different survey concepts (income vs consumption) without
+exposing the per-observation metadata needed to adjust for it; tracked_8
+is a narrow, non-representative subset; the global distribution shifts
+with country composition; and no defensible midpoint or external
+calibration basis exists. Inventing a numeric curve now would be fake
+precision — exactly the failure mode this project's methodology forbids
+(DEC-018, DEC-020, DEC-022, DEC-023). Deferral is the honest outcome; it
+preserves the direction confirmation and the raw data without publishing
+an undefensible number.
+
+### Impact
+
+NO Gini level_score was implemented; NO NormalizedSignal output changed;
+the model version stays **normalization-v0.6**; `confidence` stays None
+everywhere; `backtest_safe` stays False. The read-only profile script
+`apps/api/scripts/gini_calibration_profile.py` is added (descriptive
+statistics only — no scores, no writes, no new connector). NORMALIZATION.md
+Sprint 5.17 section + decision matrix + verdict added; §7 GINI_INDEX row
+updated; this DEC-024 added. No migration; nothing persisted; no public
+API; no force scores/weights/phases; no frontend change; no FORCE_COVERAGE
+change (Wealth-gap stays PARTIAL). GINI_INDEX stays
+MONOTONIC_NEGATIVE (direction confirmed) with NO numeric curve; the
+Sprint 5.13 permanent rules apply to every future use.
+
+### Sprint 5.17.1 impact note (2026-09-09) — verdict UNCHANGED
+
+Sprint 5.17.1 corrected an empirical-research bug in the read-only profile's
+global-universe filter: the hand-written `aggregate_codes` blacklist wrongly
+listed real economies ZAF (South Africa) and PSE (West Bank and Gaza) as
+aggregates. The filter now uses the AUTHORITATIVE WB country-metadata endpoint
+(`/v2/country`, `region.id != "NA"` => real economy). Corrected global counts
+(read-only live WB API v2, 2026-09-09): 217 real economies identified; 2430
+valid country-year observations, 171 countries, 1963–2025 (same counts as
+Sprint 5.17 — the old blacklist was ineffective due to a 2-letter vs 3-letter
+code mismatch, so the bug was methodological, not numerical); ZAF RETAINED
+(7 obs, 54.1–65), PSE RETAINED (9 obs, 33.7–36.4); pooled 20.2–71.1 median
+35.3; latest sufficiently populated year 2023 n=57.
+
+**DEC-024 verdict UNCHANGED (option B — wording/statistics basis strengthened
+but the durable methodology conclusion does not change).** The filtering bug
+did not materially alter the Sprint 5.17 methodology verdict. The six
+DEFER_GINI_LEVEL reasons stand unchanged. The welfare-concept problem and the
+missing per-observation welfare tag remain SEPARATE from this filtering bug.
+DEC-024 is not rewritten — the durable methodology conclusion is unchanged;
+only the filtering mechanism and the ZAF/PSE retention are corrected. See
+NORMALIZATION.md "Sprint 5.17.1 methodology status" for the full record.
+
+## DEC-025 — Milestone-5 high-value gap source contracts: WEO debt + Education Option C + WID wealth
+
+Date: 2026-09-10
+Status: Accepted (Sprint 5.18 — read-only research / documentation sprint)
+
+### Decision
+
+Sprint 5.18 conducted read-only, official-source-only research on three
+high-value data-gap tracks. No ingestion, persistence, normalization, scoring,
+or code changes resulted. This decision records the verified provider
+contracts and the distinct readiness verdict for each track.
+
+### Track A — IMF WEO general-government gross debt: READY for implementation
+
+- **Indicator code verified**: `GGXWDG_NGDP` — "General government gross
+  debt", unit "Percent of GDP", source "World Economic Outlook (April 2026)",
+  dataset WEO. Confirmed live via the IMF DataMapper API
+  (`https://www.imf.org/external/datamapper/api/v1/indicators`) and the
+  DataMapper series endpoint
+  (`/api/v1/GGXWDG_NGDP/{ISO3...}`). The code matches DEC-008's requirement
+  (general government, gross, % of GDP) — NOT the rejected World Bank
+  central-government series `GC.DOD.TOTL.GD.ZS`.
+- **API mechanisms**: Two official access paths exist:
+  1. **IMF DataMapper API** (public, no auth): JSON response, simple
+     `/{indicator}/{country1}/{country2}/...` path; returns all years
+     (historical + forecast) in one flat object. No vintage/release metadata.
+  2. **IMF SDMX 3.0 API** (`https://api.imf.org/external/sdmx/3.0`): the
+     system-of-record API; exposes `LATEST_ACTUAL_ANNUAL_DATA` attribute to
+     distinguish historical from forecast values; dataflow versions
+     correspond to WEO vintages (April/October). Requires an
+     `Ocp-Apim-Subscription-Key` header (free registration).
+- **Tracked_8 coverage**: ALL 8 countries covered (USA, CHN, CHE, DEU, FRA,
+  GBR, JPN, IND), verified live. Historical coverage: USA 2001–2024, CHN
+  1995–2024, CHE 1990–2024, DEU 1991–2024, FRA 1980–2024, GBR 1980–2024,
+  JPN 1980–2024, IND 1991–2024. Forecast horizon extends to 2031.
+- **Vintage/forecast risk**: The DataMapper API returns historical and
+  projected values in one flat series with NO flag distinguishing them. The
+  SDMX 3.0 API exposes `LATEST_ACTUAL_ANNUAL_DATA` to mark the boundary.
+  **Implementation must NOT silently treat projected values as historical
+  observations.** The existing `ObservationDTO` schema (with `raw_payload`)
+  is sufficient IF the adapter stores only historical values OR records the
+  estimate/projection status in `raw_payload`. A schema change is NOT
+  required for historical-only ingestion. If estimates/projections are to
+  be retained, a `raw_payload` flag or a future `observation_status` column
+  would be needed — deferred to the implementation sprint.
+- **Verdict**: READY. The contract is verified, coverage is complete, and
+  the existing architecture can ingest historical-only values. The
+  implementation sprint (5.19) must choose: (a) historical-only ingestion
+  via the DataMapper API (simplest, safest), or (b) SDMX 3.0 with
+  `LATEST_ACTUAL_ANNUAL_DATA` filtering (more robust, requires API key).
+
+### Track B — Education Option C: PARTIAL — WB SE.SEC.NENR stale, OECD attainment triennial
+
+- **WB SE.SEC.NENR** (secondary net enrollment): Official WB metadata
+  confirms: "School enrollment, secondary (% net)", annual, source UNESCO
+  UIS via WDI. Net enrollment rate = children of official school age
+  enrolled / population of corresponding official school age. **Coverage
+  problem verified live**: USA last data 2017 (2018–2025 all null); CHE last
+  2017; DEU last 2017; GBR last 2017; CHN has NO data at all (all years
+  null); JPN last data 2016. The WB metadata itself states "Reference
+  period: 1970–2019" — the series is effectively discontinued for most
+  tracked_8 countries. This is a stale-source problem, not a mapping
+  problem.
+- **OECD tertiary attainment** (`DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA_MIGR`,
+  agency `OECD.EDU.IMEP`, v1.0): "Adults' educational attainment
+  distribution, by country of birth, age group and gender". Measure:
+  `PT_POP_SEX_AGE` (percentage of population in the same sex and age).
+  Attainment level `ISCED11A_5T8` = tertiary education. Age group `Y25T34`
+  = 25–34 years. **Frequency: A3 (triennial)**, NOT annual. Values are
+  fractions (0–1), e.g. USA 2023 = 0.372 (37.2%). **Tracked_8 coverage:
+  5 of 8** — USA, CHE, DEU, FRA, GBR have data; JPN, CHN, IND are NOT in
+  the dataset (OECD non-member / non-coverage). Data years: 2017, 2020,
+  2023 (triennial cycle).
+- **Verdict**: PARTIAL. WB SE.SEC.NENR is too stale for a live force input
+  (last data ~2017, CHN has none). OECD tertiary attainment is a valid
+  attainment measure (not enrollment) but is triennial and covers only 5/8
+  tracked_8. Neither indicator alone can make the Education force
+  AVAILABLE. Recommendation: promote OECD tertiary attainment as a partial
+  proxy (5/8 coverage, triennial); DO NOT promote WB SE.SEC.NENR without a
+  fresher source or an explicit stale-data acceptance decision. The
+  Education force stays at its current status (defined_not_sourced for
+  most, partial for OECD-5 if promoted).
+
+### Track C — WID wealth: access verified, ceiling NOT lifted
+
+- **Official access mechanism**: WID provides four documented access paths:
+  (1) website graphing tools, (2) specific-series download from the DATA
+  section, (3) bulk download (full dataset from `https://wid.world/data/`),
+  (4) R/Stata packages using a webservice at
+  `https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/prod/`. The
+  webservice requires an `x-api-key` header (base64-encoded API key bundled
+  in the R package's `sysdata.rda`). Bulk download does NOT require an API
+  key. No scraping of unofficial interfaces is needed.
+- **Wealth indicator**: `shweal` (share of net personal wealth, `hweal` =
+  net personal wealth, `s` = share). Percentile `p90p100` = top 10% wealth
+  share, `p99p100` = top 1% wealth share. Values are fractions (0–1).
+  Annual frequency. Country codes are 2-letter ISO (US, CN, CH, DE, FR,
+  GB, JP, IN). Age code `992` = adults (20+). Population type `i` =
+  individuals.
+- **Tracked_8 coverage**: WID covers 100+ countries; all 8 tracked_8
+  countries are listed in the WID country index (USA, China, Switzerland,
+  Germany, France, UK, Japan, India). Actual wealth-share data coverage
+  varies by country and year (WID data is research-grade, with
+  interpolations/extrapolations — the R package exposes
+  `include_extrapolations = FALSE` to exclude fragile estimates).
+- **Ceiling recommendation**: Adding one wealth-share series does NOT
+  automatically lift the DEC-009 `PARTIAL` ceiling on the Wealth /
+  opportunity / values gaps force. The force covers wealth inequality,
+  equality of opportunity, AND values/social gaps. A wealth share
+  (top-10%) addresses wealth inequality only. The ceiling stays PARTIAL
+  until opportunity and values/social-gap measures are also addressed.
+  WID wealth shares would strengthen the force (add a wealth-distribution
+  input alongside the income-inequality Gini) but the force remains a
+  multi-concept proxy.
+- **Verdict**: READY for implementation as a partial proxy. The access
+  mechanism is stable (bulk download or R-package webservice). The
+  indicator (`shweal`, `p90p100` or `p99p100`) is well-defined. The
+  implementation sprint must: (a) choose bulk-download vs webservice, (b)
+  decide whether to exclude extrapolations (`include_extrapolations =
+  FALSE` is recommended for Atlas), (c) accept that the force stays
+  PARTIAL.
+
+### Reason
+
+The three tracks were audited to close the highest-value remaining data
+gaps before Milestone 5 closeout. Each track has a distinct readiness
+verdict: WEO debt is fully ready, education is partially ready with
+significant staleness/coverage caveats, and WID wealth is ready as a
+partial proxy that does NOT lift the conceptual ceiling. Recording these
+contracts now prevents re-research and ensures implementation sprints
+have verified provider identities, codes, and coverage matrices.
+
+### Impact
+
+NO code changed; NO ingestion performed; NO persistence; NO
+normalization; NO scoring; NO migration; NO model-version bump; NO
+frontend change. The existing `ObservationDTO` schema is sufficient for
+WEO historical-only and WID wealth-share ingestion (with `raw_payload`
+preserving provider dimensions). WEO forecast/estimate retention would
+require a future schema discussion. DEC-007 (education Option C) and
+DEC-008 (general-government debt) are HONORED — this sprint verified
+their contracts without overriding their conceptual decisions. DEC-009
+(wealth ceiling) is HONORED — WID wealth does NOT lift the PARTIAL
+ceiling. The recommended sprint sequence is 5.19 (WEO debt), 5.20
+(OECD attainment), 5.21 (WID wealth), 5.22 (Force Layer + Milestone 5
+Closeout).
+
+### Sprint 5.19 verification corrections (2026-09-10)
+
+Sprint 5.19 implemented Track A (IMF WEO) and completed final
+verification of Tracks B and C. The following corrections to the
+Sprint 5.18 research above are recorded:
+
+**Track A — IMF SDMX 3.0 works WITHOUT subscription key.** DEC-025
+stated the SDMX 3.0 API "Requires an `Ocp-Apim-Subscription-Key` header
+(free registration)." This is INCORRECT. The official endpoint
+`https://api.imf.org/external/sdmx/3.0` is publicly accessible without
+authentication. Sprint 5.19 successfully imported all 8 tracked
+countries (297 observations, historical-only) via SDMX 3.0 with
+`LATEST_ACTUAL_ANNUAL_DATA` filtering. No DataMapper fallback was
+needed. The adapter, mappings, CLI, and seed are implemented and tested
+(21 offline tests pass). Idempotent re-import verified (0 inserted /
+297 skipped / 0 revised on second run). The revision/vintage path is
+covered by the shared `persist_observations` infrastructure
+(`test_observation_revisions.py`).
+
+**Track B — OECD dataflow and dimensions corrected.** DEC-025
+referenced `DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA_MIGR` with age
+`Y25T34` (25–34), triennial frequency (A3), 5/8 coverage, and fraction
+values (0–1). Sprint 5.19 verification found:
+- Correct dataflow: `DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA` (NOT `_MIGR`)
+  — "Adults' educational attainment distribution, by age group and
+  gender" (national-level, not migration-specific).
+- Age group: `Y25T64` (25–64 years), NOT `Y25T34` (25–34). No `_T`
+  (all-ages total) exists in this dataflow.
+- Frequency: `A` (annual), NOT `A3` (triennial). Data is available
+  annually, though some countries have sparse coverage.
+- Coverage: 8/8 countries have data, NOT 5/8. However, CHN (2 data
+  points: 2010, 2020) and IND (6 data points: 2011, 2012, 2018–2021)
+  are extremely sparse. USA, CHE, DEU, FRA, GBR, JPN have good annual
+  coverage (1981–2025 / 1989–2025 / 1989–2025 / 1981–2024 / 1997–2025 /
+  1997–2025 respectively).
+- Values: percentages (`PT_POP_SEX_AGE`), NOT fractions (0–1). E.g.
+  USA 2023 = 50.71% (not 0.5071).
+- Attainment level: `ISCED11A_5T8` = "Tertiary education" (ISCED
+  levels 5–8), confirmed correct.
+- SEX = `_T` (total, both sexes), confirmed.
+- Canonical recommendation: `EDUCATION_IMPLEMENTABLE_PARTIAL` — the
+  series is implementable for 6/8 countries with good coverage; CHN
+  and IND are too sparse for reliable time-series use. The age
+  constraint (25–64, not all-ages) is the standard OECD/EAG convention
+  for adult educational attainment.
+
+**Track C — WID canonical series and extrapolation counts verified.**
+DEC-025 stated pop=`i` (individuals). Sprint 5.19 bulk-download
+verification found:
+- Canonical series for all 8 countries: `shwealj992` (age=992 adults,
+  pop=`j` = equal-split adults), NOT pop=`i` (individuals). Pop=`i`
+  exists only for USA and GBR; pop=`j` is the only series available
+  for all 8 tracked countries.
+- Coverage (shwealj992, p90p100 + p99p100): all 8 countries have data
+  from at least 1980 to 2024. Modern-era coverage is good; pre-1900
+  gaps are expected for WID's long-run series.
+- Extrapolation counts (data_quality=2): USA 0, CHN 0, CHE 0, DEU 24,
+  FRA 80, GBR 93, JPN 0, IND 0. Three countries (DEU, FRA, GBR) have
+  significant extrapolation. Interpolation counts (data_quality=1):
+  DEU 1, IND 4; all others 0.
+- Recommendation: `WID_IMPLEMENTABLE` — exclude data_quality=2
+  (extrapolated) values during ingestion. After exclusion, coverage
+  remains sufficient for all 8 countries. The `include_extrapolations
+  = FALSE` recommendation from Sprint 5.18 is honored via the
+  data_quality filter. The force stays PARTIAL (DEC-009 ceiling
+  honored).
+
+### Sprint 5.20 implementation notes (2026-09-10)
+
+Sprint 5.20 implemented Tracks B and C and hardened Track A. The
+following implementation corrections to the Sprint 5.19 verification
+above are recorded:
+
+**Track A — IMF WEO adapter hardened.** The NaN-only check (`not (value
+== value)`) was replaced with `math.isfinite(value)` — now rejects NaN,
++inf, and -inf. The fiscal-year century rollover was fixed: `FY1999/00`
+correctly maps to 2000 (was 1900), `FY2099/00` to 2100 (was 2000). The
+`LATEST_ACTUAL_ANNUAL_DATA` boundary is now extracted by attribute ID
+from the SDMX structure's `dataAttributes` list, not by array position
+— fail-closed if the attribute is absent or ambiguous.
+
+**Track B — OECD education: Y25T34 selected, exact no-wildcard identity.**
+Sprint 5.19 recommended Y25T64. Sprint 5.20 compared Y25T34 and Y25T64
+live for all 8 tracked countries and found coverage is NOT materially
+different (both 8/8, similar counts). Y25T34 was selected because 25-34
+represents recent cohorts and is more responsive to the current education
+system. The production identity uses ALL 17 dimensions fixed (NO wildcards):
+`{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A`.
+STATISTICAL_OPERATION=OBS excludes SE (standard error) rows. 200 observations
+imported across 8 countries (CHN: 1 obs, IND: 8 obs — sparse). Education
+promoted to PARTIAL (DEC-009 ceiling — one tertiary series cannot make
+Education AVAILABLE).
+
+**Track C — WID wealth: data_quality DEFER filtering, not exclude.**
+Sprint 5.19 recommended excluding data_quality=2 (extrapolated) values.
+Sprint 5.20 found that WID does NOT provide an official, authoritative
+code dictionary for the data_quality column. The values 0, 1, 2 were
+observed but their exact meaning (observed/interpolated/extrapolated) is
+NOT officially documented. Policy: DEFER filtering — import ALL rows,
+preserve data_quality in raw_payload, do NOT delete provider data using
+an inferred code meaning. 670 observations imported across 8 countries.
+The force stays PARTIAL (DEC-009 ceiling honored).
+
+## DEC-026 — Education attainment age 25-34 and PARTIAL ceiling
+
+Date: 2026-09-10
+Status: Accepted (Sprint 5.20)
+
+### Decision
+
+OECD tertiary educational attainment for age 25-34 (`Y25T34`) is the
+canonical education indicator. Y25T64 was rejected because 25-34
+represents recent cohorts and is more responsive to the current education
+system. Coverage is NOT materially different between the two age groups
+(verified live: both 8/8, similar counts). The Education force is capped
+at PARTIAL (DEC-009) — one tertiary attainment series cannot make
+Education AVAILABLE. Attainment != enrollment (DEC-007 honored).
+
+## DEC-027 — WID data_quality filtering: DEFERRED (official semantics unverified)
+
+Date: 2026-09-10
+Status: Accepted (Sprint 5.20)
+
+### Decision
+
+WID's `data_quality` column is preserved in `raw_payload` but NOT used
+for filtering. WID does NOT provide an official, authoritative code
+dictionary for the data_quality values (0, 1, 2 observed). The Sprint
+5.19 recommendation to exclude data_quality=2 (extrapolated) values is
+RETRACTED — no inferred row deletion is allowed without official
+documentation. If official semantics are found later, a future sprint
+may add filtering.
+
+## DEC-028 — WID top-10 wealth share: PARTIAL ceiling confirmed
+
+Date: 2026-09-10
+Status: Accepted (Sprint 5.20)
+
+### Decision
+
+WID top-10% net personal wealth share (`shwealj992`, `p90p100`, pop=`j`
+equal-split adults) is the canonical wealth concentration indicator. Raw
+provider fraction (0-1) preserved unchanged. The Wealth / opportunity /
+values gaps force stays PARTIAL (DEC-009) — a wealth share addresses
+wealth inequality only, not opportunity gaps or values/social
+polarization. No numeric normalization curve is approved —
+MONOTONIC_NEGATIVE direction confirmed, but "100 - share*100" is NOT an
+approved mapping.

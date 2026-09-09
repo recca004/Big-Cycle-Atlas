@@ -132,8 +132,8 @@ async def test_military_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        # 19 = 15 WB + 2 BIS + 2 OECD
-        assert total == 19
+        # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
+        assert total == 22
         wb_series = (
             await session.execute(
                 select(SourceSeries.external_code)
@@ -150,7 +150,7 @@ async def test_military_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        assert total == 19
+        assert total == 22
         dup = (
             await session.execute(
                 select(func.count())

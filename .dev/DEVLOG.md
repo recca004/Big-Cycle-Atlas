@@ -1,5 +1,589 @@
 # Devlog
 
+## 2026-09-10 — Sprint 5.20: Education + WID Implementation + Sprint-5.19 Hardening
+
+### Summary
+
+Sprint 5.20 implemented OECD tertiary attainment (age 25-34) and WID top-10
+wealth share, hardened the IMF WEO adapter (finite values, fiscal-year
+rollover, attribute identity), wired GOVERNMENT_DEBT_GDP into Indebtedness
+coverage, and synchronized living documentation. No force aggregation, no
+force scores, no normalization curves, no commit/push.
+
+### Part 0 — Sprint 5.19 hardening
+
+- **IMF finite values**: replaced `not (value == value)` (NaN-only) with
+  `math.isfinite(value)` — rejects NaN, +inf, -inf. No clamping.
+- **IMF fiscal-year rollover**: fixed century rollover logic.
+  `FY1999/00` → 2000, `FY2099/00` → 2100 (previously mapped to 1900/2000).
+- **IMF attribute identity**: boundary extraction now validates
+  `LATEST_ACTUAL_ANNUAL_DATA` by id from the SDMX structure's
+  `dataAttributes` list, not by position. Fail-closed if absent or ambiguous.
+- **IMF docstring**: corrected stale comma-separated URL notation to
+  slash-separated (`/data/dataflow/{agency}/{dataflow}/+/{key}`).
+- **Tests**: 7 new IMF regression tests (NaN, +inf, -inf, fiscal rollover,
+  missing attributes, wrong attribute id, positional extraction).
+
+### Part A — OECD tertiary attainment: IMPLEMENTED
+
+- **Y25T34 vs Y25T64**: compared live for all 8 tracked countries. Coverage
+  is NOT materially different (both 8/8, similar counts). Y25T34 selected:
+  25-34 represents recent cohorts, more responsive to the current education
+  system. Attainment != enrollment preserved (DEC-007).
+- **Exact production identity**: 17 dimensions, ALL fixed, NO wildcards.
+  `EAG_LSO_NEAC/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A`
+  STATISTICAL_OPERATION=OBS (excludes SE standard error rows).
+- **Import**: 200 observations across 8 countries. CHN: 1 obs (2010 only).
+  IND: 8 obs (sparse). Idempotency verified (0 inserted, all skipped).
+- **Force ceiling**: Education promoted to PARTIAL (was defined_not_sourced).
+  One tertiary series cannot make Education AVAILABLE.
+
+### Part B — WID top-10 wealth share: IMPLEMENTED
+
+- **Data-quality semantics**: WID does NOT provide an official code
+  dictionary for the `data_quality` column. Policy: DEFER filtering — import
+  ALL rows, preserve data_quality in raw_payload, do NOT delete provider
+  data using an inferred code meaning.
+- **Production access**: WID bulk download (882 MB zip, no API key).
+  Per-country CSV files (semicolon-delimited). ISO2 country codes.
+- **Exact series**: `shwealj992` / `p90p100` (top 10% net personal wealth
+  share, equal-split adults). Raw fraction (0-1) preserved unchanged.
+- **Import**: 670 observations across 8 countries. CHE: 45, CHN: 58, DEU: 76,
+  FRA: 135, GBR: 125, IND: 58, JPN: 56, USA: 117. Historical data goes back
+  to 1800-1820 for some countries (WID long-run series). Idempotency
+  verified (0 inserted, 117 skipped for USA re-run).
+- **Force ceiling**: Wealth/opportunity/values gaps stays PARTIAL (DEC-009).
+  Wealth share does not address opportunity or values/social gaps.
+
+### Part C — Government-debt force-coverage wiring
+
+- `GOVERNMENT_DEBT_GDP` wired into Indebtedness as a live input (was
+  candidate-only). No normalization curve, no force score, no weight.
+  CONTEXTUAL_DEFERRED level — debt sustainability is multi-factor.
+
+### Part D — Tests
+
+- 435 tests pass (was 400). New: IMF hardening (7), OECD education (12),
+  WID adapter (17), updated count expectations (indicators 25→27,
+  SourceSeries 20→22, data sources 9→10, registry 19→22).
+
+### Part E — Model version
+
+- Model version: `normalization-v0.6` (unchanged — no new scores).
+- Confidence: `None` (unchanged).
+- No force scores, no force weights, no phase logic, no forecasts.
+
+## 2026-09-10 — Sprint 5.19: WEO debt implementation + Education/WID final verification
+
+### Summary
+
+Sprint 5.19 implemented Track A (IMF WEO general-government gross debt
+via SDMX 3.0) and completed final read-only verification of Track B
+(OECD tertiary attainment) and Track C (WID wealth shares). No force
+aggregation, no force scores, no normalization, no commit/push.
+
+### Track A — IMF WEO debt: IMPLEMENTED
+
+- **Provider contract verified**: IMF SDMX 3.0 API at
+  `https://api.imf.org/external/sdmx/3.0` is publicly accessible WITHOUT
+  a subscription key (contrary to DEC-025's Sprint 5.18 assumption).
+  Dataflow: `IMF.RES/WEO` version `9.0.0`. Indicator: `GGXWDG_NGDP`.
+  Frequency: `A`. Canonical: `GOVERNMENT_DEBT_GDP`.
+- **URL format**: slash-separated dataflow components
+  (`/data/dataflow/IMF.RES/WEO/+/{key}`), NOT comma-separated.
+- **Historical/forecast boundary**: `LATEST_ACTUAL_ANNUAL_DATA`
+  attribute in each observation's raw payload. Filter rule: persist
+  only observations where `observation_status == "actual"` (year ≤
+  `LATEST_ACTUAL_ANNUAL_DATA`). No forecast values persisted.
+- **Adapter/mappings/CLI/seed**: `imf_weo.py`, `imf_weo_mappings.py`,
+  `ingest_imf_weo.py`, seed update. 21 offline tests pass.
+- **Live import (tracked_8)**: 297 observations inserted across 8
+  countries. Country counts: CHE 36 (1990–2025), CHN 30 (1995–2024),
+  DEU 35 (1991–2025), FRA 45 (1980–2024), GBR 46 (1980–2025), IND 35
+  (1991–2025), JPN 45 (1980–2024), USA 25 (2001–2025). Max years
+  matched provider-reported `LATEST_ACTUAL_ANNUAL_DATA`. No forecast
+  years persisted.
+- **Idempotency**: second full import = 0 inserted / 297 skipped / 0
+  revised. Idempotent for current vintage.
+- **Revision/vintage**: covered by shared `persist_observations`
+  infrastructure (`test_observation_revisions.py`). The IMF adapter
+  produces DTOs; the persistence layer handles revisions, vintages,
+  and supersession links. No IMF-specific revision test needed.
+
+### Track B — OECD tertiary attainment: VERIFIED (corrections to DEC-025)
+
+- **Correct dataflow**: `DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA` (agency
+  `OECD.EDU.IMEP`, v1.0) — "Adults' educational attainment
+  distribution, by age group and gender" (national-level, NOT the
+  migration-specific `_MIGR` variant referenced in DEC-025).
+- **Series key**: `REF_AREA._T.Y25T64.ISCED11A_5T8.+.+.+.+.+.+.+.+.+.+.+.+.A`
+  - SEX = `_T` (total, both sexes)
+  - AGE = `Y25T64` (25–64 years) — NOT `Y25T34` (25–34) as in DEC-025.
+    No `_T` (all-ages total) exists in this dataflow.
+  - ATTAINMENT_LEV = `ISCED11A_5T8` (Tertiary education, ISCED 5–8)
+  - MEASURE = `POP` (Population)
+  - UNIT_MEASURE = `PT_POP_SEX_AGE` (percentage of population by sex
+    and age) — values are PERCENTAGES, NOT fractions (0–1) as in
+    DEC-025. E.g. USA 2023 = 50.71%.
+  - FREQ = `A` (annual) — NOT `A3` (triennial) as in DEC-025.
+- **Coverage (8/8, with sparsity)**:
+  - USA: 1981–2025 (good annual coverage)
+  - CHE: 1989–2025 (good)
+  - DEU: 1989–2025 (good)
+  - FRA: 1981–2024 (good)
+  - GBR: 1997–2025 (good)
+  - JPN: 1997–2025 (good)
+  - CHN: 1997–2020 (EXTREMELY SPARSE — only 2010 and 2020 have values)
+  - IND: 1997–2023 (EXTREMELY SPARSE — only 2011, 2012, 2018–2023)
+- **Canonical recommendation**: `EDUCATION_IMPLEMENTABLE_PARTIAL` —
+  implementable for 6/8 countries with good coverage; CHN and IND are
+  too sparse for reliable time-series use. Age 25–64 is the standard
+  OECD/EAG convention for adult attainment (not all-ages total).
+
+### Track C — WID wealth shares: VERIFIED (corrections to DEC-025)
+
+- **Bulk download verified**: `https://wid.world/bulk_download/wid_all_data.zip`
+  (882 MB, 848 CSV files, no API key needed).
+- **Data format**: `country;variable;percentile;year;value;age;pop;data_quality`
+- **Canonical series**: `shwealj992` (age=992 adults, pop=`j` =
+  equal-split adults) — NOT pop=`i` (individuals) as in DEC-025.
+  Pop=`j` is the ONLY series available for all 8 tracked countries.
+  Pop=`i` exists only for USA and GBR.
+- **Coverage (shwealj992, p90p100 + p99p100)**: all 8 countries have
+  data 1980–2024. Pre-1900 gaps are expected for WID's long-run series.
+- **Extrapolation counts (data_quality=2)**: USA 0, CHN 0, CHE 0, DEU
+  24, FRA 80, GBR 93, JPN 0, IND 0. Three countries (DEU, FRA, GBR)
+  have significant extrapolation.
+- **Interpolation counts (data_quality=1)**: DEU 1, IND 4; all others 0.
+- **Decision**: `WID_IMPLEMENTABLE` — exclude data_quality=2
+  (extrapolated) values during ingestion. After exclusion, coverage
+  remains sufficient for all 8 countries. The force stays PARTIAL
+  (DEC-009 ceiling honored).
+
+### Force-layer boundary
+
+No force aggregation, no force scores, no normalization, no phase
+classification, no forecasting was performed in this sprint. The
+architecture separates raw observations, coverage status, normalized
+signals, confidence, force scores, weights, phases, and forecasts.
+Sprint 5.19 operated entirely below the force layer. Sprint 5.21
+requires methodology work (normalization design, weight design) before
+force aggregation can begin.
+
+### Files
+
+- Created: `apps/api/app/data_sources/imf_weo.py`,
+  `apps/api/app/data_sources/imf_weo_mappings.py`,
+  `apps/api/scripts/ingest_imf_weo.py`,
+  `apps/api/tests/test_imf_weo_adapter.py`,
+  `apps/api/scripts/verify_oecd_education.py`,
+  `apps/api/scripts/verify_wid_wealth.py`
+- Updated: `apps/api/app/db/seed.py`, `.dev/DECISIONS.md`,
+  `.dev/DATA_SOURCES.md`, `.dev/FORCE_COVERAGE.md`, `.dev/BACKLOG.md`,
+  `.dev/HANDOFF.md`, `.dev/PROJECT_STATUS.md`
+
+### Tests
+
+- IMF WEO adapter: 21 passed
+- Full offline suite: pending (run below)
+
+### Not done (deliberately)
+
+- No force aggregation, no force scores, no normalization, no phase,
+  no forecasting, no commit, no push.
+
+## 2026-09-10 — Sprint 5.19 Part 0: PROJECT_STATUS.md recovery incident
+
+### Incident
+
+The working-tree `.dev/PROJECT_STATUS.md` was accidentally clobbered to
+just `-NoNewline` (the entire file content was destroyed). The HEAD
+version only contained up to Sprint 5.13 (pytest 318) — Sprints 5.14
+through 5.18 were uncommitted working-tree changes that existed only in
+the now-destroyed file.
+
+### Recovery method
+
+No `git checkout --` or `git reset` was used. The HEAD version was
+extracted read-only via `git show HEAD:.dev/PROJECT_STATUS.md` and used
+as the base. Sprints 5.14, 5.15, 5.15.1, 5.16, 5.17, 5.17.1, and 5.18
+were then re-added to the Phase and Progress lines by synthesizing from
+the surviving `.dev/HANDOFF.md` entries (which have detailed per-sprint
+summaries for each), `.dev/BACKLOG.md`, `.dev/DEVLOG.md`, and
+`.dev/DECISIONS.md` (DEC-023, DEC-024, DEC-025). The pytest count was
+updated from 318 to 379. The Working section's live-data line already
+had the correct observation count (5647) and indicator_diagnostics was
+not mentioned in the HEAD version's Working section (it was added in
+Sprint 5.14) — the Progress line now includes the 1872 diagnostics count.
+
+### Data loss assessment
+
+The reconstructed Phase and Progress lines are faithful summaries but
+may not be byte-identical to the destroyed working-tree version. The
+Working section's detailed bullet points for Sprints 5.14–5.18 (which
+were added in the working tree but never committed) are NOT fully
+reconstructed — the HEAD version's Working section ends at Sprint 5.13
+content. The HANDOFF.md, BACKLOG.md, DEVLOG.md, DECISIONS.md,
+FORCE_COVERAGE.md, and DATA_SOURCES.md all survived intact and remain
+the authoritative source of truth for Sprint 5.14–5.18 details.
+
+### Lesson
+
+Uncommitted working-tree changes to source-of-truth documentation files
+are fragile. The `.dev/HANDOFF.md` file served as the recovery backbone
+because it has self-contained per-sprint entries. Future sprints should
+commit documentation changes more frequently.
+
+## 2026-09-10 — Sprint 5.18: High-Value Data Gap Closure Audit (DEC-025)
+
+### Goal
+
+Owner-directed, read-only research sprint to close the highest-value
+remaining data gaps before Milestone 5 closeout. Three isolated provider
+tracks: (A) IMF WEO general-government debt, (B) Education Option C
+(WB SE.SEC.NENR + OECD tertiary attainment), (C) WID wealth shares. No
+ingestion, no persistence, no normalization, no scoring, no code changes.
+Official provider sources only.
+
+### Track A — IMF WEO general-government gross debt
+
+Verified from official IMF sources:
+- **Indicator**: `GGXWDG_NGDP` — "General government gross debt", unit
+  "Percent of GDP", source "World Economic Outlook (April 2026)", dataset
+  WEO. Confirmed via the IMF DataMapper API indicators endpoint
+  (`https://www.imf.org/external/datamapper/api/v1/indicators`) and live
+  series data
+  (`/api/v1/GGXWDG_NGDP/USA/CHN/CHE/DEU/FRA/GBR/JPN/IND`). Matches
+  DEC-008 (general government, gross, % of GDP) — NOT WB
+  central-government `GC.DOD.TOTL.GD.ZS`.
+- **API mechanisms**: (1) DataMapper API — public, no auth, flat JSON,
+  no vintage flag; (2) SDMX 3.0 API
+  (`https://api.imf.org/external/sdmx/3.0`) — system-of-record, exposes
+  `LATEST_ACTUAL_ANNUAL_DATA` to distinguish historical from forecast,
+  requires free `Ocp-Apim-Subscription-Key` header, rate limit 50 req/s.
+- **Tracked_8 coverage**: ALL 8 (USA 2001–2024, CHN 1995–2024, CHE
+  1990–2024, DEU 1991–2024, FRA 1980–2024, GBR 1980–2024, JPN 1980–2024,
+  IND 1991–2024; forecasts to 2031).
+- **Vintage/forecast risk**: DataMapper returns historical + projected in
+  one flat series with NO flag. SDMX 3.0 exposes
+  `LATEST_ACTUAL_ANNUAL_DATA` to mark the boundary. Implementation must
+  NOT silently treat projections as historical. Existing `ObservationDTO`
+  schema sufficient for historical-only ingestion.
+- **Verdict**: READY for Sprint 5.19.
+
+### Track B — Education Option C
+
+- **WB SE.SEC.NENR** (secondary net enrollment): Official WB metadata
+  confirms "School enrollment, secondary (% net)", annual, source UNESCO
+  UIS via WDI. Net enrollment = children of official school age enrolled /
+  population of corresponding official school age. **Coverage problem
+  verified live**: USA last data 2017 (2018–2025 all null), CHE last 2017,
+  DEU last 2017, GBR last 2017, CHN has NO data at all (all years null),
+  JPN last data 2016. WB metadata states "Reference period: 1970–2019".
+  NOT recommended as a live input.
+- **OECD tertiary attainment**
+  (`DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA_MIGR`, agency `OECD.EDU.IMEP`,
+  v1.0): "Adults' educational attainment distribution, by country of
+  birth, age group and gender". Measure `PT_POP_SEX_AGE`, attainment
+  `ISCED11A_5T8` (tertiary), age `Y25T34` (25–34). **Frequency: A3
+  (triennial)**. Values are fractions (0–1): USA 2023 = 0.372, GBR 2023 =
+  0.726, CHE 2023 = 0.397, DEU 2023 = 0.148, FRA 2023 = 0.255.
+  **Tracked_8 coverage: 5/8** (USA, CHE, DEU, FRA, GBR; JPN/CHN/IND NOT
+  in dataset). Data years: 2017, 2020, 2023.
+- **Verdict**: PARTIAL. OECD attainment can be promoted as a partial
+  proxy (5/8, triennial). WB SE.SEC.NENR should NOT be promoted.
+
+### Track C — WID wealth
+
+- **Access**: Four documented paths (graphing tools, specific-series
+  download, bulk download from `https://wid.world/data/`, R/Stata
+  packages using webservice at
+  `https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/prod/`).
+  Bulk download needs no API key; webservice requires `x-api-key`
+  header (base64-encoded key in R package `sysdata.rda`). No scraping
+  needed.
+- **Indicator**: `shweal` (share of `hweal` = net personal wealth).
+  Percentile `p90p100` = top 10% wealth share, `p99p100` = top 1%.
+  Values are fractions (0–1). Annual. 2-letter ISO country codes. Age
+  `992` = adults. Population `i` = individuals.
+- **Extrapolation flag**: WID includes interpolations/extrapolations by
+  default; `include_extrapolations = FALSE` recommended for Atlas.
+- **Tracked_8**: all 8 listed in WID country index; data coverage varies.
+- **Ceiling**: does NOT lift DEC-009 PARTIAL — wealth share addresses
+  wealth inequality only, not opportunity or values/social gaps.
+- **Verdict**: READY for Sprint 5.21 as a partial proxy.
+
+### Priority matrix
+
+| Candidate | Force | Provider | Coverage | Concept fit | Access stability | Effort | Gap improvement | Risk | Verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| IMF gen-gov debt | Indebtedness | IMF WEO | 8/8 | exact (gross, gen-gov, %GDP) | high (public API) | medium | high (public-sector debt input) | vintage/forecast mixing | READY (5.19) |
+| WB sec net enrollment | Education | WB/UIS | stale, CHN none | exact (net enrollment) | high but stale | low | low (stale data) | staleness | NOT recommended |
+| OECD tertiary attainment | Education | OECD | 5/8 | exact (attainment, 25-34) | high (SDMX) | medium | medium (first education input) | triennial, 3/8 missing | PARTIAL (5.20) |
+| WID wealth share | Wealth/opportunity | WID | 8/8 listed | partial (wealth only) | medium (bulk or API key) | medium | medium (wealth input) | extrapolations, ceiling stays | READY as partial proxy (5.21) |
+
+### Milestone-5 exit assessment
+
+After Sprints 5.19–5.21, enough measurement coverage exists to move to
+the force layer. Sprint 5.22 can reasonably be "Force Layer + Milestone 5
+Closeout": a valid force engine that scores approved forces, returns None
+for unapproved forces, exposes coverage/missingness, and preserves
+PARTIAL proxy semantics.
+
+### Files changed
+
+- `.dev/DECISIONS.md` — DEC-025 added
+- `.dev/DATA_SOURCES.md` — IMF + WID sections added
+- `.dev/FORCE_COVERAGE.md` — Sprint 5.18 audit section + updated priorities
+- `.dev/BACKLOG.md` — Now/Next updated with 5.19–5.22 sequence
+- `.dev/PROJECT_STATUS.md` — Phase + Progress updated
+- `.dev/HANDOFF.md` — Sprint 5.18 entry added
+- `.dev/DEVLOG.md` — this entry
+
+No code changed. No ingestion. No persistence. No normalization. No
+scoring. No migration. No model-version bump. No frontend change. pytest
+379 green (unchanged).
+
+## 2026-09-09 — Sprint 5.17.1: Gini global-universe filter hardening + living-doc cleanup
+
+### Goal
+
+Owner-directed, timeboxed brief — correct one empirical-research bug in the Sprint 5.17 read-only Gini calibration profile: the script's global universe filter used a hand-written `aggregate_codes` blacklist that wrongly listed real economies ZAF (South Africa) and PSE (West Bank and Gaza) as aggregates. Replace the heuristic with an authoritative World Bank country/economy classification. No DB writes, no persistent connector, no Gini curve, no score semantics change, no commit/push.
+
+### Root cause
+
+`apps/api/scripts/gini_calibration_profile.py` `_live_global_profile` filtered SI.POV.GINI rows against a hand-maintained `aggregate_codes` set that included `"ZAF"` and `"PSE"` — real economies. The set also included many genuine aggregate codes (WLD, EAP, HIC, ...). Two compounding defects: (1) the blacklist was methodologically wrong (ZAF/PSE are real economies with real WB region assignments); (2) the filter matched the GINI record's 2-letter `country.id` against the 3-letter blacklist codes, so the blacklist was in fact INEFFECTIVE — no code ever matched. The reported 2430/171 counts happened to be correct by accident, but the filter was not trustworthy.
+
+### Authoritative economy-filter design
+
+The official WB `/v2/country` metadata endpoint returns every country and aggregate record. Each record carries a nested `region` object:
+- Real economies: `region.id` is a real region code (NAC, SSF, MEA, EAS, SAS, ...), `region.value` is a region name.
+- Aggregates: `region.id == "NA"`, `region.value == "Aggregates"`.
+
+A pure helper `build_valid_economy_codes(country_records: list[dict]) -> set[str]` builds the set of real-economy ISO3 codes from the metadata records (region.id NOT in {"NA", "", None}). The GINI record's `countryiso3code` (3-letter, e.g. USA/ZAF/PSE) is matched against this set. No inference from code length, capitalization, or a manual blacklist. The helper has no I/O — it is unit-tested offline with mocked provider metadata (no external HTTP in pytest).
+
+Notable subtlety: SSF appears BOTH as a real-economy region id (on ZAF's record, region.id="SSF") AND as an aggregate code (the SSF aggregate's own record has region.id="NA"). The filter keys on the record's OWN region field, never on the code itself, so the two senses never collide: ZAF is retained, the SSF aggregate is excluded.
+
+### Fail loudly
+
+If the country metadata cannot be retrieved or parsed reliably (HTTP error, non-200, JSON decode failure, unexpected response shape, no records), the GLOBAL live profile STOPS. It does NOT silently fall back to the old blacklist. The tracked_8 DB profile (Part 2, which reads the live dev DB) may still run. Research output states that global profiling was unavailable.
+
+### Corrected global counts/statistics (read-only live WB API v2, 2026-09-09)
+
+- Authoritative economy filter: 217 real economies identified (region.id != "NA").
+- ZAF: RETAINED — 7 observations (min=54.1, median=59.6, max=65).
+- PSE: RETAINED — 9 observations (min=33.7, median=34.5, max=36.4).
+- Total valid country-year observations: 2430.
+- Distinct countries/economies: 171.
+- Year span: 1963–2025.
+- Pooled: min=20.2, p10=27.5, p25=30.8, median=35.3, p75=42.6, p90=50.8, max=71.1.
+- Cross-sections: 2000 n=57 median 36.4; 2010 n=86 median 33.7; 2020 n=70 median 34.35; 2025 n=4 (too sparse).
+- Latest sufficiently populated year (n>=30): 2023 (n=57, median 33.9).
+- Country count by decade: 1960s 2, 1970s 10, 1980s 64, 1990s 120, 2000s 152, 2010s 160, 2020s 115.
+- Decade medians: 1960s 36.7, 1970s 34.0, 1980s 35.4, 1990s 39.0, 2000s 35.6, 2010s 34.8, 2020s 34.35.
+
+The counts (2430/171) match the Sprint 5.17 reported values — the old blacklist was ineffective (2-letter vs 3-letter mismatch), so the bug was methodological, not numerical. The corrected filter is authoritative and defensible.
+
+### Impact on DEC-024
+
+**Verdict UNCHANGED (option B — wording/statistics basis strengthened but the durable methodology conclusion does not change).** The filtering bug did not materially alter the Sprint 5.17 methodology verdict. The six DEFER_GINI_LEVEL reasons stand: (1) survey-concept comparability insufficient (income vs consumption; no per-observation tag); (2) tracked_8 not a defensible calibration universe; (3) global distribution not stable enough for one fixed curve; (4) no defensible midpoint semantics; (5) no external calibration basis; (6) as-of-safe expanding-window design unresolved. The welfare-concept problem and the missing per-observation welfare tag remain SEPARATE from this filtering bug. DEC-024 is not rewritten — the durable methodology conclusion is unchanged; only the filtering mechanism and the ZAF/PSE retention are corrected.
+
+### Welfare-concept wording
+
+Refined to "provider-methodology / country-level welfare-concept classification" rather than "every CHN observation is definitively tagged consumption by the API". The API does NOT expose a per-observation welfare-concept tag; the classification is a methodology-level hint from official PIP documentation, not a per-row metadata column. No invented adjustments are applied.
+
+### Tests
+
+6 new offline regressions in `apps/api/tests/test_gini_economy_filter.py` (mocked WB country metadata — no external HTTP):
+- ZAF retained as a real economy.
+- PSE retained as a real economy.
+- Known aggregates (WLD, EAP, HIC, SSF, INX) excluded.
+- Real-economies set exactly {USA, ZAF, PSE, CHN, IND} for the mock.
+- SSF region-id collision handled (ZAF retained, SSF aggregate excluded).
+- Malformed records (non-dict, missing id, missing region) skipped defensively.
+
+### Results
+
+- pytest **379 passed, 0 failed** (373 baseline + 6 new), all offline. WGI level/relative/momentum, DSR level, credit-gap level all verified unchanged; confidence None on every signal; model version stays **normalization-v0.6**.
+
+### Model / methodology boundaries (unchanged)
+
+- normalization-v0.6 KEPT.
+- confidence = None KEPT.
+- GINI_INDEX unscored KEPT.
+- Wealth-gap coverage ceiling = PARTIAL KEPT.
+- No Gini curve implemented. No freshness change. No relative scoring. No force aggregation. No phase.
+
+### Not done (deliberately)
+
+- No productivity normalization, no IMF WEO ingestion, no WID ingestion, no education ingestion, no Gini scoring, no confidence, no force aggregation, no phase, no commit/push.
+
+## 2026-09-09 — Sprint 5.17: Gini calibration universe + comparability audit
+
+### Goal
+
+Owner-directed, timeboxed brief — answer what calibration universe and transformation, if any, can defensibly map World Bank GINI_INDEX into an Atlas 0–100 INDICATOR strength level. Investigate provider semantics, survey/concept comparability, cross-country comparability limits, global calibration candidates, as-of-safe historical calibration, robustness to sparse/irregular histories, and whether one global monotonic curve is defensible. No Gini level_score implementation; no NormalizedSignal change; no model-version bump; no commit/push.
+
+### Provider semantics (verified)
+
+`SI.POV.GINI` (World Bank, Poverty and Inequality Platform / PIP): 0–100 scale; higher = more inequality; direction CONFIRMED (DEC-018: MONOTONIC_NEGATIVE). Welfare concept: mixes income-based surveys (high-income economies via LIS/EU-SILC, after-tax income) and consumption-based surveys (CHN/IND and most low-/middle-income countries). OWID: "consumption tends to be more evenly distributed than income" — consumption Gini is systematically LOWER than income Gini for the same true inequality. **The WB API does NOT expose a per-observation welfare-concept tag.** PIP documents within-country comparability breaks (questionnaire changes) but NOT a cross-country welfare-concept classification exposed via WDI.
+
+### Tracked_8 audit (live DB, latest vintage)
+
+187 observations across 8 countries. USA 35 obs (1990–2024, latest 41.8, income-based); CHE 21 (1992–2022, 33.8, income); CHN 20 (1990–2022, 36.0, consumption); DEU 32 (1991–2022, 33.7, income); FRA 29 (1990–2023, 31.8, income); GBR 32 (1990–2021, 32.4, income); JPN 13 (2008–2020, 32.3, income); IND 5 (1993–2022, 25.5, consumption). Pooled tracked_8: 25.5–43.7 (median 33.1). The income-vs-consumption difference is visible: IND (consumption) median 27.7 vs USA (income) median 40.8.
+
+### Global WB Gini universe (read-only live WB API v2 query)
+
+2430 valid country-year observations, 171 countries, 1963–2025. Global pooled: 20.2–71.1 (median 35.3). tracked_8 (25.5–43.7) is a NARROW non-representative subset. Same-year cross-sections: 2000 n=57 median 36.4; 2010 n=86 median 33.7; 2020 n=70 median 34.35; 2025 n=4 (too sparse). Country count by decade: 1960s 2 → 1990s 120 → 2010s 160 → 2020s 115 — composition shifts materially. Decade medians: 34–39.
+
+### Verdict: DEFER_GINI_LEVEL (DEC-024)
+
+Six reasons: (1) survey-concept comparability insufficient (income vs consumption; no per-observation metadata); (2) tracked_8 NOT a defensible calibration universe (narrow subset, permanently rejected); (3) global distribution not stable enough for one fixed curve (composition shifts, decade medians vary); (4) no defensible midpoint semantics (level_score=50 has no approved interpretation); (5) no external calibration basis for fixed thresholds; (6) as-of safety requires an expanding-window design that doesn't drift — unresolved. GINI_INDEX stays MONOTONIC_NEGATIVE (direction confirmed) with NO numeric curve; `100 - Gini` remains NOT approved; Wealth-gap force stays PARTIAL (DEC-009).
+
+### Impact
+
+No Gini level_score implemented; model version stays normalization-v0.6; confidence stays None; backtest_safe stays False; Wealth-gap force stays PARTIAL. pytest 373 green (unchanged — docs + read-only research only). Files: `apps/api/scripts/gini_calibration_profile.py` (NEW — read-only profile), `.dev/NORMALIZATION.md` (Sprint 5.17 section + decision matrix + verdict + §7 GINI_INDEX row update), `.dev/DECISIONS.md` (DEC-024), `.dev/DATA_SOURCES.md` (Gini welfare-concept clarification), `.dev/HANDOFF.md`, `.dev/PROJECT_STATUS.md`, `.dev/DEVLOG.md`, `.dev/BACKLOG.md`.
+
+## 2026-09-09 — Sprint 5.16: WGI confidence calibration audit + diagnostic hardening
+
+### Goal
+
+Owner-directed, timeboxed brief — two outputs: (1) harden transaction handling around `DBAPIError.connection_invalidated` (a dead connection cannot safely persist a FAILED audit row in the caller's transaction); (2) conduct the empirical WGI confidence calibration audit on the 624 aligned score/diagnostic rows imported in Sprint 5.15, decide whether a defensible numeric indicator confidence exists for the WGI ×3, and record a durable methodology decision. No numeric confidence implementation; no NormalizedSignal change; no model-version bump; no commit/push.
+
+### Transaction hardening
+
+`run_wgi_diagnostic_ingestion` already wrapped persistence in a SAVEPOINT (Sprint 5.15.1) and caught recoverable `DBAPIError` to record a FAILED run. The gap: `DBAPIError.connection_invalidated = True` was treated identically — but a dead connection means the outer transaction cannot commit the FAILED audit row either. The fix: check `exc.connection_invalidated`; if True, re-raise (the error propagates; no false audit-record promise). Recoverable DBAPIError continues through the FAILED-run recording path. Regression coverage for both cases added (33 tests total in the file; 373 suite-wide).
+
+### Empirical profile
+
+Read-only script `apps/api/scripts/wgi_confidence_profile.py` analyzed the 624 aligned rows (8 countries × 3 WGI dimensions × 26 score years). Dataset integrity: exactly 624 rows, 0 missing, 0 duplicates, 0 LB>score or score>UB violations. Key findings:
+
+- CI width pooled median 11.54 (RL 9.23, CC 11.54, PV 13.88).
+- Boundary clipping: 9/624 (1.4%) upper-clipped, all CHE; 0 lower-clipped.
+- Score vs width: pooled Pearson 0.080 — no systematic score-level bias.
+- Source count pooled median 9; temporal trend Pearson 0.543 vs year (non-stationary).
+- **CI width vs SR: pooled Pearson -0.829 — highly redundant.** Combining both double-counts; using one discards the other.
+- Dimension differences substantial and unexplained (RL narrowest/most sources vs PV widest/fewest sources).
+- Country differences exist but less pronounced than dimension differences.
+
+### Verdict: DEFER_NUMERIC_CONFIDENCE (DEC-023)
+
+Six reasons: (1) CI width/SR redundancy; (2) unexplained dimension differences; (3) temporal trends make empirical calibration leaky or drifting; (4) no external calibration basis for a numeric mapping; (5) freshness composition unresolved; (6) a single scalar would hide dimension-specific trust. The diagnostics remain INPUT DATA only. Required before numeric confidence: external calibration basis, pooled vs per-dimension decision, calibration-window decision, freshness composition rule, scalar vs per-dimension decision, CI-width/SR redundancy resolution.
+
+### Impact
+
+No numeric confidence implemented; model version stays normalization-v0.6; confidence stays None; backtest_safe stays False. pytest 373 green. Files: `wgi_diagnostic_ingestion.py` (connection_invalidated propagation), `test_wgi_diagnostic_ingestion.py` (+1 regression), `scripts/wgi_confidence_profile.py` (NEW), `.dev/NORMALIZATION.md` (Sprint 5.16 section + decision matrix + verdict), `.dev/DECISIONS.md` (DEC-023), `.dev/HANDOFF.md`, `.dev/PROJECT_STATUS.md`, `.dev/DEVLOG.md`, `.dev/BACKLOG.md`.
+
+## 2026-09-09 — Sprint 5.15.1: Diagnostic ingestion failure-audit hardening
+
+### Goal
+
+Owner-directed, timeboxed brief — fix one auditability gap in the Sprint 5.15 diagnostic ingestion path: a diagnostic series that fails during PERSISTENCE (e.g. source_count = 9.7 rejected by validation, or a DB error) left NO FAILED IngestionRun audit record because the exception propagated to the CLI, which rolled back the entire transaction (including the RUNNING IngestionRun row). The intended invariant: every attempted country × diagnostic series leaves a SUCCESS or FAILED IngestionRun record. No Sprint 5.16, no confidence, no unrelated refactor, no commit/push.
+
+### Root cause
+
+`run_wgi_diagnostic_ingestion` recorded a FAILED IngestionRun on FETCH failure (DataSourceError) but let persistence errors propagate. The CLI's `import_one` caught the exception and called `session.rollback()`, which removed the RUNNING IngestionRun row — no FAILED audit record survived.
+
+### Transaction / savepoint design
+
+Persistence now runs inside a SAVEPOINT via `async with session.begin_nested()`:
+1. The outer IngestionRun row is created + flushed in the outer transaction (unchanged).
+2. Fetch runs (unchanged — DataSourceError → FAILED run, non-raising outcome).
+3. `persist_indicator_diagnostics` runs inside the savepoint.
+4. On an expected failure (`IndicatorDiagnosticPersistenceError` or `DBAPIError`), the savepoint is rolled back automatically by the context manager — only the diagnostic rows are undone; the outer IngestionRun row remains.
+5. The run is marked FAILED (completed_at, error_count=1, structured errors[]), flushed, and returned as a non-raising outcome — the caller commits the FAILED run.
+6. On success, the savepoint is released and the run is marked SUCCESS (unchanged).
+
+Only the project's expected persistence/domain (`IndicatorDiagnosticPersistenceError`) and database (`DBAPIError`) failure classes are caught. `DBAPIError` covers `IntegrityError` / `OperationalError` / `DatabaseError` — all legitimate ingestion-time DB failures. Programmer bugs (anything outside these two classes) propagate. `BaseException` is never caught. The service never commits — caller-owned transaction remains the rule.
+
+### Persistence-failure behavior
+
+- `IndicatorDiagnosticPersistenceError` (non-integer source_count, unknown identity, spec mismatch, non-finite value): savepoint rolled back, FAILED run with the error recorded, non-raising outcome. No retry (the CLI's TransientRetryFetcher retries only transient network/5xx — persistence validation failures are not retried).
+- `DBAPIError` (integrity constraint, operational DB error): savepoint rolled back, FAILED run, non-raising outcome. The session remains usable for the outer transaction.
+
+### Failed-run audit behavior
+
+After the fix, every attempted country × WGI diagnostic series leaves a SUCCESS or FAILED IngestionRun record after the caller commits:
+- FETCH SUCCESS + PERSISTENCE SUCCESS → SUCCESS run (unchanged).
+- FETCH FAILURE → FAILED run, no diagnostic rows (unchanged).
+- PERSISTENCE VALIDATION FAILURE → FAILED run, no diagnostic rows (NEW).
+- PERSISTENCE DB FAILURE → FAILED run where safely possible, no partial diagnostic rows (NEW).
+
+A failed series never rolls back a previously successful series — the CLI's per-series transaction/session isolation is unchanged.
+
+### Tests added/updated
+
+- `test_noninteger_source_count_rejected_through_full_path` (UPDATED): was `pytest.raises(IndicatorDiagnosticPersistenceError)` + rollback; now asserts the non-raising FAILED outcome — outcome.error != None, run.status == failed, error_count == 1, errors[0].type == "IndicatorDiagnosticPersistenceError", no IndicatorDiagnostic row, no Observation/SourceSeries rows, exactly one FAILED IngestionRun persists after caller commit, run metadata preserved (data_kind / country / base indicator / diagnostic kind / provider series / provider source), no rounding to 10.
+- `test_db_failure_during_persistence_leaves_failed_run_and_clean_session` (NEW): injects a `DBAPIError` during persistence via monkeypatch; verifies diagnostic writes are rolled back (savepoint), FAILED IngestionRun persists after caller commit, a subsequent series succeeds in a fresh session (no transaction contamination), both runs persist (one failed, one success).
+
+### Results
+
+- pytest **372 passed, 0 failed** (371 baseline + 1 new), all offline. WGI level/relative/momentum, DSR level, credit-gap level all verified unchanged; confidence None on every signal; model version stays **normalization-v0.6**.
+
+### Not done (deliberately)
+
+- No confidence formula, no Sprint 5.16, no model-version bump, no migration, no DEC change, no frontend, no commit/push.
+
+## 2026-09-09 — Sprint 5.15: WGI diagnostic live ingestion
+
+### Goal
+
+Owner-directed, timeboxed brief — implement ONLY the LIVE WORLD BANK FETCH + INGESTION PATH for the 9 owner-approved WGI diagnostic series (RULE_OF_LAW / CONTROL_OF_CORRUPTION / POLITICAL_STABILITY_WGI_SCORE × ci_lower_bound / ci_upper_bound / source_count, provider series `GOV_WGI_{RL,CC,PV}.SC_LB/.SC_UB/.SR`, dedicated WGI source id 3), then import all tracked_8 history and verify the live DB. Do NOT implement confidence. No NormalizedSignal change, no model-version bump (stays normalization-v0.6), no public API, no frontend, no DEC-023.
+
+### Completed
+
+- **Read-only live probe (temporary script, deleted after the run)**: confirmed the API mechanism — the dedicated WGI source is requested via `?source=3` on the plain `/v2/country/{ISO3}/indicator/{series}` endpoint; the response metadata array's first element exposes `"sourceid"` (usable for provider-identity validation); each record carries `indicator.id` and `countryiso3code`; the `/v2/source/3/...` path form returns 404; without the source param the API auto-resolves these series to source 3 anyway (control probe). The fetch path therefore sends `source=3` explicitly AND validates every response.
+- **Dedicated fetch path** `app/data_sources/world_bank_wgi_diagnostics.py`: `WorldBankWgiDiagnosticFetcher.fetch_wgi_diagnostic(country_iso3, spec, start_year, end_year) -> list[IndicatorDiagnosticDTO]` — reuses the WB adapter's transport conventions (httpx, the cadata SSL workaround, timeout) but NEVER the observation path: no ObservationDTO, no SourceSeries, no persist_observations. Provider identity validated on every response: `metadata[0].sourceid` == spec.provider_source_code (else SeriesMappingError — served from the wrong source, never silently adapted), record `indicator.id` == spec.provider_series_code, record `countryiso3code` == requested country. DTO semantics: period_start = YYYY-01-01 (annual, matching the score convention), raw_payload preserved per record, null values/records skipped (never 0), non-finite/bad numerics → DataSourceParseError.
+- **Ingestion service** `app/services/wgi_diagnostic_ingestion.py`: `run_wgi_diagnostic_ingestion` — resolves the DataSource by fetcher.source_key, creates an IngestionRun with run_metadata data_kind="indicator_diagnostic" + base_indicator_code / diagnostic_kind / provider_series_code / provider_source_code / start_year / end_year (auxiliary imports are visible in the run log without any model change), persists ONLY via `persist_indicator_diagnostics` (vintage 1 / skip identical / vintage N+1 on change / old vintages retained / caller-owned transaction), and records fetch failures as FAILED runs (committed by the CLI) with errors[] — never a silent skip.
+- **Batch CLI** `scripts/ingest_wgi_diagnostics.py`: --country/--all-countries, --indicator/--all-indicators (validated against the 3 WGI base indicators), --kind ci_lower_bound|ci_upper_bound|source_count/--all-kinds, --start/--end; full command `--all-countries --all-indicators --all-kinds --start 1996 --end 2025`. Deliberately separate from `ingest_world_bank.py` (these series are NOT in --all-mapped; that CLI imports canonical observations, this one never touches the observation persistence path). TransientRetryFetcher: retries network/statusless and 5xx up to 3 attempts (2s/4s backoff); 4xx, DataSourceParseError, and SeriesMappingError raise immediately. Per-series failure isolation: each country × series runs in its own transaction; failed runs are committed as failed IngestionRun records; a failed series never rolls back successful ones; end-of-batch totals + exit 1 on any failure.
+- **31 offline tests** `tests/test_wgi_diagnostic_ingestion.py`: the 9-spec registry, fetch URL/params (source=3, date span), metadata sourceid + record identity rejection, null/non-finite handling, raw_payload preservation, DTO-type isolation, structural source-separation asserts (the three modules' sources contain no observation-path/series-table literals), persistence vintages (insert v1 / exact reimport skip / changed value → immutable vintage 2 with the old row retained), non-integer SR rejected through the full path, all retry semantics, IngestionRun diagnostic metadata, failed-run recording, per-series failure isolation, exact-period lookup + no-fallback (2023 → 2023's own diagnostics, 2025 → all None), country isolation, catalog/coverage/normalization isolation (Observation/SourceSeries/Indicator 25/force coverage/WGI-DSR-credit-gap outputs unchanged, confidence None, backtest_safe False), model version v0.6. httpx MockTransport only — no external HTTP in pytest.
+- **Live import + read-only validation** (dev Postgres): 72/72 series SUCCESS — **1872 rows = exactly the expected 8 countries × 3 indicators × 3 kinds × 26 score years** (1996–2024, biennial gaps 1997/1999/2001 only; no 2025), all vintage 1, 0 duplicate identities; 624 per kind, 624 per WGI indicator, 234 per country. Validation: LB ≤ score ≤ UB for all 624/624 latest-vintage score points (0 violations); SR all finite/integer/non-negative (observed 4–16, descriptive — not encoded as thresholds); perfect one-to-one score-year alignment (0 problems, no borrowed periods, no synthesized diagnostics); canonical isolation — Indicator 25 / SourceSeries 19 / Observation 5647 unchanged; 75 diagnostic IngestionRuns all success (72 + 3 idempotent re-runs).
+- **Idempotency + revision behavior verified**: exact re-run (CHE RL, all 3 kinds, 1996–2025) → 78 received / 0 inserted / 78 skipped / 0 revised; offline revision test (mocked LB 80 → 81) → second immutable vintage, old value retained, never an update.
+- **Exact-period lookup smoke** (CHE RULE_OF_LAW @2025-Q2 → score aligns to source year 2024): score 87.3184, LB 82.0371, UB 92.5997, CI width 10.5626 (DISPLAY/DIAGNOSTIC ONLY — never attached to NormalizedSignal, never converted to confidence), SR 10; 2025 lookup → all None (no latest-available fallback, no year borrowing). As-of safety holds: the score's source year = the diagnostics' source year (same-country/same-dimension/same-period rule); backtest_safe stays False (release dates not stored).
+- **Docs**: DATA_SOURCES.md (WGI diagnostics "verified but not imported" → "imported into indicator_diagnostics" with row counts, year coverage, idempotency, provider source identity, no-canonical-pollution; + diagnostic CLI line; Last tested 2026-09-09), NORMALIZATION.md (+Sprint 5.15 implementation-status section; §17 item 9 RESOLVED — item 6 confidence composition remains open; §10.2 measurement_uncertainty row), PROJECT_STATUS.md (Part-0 doc drift: living pytest count 318 → 371; phase clause; progress; Working bullet; Not-built WGI bullet → "NOW IMPORTED, confidence composition open"; Current/Next milestone; Last successful test), HANDOFF.md, DEVLOG.md (this entry), BACKLOG.md. No DEC-023 — ordinary ingestion mechanics under DEC-022.
+
+### Results
+
+- pytest **371 passed, 0 failed** (340 baseline + 31 new), all offline (`cd apps/api && uv run --no-sync pytest`). WGI level/relative/momentum, DSR level, credit-gap level all verified unchanged; confidence None on every signal; model version stays **normalization-v0.6**.
+- Live dev DB after import: 5647 observations / 25 indicators / 19 source_series UNCHANGED + 1872 indicator_diagnostics rows (all vintage 1); IngestionRuns 311 success / 16 failed (the 16 are all historical; all 75 Sprint 5.15 diagnostic runs succeeded).
+
+### Not done (deliberately)
+
+- NO confidence 0..1, NO CI-width/SR → confidence curve, NO IndicatorConfidenceDiagnostics on NormalizedSignal, NO force confidence/aggregation/weights, NO source-quality numeric constants, NO confidence floor, NO Gini/productivity normalization, NO DSR/credit-gap momentum, NO non-WGI relative, NO phase, NO forecast, NO persistence of normalized signals, NO public diagnostics API, NO frontend diagnostics UI. The imported LB/UB/SR rows are confidence INPUT DATA only.
+
+### Next
+
+- Sprint 5.16 — owner to choose: (a) confidence numeric composition for the WGI ×3 (§17 item 6 — the input data now exists; requires normalization-v0.7; the 0/100 bound-clipping and CI-width/SR double-counting cautions apply), (b) Gini calibration universe, (c) productivity expanded calibration universe, (d) data-side work (education Option C / DEC-007, IMF WEO / DEC-008, WID wealth shares). NOT queued: DSR/credit-gap momentum, non-WGI relative.
+
+## 2026-09-09 — Sprint 5.14: Indicator diagnostics storage + immutable persistence foundation (DEC-022 implementation)
+
+### Goal
+
+Owner-directed, timeboxed brief — implement ONLY the storage/persistence/lookup foundation for auxiliary indicator diagnostics (the accepted DEC-022 recommendation): model + migration, typed diagnostic identity/DTO, immutable idempotent + revision-aware persistence, safe latest-vintage exact-period lookup, and the WGI diagnostic spec registry. NO live WGI fetch, NO confidence formula, NO NormalizedSignal change, NO public API, NO frontend; model version stays normalization-v0.6.
+
+### Completed
+
+- **Model + migration**: `app/models/indicator_diagnostic.py` — `IndicatorDiagnosticKind` (exactly ci_lower_bound / ci_upper_bound / source_count; str-Enum, DB-portable String(30); NO SE) + `IndicatorDiagnostic` (country_id, indicator_id = the BASE canonical indicator, data_source_id, diagnostic_kind, provider_source_code, provider_series_code, period_start, raw value, retrieved_at, vintage_number, raw_payload, created_at; NO source_series_id, no updated_at — rows are immutable). DB-unique identity `uq_indicator_diagnostics_identity` (country, indicator, source, provider source, provider series, kind, period, vintage) + composite lookup index (country, indicator, kind, period). Alembic `e3a7c94b1d51` (down_revision 38fff2cf97c9) — APPLIED to the dev DB; observations 5647 / indicators 25 / source_series 19 verified IDENTICAL before and after; indicator_diagnostics exists with 0 rows (nothing seeded).
+- **WGI diagnostic spec registry**: `app/data_sources/wgi_diagnostic_specs.py` — 9 frozen `WgiDiagnosticSpec`s (RULE_OF_LAW / CONTROL_OF_CORRUPTION / POLITICAL_STABILITY_WGI_SCORE × the 3 kinds) with the Sprint-5.13-verified series codes `GOV_WGI_{RL,CC,PV}.SC_LB/.SC_UB/.SR`, source_key world_bank, provider_source_code "3" (the dedicated WGI source, distinct from the WDI source 2 of the score series); `validate_wgi_diagnostic_specs()` enforces 9 specs / no duplicate identities / exactly one series per (indicator, kind) / explicit provider source. Provider-diagnostic metadata ONLY — seeds no indicators, no SourceSeries, no observations.
+- **Persistence**: `app/services/indicator_diagnostic_service.py` — `IndicatorDiagnosticDTO` (deliberately NOT an ObservationDTO; base_indicator_code carries the base identity) + `persist_indicator_diagnostics(session, dtos, specs)`: resolves country / base indicator / DataSource (unknown → raise), REJECTS any DTO without a matching expected spec or with a mismatched provider identity (source key, provider source code, or provider series code), validates finite values and integer-valued non-negative source_count (9.7 → raise, NEVER rounded), compares against the latest vintage for the FULL identity, skips identical values / inserts vintage N+1 on change / never overwrites, old vintages retained, no IndicatorRevision rows (the vintages are the history), caller-owned transaction (add/flush only), returns received/inserted/skipped/revised.
+- **Exact-period lookup**: `get_indicator_diagnostics_for_period(session, country_iso3, base_indicator_code, period_start, expected_specs)` → latest-vintage values by kind at the EXACT source period — no prior-year fallback, no future-year borrowing, no today's-latest; country-scoped at every layer (ISSUE-004 class); expected provider-series identity enforced (a single unexpected series → None for the expected spec — never a silent substitution; multiple provider identities claiming one logical diagnostic → IndicatorDiagnosticAmbiguityError, never row-order resolution); missing → None (missing ≠ perfect ≠ zero; the base Observation stays fully usable).
+- **Isolation regressions (22 new tests, `tests/test_indicator_diagnostics.py`)**: table/migration shape (no series FK, unique identity, lookup index), exactly 3 kinds, insert→vintage 1 / identical→skip / changed→vintage 2 with the old row retained, DB unique constraint blocks duplicate same-vintage inserts, USA/CHE isolation at same indicator+kind+series+period, latest-vintage selection, exact-period hit / no-prior-year-fallback / no-future-borrowing, ambiguity raise, missing→None + base score stays usable, source_count integer validation, nonfinite rejection, unknown/mismatched identity rejection, no Observation rows / observation count / SourceSeries count / Indicator count (25) unchanged, /api/indicators + /api/countries JSON unchanged, force-coverage signature unchanged, WGI/DSR/credit-gap normalization outputs + confidence None + normalization-v0.6 unchanged, no force/weight/confidence fields on the diagnostic model or NormalizedSignal.
+- **Methodology note (NORMALIZATION.md)**: raw CI width (SC_UB − SC_LB) is not an unbiased precision measure everywhere — published WGI score bounds clip at the 0/100 boundaries (UB clamps at 100); CI width and source count may carry overlapping information — future confidence composition must test for double-counting. Storage keeps the RAW provider values only; no correction or transformation.
+
+### Results
+
+- pytest **340 passed** (318 baseline + 22 new), all offline; WGI level/momentum/relative, DSR own-history level, and credit-gap one-sided level outputs all re-verified unchanged; confidence remains None on every signal; model version stays **normalization-v0.6**.
+- Migration verified on the live dev DB (PostgreSQL 18): alembic current 38fff2cf97c9 → e3a7c94b1d51; observations 5647 / indicators 25 / source_series 19 identical before and after; indicator_diagnostics = 0 rows.
+
+### Not done (deliberately)
+
+- Live WB fetch of GOV_WGI_{RL,CC,PV}.SC_LB/.SC_UB/.SR (Sprint 5.15 candidate) — nothing ingested.
+- No confidence formula / no indicator confidence / no CI-width calculation on NormalizedSignal / no force confidence or aggregation / no public diagnostics API / no persistence of normalized signals / no frontend.
+
+### Next
+
+- Sprint 5.15 — owner to choose: the WGI uncertainty live-ingestion sprint (primary candidate), Gini calibration universe, productivity expanded calibration universe, or data-side work (education Option C / IMF WEO / WID wealth shares).
+
 ## 2026-09-09 — Sprint 5.13: Confidence layering + WGI uncertainty representation audit (DEC-022)
 
 ### Goal

@@ -150,6 +150,7 @@ async def test_indebtedness_mapping_known(client):
     assert set(force.live_indicator_codes) == {
         "CREDIT_TO_GDP_GAP",
         "DEBT_SERVICE_RATIO",
+        "GOVERNMENT_DEBT_GDP",
     }
 
 
@@ -162,7 +163,9 @@ async def test_che_coverage_full(client):
 
     assert coverage["productivity_output_growth"].status == "available"
     assert coverage["cost_competitiveness"].status == "available"
-    assert coverage["indebtedness"].status == "available"
+    # Indebtedness: 2 of 3 live inputs have data (GOVERNMENT_DEBT_GDP has no
+    # observation in this fixture) → partial, not available.
+    assert coverage["indebtedness"].status == "partial"
 
     live = {
         i.indicator_code: i
@@ -195,12 +198,15 @@ async def test_catalog_only_indicator_does_not_count_as_live(client):
     coverage = await _coverage("CHE")
 
     education = coverage["education"]
+    # Education now has TERTIARY_ATTAINMENT_25_34 as a live input (Sprint 5.20)
+    # but with no observations persisted → defined_not_sourced.
+    # PARTIAL ceiling (one tertiary series cannot make Education AVAILABLE).
     assert education.status == "defined_not_sourced"
-    assert education.live_inputs == []
-    candidate = education.candidate_inputs[0]
-    assert candidate.indicator_code == "TERTIARY_ENROLLMENT"
-    assert not candidate.has_data
-    assert not candidate.has_source_series
+    live_codes = {i.indicator_code for i in education.live_inputs}
+    assert "TERTIARY_ATTAINMENT_25_34" in live_codes
+    # TERTIARY_ENROLLMENT is now a candidate (not live)
+    candidate_codes = {i.indicator_code for i in education.candidate_inputs}
+    assert "TERTIARY_ENROLLMENT" in candidate_codes
 
 
 async def test_completely_missing_force_stays_missing(client):
@@ -228,7 +234,7 @@ async def test_api_returns_all_17_forces(client):
     by_code = {f["code"]: f for f in data["forces"]}
     assert by_code["productivity_output_growth"]["status"] == "available"
     assert by_code["cost_competitiveness"]["status"] == "available"
-    assert by_code["indebtedness"]["status"] == "available"
+    assert by_code["indebtedness"]["status"] == "partial"
     assert by_code["education"]["status"] == "defined_not_sourced"
     assert by_code["trade_capital_flows"]["status"] == "defined_not_sourced"
     assert by_code["military_strength"]["status"] == "defined_not_sourced"  # M5.4 promotion, no data in this fixture

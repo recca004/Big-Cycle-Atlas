@@ -4,6 +4,8 @@ EXPECTED_SOURCE_KEYS = {
     "world_bank",
     "bis",
     "oecd",
+    "imf",
+    "wid",
     "fred",
     "eurostat",
     "ecb",
@@ -18,7 +20,7 @@ async def test_list_sources(client):
     assert response.status_code == 200
     body = response.json()
     assert isinstance(body, list)
-    assert len(body) == 8
+    assert len(body) == 10
     keys = {source["key"] for source in body}
     assert keys == EXPECTED_SOURCE_KEYS
     for source in body:

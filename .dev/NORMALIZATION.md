@@ -783,6 +783,729 @@ avoid a migration is the exact failure this audit exists to prevent.
 4. Nothing else: no confidence formula, no NormalizedSignal change, no
    model-version bump, no public API.
 
+## Sprint 5.14 implementation status (2026-09-09) — DIAGNOSTICS STORAGE / PERSISTENCE / LOOKUP FOUNDATION
+
+The owner accepted the DEC-022 recommendation. Items 1 and 3 of the spec
+above are implemented, plus the typed representations item 2 needs (the
+LIVE WB FETCH for `GOV_WGI_{dim}.SC_LB/.SC_UB/.SR` is deliberately NOT —
+that is Sprint 5.15). Model version stays **normalization-v0.6**; this
+sprint changed raw auxiliary-data capability only.
+
+Implemented (offline-verified, 340 tests):
+
+1. **`indicator_diagnostics` table** (Alembic `e3a7c94b1d51`, applied to
+   the dev DB; observations/indicators/source_series counts verified
+   unchanged): rows keyed to the BASE canonical indicator + country +
+   DataSource + `diagnostic_kind` (exactly `ci_lower_bound` /
+   `ci_upper_bound` / `source_count` — no SE) + `provider_source_code`
+   (WB dedicated WGI source id "3", distinct from the WDI source id 2 of
+   the score series) + exact `provider_series_code` (e.g.
+   `GOV_WGI_RL.SC_LB`) + `period_start` + raw `value` + `retrieved_at` +
+   `vintage_number` + `raw_payload`. Deliberately NO `source_series_id`
+   and no SourceSeries rows; DB-unique identity
+   `uq_indicator_diagnostics_identity` (country, indicator, source,
+   provider source, provider series, kind, period, vintage) + lookup
+   index (country, indicator, kind, period).
+2. **Immutable persistence** (`persist_indicator_diagnostics` +
+   `IndicatorDiagnosticDTO`, structurally separate from
+   `persist_observations`): insert vintage 1 → skip identical → new
+   vintage N+1 on changed value; old vintages retained, never
+   overwritten; no IndicatorRevision rows (the vintages are the
+   history); caller owns the transaction. Unknown identities (unknown
+   country/indicator, or a DTO whose provider identity does not match
+   the expected spec) are rejected, not stored free-form; `source_count`
+   must be a non-negative integer-valued float (9.7 is rejected, never
+   rounded); all values must be finite.
+3. **WGI diagnostic spec registry** (9 specs = 3 indicators × 3 kinds,
+   series codes verified Sprint 5.13; provider-diagnostic metadata
+   only — seeds nothing): persistence and lookup both tie to the
+   EXPECTED provider-series identity.
+4. **Exact-period lookup** (`get_indicator_diagnostics_for_period`):
+   latest-vintage values by kind at the ALIGNED source period, country-
+   scoped (ISSUE-004 class), exact period match — no prior-year
+   fallback, no future-year borrowing, no today's-latest; missing →
+   None (missing ≠ perfect ≠ zero; the base Observation stays usable);
+   if multiple provider identities claim one logical diagnostic the
+   lookup RAISES, never resolves by row order.
+5. **Catalog/coverage isolation verified**: diagnostics never create
+   Observation/SourceSeries/Indicator rows; `/api/indicators`,
+   per-country `indicator_count` (still 25 canonical indicators), force
+   coverage, WGI/DSR/credit-gap normalization outputs and
+   `confidence = None` are all regression-tested unchanged.
+
+### CI-width boundary caution (methodology note, storage is raw either way)
+
+Future WGI confidence work must NOT assume raw `SC_UB − SC_LB` is an
+unbiased precision measure everywhere: published WGI score bounds clip
+at the 0/100 score boundaries (e.g. UB clamps at 100 — CHE CC 2020),
+so boundary clipping can compress observed CI width near the scale
+ends. CI width and source count may also carry overlapping information
+— future confidence composition must test for double-counting. This
+sprint only stores the RAW provider values; no correction or
+transformation is applied or implied.
+
+## Sprint 5.15 implementation status (2026-09-09) — WGI DIAGNOSTIC LIVE INGESTION
+
+Item 2 of the spec above is implemented and executed against the live
+API: the 9 owner-approved diagnostic series are now IMPORTED into
+`indicator_diagnostics`. Model version stays **normalization-v0.6**;
+`confidence` stays None everywhere; backtest_safe stays False (provider
+RELEASE DATES are still not stored — do not overclaim historical
+knowledge safety).
+
+Implemented and live-verified:
+
+1. **Dedicated source-3 fetch path**
+   (`app/data_sources/world_bank_wgi_diagnostics.py`): requests each
+   diagnostic series with the EXPLICIT `source=3` parameter (dedicated
+   WGI source, distinct from the WDI source 2 of the score series) and
+   VALIDATES the response provider identity — metadata `sourceid`,
+   each record's `indicator.id`, and `countryiso3code` must match the
+   expected spec or the fetch raises (never retried, never silently
+   adapted). Returns `IndicatorDiagnosticDTO`s only — never an
+   observation DTO; nulls skipped; values RAW (no clamping, no
+   rounding); annual `YYYY` → `period_start = YYYY-01-01` matching the
+   WGI score convention.
+2. **Diagnostic ingestion + IngestionRun**
+   (`app/services/wgi_diagnostic_ingestion.py`): one run per
+   country × diagnostic series with `run_metadata.data_kind =
+   "indicator_diagnostic"` + base_indicator_code + diagnostic_kind +
+   provider_series_code + provider_source_code; persists ONLY via
+   `persist_indicator_diagnostics`; caller owns the transaction; fetch
+   failures recorded as failed runs, per-series failure isolation.
+3. **Separate batch CLI** (`scripts/ingest_wgi_diagnostics.py`):
+   --country/--all-countries, --indicator/--all-indicators,
+   --kind/--all-kinds, --start/--end; transient-only retry (network/5xx
+   up to 3 attempts; 4xx/parse/spec-identity never); deliberately NOT
+   part of `ingest_world_bank.py --all-mapped`.
+4. **Live import verified (read-only post-validation)**: 1872 rows =
+   exactly the expected 8 × 3 × 3 × 26 (624 per kind, 624 per WGI
+   indicator, 234 per country; 1996–2024 with the biennial gaps only),
+   all vintage 1, 0 duplicate identity groups; **LB ≤ score ≤ UB for
+   all 624/624 latest-vintage score points**; SR all finite/integer/
+   non-negative (observed range 4–16, descriptive); perfect one-to-one
+   score-year alignment; canonical isolation — Indicator 25 /
+   SourceSeries 19 / Observation 5647 unchanged. Idempotent re-run:
+   CHE RL all kinds → 0 inserted / 78 skipped / 0 revised. Exact-period
+   lookup smoke: CHE Rule of Law @2025-Q2 → aligned 2024 score 87.32
+   with 2024 LB 82.04 / UB 92.60 / SR 10 (CI width 10.56 displayed for
+   inspection ONLY — not attached to any signal); a 2025 lookup returns
+   None (no future/latest-available fallback).
+
+NOT done (deliberately): no confidence formula, no CI-width or SR curve,
+no NormalizedSignal diagnostics field, no force confidence, no public
+diagnostics API, no frontend. The imported data is confidence INPUT
+DATA only; the Sprint 5.14 boundary caution above applies to every
+future use.
+
+## Sprint 5.16 methodology status (2026-09-09) — WGI CONFIDENCE CALIBRATION AUDIT + DIAGNOSTIC HARDENING
+
+A METHODOLOGY / EMPIRICAL RESEARCH sprint. NO numeric confidence was
+implemented; NO NormalizedSignal output changed; the model version stays
+**normalization-v0.6**; `confidence` stays None everywhere; `backtest_safe`
+stays False. The profile is DESCRIPTIVE / READ-ONLY — it is not proof that
+any empirical distribution is economic truth.
+
+Two outputs:
+
+1. **Transaction hardening** — `wgi_diagnostic_ingestion.py` now
+   distinguishes recoverable `DBAPIError` (savepoint rolled back, FAILED
+   `IngestionRun` retained, non-raising outcome) from
+   `DBAPIError.connection_invalidated = True` (the DB connection is dead;
+   the outer transaction CANNOT persist a FAILED audit row — the error
+   PROPAGATES so the caller can rollback/close/retry; no false audit-record
+   promise is made). Focused regression coverage for both cases.
+2. **WGI confidence calibration audit** — a read-only empirical profile
+   (`apps/api/scripts/wgi_confidence_profile.py`) of the 624 aligned
+   score/diagnostic rows, plus this decision matrix and verdict.
+
+### Empirical profile (624 rows = 8 countries x 3 WGI dimensions x 26 score years)
+
+Dataset integrity (Part 2): exactly 624 rows; 208 per dimension; 78 per
+country; 24 per year (8 x 3); 0 missing LB/UB/SR; 0 duplicate identities;
+0 LB>score violations; 0 score>UB violations. The dataset is clean and
+exactly the expected size.
+
+CI width (Part 3): pooled median 11.54 (min 7.65, max 17.04). By
+dimension: RL median 9.23 (narrowest), CC median 11.54, PV median 13.88
+(widest). By country: CHE median 13.10 (widest), IND median 10.58
+(narrowest). The CI is symmetric around the score for unclipped rows
+(median margin asymmetry ~0).
+
+Boundary clipping (Part 4): 9/624 (1.4%) upper-clipped (UB >= 100); 0
+lower-clipped. All 9 are CHE (7 CC + 2 PV). Clipping is rare and
+concentrated in one country. The margin asymmetry for upper-clipped rows
+is small (median 0.70) — the CI is nearly symmetric even when clipped.
+Raw CI width is NOT an unbiased precision measure at the upper boundary,
+but the distortion is small and localized.
+
+Score vs width (Part 5): pooled Pearson 0.080, Spearman 0.052 —
+essentially no correlation between score level and CI width. A
+width-based confidence would NOT systematically penalize high or low
+governance scores. Per-dimension correlations are weak (0.21-0.39).
+Unclipped rows: 0.07/0.04 — no correlation. CI width is NOT a proxy for
+score level.
+
+Source count (Part 6): pooled median 9 (min 4, max 16). By dimension: RL
+median 12 (most sources), CC median 10, PV median 8.5 (fewest). By
+country: IND median 11.5 (most), CHE median 8 (fewest). Temporal trend:
+Pearson 0.543, Spearman 0.554 — SR increases over time (median 6 in 1996
+to 10.5 in 2024). SR is NOT stationary; a confidence based on SR would
+partly encode "newer = more sources" rather than purely measurement
+quality.
+
+CI width vs SR overlap (Part 7): pooled Pearson -0.829, Spearman -0.797
+— STRONG negative correlation. More sources -> narrower CI. Per
+dimension: RL -0.85/-0.87, CC -0.87/-0.92, PV -0.96/-0.97. The median CI
+width by integer SR is monotonically decreasing (SR=4 -> 17.04, SR=16 ->
+7.79). **SR and CI width are highly informationally redundant — they
+carry largely the same measurement-uncertainty signal. Combining both
+in a confidence formula would double-count the same information.**
+
+Dimension differences (Part 8): RL has the narrowest CI (median 9.23) and
+most sources (median 12); PV has the widest CI (median 13.88) and fewest
+sources (median 8.5); CC is in between. The dimensions differ
+systematically. A single pooled calibration would systematically assign
+PV lower confidence than RL — whether this is correct depends on whether
+the dimension differences reflect genuine measurement quality
+differences or the inherent difficulty of measuring political stability
+vs rule of law. The profile cannot distinguish these.
+
+Country differences (Part 9): CHE stands out (widest CI median 13.10,
+fewest sources median 8, all 9 clipped rows). IND has the most sources
+(median 11.5). Country differences exist but are less pronounced than
+dimension differences. A pooled calibration would give CHE
+systematically lower confidence — whether this reflects CHE's genuinely
+wider measurement uncertainty or a country-specific measurement-system
+artifact cannot be determined from the data alone.
+
+Time trends (Part 10): SR increases over time (Pearson 0.543 vs year);
+CI width decreases over time (implied by the strong SR-width negative
+correlation). Any empirical calibration (percentile-based) faces a
+leakage / drift tradeoff: full-history calibration leaks future
+distribution information; expanding-window calibration is as-of safe but
+makes confidence drift over time as measurement systems improve. A fixed
+mapping avoids leakage but is arbitrary without an external calibration
+basis.
+
+### Calibration option matrix (Part 10)
+
+| Option | Meaning | As-of safe? | Leakage | Arbitrary? | Defensible now? |
+|---|---|---|---|---|---|
+| A. Fixed provider-scale mapping | A fixed function from raw CI width (or SR) to a confidence component | Yes (same for all snapshots) | None | Yes — no empirical grounding for the mapping shape | NO — arbitrary without external calibration |
+| B. Expanding own-history percentile | Country's own expanding CI-width history -> percentile | Yes (expanding only) | None | Moderate — early years tiny n; drifts as measurement improves | PARTIALLY — as-of safe but unstable early + drifts |
+| C. Expanding cross-country percentile | All countries' expanding CI-width history for one dimension -> percentile | Yes (expanding only) | None | Moderate — pools countries with different measurement systems | PARTIALLY — as-of safe but encodes development status |
+| D. Full-history percentile | Percentile using ALL history (including future) | NO | YES — future data | Low | NO — leaks future data |
+| E. tracked_8 cross-sectional percentile | Current CI width ranked within tracked_8 at the same snapshot | Yes (same snapshot) | None | High — n=8 is a weak distribution; not global measurement quality | NO — tracked_8 is not a measurement-quality reference |
+| F. Diagnostics-only / no scalar | Keep LB/UB/SR as diagnostic provenance; do not collapse to a scalar | N/A | None | None | YES — preserves all information; defers the arbitrary choice |
+
+### Freshness composition (Part 11)
+
+The composition with freshness (multiplication, weighted arithmetic mean,
+weighted geometric mean, minimum/bottleneck, or separate diagnostics
+without scalar composition) is UNRESOLVED. Each option has distinct
+semantics:
+
+- Multiplication: a single bad component tanks the whole (semantically
+  correct for "AND" trust but harsh).
+- Weighted arithmetic mean: a bad component only partially reduces
+  confidence (may overstate trust).
+- Weighted geometric mean: balances (a zero in one component zeroes the
+  product; less harsh than pure multiplication on partial degradation).
+- Minimum/bottleneck: the weakest link dominates (conservative; may be
+  too harsh).
+- Separate diagnostics without scalar composition: preserves all
+  information; defers the aggregation decision.
+
+No composition rule has an evidence basis. The permanent rules
+(confidence != freshness, confidence != strength, missing != perfect !=
+zero) constrain the choice but do not resolve it.
+
+### Source quality (Part 12)
+
+WGI is a perception_composite (aggregated expert assessments + survey
+data), NOT an official_primary source. Source quality should remain
+PROVENANCE ONLY for now — typed as an ordinal enum later
+(official_primary / official_republished / proxy_measure /
+perception_composite), NOT a numeric constant. No "World Bank = 0.95" or
+"WGI = 0.85" is approved or defensible.
+
+### Method sufficiency / scalar vs dimension-specific (Part 13)
+
+A single scalar confidence for the entire NormalizedSignal would HIDE
+the distinction between "level is well measured but momentum is
+unavailable" and "level is poorly measured." The recommendation is that
+confidence should eventually be PER-DIMENSION (level_confidence,
+relative_confidence, momentum_confidence), not one scalar. This is a
+methodology recommendation only — no schema change is implemented this
+sprint.
+
+### Verdict: DEFER_NUMERIC_CONFIDENCE
+
+**Atlas cannot yet define a defensible numeric indicator confidence for
+the WGI x3.** The deferral is a durable methodology decision, not a
+postponement of an obvious answer. The reasons:
+
+1. **CI width and SR are highly redundant** (Pearson -0.83). Combining
+   both double-counts the same measurement-uncertainty signal; using
+   only one discards the other. No evidence basis exists to choose one
+   as the sole input or to weight them in a joint formula.
+2. **Dimension differences are substantial and unexplained.** RL, CC,
+   and PV have systematically different CI widths and SR distributions.
+   A pooled calibration would systematically favor RL over PV; a
+   per-dimension calibration would need a per-dimension evidence basis
+   that does not exist. The profile cannot distinguish genuine
+   measurement-quality differences from inherent concept difficulty.
+3. **Temporal trends make empirical calibration leaky or drifting.**
+   Full-history calibration leaks future distribution information;
+   expanding-window calibration is as-of safe but makes confidence drift
+   as measurement systems improve. A fixed mapping avoids leakage but
+   is arbitrary without an external calibration basis.
+4. **No external calibration basis exists** for mapping raw CI width
+   (or SR) to a 0-1 confidence value. Any mapping (linear, percentile,
+   rank) would be an arbitrary choice without evidence — the exact
+   failure mode this project's methodology forbids.
+5. **Freshness composition is unresolved.** No composition rule
+   (multiplication, weighted mean, geometric mean, minimum, separate
+   diagnostics) has an evidence basis.
+6. **A single scalar confidence would hide dimension-specific trust.**
+   The eventual confidence architecture should be per-dimension, not
+   one scalar — but that schema decision is not this sprint's work.
+
+**What additional evidence / data / methodology is required before
+numeric confidence can be defensibly implemented:**
+
+- An external calibration basis for mapping raw CI width (or SR) to a
+  0-1 confidence value (e.g. WB/WGI methodology documentation on the
+  relationship between CI width and estimate reliability; or a
+  peer-reviewed calibration study).
+- A decision on whether confidence is pooled across WGI dimensions or
+  per-dimension — and if per-dimension, a per-dimension evidence basis.
+- A decision on the calibration window (fixed mapping vs expanding
+  own-history vs expanding cross-country) — and if empirical, an
+  as-of-safe expanding-window design that does not drift.
+- A decision on the freshness composition rule (multiplication, weighted
+  mean, geometric mean, minimum, or separate diagnostics) with an
+  evidence basis.
+- A decision on whether confidence is one scalar or per-dimension
+  (level_confidence / relative_confidence / momentum_confidence).
+- Resolution of the CI-width / SR redundancy: which is the primary
+  measurement-uncertainty input, and how (if at all) the other
+  contributes without double-counting.
+
+Until these are resolved, the diagnostics remain INPUT DATA only; the
+Sprint 5.14 boundary caution (raw CI width is not unbiased at the 0/100
+boundaries) and the Sprint 5.13 permanent rules (confidence != strength,
+confidence != freshness, missing != perfect != zero, no arbitrary
+provider-quality constants) apply to every future use.
+
+## Sprint 5.17 methodology status (2026-09-09) — GINI CALIBRATION UNIVERSE + COMPARABILITY AUDIT
+
+A METHODOLOGY / EMPIRICAL RESEARCH sprint. NO Gini level_score was
+implemented; NO NormalizedSignal output changed; the model version stays
+**normalization-v0.6**; `confidence` stays None everywhere; `backtest_safe`
+stays False; the Wealth / opportunity / values gaps force stays PARTIAL
+(DEC-009). The profile is DESCRIPTIVE / READ-ONLY — it is not proof that any
+empirical distribution is economic truth.
+
+Two outputs:
+
+1. **Provider semantics + comparability audit** — verified what
+   `SI.POV.GINI` represents (World Bank Poverty and Inequality Platform;
+   0–100 scale; higher = more inequality; mixes income-based and
+   consumption-based surveys; the WB API does NOT expose a per-observation
+   welfare-concept tag).
+2. **Calibration universe audit** — a read-only empirical profile
+   (`apps/api/scripts/gini_calibration_profile.py`) of both the tracked_8
+   imported data (187 obs) and the broader WB global Gini universe (2430
+   country-year observations, 171 countries, 1963–2025), plus this decision
+   matrix and verdict.
+
+### Part 1 — Provider semantics (verified)
+
+`SI.POV.GINI` (World Bank, Poverty and Inequality Platform / PIP):
+- Scale: 0–100, where 0 = perfect equality, 100 = perfect inequality.
+- Higher = more inequality. Direction CONFIRMED (DEC-018: MONOTONIC_NEGATIVE).
+- Welfare concept: **mixes income-based and consumption-based surveys**.
+  High-income economies (USA, CHE, DEU, FRA, GBR, JPN) use income-based
+  surveys (LIS Database / EU-SILC; after-tax income). Most low- and
+  middle-income countries (including CHN, IND) use consumption-based
+  surveys.
+- **The WB API does NOT expose a per-observation welfare-concept tag.**
+  The PIP methodology handbook documents that comparability breaks exist
+  (questionnaire changes, welfare-aggregate changes) and provides a binary
+  within-country comparability indicator — but NOT a cross-country
+  welfare-concept classification exposed via the WDI API.
+- PIP explicitly cautions: "Changes in questionnaire design imply that
+  poverty estimates within countries become incomparable." OWID states:
+  "consumption tends to be more evenly distributed than income" — so a
+  consumption-based Gini is systematically LOWER than an income-based Gini
+  for the same true inequality.
+- Survey definitions can vary through time; national vs harmonized
+  definitions exist (PIP harmonizes where possible but country-specific
+  decisions remain).
+
+### Part 2 — Tracked_8 Gini coverage (live DB, latest vintage)
+
+| Country | n | first | latest | min | median | max | latest val | welfare concept (hint) |
+|---|---|---|---|---|---|---|---|---|
+| USA | 35 | 1990 | 2024 | 38.0 | 40.8 | 41.9 | 41.8 | income (LIS) |
+| CHE | 21 | 1992 | 2022 | 31.6 | 33.0 | 34.3 | 33.8 | income (LIS) |
+| CHN | 20 | 1990 | 2022 | 32.2 | 38.65 | 43.7 | 36.0 | consumption (grouped data) |
+| DEU | 32 | 1991 | 2022 | 28.1 | 30.4 | 33.7 | 33.7 | income (LIS) |
+| FRA | 29 | 1990 | 2023 | 29.7 | 32.0 | 33.7 | 31.8 | income (EU-SILC/LIS) |
+| GBR | 32 | 1990 | 2021 | 32.4 | 35.0 | 38.9 | 32.4 | income (LIS) |
+| JPN | 13 | 2008 | 2020 | 30.7 | 32.3 | 34.6 | 32.3 | income (LIS) |
+| IND | 5 | 1993 | 2022 | 25.5 | 27.7 | 28.8 | 25.5 | consumption (South Asia) |
+
+Pooled tracked_8: n=187, min=25.5, p10=29.9, p25=31.65, median=33.1,
+p75=38.35, p90=41.1, max=43.7.
+
+**Welfare-concept hint is from official PIP documentation, NOT from the
+WB API.** The WB API does not expose a per-observation welfare-concept
+field. The hint is a methodology-level classification, not a per-row
+metadata column that could drive a defensible automated adjustment.
+
+The income-vs-consumption difference is visible in the data: IND
+(consumption) median 27.7 is the lowest; USA (income) median 40.8 is the
+highest. A single global curve would systematically score consumption-based
+countries as "more equal" than they really are — conflating a
+measurement-concept difference with a true inequality difference.
+
+### Part 3 — Why `100 - Gini` is not approved
+
+`level_score = 100 - Gini` would imply that a raw Gini of 40 has an
+Atlas-defined absolute economic meaning (level 60). No such meaning has
+been approved. The 0–100 Gini scale is a Lorenz-curve area, not an Atlas
+strength scale. A raw-Gini-to-level mapping requires a calibration
+reference (global empirical distribution, normative threshold, or
+external justification) — none exists. `100 - Gini` is NOT an approved
+mapping (DEC-018) and remains NOT approved.
+
+### Part 4 — Calibration universe options
+
+| Option | Economic meaning | Sample size | Global representativeness | Cross-country comparability | As-of safe? | Future leakage | Sensitivity to coverage | Sensitivity to survey-concept mix | Versioning | Complexity | Defensible now? |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A. tracked_8 pooled history | Low — 8 countries are not a global inequality distribution | 187 obs | NONE — range 25.5–43.7 vs world 20.2–71.1 | Weak (income + consumption mixed) | No (full history) | Yes (encodes future) | High (8 only) | High (CHN/IND consumption) | v0.7 bump | Low | NO — tracked_8 is not a global inequality distribution |
+| B. tracked_8 same-year cross section | Low — n=8 is a weak distribution | 8 per year | NONE | Weak | Yes (same snapshot) | None | Very high (n=8) | High | v0.7 bump | Low | NO — n=8 is too sparse and not global |
+| C. Full WB global history | Moderate — 171 countries is broad | 2430 obs | High | Weak (income + consumption mixed, no per-obs tag) | NO (full history) | YES — leaks future distribution + composition | Moderate | High (unavoidable) | v0.7 bump | Moderate | NO — leaks future data |
+| D. WB global same-year cross section | Moderate | 57–86 per representative year | Moderate (sparse some years) | Weak | Yes (same snapshot) | None | High (sparse years: 2025 n=4) | High | v0.7 bump | Moderate | PARTIALLY — as-of safe but sparse + concept-mixed |
+| E. Expanding global history (as-of) | Moderate | Grows over time | Moderate → High | Weak | Yes (expanding only) | None (if strictly expanding) | Moderate | High | v0.7 bump | High (window logic) | PARTIALLY — as-of safe but drifts as coverage/concept mix changes |
+| F. Welfare-concept-specific global calibration | High — separates income vs consumption | Requires per-obs metadata | High within each group | Strong within group | Depends on window | Depends | Moderate | Resolved by construction | v0.7 bump | Very High | NO — WB API does NOT expose per-observation welfare concept |
+| G. Fixed externally-justified raw-Gini thresholds | Requires external authority | N/A | N/A if authority is global | Depends on authority | Yes | None | None | Depends | v0.7 bump | Low | NO — no authoritative source for specific thresholds |
+| H. CONTEXTUAL_DEFERRED / no scalar | N/A | N/A | N/A | N/A | N/A | None | None | None | None | None | YES — preserves all information; defers the arbitrary choice |
+
+### Part 5 — Global WB Gini universe (read-only live query)
+
+Read-only WB API v2 query (no DB writes, no new connector):
+- 2430 valid country-year observations, 171 countries, 1963–2025.
+- Global pooled: min=20.2, p10=27.5, p25=30.8, median=35.3, p75=42.6,
+  p90=50.8, max=71.1.
+- tracked_8 (25.5–43.7) is a NARROW subset of the world (20.2–71.1).
+  tracked_8 is NOT representative of the global Gini distribution.
+
+Same-year cross-sections (representative years):
+- 2000: n=57, median 36.4 (p10=28.88, p90=53.72)
+- 2010: n=86, median 33.7 (p10=27.75, p90=47.85)
+- 2020: n=70, median 34.35 (p10=26, p90=44.61)
+- 2025: n=4 (too sparse)
+
+### Part 6 — Distribution stability
+
+Median Gini by decade: 1960s 36.7, 1970s 34.0, 1980s 35.4, 1990s 39.0,
+2000s 35.6, 2010s 34.8, 2020s 34.35. The 1990s median (39.0) is notably
+higher than the 2020s (34.35) — but this is largely composition-driven.
+
+Country count by decade: 1960s 2, 1970s 10, 1980s 64, 1990s 120, 2000s 152,
+2010s 160, 2020s 115. **The country composition changes materially by
+decade.** A fixed full-history pooled percentile would encode both future
+information and future composition changes. The distribution is NOT stable
+enough for one fixed curve without an as-of-safe expanding-window design
+that handles composition drift.
+
+### Part 7 — Survey-concept comparability (MAIN METHODOLOGICAL RISK)
+
+The income-vs-consumption difference is the primary blocker:
+
+- High-income economies (USA/CHE/DEU/FRA/GBR/JPN): income-based (LIS /
+  EU-SILC; after-tax income).
+- CHN, IND: consumption-based (PIP groups China under grouped data; India
+  under South Asia consumption surveys).
+- OWID: "consumption tends to be more evenly distributed than income" —
+  consumption Gini is systematically LOWER than income Gini for the same
+  true inequality.
+- This is visible in the tracked_8 data: IND (consumption) median 27.7 vs
+  USA (income) median 40.8.
+- **The WB API does NOT expose a per-observation welfare-concept tag.**
+  No defensible automated adjustment is possible from the data alone.
+- PIP has a within-country comparability database (binary), NOT a
+  cross-country welfare-concept classification exposed via WDI.
+
+Possible outcomes:
+- Provider harmonization is sufficient for one curve: NO — income vs
+  consumption is a systematic level difference, not a noise term.
+- Separate calibration groups are required: MAYBE — but the WB API does
+  not expose the grouping metadata per observation.
+- Metadata is insufficient for defensible adjustment: YES — this is the
+  current state.
+- Global percentile should remain descriptive only: YES — for now.
+
+No fixed adjustment (e.g. "consumption Gini + 5 points") is invented. No
+authoritative source directly supports a specific numeric transformation.
+
+### Part 8 — Level vs relative (kept separate)
+
+A Gini LEVEL score would answer: "How unequal is this country's measured
+distribution on an interpretable absolute/global calibration?" A future
+relative_score could answer: "Where does it rank within a named universe?"
+tracked_8 relative rank is NOT used as the level_score. relative_score is
+NOT implemented this sprint.
+
+### Part 9 — Irregular freshness (preserved)
+
+Gini publication is irregular (IND 5 obs over 29 years; JPN 13 obs over
+12 years; latest year varies 2020–2024 by country). The existing freshness
+policy (DEC-013, exponential decay, irregular class: 2y/4y/8y thresholds)
+remains the one source of truth. A country may have an old but still usable
+Gini observation with freshness_factor < 1. The economic level must NOT
+be multiplied by freshness. Freshness later affects trust/confidence.
+No freshness parameters were modified.
+
+### Part 10 — As-of calibration / future leakage
+
+- FULL-HISTORY pooled percentile: NOT as-of-safe — leaks future
+  distribution and composition.
+- EXPANDING global distribution (all eligible observations known by the
+  snapshot): potentially as-of-safe by observation period, but composition
+  drifts as coverage changes.
+- SAME-YEAR global cross section: as-of-safe but sensitive to sparse
+  reporting (2025 n=4).
+- TRAILING global window: requires a window decision (unresolved).
+- Release dates remain unavailable → backtest_safe stays False even for a
+  period-safe calibration.
+
+### Part 11 — Candidate transformation families
+
+| Family | Required parameters | What Atlas 50 means | Endpoint meaning | Sensitivity to tails | Comparability assumptions | Interpretability | Defensible now? |
+|---|---|---|---|---|---|---|---|
+| 1. Empirical percentile inversion | A calibration distribution | Median of calibration distribution | 0=worst, 100=best in distribution | High (driven by extremes) | Distribution is comparable across countries | Moderate | NO — no defensible calibration distribution |
+| 2. Monotonic piecewise-linear raw-Gini | Thresholds + segment slopes | A raw-Gini normative threshold | Thresholds define endpoints | Moderate | Raw Gini is comparable across countries | High | NO — no authoritative thresholds |
+| 3. Monotonic saturating | Saturation point + slope | Inflection point | Asymptote | Low | Raw Gini is comparable | Moderate | NO — no defensible saturation point |
+| 4. Robust z / MAD | Center + scale | Center + 0 MADs | z-score-based | Low (robust) | Distribution is stable + comparable | Low | NO — distribution not stable |
+| 5. Logistic mapping | Midpoint + slope | Midpoint | Asymptotes | Low | Midpoint is meaningful | Moderate | NO — no defensible midpoint |
+| 6. CONTEXTUAL_DEFERRED | None | N/A | N/A | N/A | N/A | N/A | YES — defers the arbitrary choice |
+
+### Part 12 — Midpoint semantics
+
+What does level_score = 50 mean?
+- Median of a global calibration distribution: the distribution shifts over
+  time (decade medians 34–39) and is composition-dependent — not stable.
+- A raw-Gini normative threshold: no authoritative source for a specific
+  threshold value.
+- Historical median: leaks future information.
+- No approved interpretation: **this is the current state.**
+
+No defensible 50 interpretation exists. Without a defensible midpoint, no
+monotonic curve (logistic, piecewise-linear, saturating) can be calibrated.
+
+### Part 13 — Wealth-gap force ceiling (locked)
+
+The Wealth / opportunity / values gaps force stays PARTIAL (DEC-009) even
+if GINI_INDEX eventually gets a numeric indicator level. Gini measures
+income inequality only; wealth inequality, opportunity gaps, and
+values/polarization remain incomplete. The ceiling acts at the force layer
+only — an indicator level_score never lifts the force ceiling. No
+FORCE_COVERAGE status change.
+
+### Decision matrix — Gini Calibration Audit (Sprint 5.17)
+
+| Issue | Evidence | Risk | Decision | Implementation implication |
+|---|---|---|---|---|
+| Provider definition | SI.POV.GINI = 0–100 Lorenz area; higher = more inequality; PIP mixes income + consumption surveys | Systematic level difference between income-based and consumption-based Gini | Direction confirmed (DEC-018); numeric curve deferred | No level_score until calibration universe is resolved |
+| Income vs consumption comparability | WB API does NOT expose per-observation welfare-concept tag; PIP documents comparability breaks; OWID: consumption more evenly distributed than income | A single global curve conflates measurement-concept difference with true inequality difference | Metadata insufficient for defensible adjustment | Need a welfare-concept metadata source OR a separate-calibration methodology OR an external adjustment authority |
+| Global distribution | 2430 obs, 171 countries, 20.2–71.1; decade medians 34–39; tracked_8 25.5–43.7 is a narrow subset | tracked_8 is NOT representative; global distribution shifts by decade | tracked_8 calibration rejected; global calibration needs as-of-safe window | Expanding-global or same-year design required; full-history rejected |
+| Temporal stability | Country count shifts 2→160→115 by decade; decade medians vary 34–39 | A fixed full-history percentile encodes future info + composition changes | Full-history pooled percentile NOT as-of-safe | Expanding-window design that handles composition drift (unresolved) |
+| tracked_8 suitability | 8 countries, 25.5–43.7, income + consumption mixed | Not a global inequality distribution; n=8 cross-section too sparse | tracked_8 calibration permanently rejected as calibration universe | No tracked_8-based level_score |
+| Expanding-global option | As-of-safe by observation period; composition drifts | Drift as coverage/concept mix changes | Partially defensible but requires window + drift handling | Needs a window decision + drift-mitigation design |
+| Same-year option | As-of-safe; 57–86 countries per representative year; 2025 n=4 | Sparse years; concept mix unchanged | Partially defensible but sensitive to sparse reporting | Needs a sparse-year fallback rule |
+| Midpoint semantics | No defensible level_score=50 interpretation exists | Any monotonic curve requires a midpoint | No curve can be calibrated without a midpoint | Need an external calibration basis OR a normative threshold authority |
+| Irregular freshness | IND 5 obs/29y; JPN 13 obs/12y; latest varies 2020–2024 | Old-but-usable observations must not be zeroed | Freshness policy (DEC-013) preserved; level NOT multiplied by freshness | No freshness parameter changes |
+| As-of leakage | Release dates unavailable; full-history leaks future | backtest_safe stays False | Any calibration is period-safe at best, not release-safe | backtest_safe stays False |
+| Force proxy ceiling | Gini = income inequality only; wealth/opportunity/values missing | Indicator level must not lift force ceiling | Wealth-gap force stays PARTIAL (DEC-009) | No FORCE_COVERAGE change |
+
+### Verdict: DEFER_GINI_LEVEL
+
+**Atlas cannot yet defensibly map World Bank GINI_INDEX into an Atlas
+0–100 INDICATOR strength level.** The deferral is a durable methodology
+decision, not a postponement of an obvious answer. The reasons:
+
+1. **Survey-concept comparability is insufficient.** Income-based and
+   consumption-based Gini are systematically different (consumption is more
+   evenly distributed). The WB API does NOT expose a per-observation
+   welfare-concept tag, so no defensible automated adjustment is possible.
+   A single global curve would conflate a measurement-concept difference
+   with a true inequality difference — exactly the failure mode this
+   project's methodology forbids.
+2. **tracked_8 is NOT a defensible calibration universe.** The tracked_8
+   range (25.5–43.7) is a narrow subset of the world distribution
+   (20.2–71.1). tracked_8 is 8 countries, not a global inequality
+   distribution. tracked_8 calibration is permanently rejected.
+3. **The global distribution is not stable enough for one fixed curve.**
+   Country composition shifts materially by decade (2→160→115 countries).
+   Decade medians vary (34–39). A fixed full-history pooled percentile
+   would encode future information and composition changes.
+4. **No defensible midpoint semantics exists.** level_score=50 has no
+   approved interpretation (global median shifts; no authoritative
+   raw-Gini threshold; historical median leaks future). Without a
+   defensible midpoint, no monotonic curve can be calibrated.
+5. **No external calibration basis exists** for fixed raw-Gini thresholds.
+   Any threshold (e.g. "Gini 40 = level 50") would be an arbitrary choice
+   without evidence — the failure mode DEC-018 explicitly rejected.
+6. **As-of safety requires an expanding-window design that doesn't drift
+   — unresolved.** Full-history leaks future; same-year is sparse;
+   expanding drifts as coverage/concept mix changes.
+
+**What additional evidence / data / methodology is required before a Gini
+level can be defensibly implemented:**
+
+- A welfare-concept metadata source (per-observation income vs
+  consumption tag) OR an authoritative welfare-concept adjustment
+  methodology OR a decision to calibrate income-based and consumption-based
+  Gini separately.
+- A decision on the calibration universe (expanding global vs same-year vs
+  a fixed externally-justified reference distribution) — tracked_8 is
+  permanently rejected.
+- A defensible midpoint semantics (what does level_score=50 mean?) —
+  requiring an external calibration basis or a normative threshold
+  authority.
+- An as-of-safe expanding-window design that handles composition drift
+  (if expanding global is chosen).
+- A sparse-year fallback rule (if same-year is chosen).
+- Resolution of whether income-based and consumption-based Gini need
+  separate calibration curves.
+
+Until these are resolved, GINI_INDEX stays MONOTONIC_NEGATIVE (direction
+confirmed by DEC-018) with NO numeric curve; `100 - Gini` remains NOT
+approved; the Wealth / opportunity / values gaps force stays PARTIAL
+(DEC-009); the Sprint 5.13 permanent rules apply to every future use.
+
+## Sprint 5.17.1 methodology status (2026-09-09) — GINI GLOBAL-UNIVERSE FILTER HARDENING
+
+A METHODOLOGY / EMPIRICAL-RESEARCH BUG-FIX sprint. NO Gini level_score was
+implemented; NO NormalizedSignal output changed; the model version stays
+**normalization-v0.6**; `confidence` stays None everywhere; `backtest_safe`
+stays False; the Wealth / opportunity / values gaps force stays PARTIAL
+(DEC-009). No DEC change — DEC-024 verdict UNCHANGED.
+
+### Root cause
+
+The Sprint 5.17 read-only profile
+(`apps/api/scripts/gini_calibration_profile.py`) filtered the global WB
+SI.POV.GINI universe using a hand-written `aggregate_codes` blacklist that
+wrongly listed real economies ZAF (South Africa) and PSE (West Bank and Gaza)
+as aggregates. Two compounding defects: (1) the blacklist was methodologically
+wrong (ZAF/PSE are real economies with real WB region assignments); (2) the
+filter matched the GINI record's 2-letter `country.id` against the 3-letter
+blacklist codes, so the blacklist was in fact INEFFECTIVE — no code ever
+matched. The reported 2430/171 counts happened to be correct by accident,
+but the filter was not trustworthy.
+
+### Authoritative economy-filter design
+
+The official WB `/v2/country` metadata endpoint returns every country and
+aggregate record. Each record carries a nested `region` object:
+- Real economies: `region.id` is a real region code (NAC, SSF, MEA, EAS,
+  SAS, ...), `region.value` is a region name.
+- Aggregates: `region.id == "NA"`, `region.value == "Aggregates"`.
+
+A pure helper `build_valid_economy_codes(country_records: list[dict]) ->
+set[str]` builds the set of real-economy ISO3 codes from the metadata
+records (region.id NOT in {"NA", "", None}). The GINI record's
+`countryiso3code` (3-letter, e.g. USA/ZAF/PSE) is matched against this set.
+No inference from code length, capitalization, or a manual blacklist. The
+helper has no I/O — it is unit-tested offline with mocked provider
+metadata (no external HTTP in pytest).
+
+Notable subtlety: SSF appears BOTH as a real-economy region id (on ZAF's
+record, region.id="SSF") AND as an aggregate code (the SSF aggregate's
+own record has region.id="NA"). The filter keys on the record's OWN region
+field, never on the code itself, so the two senses never collide: ZAF is
+retained, the SSF aggregate is excluded.
+
+### Fail loudly
+
+If the country metadata cannot be retrieved or parsed reliably (HTTP
+error, non-200, JSON decode failure, unexpected response shape, no
+records), the GLOBAL live profile STOPS. It does NOT silently fall back
+to the old blacklist. The tracked_8 DB profile (Part 2, which reads the
+live dev DB) may still run. Research output states that global profiling
+was unavailable.
+
+### Corrected global counts/statistics (read-only live WB API v2, 2026-09-09)
+
+- Authoritative economy filter: **217 real economies** identified
+  (region.id != "NA").
+- **ZAF: RETAINED** — 7 observations (min=54.1, median=59.6, max=65).
+- **PSE: RETAINED** — 9 observations (min=33.7, median=34.5, max=36.4).
+- Total valid country-year observations: **2430**.
+- Distinct countries/economies: **171**.
+- Year span: **1963–2025**.
+- Pooled: min=20.2, p10=27.5, p25=30.8, median=35.3, p75=42.6, p90=50.8,
+  max=71.1.
+- Cross-sections: 2000 n=57 median 36.4; 2010 n=86 median 33.7; 2020 n=70
+  median 34.35; 2025 n=4 (too sparse).
+- Latest sufficiently populated year (n>=30): **2023 (n=57, median 33.9)**.
+- Country count by decade: 1960s 2, 1970s 10, 1980s 64, 1990s 120, 2000s
+  152, 2010s 160, 2020s 115.
+- Decade medians: 1960s 36.7, 1970s 34.0, 1980s 35.4, 1990s 39.0, 2000s
+  35.6, 2010s 34.8, 2020s 34.35.
+
+The counts (2430/171) match the Sprint 5.17 reported values — the old
+blacklist was ineffective (2-letter vs 3-letter mismatch), so the bug was
+methodological, not numerical. The corrected filter is authoritative and
+defensible.
+
+### Impact on DEC-024
+
+**Verdict UNCHANGED (option B — wording/statistics basis strengthened but
+the durable methodology conclusion does not change).** The filtering bug
+did not materially alter the Sprint 5.17 methodology verdict. The six
+DEFER_GINI_LEVEL reasons stand: (1) survey-concept comparability
+insufficient (income vs consumption; no per-observation tag); (2) tracked_8
+not a defensible calibration universe; (3) global distribution not stable
+enough for one fixed curve; (4) no defensible midpoint semantics; (5) no
+external calibration basis; (6) as-of-safe expanding-window design
+unresolved. The welfare-concept problem and the missing per-observation
+welfare tag remain SEPARATE from this filtering bug. DEC-024 is not
+rewritten — the durable methodology conclusion is unchanged; only the
+filtering mechanism and the ZAF/PSE retention are corrected.
+
+### Welfare-concept wording
+
+Refined to "provider-methodology / country-level welfare-concept
+classification" rather than "every CHN observation is definitively tagged
+consumption by the API". The API does NOT expose a per-observation
+welfare-concept tag; the classification is a methodology-level hint from
+official PIP documentation, not a per-row metadata column. No invented
+adjustments are applied.
+
+### Tests
+
+6 new offline regressions in `apps/api/tests/test_gini_economy_filter.py`
+(mocked WB country metadata — no external HTTP):
+- ZAF retained as a real economy.
+- PSE retained as a real economy.
+- Known aggregates (WLD, EAP, HIC, SSF, INX) excluded.
+- Real-economies set exactly {USA, ZAF, PSE, CHN, IND} for the mock.
+- SSF region-id collision handled (ZAF retained, SSF aggregate excluded).
+- Malformed records (non-dict, missing id, missing region) skipped
+  defensively.
+
+pytest **379 passed** (373 baseline + 6 new), all offline. Model version
+stays **normalization-v0.6**; confidence stays None; no migration; no
+model-version bump; no force scores/weights/phases; no public API; no
+frontend change; no FORCE_COVERAGE change (Wealth-gap stays PARTIAL).
+
 ## 1. Score semantics — four separable dimensions
 
 A score is never a single number. Every derived signal keeps these dimensions
@@ -932,7 +1655,7 @@ they cannot be accidentally promoted into force scoring.
 | TRADE_BALANCE | CONTEXTUAL_DEFERRED | CONTEXTUAL_DEFERRED | — | annual | Sign/magnitude both ambiguous (surplus = competitiveness or weak demand; deficit = investment or imbalance). Deferred rather than invented. |
 | CURRENT_ACCOUNT_GDP | CONTEXTUAL_DEFERRED | CONTEXTUAL_DEFERRED | — | annual | Large surpluses and deficits both carry meanings; banding deferred. |
 | GROSS_CAPITAL_FORMATION_GDP | CONTEXTUAL_DEFERRED (reclassified by DEC-018 — Sprint 5.9 audit; superseded the Sprint 5.5 MONOTONIC_SATURATING proposal) | CROSS_SECTIONAL_RELATIVE | OWN_HISTORY (3y, 5y) | annual | Investment effort, not infrastructure quality. MONOTONIC_SATURATING disproved: very high GCF can be credit-driven overinvestment; the healthy level is economy-model-dependent. Future design candidate: deviation from the country's own investment norm. |
-| GINI_INDEX | MONOTONIC_NEGATIVE, numeric curve deferred (direction confirmed by DEC-018) | CROSS_SECTIONAL_RELATIVE (weak: survey-base differences) | OWN_HISTORY (irregular — only when enough observations) | irregular | Higher = more income inequality. "100 − Gini" is NOT an approved mapping; the calibration universe (global vs tracked_8) and survey-base comparability remain open. Never forward-filled; freshness decay applies to stale values. Force capped PARTIAL (income ≠ wealth/opportunity/values). |
+| GINI_INDEX | MONOTONIC_NEGATIVE, numeric curve DEFERRED (DEC-024, Sprint 5.17: survey-concept comparability insufficient; tracked_8 rejected; global distribution not stable; no defensible midpoint) | CROSS_SECTIONAL_RELATIVE (weak: survey-base differences) | OWN_HISTORY (irregular — only when enough observations) | irregular | Higher = more income inequality. "100 - Gini" is NOT an approved mapping; the calibration universe (global vs tracked_8) and survey-base comparability remain open. Sprint 5.17 (DEC-024): verdict DEFER_GINI_LEVEL — WB API does NOT expose per-observation welfare-concept tag; tracked_8 (25.5-43.7) is a narrow subset of world (20.2-71.1); global distribution shifts by decade (composition 2->160->115 countries); no defensible level_score=50 interpretation. Never forward-filled; freshness decay applies to stale values. Force capped PARTIAL (income != wealth/opportunity/values). |
 | INFLATION_CPI | CONTEXTUAL_DEFERRED (reclassified by DEC-018 — Sprint 5.9 audit; superseded the Sprint 5.5 TARGET_BAND proposal) | CONTEXTUAL_DEFERRED | OWN_HISTORY (3y, 5y) | annual | Domestic price pressure; a universal raw-CPI band would encode "2% ideal for every country" (objectives differ across regimes). Level waits for a defensible per-country target/reference. |
 | MILITARY_EXPENDITURE_USD | CONTEXTUAL_DEFERRED | RELATIVE_SHARE (future; share of tracked/global spending, or PPP-adjusted resources) | — | annual | Nominal, scale-dependent; spending ≠ capability (DEC-011). No more-spending-is-stronger curve. |
 | MILITARY_EXPENDITURE_GDP | CONTEXTUAL_DEFERRED | CONTEXTUAL_DEFERRED | — | annual | Effort/burden, not capability. |
@@ -1045,7 +1768,7 @@ approved yet):
 |---|---|---|
 | `source_quality` | Provider/methodology quality — QUALITATIVE/typed metadata only | WGI perception-composite methodology; BIS DSR income-definition caveats; Basel/BIS credit-gap interpretation caveats |
 | `freshness_factor` | Existing numeric provenance (Section 5) — reused, never recomputed | current: the DEC-013 exponential decay factor |
-| `measurement_uncertainty` | Optional provider-specific diagnostics | WGI: 90% CI bounds on the governance score (width = UB − LB), number of underlying sources (audited Sprint 5.13; NOT yet imported) |
+| `measurement_uncertainty` | Optional provider-specific diagnostics | WGI: 90% CI bounds on the governance score (width = UB − LB), number of underlying sources (audited Sprint 5.13; storage/persistence/lookup foundation implemented Sprint 5.14; LIVE INGESTION complete Sprint 5.15 — 1872 rows in `indicator_diagnostics`; still no confidence formula — the field remains a design placeholder, §17 item 6 open) |
 | `method_sufficiency` | Optional method-specific diagnostics | DSR: own-history sample_n / minimum_sample_n / calibration span (OwnHistoryLevelResult provenance already carries these); credit gap: parametric curve needs no Atlas history sample; WGI: CI width + source count |
 
 Method-diagnostics note: these describe how WELL-DETERMINED the method's
@@ -1221,11 +1944,18 @@ CROSS_SECTIONAL_RELATIVE indicators.
 6. Confidence composition (product vs weighted factors) and factor weights.
    **Sprint 5.13 (DEC-022)**: the LAYERING is resolved — indicator
    confidence (§10.2) is separated from force confidence (§10.3), the
-   permanent rules (confidence ≠ strength, confidence ≠ freshness, missing
-   ≠ perfect ≠ zero, no arbitrary provider-quality constants) are locked,
-   and the WGI uncertainty inputs are identified (LB + UB + SR). The
-   NUMERIC composition and weights remain open — that openness is now the
-   only remaining confidence question.
+   permanent rules (confidence != strength, confidence != freshness, missing
+   != perfect != zero, no arbitrary provider-quality constants) are locked,
+   and the WGI uncertainty inputs are identified (LB + UB + SR). **Sprint
+   5.16**: the empirical profile (624 rows, `scripts/wgi_confidence_profile.py`)
+   found CI width and SR are HIGHLY REDUNDANT (Pearson -0.83), dimension
+   differences are substantial and unexplained, temporal trends make
+   empirical calibration leaky or drifting, and no external calibration basis
+   exists for a numeric mapping. Verdict: **DEFER_NUMERIC_CONFIDENCE** — a
+   durable methodology decision (see the Sprint 5.16 section above for the
+   full decision matrix and the evidence/data/methodology required before
+   numeric confidence can be defensibly implemented). The NUMERIC composition
+   and weights remain open.
 7. Labour productivity: levels (favor advanced economies) vs growth rates for
    fairness — final choice deferred to scoring sprint. **UPDATED Sprint 5.9
    (DEC-018)**: the MONOTONIC_POSITIVE direction is approved, but the
@@ -1244,9 +1974,17 @@ CROSS_SECTIONAL_RELATIVE indicators.
    (CI width as the primary measurement diagnostic; SE deferred).
    Representation: dedicated auxiliary-diagnostics storage (the Sprint
    5.13 decision matrix rejected auxiliary canonical indicators, multiple
-   SourceSeries per indicator, and raw_payload metadata). INGESTION IS NOT
-   IMPLEMENTED — it requires a migration and is specified for Sprint 5.14
-   (nothing is ingested merely because the series exist).
+   SourceSeries per indicator, and raw_payload metadata). **UPDATED Sprint
+   5.14:** the storage/persistence/lookup foundation is implemented
+   (`indicator_diagnostics` migration applied; exact-period lookup;
+   nothing ingested). **RESOLVED 2026-09-09 (Sprint 5.15):** LIVE
+   INGESTION complete — the 9 LB/UB/SR series are imported into
+   `indicator_diagnostics` (1872 rows = 8 countries × 3 indicators ×
+   3 kinds × 26 score years; LB ≤ score ≤ UB verified 624/624; SR
+   integer 4–16; one-to-one score-year alignment; idempotent re-import;
+   no canonical/SourceSeries/Observation pollution). The input DATA now
+   exists; using it for confidence is still §17 item 6's open numeric
+   composition.
 10. WGI biennial-gap handling in scoring snapshots (missing 1997/1999/2001).
     **RESOLVED FOR THE CURRENT WGI PATH ONLY (2026-09-09)**: level and
     relative snapshots handle the gaps via DEC-015 as-of alignment (a

@@ -14,6 +14,9 @@ from datetime import datetime
 from pathlib import Path
 from enum import Enum
 
+if asyncio.get_event_loop_policy().__class__.__name__ == "WindowsProactorEventLoopPolicy":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -21,7 +24,9 @@ from sqlalchemy.orm import selectinload
 from app.db.base import Base
 from app.db.session import get_engine
 from app.data_sources.bis_mappings import BIS_MAPPINGS
+from app.data_sources.imf_weo_mappings import IMF_WEO_MAPPINGS
 from app.data_sources.oecd_mappings import OECD_MAPPINGS
+from app.data_sources.wid_mappings import WID_MAPPINGS
 from app.data_sources.world_bank_mappings import WORLD_BANK_MAPPINGS
 from app.models import (
     Country,
@@ -75,11 +80,13 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
             {"key": "world_bank", "name": "World Bank"},
             {"key": "bis", "name": "Bank for International Settlements"},
             {"key": "oecd", "name": "OECD"},
+            {"key": "imf", "name": "International Monetary Fund"},
             {"key": "fred", "name": "Federal Reserve Economic Data (FRED)"},
             {"key": "eurostat", "name": "Eurostat"},
             {"key": "ecb", "name": "European Central Bank"},
             {"key": "snb", "name": "Swiss National Bank"},
             {"key": "un_comtrade", "name": "UN Comtrade"},
+            {"key": "wid", "name": "World Inequality Database (WID)"},
         ]
 
         existing_sources = {
@@ -124,6 +131,8 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
             {"code": "GINI_INDEX", "name": "Gini index", "category": "Inequality", "unit": "index (0-100)", "frequency": "irregular", "strength_direction": IndicatorStrengthDirection.negative, "description": "World Bank Gini index (SI.POV.GINI): extent to which the income/consumption distribution deviates from perfect equality (0 = perfect equality, 100 = perfect inequality). Published irregularly; missing years are gaps, never zeros or forward-filled. Higher = more inequality."},
             {"code": "MILITARY_EXPENDITURE_USD", "name": "Military expenditure", "category": "Military", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Annual military expenditure in current US dollars, as published through World Bank WDI using SIPRI data (MS.MIL.XPND.CD; underlying source: SIPRI Military Expenditure Database). Input proxy for military strength, not a capability measure."},
             {"code": "MILITARY_EXPENDITURE_GDP", "name": "Military expenditure (% of GDP)", "category": "Military", "unit": "percent of GDP", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Military expenditure as a share of GDP, as published through World Bank WDI using SIPRI data (MS.MIL.XPND.GD.ZS; underlying source: SIPRI Military Expenditure Database). Input proxy for military strength, not a capability measure."},
+            {"code": "TERTIARY_ATTAINMENT_25_34", "name": "Tertiary educational attainment, age 25-34", "category": "Human Capital", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "OECD EAG LSO NEAC: percentage of 25-34 year-olds with tertiary education (ISCED 5-8). Attainment != enrollment. CHN/IND have sparse coverage."},
+            {"code": "WEALTH_SHARE_TOP_10", "name": "Top 10% net personal wealth share", "category": "Inequality", "unit": "share (0-1)", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.negative, "description": "WID world shwealj992 p90p100: top 10% share of net personal wealth (equal-split adults, pop=j). Raw provider fraction preserved unchanged (0-1). Higher = greater wealth concentration."},
         ]
 
         existing_indicators = {
@@ -163,7 +172,7 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
         }
         inserted_series = 0
         updated_series = 0
-        all_mappings = [*WORLD_BANK_MAPPINGS, *BIS_MAPPINGS, *OECD_MAPPINGS]
+        all_mappings = [*WORLD_BANK_MAPPINGS, *BIS_MAPPINGS, *OECD_MAPPINGS, *IMF_WEO_MAPPINGS, *WID_MAPPINGS]
         for mapping in all_mappings:
             source = sources_by_key[mapping.source_key]
             indicator = indicators_by_code[mapping.indicator_code]

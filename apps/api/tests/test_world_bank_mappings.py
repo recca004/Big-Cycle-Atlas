@@ -84,13 +84,13 @@ async def test_seed_is_idempotent(client):
     sessionmaker = session_module._sessionmaker
     async with sessionmaker() as session:
         before = (await session.execute(select(SourceSeries))).scalars().all()
-        assert len(before) == 19  # 15 WB + 2 BIS + 2 OECD
+        assert len(before) == 22  # 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
 
     await seed()  # re-run full seed against the same test DB
 
     async with sessionmaker() as session:
         after = (await session.execute(select(SourceSeries))).scalars().all()
-        assert len(after) == 19
+        assert len(after) == 22
         assert {s.external_code for s in after} >= set(EXPECTED_MAPPINGS.values())
 
 

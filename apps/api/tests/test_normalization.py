@@ -18,8 +18,8 @@ from app.models.indicator import IndicatorStrengthDirection
 def test_registry_has_no_duplicate_codes():
     codes = list(nd.NORMALIZATION_REGISTRY)
     assert len(codes) == len(set(codes))
-    # 19 live SourceSeries = 19 registry entries, one per live indicator.
-    assert len(codes) == 19
+    # 22 live SourceSeries = 22 registry entries, one per live indicator.
+    assert len(codes) == 22
 
 
 def test_every_live_force_input_has_a_normalization_spec():
@@ -181,6 +181,7 @@ def test_proxy_ceiling_does_not_modify_indicator_normalization():
         if force.coverage_ceiling is ForceCoverageStatus.partial
     }
     assert set(ceiling_forces) == {
+        "education",
         "military_strength",
         "wealth_opportunity_values_gaps",
         "internal_conflict",

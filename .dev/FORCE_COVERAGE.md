@@ -117,27 +117,85 @@ candidate context only: trade alone does not cover openness to capital,
 people, and ideas. No openness ratio is derived and no status change occurs
 without owner approval of a narrower proxy methodology.
 
-## Top next data priorities (ranked by force gaps filled, post-5.4)
+## Sprint 5.18 audit — high-value gap source contracts (DEC-025, 2026-09-10)
 
-WB Gini (income inequality), WB CPI (domestic price pressure), and the
-SIPRI-derived WB military series (spending proxy) are DONE as of M5.4 — this
-was the final data-expansion sprint before normalization. Remaining gaps:
+Read-only, official-source-only research on three high-value data-gap
+tracks. No ingestion, persistence, normalization, or scoring changes.
+Distinct readiness verdicts per track. **Sprint 5.19 corrections in
+bold below — see DEC-025 "Sprint 5.19 verification corrections" for the
+full record.**
 
-1. **Education Option C indicators (MEDIUM)** — OECD educational attainment
-   (tertiary, % of 25–34) and/or WB net enrollment (SE.SEC.NENR); needs the
-   OECD connector extension or WB net-enrollment verification first (DEC-007).
-2. **General-government debt source (MEDIUM)** — IMF WEO (no free official API
-   in the current connector set) or another defensible source; would upgrade
-   Indebtedness from its current private-sector-only inputs (DEC-008).
-3. **Wealth-share / opportunity indicators (MEDIUM)** — WID wealth or income
-   shares, unemployment/opportunity measures, social polarization indicators;
-   would move Wealth / opportunity / values gaps beyond its PARTIAL ceiling.
-4. **ACLED / event data (LOW-MEDIUM)** — would move Internal conflict beyond
-   its PARTIAL ceiling.
-5. **Military capability data (LOW)** — would move Military strength beyond
-   its PARTIAL ceiling; SIPRI itself notes expenditure is an input measure.
-   Any future capability source (personnel, equipment, readiness) is a
-   separate decision — no more spending series will lift the ceiling.
+### Track A — IMF WEO general-government gross debt: IMPLEMENTED (Sprint 5.19)
+
+- Indicator `GGXWDG_NGDP` verified: "General government gross debt", %
+  of GDP, WEO. Matches DEC-008 (general government, gross) — NOT WB
+  central-government `GC.DOD.TOTL.GD.ZS`.
+- Two API paths: DataMapper (public, no auth, flat JSON, no vintage flag)
+  and SDMX 3.0 (**public, NO key needed** — Sprint 5.18 incorrectly
+  stated a key was required; `LATEST_ACTUAL_ANNUAL_DATA` attribute marks
+  historical vs forecast).
+- Tracked_8: ALL 8 covered (USA 2001–2025, CHN 1995–2024, CHE 1990–2025,
+  DEU 1991–2025, FRA 1980–2024, GBR 1980–2025, JPN 1980–2024, IND
+  1991–2025). **297 observations imported via SDMX 3.0, historical-only.**
+- Vintage risk: DataMapper mixes historical + forecast with no flag;
+  **SDMX 3.0 with `LATEST_ACTUAL_ANNUAL_DATA` filtering implemented — no
+  forecast values persisted.**
+- **Idempotent re-import verified: 0 inserted / 297 skipped / 0 revised.**
+- Verdict: **IMPLEMENTED in Sprint 5.19.** GOVERNMENT_DEBT_GDP now has
+  live data.
+
+### Track B — Education Option C: PARTIAL (Sprint 5.19 corrections)
+
+- **WB SE.SEC.NENR** (secondary net enrollment): STALE — USA/CHE/DEU/GBR
+  last data 2017, JPN last 2016, CHN has NO data at all. WB metadata
+  states "Reference period: 1970–2019". NOT recommended as a live input.
+- **OECD tertiary attainment** — Sprint 5.19 verified the correct
+  dataflow: `DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA` (NOT `_MIGR`),
+  agency `OECD.EDU.IMEP`, v1.0. Series: SEX=`_T`, AGE=`Y25T64` (NOT
+  `Y25T34`), ATTAINMENT_LEV=`ISCED11A_5T8`, UNIT=`PT_POP_SEX_AGE`
+  (percentages, NOT fractions), FREQ=`A` (annual, NOT triennial A3).
+  **Coverage: 8/8** (NOT 5/8) — but CHN (2 data points) and IND (6 data
+  points) are extremely sparse. USA/CHE/DEU/FRA/GBR/JPN have good annual
+  coverage (1981–2025 / 1989–2025 / 1989–2025 / 1981–2024 / 1997–2025 /
+  1997–2025).
+- Verdict: `EDUCATION_IMPLEMENTABLE_PARTIAL` — implementable for 6/8
+  countries with good coverage. CHN and IND too sparse for reliable
+  time-series use. Education force stays defined_not_sourced / partial.
+
+### Track C — WID wealth: VERIFIED (Sprint 5.19 corrections)
+
+- Access: bulk download (no key, 882 MB) or R-package webservice (API key
+  required). No scraping needed.
+- Indicator: `shweal` (share of net personal wealth), `p90p100` = top 10%
+  wealth share. Annual, fractions (0–1), 2-letter ISO country codes.
+  **Canonical series: `shwealj992` (pop=`j` = equal-split adults, NOT
+  pop=`i` = individuals). Pop=`j` is the only series for all 8 countries.**
+- Tracked_8: all 8 have data 1980–2024. **Extrapolation counts
+  (data_quality=2): DEU 24, FRA 80, GBR 93; all others 0. Recommend
+  excluding data_quality=2 during ingestion.**
+- Ceiling: does NOT lift DEC-009 PARTIAL — wealth share addresses wealth
+  inequality only, not opportunity or values/social gaps.
+- Verdict: `WID_IMPLEMENTABLE` — exclude extrapolations (data_quality=2),
+  force stays PARTIAL. READY for Sprint 5.21.
+
+## Top next data priorities (ranked by force gaps filled, post-5.19)
+
+1. **OECD tertiary attainment (PARTIAL, Sprint 5.20)** — would add the
+   first live input to Education (currently defined_not_sourced). 6/8
+   good coverage, 2/8 sparse. Annual (not triennial as previously
+   stated). WB SE.SEC.NENR deferred (stale).
+2. **WID wealth shares (IMPLEMENTABLE, Sprint 5.21)** — would add a
+   wealth-distribution input to Wealth / opportunity / values gaps
+   (currently Gini income-inequality only). Force stays PARTIAL.
+   Exclude data_quality=2 (extrapolations).
+3. **Force Layer + Methodology (Sprint 5.22)** — normalization design,
+   weight design, force aggregation. Requires methodology work before
+   force scores can be created.
+4. **ACLED / event data (LOW-MEDIUM)** — would move Internal conflict
+   beyond its PARTIAL ceiling.
+5. **Military capability data (LOW)** — would move Military strength
+   beyond its PARTIAL ceiling; no more spending series will lift the
+   ceiling.
 
 FRED/ALFRED (US-only, 1 of 8 countries) and other new providers are deferred:
 they fill fewer force gaps per unit of work than extending WB.

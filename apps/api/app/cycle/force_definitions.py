@@ -66,8 +66,18 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="education",
         name="Education",
         description="Quality and reach of the country's education system and human capital.",
+        live_indicator_codes=("TERTIARY_ATTAINMENT_25_34",),
         candidate_indicator_codes=("TERTIARY_ENROLLMENT", "SECONDARY_ENROLLMENT"),
-        coverage_notes="Enrollment rates are partial education proxies; attainment/test-score measures would strengthen this force.",
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "Live input: OECD tertiary attainment age 25-34 (ISCED 5-8, "
+            "% of population, annual, Sprint 5.20). Attainment != enrollment. "
+            "CHN has only 1 data point (2010); IND has 11 sparse data points. "
+            "Still missing: secondary attainment/enrollment, learning "
+            "outcomes/test scores, education quality, years of schooling, "
+            "skills. One tertiary series cannot make Education AVAILABLE — "
+            "capped at PARTIAL."
+        ),
     ),
     ForceDefinition(
         code="character_determination",
@@ -174,9 +184,15 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="indebtedness",
         name="Indebtedness",
         description="Level and trajectory of debt burdens across sectors.",
-        live_indicator_codes=("CREDIT_TO_GDP_GAP", "DEBT_SERVICE_RATIO"),
-        candidate_indicator_codes=("GOVERNMENT_DEBT_GDP",),
-        coverage_notes="Private-sector credit gap + debt service live; government debt is a catalog-only candidate pending a source (IMF/WB).",
+        live_indicator_codes=("CREDIT_TO_GDP_GAP", "DEBT_SERVICE_RATIO", "GOVERNMENT_DEBT_GDP"),
+        coverage_notes=(
+            "Private-sector credit gap + debt service (BIS) + general-government "
+            "gross debt (IMF WEO, Sprint 5.19). Government debt is a raw level "
+            "input only — no monotonic 'higher debt = weaker' curve is approved; "
+            "debt sustainability depends on interest cost, currency, maturity, "
+            "fiscal capacity, monetary sovereignty, and growth (CONTEXTUAL_DEFERRED "
+            "in the normalization registry). No Indebtedness force score exists."
+        ),
     ),
     ForceDefinition(
         code="military_strength",
@@ -200,15 +216,16 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="wealth_opportunity_values_gaps",
         name="Wealth / opportunity / values gaps",
         description="Gaps in wealth, opportunity, and values within the country.",
-        live_indicator_codes=("GINI_INDEX",),
+        live_indicator_codes=("GINI_INDEX", "WEALTH_SHARE_TOP_10"),
         coverage_ceiling=ForceCoverageStatus.partial,
         coverage_notes=(
-            "Current live input measures income inequality only (World Bank Gini "
-            "index, published irregularly). Wealth inequality, opportunity gaps, "
-            "and values/social gaps remain missing — the force is capped at "
-            "PARTIAL until its conceptual scope is better covered. Future possible "
-            "inputs: wealth/income shares (WID), unemployment/opportunity "
-            "measures, social polarization indicators."
+            "Live inputs: World Bank Gini index (income inequality, irregular) "
+            "+ WID top 10% net personal wealth share (wealth concentration, "
+            "annual, Sprint 5.20). Both are distributional measures — "
+            "opportunity gaps and values/social polarization remain missing. "
+            "The force is capped at PARTIAL until its conceptual scope is "
+            "better covered. WID data_quality column preserved but NOT used "
+            "for filtering (official semantics unverified)."
         ),
     ),
     ForceDefinition(

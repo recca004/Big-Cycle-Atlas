@@ -30,6 +30,11 @@ RETRIEVED_AT = datetime(2026, 9, 8, 12, 0, tzinfo=timezone.utc)
 
 PROD_CODE = "DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP"
 ULC_CODE = "DSD_PDB@DF_PDB_ULC_Q/{cc}.Q.ULCE._T.PA.V.GY.S.NC"
+ATTAINMENT_CODE = (
+    "EAG_LSO_NEAC/"
+    "{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z."
+    "ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A"
+)
 
 PROD_HEADER = (
     "REF_AREA,FREQ,MEASURE,ACTIVITY,UNIT_MEASURE,PRICE_BASE,TRANSFORMATION,"
@@ -63,7 +68,7 @@ async def test_approved_oecd_indicators_seeded(client):
         codes = dict(
             (await session.execute(select(Indicator.code, Indicator.id))).all()
         )
-        assert len(codes) == 25
+        assert len(codes) == 27
         prod = (await session.execute(
             select(Indicator).where(Indicator.code == "LABOUR_PRODUCTIVITY_PER_HOUR")
         )).scalar_one()
@@ -91,13 +96,13 @@ async def test_oecd_source_series_seeded_idempotently(client):
         series = (await session.execute(
             select(SourceSeries).where(SourceSeries.data_source_id == oecd_source.id)
         )).scalars().all()
-        assert {s.external_code for s in series} == {PROD_CODE, ULC_CODE}
+        assert {s.external_code for s in series} == {PROD_CODE, ULC_CODE, ATTAINMENT_CODE}
         # country-independent identity: the {cc} placeholder must survive seeding
         assert all("{cc}" in s.external_code for s in series)
         total = (await session.execute(
             select(func.count()).select_from(SourceSeries)
         )).scalar_one()
-        assert total == 19  # 15 WB + 2 BIS + 2 OECD
+        assert total == 22  # 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
 
     # re-running the seed updates, never duplicates
     await seed(DEFAULT_DATA_FILE)
@@ -109,11 +114,11 @@ async def test_oecd_source_series_seeded_idempotently(client):
             select(func.count()).select_from(SourceSeries)
             .where(SourceSeries.data_source_id == oecd_source.id)
         )).scalar_one()
-        assert count == 2
+        assert count == 3
         total = (await session.execute(
             select(func.count()).select_from(SourceSeries)
         )).scalar_one()
-        assert total == 19
+        assert total == 22
 
 
 # --- Parts 4–5: annual + quarterly persistence --------------------------------

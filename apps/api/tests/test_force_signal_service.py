@@ -238,8 +238,8 @@ async def test_backtest_safe_false_on_all_signals(client):
 async def test_versions_on_all_signals(client):
     signals = await _build_signals("CHE", ScoringPeriod(2025, 2))
     for s in signals:
-        assert s.force_model_version == "force-aggregation-v0.2"
-        assert s.normalization_model_version == "normalization-v0.7"
+        assert s.force_model_version == "force-aggregation-v0.3"
+        assert s.normalization_model_version == "normalization-v0.8"
 
 
 # --- Country isolation ---------------------------------------------------------

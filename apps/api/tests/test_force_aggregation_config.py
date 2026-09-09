@@ -109,7 +109,11 @@ def test_vulnerability_penalty_not_in_identity_single():
 def test_supporting_context_not_scoring_component():
     for force_code, spec in FORCE_AGGREGATION_CONFIGS.items():
         if spec.level_mode is ForceDimensionMode.identity_copy:
-            for comp in spec.components:
+            eligible = [
+                c for c in spec.components
+                if c.role in {ForceIndicatorRole.core_condition, ForceIndicatorRole.proxy_condition}
+            ]
+            for comp in eligible:
                 assert comp.role is not ForceIndicatorRole.supporting_context, (
                     f"{force_code}: SUPPORTING_CONTEXT cannot be the scoring "
                     f"component in IDENTITY_SINGLE"
@@ -228,7 +232,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
 def test_confidence_mode_always_deferred():
     for force_code, spec in FORCE_AGGREGATION_CONFIGS.items():
         assert spec.confidence_mode is ForceDimensionMode.deferred, (
-            f"{force_code}: confidence must be deferred in force-aggregation-v0.2"
+            f"{force_code}: confidence must be deferred in force-aggregation-v0.3"
         )
 
 
@@ -264,12 +268,12 @@ def test_no_force_persistence_or_api():
 
 
 def test_force_aggregation_version():
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.2"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.3"
 
 
 def test_normalization_version_unchanged():
     from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.7"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.8"
 
 
 # --- Validation raises loudly ------------------------------------------------

@@ -2576,24 +2576,33 @@ similar simplicity and transparency to DIRECT_0_100:
 - Both use provider-published values for cross-country comparison
 - Both are proxies for a broader force (PROXY_CONDITION, PARTIAL ceiling)
 
-### Normalization family: COMPLEMENT_0_100 (NEW — Sprint 6.7 implementation)
+### Normalization family: COMPLEMENT_0_100 (EXECUTABLE — Sprint 6.7)
 
 - **Family**: COMPLEMENT_0_100 (fraction 0-1, negative direction,
   score = 100*(1-raw))
 - **Formula**: `level_score = 100 * (1 - raw_share)` where
   raw_share ∈ [0,1]
-- **Valid raw range**: [0, 1] (enforced by adapter)
-- **Out-of-domain behavior**: return None (adapter rejects; missing ≠ zero)
+- **Valid normalization domain**: [0, 1] — this is the NORMALIZATION domain,
+  NOT a WID ingestion validity domain (Sprint 6.6.2 ISSUE-005). Finite
+  provider values outside [0,1] are preserved as immutable
+  Observation.value; normalization raises NormalizationDataError for such
+  values (never clamps, never silently returns None).
+- **Out-of-domain behavior**: raise NormalizationDataError (never clamp,
+  never convert to missing)
 - **Midpoint semantics**: 50 = "bottom 90% holds half of net personal
   wealth" — meaningful, interpretable, NOT a normative target
-- **Direction**: MONOTONIC_NEGATIVE (higher share = more concentration =
-  weaker; higher score = more equal = stronger)
+- **Direction**: negative (higher share = more concentration = weaker;
+  higher score = more equal = stronger)
 - **Missingness**: missing observation → None, never 0
 - **Freshness**: FreshnessClass.annual (existing); stale → None
 - **As-of behavior**: point-in-time distributional fact; no future leakage
 - **Provenance**: WID shwealj992 p90p100 pop=j equal-split adults
 - **Data-quality policy**: data_quality preserved in raw_payload but NOT
   used for filtering (DEC-027 — unchanged)
+- **Relative**: None (DEC-034: not approved)
+- **Momentum**: None (DEC-034: not approved)
+- **Confidence**: None (composition unresolved, §17)
+- **Model version**: normalization-v0.8
 
 ### Gini relationship
 
@@ -2613,28 +2622,203 @@ NOT block IDENTITY_SINGLE for the WID component.
 - Coverage does NOT scale score (DEC-029 invariant)
 - Confidence stays None (DEC-023)
 
-### Impact
+### Impact (Sprint 6.7 IMPLEMENTED)
 
-NO production code changed. NO normalization code changes. NO force
-code changes. Model versions unchanged: `normalization-v0.7`,
-`force-aggregation-v0.2`. `WEALTH_SHARE_TOP_10` stays
-`MONOTONIC_NEGATIVE` with deferred level curve (the COMPLEMENT_0_100
-reclassification is a Sprint 6.7 implementation step). Wealth-gap force
-stays `SUPPORTING_CONTEXT` / `DEFERRED_MULTI` with `level_score = None`.
+COMPLEMENT_0_100 is now executable for `WEALTH_SHARE_TOP_10`. Model versions
+bumped: `normalization-v0.7` → `normalization-v0.8`,
+`force-aggregation-v0.2` → `force-aggregation-v0.3`. `WEALTH_SHARE_TOP_10`
+reclassified from `MONOTONIC_NEGATIVE` to `COMPLEMENT_0_100`. Wealth-gap
+force promoted from `DEFERRED_MULTI` to `IDENTITY_SINGLE` with
+`WEALTH_SHARE_TOP_10` as `PROXY_CONDITION` and `GINI_INDEX` as
+`SUPPORTING_CONTEXT`. 5/17 forces executable; 12/17 intentionally deferred.
 confidence = None. backtest_safe = False.
 
-Read-only research artifact: `scripts/wealth_share_profile.py` (NEW —
-descriptive statistics only, no scores, no writes, clearly labeled
-research support).
-
-pytest 571 passed (unchanged — no code changes). DB unchanged
+pytest 620 passed (579 baseline + 41 new). DB unchanged
 (6814/27/22/10/1872). No migration, no ingestion, no persistence.
 No commit/push.
 
 ### Next
 
-Sprint 6.7 — WID wealth-share level + wealth-gap proxy implementation.
-Implement COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 and promote the
-Wealth-gap force to the 5th executable force via PROXY_CONDITION +
-IDENTITY_SINGLE. Bump normalization-v0.7 → v0.8 and
-force-aggregation-v0.2 → v0.3.
+---
+
+## Sprint 6.10 implementation status (2026-09-10) — DERIVED ALIGNED VALUE ARCHITECTURE (DEC-037, DESIGN_ONLY)
+
+### Status
+
+**DESIGN_ONLY — minimal non-executable frozen dataclass + focused tests,
+NO formula approved, NO derivation implemented, NO model-version bump.**
+
+### Pipeline position
+
+The derived aligned layer sits between `AlignedValue` and
+`NormalizedSignal`:
+
+    DataSource / SourceSeries
+      -> immutable Observation
+      -> as-of alignment
+      -> AlignedValue
+      -> DerivedAlignedValue        <-- Sprint 6.10
+      -> NormalizedSignal
+      -> force aggregation
+
+A derived value combines TWO or more already-aligned source observations
+via an approved formula. It never creates or masquerades as a raw
+Observation. It is computed on demand only — never persisted.
+
+### Object contract
+
+Two frozen dataclasses added to
+`apps/api/app/cycle/normalization_definitions.py`:
+
+**DerivedComponentProvenance** (per required component):
+- `indicator_code: str` — the component's canonical indicator code
+- `aligned_value: Optional[AlignedValue]` — None when missing; carries
+  indicator, country, scoring period, source period, raw value, age,
+  effective period end, freshness, staleness, vintage
+- `observation_id: Optional[int]` — the raw Observation primary key
+  (required when present; None when missing)
+- `source_series_id: Optional[int]` — the SourceSeries identity
+  (required when present; None when missing)
+- `data_source_id: Optional[int]` — the DataSource identity
+  (required when present; None when missing)
+- `release_date: Optional[date]` — None until Milestone 9
+- `component_backtest_safe: bool` — False by default
+- `missing_reason: Optional[str]` — None when present; explains absence
+
+**DerivedAlignedValue** (the derived result):
+- `derived_indicator_code: str` — stable identity
+- `country_iso3: str` — the single country of the derivation
+- `scoring_period: ScoringPeriod` — the shared scoring snapshot
+- `formula_id: str` — stable formula identity
+- `formula_version: str` — formula version (SEPARATE namespace from
+  normalization-v0.8 and force-aggregation-v0.3)
+- `components: tuple[DerivedComponentProvenance, ...]` — one entry per
+  required component
+- `derived_value: Optional[float]` — None when any required component
+  is missing (MISSING != ZERO)
+- `backtest_safe: bool` — False unless ALL present components are
+  component_backtest_safe
+
+### Design decision: separate wrapper, not AlignedValue mutation
+
+AlignedValue lacks Observation.id, source_series_id, data_source_id,
+and release-date metadata. Rather than mutating AlignedValue (risky for
+the 620-test baseline), a separate DerivedComponentProvenance wrapper
+extends provenance without mutation. A future sprint MAY enrich
+AlignedValue if the wrapper proves insufficient, but that requires its
+own DEC and test updates.
+
+### Invariants enforced at construction
+
+1. **Country isolation**: every present component must match the
+   derived country_iso3. Mixed-country derivation is rejected.
+2. **Independent component provenance**: components never collapsed
+   into a synthetic source identity.
+3. **MISSING != ZERO**: any missing required component forces
+   derived_value=None, never zero-filled.
+4. **Distinct vintages**: each component keeps its own vintage.
+5. **Backtest-safety propagation**: backtest_safe=True requires ALL
+   present components to be component_backtest_safe. No formula
+   upgrades unsafe inputs.
+6. **No raw Observation creation**: typed contract only, no DB queries,
+   no persistence.
+
+### As-of reuse
+
+The derived layer consumes existing AlignedValue objects via
+`align_observation_as_of`. It must NOT query raw observations
+independently, select vintages itself, introduce a second as-of
+algorithm, bypass period-complete eligibility, or bypass
+country/source identity scoping. All present components must be
+aligned to the SAME scoring_period as the derived value.
+
+### Missingness
+
+If any required component is missing (aligned_value is None):
+- derived_value MUST be None (never zero-filled)
+- the missing component's missing_reason explains the absence
+- the missing component's indicator_code identifies which requirement
+  was unmet
+
+Partial-input formulas (some components optional) are DEFERRED — no
+such behavior is approved in Sprint 6.10.
+
+### Release-date / backtest rule
+
+A derived value is backtest_safe ONLY if EVERY present component has
+valid release-date provenance (component_backtest_safe=True). No
+formula can upgrade unsafe inputs. Currently False everywhere
+(release-date discipline is Milestone 9).
+
+### Formula identity and version
+
+Every DerivedAlignedValue carries formula_id + formula_version in a
+SEPARATE namespace from normalization-v0.8 and force-aggregation-v0.3.
+Sprint 6.10 does NOT approve any formula_id. No formula business logic
+is implemented.
+
+### Normalization boundary
+
+Normalization receives ONLY the completed DerivedAlignedValue. The
+derived layer must NOT normalize components before the formula,
+embed normalization into the derivation contract, let a derived
+indicator masquerade as a raw provider indicator, or add a
+normalization family or score. A future derived indicator that needs
+normalization would consume the DerivedAlignedValue as input to a new
+normalization path — approved by its own DEC.
+
+### Persistence
+
+Derived values are computed ON DEMAND. Sprint 6.10 adds NO database
+table, NO migration, NO raw persistence, NO ingestion, NO derived
+persistence. The dataclasses are non-executable: validation only, no
+DB queries.
+
+### LPI edition / provider-period resolution
+
+Sprint 6.9's DEC-036 referred to the "2023 LPI edition" while empirical
+provider periods appeared as 2022. Resolved from authoritative WB
+metadata: the 2023 LPI EDITION is represented by a 2022 OBSERVATION
+PERIOD in the WB API (survey conducted Sep-Nov 2022, report published
+April 2023). Edition year and provider period year are different
+labels for the same data point.
+
+### Tests
+
+17 focused offline tests in
+`apps/api/tests/test_derived_aligned_value.py` prove all six required
+invariants. No external APIs, no DB writes.
+
+### Model versions
+
+Unchanged: `normalization-v0.8`, `force-aggregation-v0.3`. No
+model-version bump (no executable behavior introduced).
+
+### Impact
+
+NO production executable behavior changed. NO force code changes. NO
+normalization code changes. 5/17 forces executable, 12/17
+intentionally deferred. No migration, no ingestion, no persistence.
+No commit/push.
+
+pytest 637 passed (620 baseline + 17 new). DB unchanged
+(6814/27/22/10/1872).
+
+### What remains deferred
+
+- The FIRST executable derived indicator requires an approved
+  formula_id + formula_version, an approved normalization family, an
+  approved force role, and a separate implementation DEC. DEC-035's
+  DEFER_GLOBAL_OPENNESS_LEVEL stands.
+- Partial-input / optional-component formulas — deferred.
+- Derived-value persistence — deferred.
+- Release-date-safe derivation — deferred until Milestone 9.
+- Enriching AlignedValue with source-identity fields — deferred.
+
+### Next
+
+Sprint 6.11 — owner to choose. Candidates: Gini normalization audit,
+first executable derived indicator (requires approved formula +
+normalization family + force role), structural/size-adjusted trade
+model, force confidence methodology, Big Cycle phase/stage,
+release-date discipline.

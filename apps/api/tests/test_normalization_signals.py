@@ -712,10 +712,10 @@ def test_shift_scoring_period_years_moves_year_keeps_quarter():
 
 
 def test_current_model_version_is_v0_7_education_direct_explicit_gates():
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.7"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.8"
     assert (
         CURRENT_MODEL_VERSION.normalization_method
-        == "sprint-6.4-education-direct-0-100-explicit-dimension-gates"
+        == "sprint-6.7-wid-wealth-complement-0-100"
     )
     # Sprint 5.10 (unchanged by 5.12/6.4): OWN_HISTORY level for EXACTLY
     # DEBT_SERVICE_RATIO.

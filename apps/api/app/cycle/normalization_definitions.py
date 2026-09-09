@@ -169,6 +169,10 @@ class NormalizationFamily(str, Enum):
     cross_sectional_relative = "cross_sectional_relative"
     relative_share = "relative_share"
     contextual_deferred = "contextual_deferred"
+    # Sprint 6.7 (DEC-034): complement of a [0,1] share — 100 * (1 - raw).
+    # Input domain is [0,1] (the NORMALIZATION domain, NOT a WID ingestion
+    # validity domain). Higher raw share = greater concentration = weaker.
+    complement_0_100 = "complement_0_100"
 
 
 @dataclass(frozen=True)
@@ -238,6 +242,191 @@ class AlignedValue:
     def __post_init__(self) -> None:
         if self.freshness_factor is not None:
             _assert_in_range(self.freshness_factor, (0.0, 1.0), "freshness_factor")
+
+
+# --- Derived aligned layer (Sprint 6.10, DEC-037 — design-only, NOT executable) --
+#
+# Pipeline position (DEC-037):
+#
+#   Observation -> as-of alignment -> AlignedValue -> derived aligned layer
+#     -> normalization -> force aggregation
+#
+# A DerivedAlignedValue combines TWO or more already-aligned component
+# AlignedValues via an approved formula. It sits BETWEEN AlignedValue and
+# NormalizedSignal — it never creates or masquerades as a raw Observation, it
+# is never persisted, and it is computed on demand only.
+#
+# The existing AlignedValue carries indicator/country/scoring-period/source-
+# period/raw-value/age/freshness/vintage provenance but does NOT carry
+# Observation.id, source_series_id, data_source_id, or release-date metadata.
+# Rather than mutating AlignedValue (which would require broad test and
+# alignment updates), a DerivedComponentProvenance wrapper associates each
+# component's AlignedValue with the additional source-identity metadata the
+# derived contract requires. This keeps AlignedValue unchanged.
+#
+# Sprint 6.10 adds the typed contract ONLY. No formula is approved, no
+# derivation is implemented, no normalization family is added, no force is
+# promoted, no persistence exists. The dataclasses are non-executable: they
+# perform validation only and never query the database.
+
+
+@dataclass(frozen=True)
+class DerivedComponentProvenance:
+    """Provenance for one REQUIRED component of a DerivedAlignedValue (DEC-037).
+
+    Wraps an existing AlignedValue with the source-identity metadata that
+    AlignedValue itself does not carry (Observation.id, source_series_id,
+    data_source_id) plus release-date safety information for future
+    backtest-safe derivation.
+
+    A PRESENT component has aligned_value set and observation_id /
+    source_series_id / data_source_id populated. A MISSING component has
+    aligned_value None and missing_reason explaining the absence — the
+    derived value is then None (MISSING != ZERO, never zero-filled).
+
+    Each component retains INDEPENDENT provenance: its own indicator,
+    source series, observation identity, vintage, source period, and
+    freshness. Components are never collapsed into a synthetic source
+    identity.
+    """
+
+    indicator_code: str  # the component's canonical indicator code
+    aligned_value: Optional[AlignedValue] = None
+    observation_id: Optional[int] = None
+    source_series_id: Optional[int] = None
+    data_source_id: Optional[int] = None
+    release_date: Optional[date] = None  # None until Milestone 9
+    component_backtest_safe: bool = False
+    missing_reason: Optional[str] = None  # None when present; explains absence
+
+    def __post_init__(self) -> None:
+        present = self.aligned_value is not None
+        if present and self.missing_reason is not None:
+            raise ValueError(
+                f"component {self.indicator_code!r}: present component cannot "
+                "have a missing_reason"
+            )
+        if not present and self.missing_reason is None:
+            raise ValueError(
+                f"component {self.indicator_code!r}: missing component requires "
+                "a missing_reason"
+            )
+        if present:
+            if self.observation_id is None:
+                raise ValueError(
+                    f"component {self.indicator_code!r}: present component "
+                    "requires observation_id"
+                )
+            if self.source_series_id is None:
+                raise ValueError(
+                    f"component {self.indicator_code!r}: present component "
+                    "requires source_series_id"
+                )
+            if self.data_source_id is None:
+                raise ValueError(
+                    f"component {self.indicator_code!r}: present component "
+                    "requires data_source_id"
+                )
+
+
+@dataclass(frozen=True)
+class DerivedAlignedValue:
+    """A value derived from two or more already-aligned source observations.
+
+    (Sprint 6.10, DEC-037 — typed contract ONLY, NOT executable, NOT persisted.)
+
+    Pipeline position:
+
+        Observation -> AlignedValue -> DerivedAlignedValue -> NormalizedSignal
+
+    A derived value combines TWO or more provider observations via an
+    approved formula. Each component retains independent provenance —
+    components are never collapsed into a synthetic source identity. The
+    derived value is computed AFTER all components are aligned; it never
+    queries raw observations independently, never selects vintages itself,
+    and never introduces a second as-of algorithm.
+
+    Invariants enforced at construction:
+
+    - At least 2 components (a single observation is not a derivation).
+    - Country isolation: every present component belongs to the same country,
+      matching the derived value's country_iso3. Mixed-country derivation
+      is rejected.
+    - Same scoring snapshot: every present component is aligned to the same
+      scoring_period as the derived value.
+    - Missingness: if any required component is missing (aligned_value None),
+      derived_value MUST be None — never zero-filled (MISSING != ZERO).
+    - Backtest safety: backtest_safe=True requires ALL present components to
+      be component_backtest_safe. An unsafe component makes the derived
+      result non-backtest-safe. No formula can upgrade unsafe inputs.
+    - Formula identity + version: a stable formula_id and formula_version
+      travel with every derived value. Formula versioning is SEPARATE from
+      normalization-v0.8 and force-aggregation-v0.3.
+
+    Sprint 6.10 does NOT approve any formula_id, does NOT implement any
+    derivation, does NOT add a normalization family, and does NOT persist
+    derived values. The dataclass is a validation-only contract.
+    """
+
+    derived_indicator_code: str
+    country_iso3: str
+    scoring_period: ScoringPeriod
+    formula_id: str
+    formula_version: str
+    components: tuple[DerivedComponentProvenance, ...]
+    derived_value: Optional[float] = None  # None when a required component is missing
+    backtest_safe: bool = False
+
+    def __post_init__(self) -> None:
+        if len(self.components) < 2:
+            raise ValueError(
+                f"DerivedAlignedValue {self.derived_indicator_code!r}: requires "
+                f"at least 2 components, got {len(self.components)}"
+            )
+        # Country isolation: every present component must match the derived
+        # country. Missing components carry indicator_code but no country.
+        for comp in self.components:
+            if comp.aligned_value is not None:
+                if comp.aligned_value.country_iso3 != self.country_iso3:
+                    raise ValueError(
+                        f"DerivedAlignedValue {self.derived_indicator_code!r}: "
+                        f"country isolation violated — component "
+                        f"{comp.indicator_code!r} country "
+                        f"{comp.aligned_value.country_iso3!r} != derived "
+                        f"country {self.country_iso3!r}"
+                    )
+        # Same scoring snapshot: every present component aligned to the
+        # same scoring_period as the derived value.
+        for comp in self.components:
+            if comp.aligned_value is not None:
+                if comp.aligned_value.scoring_period != self.scoring_period:
+                    raise ValueError(
+                        f"DerivedAlignedValue {self.derived_indicator_code!r}: "
+                        f"scoring period mismatch — component "
+                        f"{comp.indicator_code!r} aligned to "
+                        f"{comp.aligned_value.scoring_period.label} != "
+                        f"derived {self.scoring_period.label}"
+                    )
+        # Missingness: if any required component is missing, derived_value
+        # must be None (MISSING != ZERO — never zero-filled).
+        any_missing = any(c.aligned_value is None for c in self.components)
+        if any_missing and self.derived_value is not None:
+            raise ValueError(
+                f"DerivedAlignedValue {self.derived_indicator_code!r}: "
+                "derived_value must be None when a required component is "
+                "missing (MISSING != ZERO)"
+            )
+        # Backtest safety: if any present component is unsafe, the derived
+        # result cannot be backtest_safe. No formula upgrades unsafe inputs.
+        if self.backtest_safe:
+            for comp in self.components:
+                if comp.aligned_value is not None and not comp.component_backtest_safe:
+                    raise ValueError(
+                        f"DerivedAlignedValue {self.derived_indicator_code!r}: "
+                        "backtest_safe=True requires ALL present components to "
+                        f"be backtest_safe — component {comp.indicator_code!r} "
+                        "is unsafe"
+                    )
 
 
 # --- Momentum (Section 9; Sprint 5.7: WGI OWN_HISTORY only) ---------------------
@@ -743,8 +932,18 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # registry family declaration alone NEVER enables a dimension. Education
     # is deliberately NOT in either set. All v0.6 WGI + DSR + credit-gap
     # configuration unchanged.
-    version_id="normalization-v0.7",
-    normalization_method="sprint-6.4-education-direct-0-100-explicit-dimension-gates",
+    # v0.8: Sprint 6.7 (DEC-034) — WID WEALTH_SHARE_TOP_10 COMPLEMENT_0_100
+    # level. The level_score = 100 * (1 - aligned_raw_share). The [0,1]
+    # domain is the NORMALIZATION domain, NOT a WID ingestion validity domain
+    # (Sprint 6.6.2 ISSUE-005 — finite provider values outside [0,1] are
+    # preserved as immutable Observation.value; normalization raises
+    # NormalizationDataError for such values, never clamps, never silently
+    # returns None). Relative and momentum stay None (DEC-034 approves
+    # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
+    # a level-only family with no relative/momentum path. All v0.7 WGI +
+    # DSR + credit-gap + Education configuration unchanged.
+    version_id="normalization-v0.8",
+    normalization_method="sprint-6.7-wid-wealth-complement-0-100",
     reference_universe_id="tracked_8",
     momentum_windows={
         "RULE_OF_LAW_WGI_SCORE": (3, 5),
@@ -1241,24 +1440,25 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
         NormalizationSpec(
             indicator_code="WEALTH_SHARE_TOP_10",
             direction=IndicatorStrengthDirection.negative,
-            level_family=NormalizationFamily.monotonic_negative,
-            relative_family=NormalizationFamily.cross_sectional_relative,
-            momentum_family=NormalizationFamily.own_history,
-            momentum_windows=(5,),
+            level_family=NormalizationFamily.complement_0_100,
+            relative_family=None,  # DEC-034: relative NOT approved
+            momentum_family=None,  # DEC-034: momentum NOT approved
             freshness_class=FreshnessClass.annual,
             absolute_comparable=True,
-            relative_comparable=True,
             notes=(
                 "Top 10% net personal wealth share (WID shwealj992 p90p100, "
-                "Sprint 5.20). Direction: higher share = greater wealth "
-                "concentration = weaker. MONOTONIC_NEGATIVE direction is "
-                "defensible, but NO numeric curve is approved — '100 - "
-                "share*100' is NOT an approved mapping. Raw provider "
-                "fraction (0-1) stored unchanged. data_quality preserved in "
-                "raw_payload but NOT used for filtering (official semantics "
-                "unverified). Feeds the PARTIAL-capped Wealth / opportunity "
-                "/ values gaps force (DEC-009 ceiling — wealth share does "
-                "not address opportunity or values/social gaps)."
+                "Sprint 5.20). Sprint 6.7 (DEC-034): level reclassified to "
+                "COMPLEMENT_0_100 — level_score = 100 * (1 - raw_share). "
+                "The [0,1] domain is the NORMALIZATION domain, NOT a WID "
+                "ingestion validity domain (Sprint 6.6.2 ISSUE-005). A "
+                "finite provider value outside [0,1] is preserved as the "
+                "immutable raw Observation.value; normalization raises "
+                "NormalizationDataError for such values (never clamps, never "
+                "silently returns None). Relative and momentum stay None "
+                "(DEC-034 approves neither). Feeds the PARTIAL-capped Wealth "
+                "/ opportunity / values gaps force as a PROXY_CONDITION "
+                "(DEC-009 ceiling — wealth share does not address opportunity "
+                "or values/social gaps)."
             ),
         ),
     )

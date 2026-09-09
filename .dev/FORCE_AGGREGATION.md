@@ -50,6 +50,19 @@ normalization layer (see NORMALIZATION.md Sprint 6.4): explicit
 dimension approval gates prevent Education's candidate OWN_HISTORY /
 CROSS_SECTIONAL_RELATIVE families from silently executing.
 
+Sprint 6.7 (DEC-034) promotes Wealth-gap to the fifth executable force:
+`WEALTH_SHARE_TOP_10` reclassified to `COMPLEMENT_0_100` (level_score =
+100 * (1 - raw_share)); promoted from `SUPPORTING_CONTEXT` to
+`PROXY_CONDITION`. `GINI_INDEX` stays `SUPPORTING_CONTEXT` (income
+inequality != wealth concentration; not averaged, not combined). Force
+promoted from `DEFERRED_MULTI` to `IDENTITY_SINGLE`. Coverage stays
+PARTIAL. Wealth-gap relative/momentum/confidence stay None (DEC-034
+approves only the level). 5 of 17 forces are now executable (Rule of
+law, Corruption, Internal conflict proxy, Education, Wealth-gap);
+12 of 17 are intentionally None. force-aggregation-v0.2 →
+force-aggregation-v0.3 (Wealth-gap promotion only — no new arithmetic,
+no new aggregation mode). No force persistence, no public force API.
+
 ## 1. Permanent force-layer invariants
 
 These rules are permanent. They cannot be relaxed by a future sprint
@@ -172,13 +185,13 @@ unless a different non-numeric role is methodologically justified.
 
 | Force | Indicators | Role | Reason |
 |---|---|---|---|
-| Education | `TERTIARY_ATTAINMENT_25_34` | `PROXY_CONDITION` (Sprint 6.4, DEC-032) | DIRECT_0_100 level executable (normalization-v0.7). Aligned raw OECD percentage preserved unchanged. Coverage stays PARTIAL. No relative, no momentum, no confidence. |
+| Education | `TERTIARY_ATTAINMENT_25_34` | `PROXY_CONDITION` (Sprint 6.4, DEC-032) | DIRECT_0_100 level executable (normalization-v0.8). Aligned raw OECD percentage preserved unchanged. Coverage stays PARTIAL. No relative, no momentum, no confidence. |
 | Productivity / output growth | `GDP_GROWTH`, `LABOUR_PRODUCTIVITY_PER_HOUR` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. DEC-033/Sprint 6.5: DEFER_PRODUCTIVITY_LEVEL + DEFER_GDP_GROWTH_LEVEL — productivity raw USD PPP/hour is unbounded with no 0-100 semantics and no official benchmark; GDP growth is inherently a rate of change, not a level. Both stay SUPPORTING_CONTEXT. |
 | Cost competitiveness | `UNIT_LABOUR_COST_GROWTH`, `INFLATION_CPI` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
 | Trade and capital flows | `EXPORTS_GDP`, `IMPORTS_GDP`, `TRADE_BALANCE`, `CURRENT_ACCOUNT_GDP` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
 | Infrastructure and investment | `GROSS_CAPITAL_FORMATION_GDP` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
 | Military strength | `MILITARY_EXPENDITURE_USD`, `MILITARY_EXPENDITURE_GDP` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED; force capped PARTIAL. |
-| Wealth / opportunity / values gaps | `GINI_INDEX`, `WEALTH_SHARE_TOP_10` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED; force capped PARTIAL. |
+| Wealth / opportunity / values gaps | `GINI_INDEX` (SUPPORTING_CONTEXT), `WEALTH_SHARE_TOP_10` (PROXY_CONDITION) | `PROXY_CONDITION` + `SUPPORTING_CONTEXT` | Wealth-gap level = 100*(1-raw_share); Gini non-scoring; force capped PARTIAL. |
 
 No existing indicator normalization methodology is changed.
 
@@ -241,7 +254,7 @@ in provenance. Do not pick equal weights merely because no weights exist.
 | 11 | Infrastructure and investment | — | `GROSS_CAPITAL_FORMATION_GDP` | SUPPORTING_CONTEXT | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred |
 | 12 | Indebtedness | — | `DEBT_SERVICE_RATIO`, `CREDIT_TO_GDP_GAP`, `GOVERNMENT_DEBT_GDP` | CORE_CONDITION + VULNERABILITY_PENALTY + SUPPORTING_CONTEXT | DSR only | — | — | DEFERRED_MULTI | NO | NO | NO | DSR + credit gap cannot be naively averaged; government debt unscored; no composition formula approved |
 | 13 | Military strength | PARTIAL | `MILITARY_EXPENDITURE_USD`, `MILITARY_EXPENDITURE_GDP` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; force capped PARTIAL |
-| 14 | Wealth / opportunity / values gaps | PARTIAL | `GINI_INDEX`, `WEALTH_SHARE_TOP_10` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; force capped PARTIAL |
+| 14 | Wealth / opportunity / values gaps | PARTIAL | `GINI_INDEX`, `WEALTH_SHARE_TOP_10` | SUPPORTING_CONTEXT + PROXY_CONDITION | YES | — | — | IDENTITY_SINGLE | YES | NO | NO | Sprint 6.7 (DEC-034): WID wealth-share proxy; Gini non-scoring; coverage stays PARTIAL |
 | 15 | Internal conflict | PARTIAL | `POLITICAL_STABILITY_WGI_SCORE` | PROXY_CONDITION | YES | YES | YES | IDENTITY_SINGLE | YES | YES | YES | Single WGI proxy condition; identity inherits semantics; coverage stays PARTIAL |
 | 16 | Geography | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
 | 17 | Acts of nature | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
@@ -250,7 +263,7 @@ in provenance. Do not pick equal weights merely because no weights exist.
 relative + momentum (Rule of law, Corruption, Internal conflict proxy).
 14 forces deferred.**
 
-## 5.1 Current force-level approval matrix (17 forces) — force-aggregation-v0.2
+## 5.1 Current force-level approval matrix (17 forces) — force-aggregation-v0.3
 
 | # | Force | Coverage ceiling | Mapped indicators | Roles | Exec level | Exec relative | Exec momentum | Aggregation mode | Level approved? | Relative approved? | Momentum approved? | Why |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -267,7 +280,7 @@ relative + momentum (Rule of law, Corruption, Internal conflict proxy).
 | 11 | Infrastructure and investment | — | `GROSS_CAPITAL_FORMATION_GDP` | SUPPORTING_CONTEXT | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred |
 | 12 | Indebtedness | — | `DEBT_SERVICE_RATIO`, `CREDIT_TO_GDP_GAP`, `GOVERNMENT_DEBT_GDP` | CORE_CONDITION + VULNERABILITY_PENALTY + SUPPORTING_CONTEXT | DSR only | — | — | DEFERRED_MULTI | NO | NO | NO | DSR + credit gap cannot be naively averaged; government debt unscored; no composition formula approved |
 | 13 | Military strength | PARTIAL | `MILITARY_EXPENDITURE_USD`, `MILITARY_EXPENDITURE_GDP` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; force capped PARTIAL |
-| 14 | Wealth / opportunity / values gaps | PARTIAL | `GINI_INDEX`, `WEALTH_SHARE_TOP_10` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; force capped PARTIAL |
+| 14 | Wealth / opportunity / values gaps | PARTIAL | `GINI_INDEX`, `WEALTH_SHARE_TOP_10` | SUPPORTING_CONTEXT + PROXY_CONDITION | YES | — | — | IDENTITY_SINGLE | YES | NO | NO | Sprint 6.7 (DEC-034): WID wealth-share proxy; Gini non-scoring; coverage stays PARTIAL |
 | 15 | Internal conflict | PARTIAL | `POLITICAL_STABILITY_WGI_SCORE` | PROXY_CONDITION | YES | YES | YES | IDENTITY_SINGLE | YES | YES | YES | Single WGI proxy condition; identity inherits semantics; coverage stays PARTIAL |
 | 16 | Geography | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
 | 17 | Acts of nature | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
@@ -338,8 +351,8 @@ everywhere.
 
 Two separate version layers:
 
-- Indicator normalization version: `normalization-v0.7` (Sprint 6.4)
-- Force aggregation version: `force-aggregation-v0.2` (Sprint 6.4)
+- Indicator normalization version: `normalization-v0.8` (Sprint 6.7)
+- Force aggregation version: `force-aggregation-v0.3` (Sprint 6.7)
 
 A future `ForceSignal` records BOTH. Sprint 5.21 itself changes no
 executable economic output — `force-aggregation-v0.1` was the methodology
@@ -454,22 +467,19 @@ Wealth-gap force level is defined by WEALTH_SHARE_TOP_10 (PROXY_CONDITION)
 alone; GINI_INDEX provides non-scoring context (income inequality is
 related but NOT interchangeable with wealth concentration).
 
-### Impact
+### Impact (Sprint 6.7 IMPLEMENTED)
 
-NO production code changed. NO force aggregation code changes. NO
-normalization code changes. Model versions unchanged:
-`normalization-v0.7`, `force-aggregation-v0.2`. Wealth-gap force stays
-`SUPPORTING_CONTEXT` / `DEFERRED_MULTI` with `level_score = None`.
+COMPLEMENT_0_100 is now executable for `WEALTH_SHARE_TOP_10`. Wealth-gap
+force promoted from `DEFERRED_MULTI` to `IDENTITY_SINGLE` with
+`WEALTH_SHARE_TOP_10` as `PROXY_CONDITION` and `GINI_INDEX` as
+`SUPPORTING_CONTEXT`. Model versions bumped:
+`normalization-v0.7` → `normalization-v0.8`,
+`force-aggregation-v0.2` → `force-aggregation-v0.3`.
+5/17 forces executable; 12/17 intentionally deferred.
 confidence = None. backtest_safe = False.
 
-pytest 571 passed (unchanged — no code changes). DB unchanged
+pytest 620 passed (579 baseline + 41 new). DB unchanged
 (6814/27/22/10/1872). No migration, no ingestion, no persistence.
 No commit/push.
 
 ### Next
-
-Sprint 6.7 — WID wealth-share level + wealth-gap proxy implementation.
-Implement COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 and promote the
-Wealth-gap force to the 5th executable force via PROXY_CONDITION +
-IDENTITY_SINGLE. Bump normalization-v0.7 → v0.8 and
-force-aggregation-v0.2 → v0.3.

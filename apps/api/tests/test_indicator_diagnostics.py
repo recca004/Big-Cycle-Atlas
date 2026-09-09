@@ -586,7 +586,7 @@ async def test_wgi_dsr_credit_gap_outputs_unchanged_and_confidence_none(client):
 
 def test_model_version_unchanged_and_no_force_fields():
     # Sprint 5.14 changes raw auxiliary-data capability ONLY.
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.7"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.8"
     signal_fields = set(get_type_hints(NormalizedSignal))
     for forbidden in ("force_score", "weight", "phase", "stage", "measurement_uncertainty"):
         assert forbidden not in signal_fields

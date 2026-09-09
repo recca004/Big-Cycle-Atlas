@@ -91,7 +91,7 @@ outside [0,1] is now accepted and preserved as the immutable raw
 WID ingestion validity domain. The adapter still rejects: empty value,
 non-numeric text, NaN, +inf, -inf, wrong variable/percentile/age/pop/country
 identity. 7 new adapter regression tests + 3 new persistence regression tests.
-pytest 581 passed. No existing live data affected (all 670 obs are in [0,1]).
+pytest 579 passed. No existing live data affected (all 670 obs are in [0,1]).
 
 ### Lesson
 Provider data validity != Atlas normalization representability. Never convert

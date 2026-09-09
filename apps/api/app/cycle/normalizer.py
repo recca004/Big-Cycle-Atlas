@@ -1,7 +1,7 @@
 """Indicator-level normalizer — Sprint 5.6 + Sprint 5.7 momentum + Sprint 5.8
 relative + Sprint 5.10 DSR own-history level + Sprint 5.12 credit-gap
 one-sided vulnerability level + Sprint 6.4 Education DIRECT_0_100 + explicit
-dimension approval gates.
+dimension approval gates + Sprint 6.7 WID wealth COMPLEMENT_0_100.
 
 Layering (NORMALIZATION.md, preserved):
 
@@ -9,8 +9,9 @@ Layering (NORMALIZATION.md, preserved):
 
 This module works entirely at the INDICATOR level. No force aggregation, no
 force weights, no Big Cycle phase — force aggregation is owned by a
-separately versioned layer (`force-aggregation-v0.2`, DEC-029/Sprint 5.21 +
-DEC-032/Sprint 6.4); 4 of 17 forces are executable via IDENTITY_SINGLE.
+separately versioned layer (`force-aggregation-v0.3`, DEC-029/Sprint 5.21 +
+DEC-032/Sprint 6.4 + DEC-034/Sprint 6.7); 5 of 17 forces are executable via
+IDENTITY_SINGLE.
 
 Implemented (Sprint 5.6): DIRECT_0_100 level for the three WGI governance
 scores. Implemented (Sprint 5.7, DEC-016): OWN_HISTORY momentum for the WGI
@@ -68,6 +69,15 @@ proxy level_score. Education relative and momentum stay None (DEC-032
 approves neither) — the candidate OWN_HISTORY / CROSS_SECTIONAL_RELATIVE
 families are gated by the v0.7 explicit approved sets (WGI x3 only).
 Confidence stays None.
+
+Implemented (Sprint 6.7, DEC-034): COMPLEMENT_0_100 LEVEL for
+WEALTH_SHARE_TOP_10 — the fourth non-WGI level signal. The level_score =
+100 * (1 - aligned_raw_share). The [0,1] domain is the NORMALIZATION
+domain, NOT a WID ingestion validity domain (Sprint 6.6.2 ISSUE-005 —
+finite provider values outside [0,1] are preserved as immutable
+Observation.value; normalization raises NormalizationDataError for such
+values, never clamps, never silently returns None). Relative and momentum
+stay None (DEC-034 approves neither). Confidence stays None.
 
 Execution gates: OWN_HISTORY level requires BOTH the registry level family
 AND an explicit own_history_level_configs entry in the model version — a
@@ -275,11 +285,16 @@ async def normalize_indicator_as_of(
         return await _normalize_one_sided_vulnerability_as_of(
             session, spec, country_iso3, scoring_period, model_config, freshness_policy
         )
+    if spec.level_family is NormalizationFamily.complement_0_100:
+        return await _normalize_complement_0_100_as_of(
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy
+        )
     raise NormalizationNotImplementedError(
         f"{indicator_code}: level family {spec.level_family.value} is not "
         "implemented (executable: DIRECT_0_100 for the WGI x3 + "
         "TERTIARY_ATTAINMENT_25_34, OWN_HISTORY for DEBT_SERVICE_RATIO only, "
-        "ONE_SIDED_VULNERABILITY for CREDIT_TO_GDP_GAP only)"
+        "ONE_SIDED_VULNERABILITY for CREDIT_TO_GDP_GAP only, "
+        "COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 only)"
     )
 
 
@@ -427,6 +442,70 @@ async def _normalize_own_history_as_of(
             stress_percentile=stress_percentile,
             level_score=level_score,
         ),
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
+    )
+
+
+async def _normalize_complement_0_100_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+) -> NormalizedSignal | None:
+    """COMPLEMENT_0_100 level (DEC-034, Sprint 6.7): WEALTH_SHARE_TOP_10 only.
+
+    level_score = 100 * (1 - aligned_raw_share) for raw in [0, 1].
+    A present aligned raw outside [0, 1] raises NormalizationDataError —
+    never clamps, never silently returns None. The raw Observation remains
+    intact (Sprint 6.6.2 ISSUE-005: provider validity != normalization
+    representability).
+
+    Relative and momentum stay None (DEC-034 approves neither). Confidence
+    stays None. Freshness gates usability only and NEVER scales the score.
+    """
+    indicator_code = spec.indicator_code
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+
+    aligned = await align_observation_as_of(
+        session, country_iso3, indicator_code, scoring_period
+    )
+    if aligned is None:
+        return None  # no eligible observation — no signal, never a zero
+
+    freshness = evaluate_freshness(
+        own_period_age(aligned.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        # Too stale: no signal for this snapshot — never a zero score.
+        return None
+
+    raw = aligned.raw_value
+    if not 0.0 <= raw <= 1.0:
+        raise NormalizationDataError(
+            f"{indicator_code} for {country_iso3} at source period "
+            f"{aligned.source_period}: COMPLEMENT_0_100 expects a provider "
+            f"value in [0, 1], got {raw} — refusing to clamp"
+        )
+
+    level_score = 100.0 * (1.0 - raw)
+
+    return NormalizedSignal(
+        indicator_code=indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=raw,
+        source_period=aligned.source_period,
+        method=NormalizationFamily.complement_0_100,
+        model_version=model_config.version_id,
+        level_score=level_score,
+        relative_score=None,  # DEC-034: relative NOT approved
+        momentum=None,  # DEC-034: momentum NOT approved
+        confidence=None,  # deliberately not calculated (composition unresolved, §17)
+        reference_universe_id=None,
         backtest_safe=model_config.backtest_safe,
         freshness_factor=freshness.factor,
         is_stale=freshness.is_stale,

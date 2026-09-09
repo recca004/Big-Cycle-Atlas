@@ -58,7 +58,7 @@ def _make_wgi_signal(
         raw_value=level if level is not None else 0.0,
         source_period="2024",
         method=NormalizationFamily.direct_0_100,
-        model_version="normalization-v0.7",
+        model_version="normalization-v0.8",
         level_score=level,
         relative_score=relative,
         momentum=momentum,
@@ -83,7 +83,7 @@ def _make_dsr_signal(
         raw_value=15.0,
         source_period="2025-Q1",
         method=NormalizationFamily.own_history,
-        model_version="normalization-v0.7",
+        model_version="normalization-v0.8",
         level_score=level,
         relative_score=None,
         momentum=None,
@@ -104,7 +104,7 @@ def _make_credit_gap_signal(
         raw_value=1.0,
         source_period="2025-Q1",
         method=NormalizationFamily.one_sided_vulnerability,
-        model_version="normalization-v0.7",
+        model_version="normalization-v0.8",
         level_score=level,
         relative_score=None,
         momentum=None,
@@ -352,8 +352,8 @@ def test_versions_correct():
         component_signals={"RULE_OF_LAW_WGI_SCORE": signal},
         coverage_status=ForceCoverageStatus.available,
     )
-    assert fs.force_model_version == "force-aggregation-v0.2"
-    assert fs.normalization_model_version == "normalization-v0.7"
+    assert fs.force_model_version == "force-aggregation-v0.3"
+    assert fs.normalization_model_version == "normalization-v0.8"
 
 
 # --- 15: supporting context cannot alter numeric result ----------------------
@@ -362,31 +362,31 @@ def test_versions_correct():
 def test_supporting_context_cannot_alter_numeric_result():
     """A deferred force with supporting context must have None scores.
 
-    Uses wealth_opportunity_values_gaps (SUPPORTING_CONTEXT, DEFERRED_MULTI)
-    — Education was promoted to PROXY_CONDITION in Sprint 6.4 so it no
-    longer fits this test.
+    Uses military_strength (2 SUPPORTING_CONTEXT, DEFERRED_MULTI) —
+    wealth_opportunity_values_gaps was promoted to PROXY_CONDITION +
+    IDENTITY_SINGLE in Sprint 6.7 so it no longer fits this test.
     """
-    spec = FORCE_AGGREGATION_CONFIGS["wealth_opportunity_values_gaps"]
+    spec = FORCE_AGGREGATION_CONFIGS["military_strength"]
     fake_signal = NormalizedSignal(
-        indicator_code="GINI_INDEX",
+        indicator_code="MILITARY_EXPENDITURE_GDP",
         country_iso3="CHE",
         as_of_period=ScoringPeriod(2025, 2),
-        raw_value=45.0,
+        raw_value=2.5,
         source_period="2024",
         method=NormalizationFamily.monotonic_negative,
-        model_version="normalization-v0.7",
+        model_version="normalization-v0.8",
         level_score=90.0,  # fake — should NOT propagate
     )
     fs = aggregate_force_from_signals(
         force_spec=spec,
         country_iso3="CHE",
         scoring_period="2025-Q2",
-        component_signals={"GINI_INDEX": fake_signal},
+        component_signals={"MILITARY_EXPENDITURE_GDP": fake_signal},
         coverage_status=ForceCoverageStatus.partial,
     )
     assert fs.level_score is None
     assert fs.aggregation_method is ForceAggregationMode.deferred_multi
-    assert "GINI_INDEX" in fs.deferred_components
+    assert "MILITARY_EXPENDITURE_GDP" in fs.deferred_components
 
 
 def test_education_proxy_identity_copies_exact_level():
@@ -408,7 +408,7 @@ def test_education_proxy_identity_copies_exact_level():
         raw_value=52.0,
         source_period="2024",
         method=NormalizationFamily.direct_0_100,
-        model_version="normalization-v0.7",
+        model_version="normalization-v0.8",
         level_score=52.0,
     )
     fs = aggregate_force_from_signals(
@@ -662,7 +662,7 @@ def test_normalization_version_copied_from_component_signal():
         coverage_status=ForceCoverageStatus.available,
     )
     assert fs.normalization_model_version == signal.model_version
-    assert fs.normalization_model_version == "normalization-v0.7"
+    assert fs.normalization_model_version == "normalization-v0.8"
 
 
 def test_normalization_version_fallback_when_no_signal():

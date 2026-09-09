@@ -5,12 +5,12 @@ Authoritative wording: docs/data-model.md (names) and packages/shared/src/index.
 
 This module is a typed CONFIGURATION layer, not a scoring engine. It contains no
 weights, no normalization parameters, and no score formulas — those live in
-the separately versioned normalization (normalization-v0.7) and force
-aggregation (force-aggregation-v0.2) layers. Coverage is not strength: a force
+the separately versioned normalization (normalization-v0.8) and force
+aggregation (force-aggregation-v0.3) layers. Coverage is not strength: a force
 marked "available" means the mapped live indicators have observations, nothing
-more. Four force-level identity/proxy signals are executable via IDENTITY_SINGLE
-(Rule of law, Corruption, Internal conflict proxy, Education proxy); 13/17
-forces are intentionally unscored.
+more. Five force-level identity/proxy signals are executable via IDENTITY_SINGLE
+(Rule of law, Corruption, Internal conflict proxy, Education proxy, Wealth-gap
+proxy); 12/17 forces are intentionally unscored.
 
 Mapping discipline:
 - live_indicator_codes — canonical indicators with a defensible, direct

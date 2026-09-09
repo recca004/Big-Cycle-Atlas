@@ -1,5 +1,267 @@
 # Devlog
 
+## 2026-09-10 — Sprint 6.10: Derived Aligned Value Architecture (DESIGN_ONLY)
+
+### Summary
+
+Sprint 6.10 designed the smallest safe architecture for derived
+indicators built from two or more already-aligned source observations.
+A minimal non-executable frozen dataclass contract was added: no
+formula is approved, no derivation is implemented, no model-version
+bump, no migration, no persistence. The contract enforces six required
+invariants at construction.
+
+### Changes
+
+- **DEC-037** (`.dev/DECISIONS.md`): new decision recorded.
+  - Verdict: DESIGN_ONLY — typed contract, NO formula approved, NO
+    derivation implemented
+- **Code** (NEW, non-executable):
+  - `apps/api/app/cycle/normalization_definitions.py` — two frozen
+    dataclasses added: `DerivedComponentProvenance` (per-component
+    provenance wrapper) and `DerivedAlignedValue` (derived result with
+    formula_id + formula_version + components tuple)
+- **Tests** (NEW):
+  - `apps/api/tests/test_derived_aligned_value.py` — 17 focused offline
+    tests proving the six required invariants
+- **Documentation**: PROJECT_STATUS.md, HANDOFF.md, BACKLOG.md,
+  DEVLOG.md updated for Sprint 6.10 closeout. NORMALIZATION.md updated
+  with the derived-layer contract section.
+
+### Key findings
+
+1. **Object placement**: DerivedAlignedValue sits between AlignedValue
+   and NormalizedSignal in the pipeline:
+   `Observation -> AlignedValue -> DerivedAlignedValue ->
+   NormalizedSignal`. It never creates or masquerades as a raw
+   Observation.
+2. **Provenance contract**: AlignedValue lacks Observation.id,
+   source_series_id, data_source_id, and release-date metadata. A
+   separate DerivedComponentProvenance wrapper extends provenance
+   without mutating AlignedValue (safer than enriching AlignedValue,
+   which would risk the 620-test baseline).
+3. **Country isolation**: every present component must match the
+   derived country_iso3. Mixed-country derivation is rejected at
+   construction.
+4. **As-of reuse**: the derived layer consumes existing AlignedValue
+   objects via `align_observation_as_of`. It must NOT query raw
+   observations independently or introduce a second as-of algorithm.
+5. **Missingness**: if any required component is missing,
+   derived_value is None (MISSING != ZERO — never zero-filled).
+6. **Backtest safety**: backtest_safe=True requires ALL present
+   components to be component_backtest_safe. No formula upgrades
+   unsafe inputs. Currently False everywhere (release-date discipline
+   is Milestone 9).
+7. **Formula versioning**: formula_id + formula_version travel with
+   every derived value, in a SEPARATE namespace from
+   normalization-v0.8 and force-aggregation-v0.3. No formula_id is
+   approved in Sprint 6.10.
+8. **LPI edition/period resolution**: the 2023 LPI edition is
+   represented by a 2022 observation period in the WB API (survey
+   conducted Sep-Nov 2022, report published April 2023). Edition year
+   and provider period year are different labels for the same data
+   point. Resolved from authoritative WB DataBank glossary + press
+   release.
+
+### Impact
+
+NO production executable behavior changed. NO force code changes. NO
+normalization code changes. NO model-version bump
+(normalization-v0.8, force-aggregation-v0.3 unchanged). 5/17 forces
+executable, 12/17 intentionally deferred. No migration, no ingestion,
+no persistence. No commit/push.
+
+pytest 637 passed (620 baseline + 17 new). DB unchanged
+(6814/27/22/10/1872).
+
+---
+
+## 2026-09-10 — Sprint 6.9: Infrastructure & Investment Proxy Level Audit
+
+### Summary
+
+Sprint 6.9 audited whether the conceptual force "Infrastructure and
+investment" can receive a defensible PARTIAL proxy level from an
+official, cross-country provider measure. Four WB candidate indicators
+were audited from official WB DataBank metadata. No candidate receives
+a defensible executable LEVEL. The force remains DEFERRED_MULTI /
+unscored. GCF reconfirmed CONTEXTUAL_DEFERRED (DEC-018).
+
+### Changes
+
+- **DEC-036** (`.dev/DECISIONS.md`): new decision recorded.
+  - Verdict: DEFER_INFRASTRUCTURE_PROXY_LEVEL
+- **Research script** (NEW, read-only):
+  - `scripts/_sprint_6_9_infra_profile.py` — tracked-8 + broader WB
+    profile for LPI Overall, LPI Infrastructure, electricity access,
+    internet users
+- **Documentation**: PROJECT_STATUS.md, HANDOFF.md, BACKLOG.md,
+  DEVLOG.md updated for Sprint 6.9 closeout. Sprint 6.8 closeout
+  completed (stale 445→620, 4/17→5/17, v0.7→v0.8, v0.2→v0.3
+  references fixed in PROJECT_STATUS; DEC-035 wording refined in
+  DECISIONS.md).
+
+### Key findings
+
+1. **LPI Overall (LP.LPI.OVRL.XQ, 1-5 scale)**: DISCONTINUED beyond
+   2023 edition. Perception-based survey composite, infrequent (7 obs
+   / 15 years), logistics-focused. A dead series cannot serve as a
+   live scoring input.
+2. **LPI Infrastructure (LP.LPI.INFR.XQ, 1-5 scale)**: same
+   discontinuation/perception/infrequency issues. Closer to
+   infrastructure concept but still a perception survey.
+3. **Access to electricity (EG.ELC.ACCS.ZS, 0-100%)**: 7/8 tracked-8
+   at 100.00% saturation. Does NOT materially distinguish the
+   countries Atlas tracks. Measures access not quality.
+4. **Internet users (IT.NET.USER.ZS, 0-100%)**: less saturated but
+   measures service adoption, not infrastructure quality. Weak
+   semantic fit with "Infrastructure and investment."
+5. **GCF (GROSS_CAPITAL_FORMATION_GDP)**: reconfirmed
+   CONTEXTUAL_DEFERRED (DEC-018). Investment effort not
+   infrastructure quality. High GCF can reflect overinvestment. No
+   defensible universal band.
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO model-version bump (normalization-v0.8,
+force-aggregation-v0.3 unchanged). 5/17 forces executable, 12/17
+intentionally deferred. No migration, no ingestion, no persistence.
+No commit/push.
+
+pytest 620 passed (unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872).
+
+---
+
+## 2026-09-10 — Sprint 6.8: Global Openness Proxy + Derived-Indicator Architecture Audit
+
+### Summary
+
+Sprint 6.8 audited whether Atlas can defensibly create a narrow
+trade-based proxy for Global openness using already-live WB trade
+indicators. The candidate derived indicator
+`trade_openness_gdp = exports_gdp + imports_gdp` is a standard,
+widely used trade-intensity measure. However, it measures REALIZED
+TRADE INTENSITY, not economic STRENGTH, and is structurally confounded
+by country size and geography. No defensible Atlas 0-100 level mapping
+exists. The level is DEFERRED. The derived-indicator architecture is
+conceptually ready for future design but is not implemented.
+
+### Changes
+
+- **DEC-035** (`.dev/DECISIONS.md`): new decision recorded.
+  - Economic verdict: DEFER_GLOBAL_OPENNESS_LEVEL
+  - Architecture verdict: READY_FOR_DERIVED_INDICATOR_LAYER_DESIGN
+- **Research scripts** (NEW, read-only):
+  - `scripts/_sprint_6_8_trade_openness_profile.py` — tracked-8
+    empirical profile using live DB observations
+  - `scripts/_sprint_6_8_wb_broader_profile.py` — broader WB
+    real-economy profile using WB API (233 economies, 5,447 pairs)
+- **Documentation**: PROJECT_STATUS.md, HANDOFF.md, BACKLOG.md,
+  FORCE_AGGREGATION.md (stale v0.7 references fixed), DEVLOG.md
+  (581→579 correction in Sprint 6.6.2 authorization checklist)
+  updated for Sprint 6.8 closeout.
+
+### Key findings
+
+1. **WB provider semantics verified**: EXPORTS_GDP (NE.EXP.GNFS.ZS)
+   and IMPORTS_GDP (NE.IMP.GNFS.ZS) are independently published
+   ratios with the same denominator (GDP). Adding them is
+   mathematically legitimate: (X/GDP) + (M/GDP) = (X+M)/GDP.
+2. **Standard measure**: the trade-to-GDP ratio is the most widely
+   used trade-openness/intensity measure in the empirical literature.
+3. **Intensity != strength**: higher trade intensity does not mean
+   stronger — it may mean small, vulnerable, or re-export-dependent.
+   Lower does not mean weaker — it may mean large or remote.
+4. **Structural confounds**: country size and geography dominate.
+   Belgium has higher trade/GDP than the US because the US is larger.
+5. **Values > 100 are valid**: 32% of WB real economies have trade
+   openness > 100% (HKG 359%, SGP 313%, LUX 351%). DIRECT_0_100 is
+   invalid. CAPPED_AT_100 destroys valid information.
+6. **No defensible level**: no parameter-free transformation maps
+   trade intensity to 0-100 strength. A structural/size-adjusted
+   approach (gravity model) is potentially defensible but requires
+   additional data and a model not available.
+7. **Architecture**: a DerivedAlignedValue layer (component provenance,
+   period-compatibility, on-demand computation) is conceptually
+   clear and useful for any future derived indicator.
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO model-version bump (normalization-v0.8,
+force-aggregation-v0.3 unchanged). 5/17 forces executable, 12/17
+intentionally deferred. No migration, no ingestion, no derived
+persistence. No commit/push.
+
+pytest 620 passed (unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872).
+
+---
+
+## 2026-09-10 — Sprint 6.7: WID Wealth Complement Level + Fifth Executable Force
+
+### Summary
+
+Sprint 6.7 implemented DEC-034 exactly: the WID top-10 wealth share
+received a defensible 0-100 level via the new COMPLEMENT_0_100 family,
+and the Wealth / opportunity / values gaps force was promoted to the
+fifth executable force. No new methodology decision was created.
+
+### Changes
+
+- **NormalizationFamily enum** (`app/cycle/normalization_definitions.py`):
+  added `COMPLEMENT_0_100` (fraction 0-1, negative direction, score =
+  100*(1-raw)).
+- **WEALTH_SHARE_TOP_10 registry** (`app/cycle/normalization_definitions.py`):
+  reclassified from `MONOTONIC_NEGATIVE` to `COMPLEMENT_0_100`.
+  `relative_family` and `momentum_family` set to `None` (DEC-034 approves
+  neither dimension — not just gated, explicitly None).
+- **Normalizer** (`app/cycle/normalizer.py`): added
+  `_normalize_complement_0_100_as_of` — `level_score = 100 * (1 - raw)`
+  for raw in [0,1]; out-of-range raises `NormalizationDataError` (never
+  clamps, never silently None); raw Observation preserved unchanged
+  (Sprint 6.6.2 ISSUE-005 boundary preserved); relative/momentum/
+  confidence stay None; freshness gates usability only.
+- **Model version**: `normalization-v0.7` → `normalization-v0.8`.
+- **Force aggregation** (`app/cycle/force_aggregation_definitions.py`):
+  Wealth-gap force promoted from `DEFERRED_MULTI` to `IDENTITY_SINGLE`;
+  `WEALTH_SHARE_TOP_10` → `PROXY_CONDITION`; `GINI_INDEX` stays
+  `SUPPORTING_CONTEXT` (not averaged, not combined).
+- **Force aggregation version**: `force-aggregation-v0.2` →
+  `force-aggregation-v0.3`.
+- **Tests** (`tests/test_sprint_6_7_wealth_gap.py`, NEW): 41 tests covering
+  COMPLEMENT_0_100 level (raw 0→100, raw 1→0, midpoint 0.5→50, exact float,
+  out-of-range raises, raw preservation, method, version, missing/stale,
+  dimension separation, execution-gate regression, WGI/Education regression,
+  force behavior, 17-force orchestration, multi-country, no-writes).
+- **Existing tests updated**: version assertions (v0.7→v0.8, v0.2→v0.3)
+  across 8 test files; `test_supporting_context_not_scoring_component`
+  fixed to check only eligible components (SUPPORTING_CONTEXT components
+  are allowed in IDENTITY_SINGLE forces as non-scoring provenance);
+  `test_supporting_context_cannot_alter_numeric_result` moved from
+  wealth_opportunity_values_gaps (now IDENTITY_SINGLE) to
+  military_strength (still DEFERRED_MULTI).
+- **Smoke script** (`scripts/_sprint_6_7_smoke.py`, NEW): live read-only
+  smoke at 2025-Q4 for tracked-8.
+
+### Impact
+
+5/17 forces executable (Rule of law, Corruption, Internal conflict proxy,
+Education, Wealth-gap); 12/17 intentionally deferred. confidence = None.
+backtest_safe = False. No migration, no ingestion, no persistence.
+No commit/push.
+
+Live read-only smoke at 2025-Q4 for tracked-8: all invariants pass
+(normalized == 100*(1-raw), force == normalized, relative/momentum/
+confidence None, coverage PARTIAL).
+
+pytest 620 passed (579 baseline + 41 new). DB unchanged
+(6814/27/22/10/1872).
+
+---
+
 ## 2026-09-10 — Sprint 6.6.2: WID Raw-Preservation Guard Fix + Research-Artifact Hardening
 
 ### Summary
@@ -40,7 +302,7 @@ bump (normalization-v0.7, force-aggregation-v0.2 — unchanged). No current
 economic output changes because all existing 670 observations are
 already within [0,1]. No migration. No production re-ingestion required.
 
-pytest 581 passed (571 baseline + 10 new: 7 adapter + 3 persistence).
+pytest 579 passed (571 baseline - 2 removed + 7 adapter + 3 persistence).
 DB unchanged (6814/27/22/10/1872). No commit/push.
 
 ### Sprint 6.7 authorization
@@ -52,7 +314,7 @@ Sprint 6.7 is **AUTHORIZED** — all 9 gate conditions are met:
 4. Raw provider values remain preserved ✓
 5. DEC-034 separates ingestion domain from normalization domain ✓
 6. Full scan finds no existing exact-series observations outside [0,1] ✓
-7. Tests pass (581 > 571) ✓
+7. Tests pass (579 > 571) ✓
 8. DB unchanged ✓
 9. Living docs point to Sprint 6.7 next ✓
 

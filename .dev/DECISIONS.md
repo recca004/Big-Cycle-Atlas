@@ -3359,7 +3359,7 @@ corrects source-ingestion acceptance and research tooling. No current
 economic output changes because all existing 670 observations are
 already within [0,1]. No migration. No production re-ingestion required.
 
-pytest 581 passed (571 baseline + 10 new: 7 adapter + 3 persistence).
+pytest 579 passed (571 baseline - 2 removed + 7 adapter + 3 persistence).
 DB unchanged (6814/27/22/10/1872). No commit/push.
 
 #### Sprint 6.7 authorization
@@ -3375,3 +3375,1260 @@ Sprint 6.7 is **AUTHORIZED** — all 9 gate conditions are met:
 7. Tests pass (581 > 571) ✓
 8. DB unchanged ✓
 9. Living docs point to Sprint 6.7 next ✓
+
+### Sprint 6.7 implementation note (2026-09-10)
+
+Sprint 6.7 IMPLEMENTED DEC-034 exactly — no new methodology decision was
+created. Implementation summary:
+
+1. `NormalizationFamily.COMPLEMENT_0_100` added (NEW family).
+2. `WEALTH_SHARE_TOP_10` reclassified from `MONOTONIC_NEGATIVE` to
+   `COMPLEMENT_0_100`. `relative_family` and `momentum_family` set to
+   `None` (not just gated — DEC-034 approves neither dimension).
+3. `_normalize_complement_0_100_as_of` implemented: `level_score =
+   100 * (1 - raw_share)` for raw in [0,1]; out-of-range raises
+   `NormalizationDataError` (never clamps, never silently None); raw
+   Observation preserved unchanged (Sprint 6.6.2 ISSUE-005 boundary
+   preserved).
+4. `normalization-v0.7` → `normalization-v0.8`.
+5. Wealth-gap force promoted: `WEALTH_SHARE_TOP_10` → `PROXY_CONDITION`;
+   `GINI_INDEX` stays `SUPPORTING_CONTEXT` (not averaged, not combined);
+   `DEFERRED_MULTI` → `IDENTITY_SINGLE`; coverage stays `PARTIAL`.
+6. `force-aggregation-v0.2` → `force-aggregation-v0.3`.
+7. 5/17 forces executable; 12/17 intentionally deferred.
+8. 41 new tests in `test_sprint_6_7_wealth_gap.py`.
+9. Live read-only smoke at 2025-Q4 for tracked-8: all invariants pass
+   (normalized == 100*(1-raw), force == normalized, relative/momentum/
+   confidence None, coverage PARTIAL).
+
+pytest 620 passed (579 baseline + 41 new). DB unchanged
+(6814/27/22/10/1872). No migration, no ingestion, no persistence.
+No commit/push.
+
+---
+
+## DEC-035 — Global openness proxy + derived-indicator architecture audit (DEFER_GLOBAL_OPENNESS_LEVEL; READY_FOR_DERIVED_INDICATOR_LAYER_DESIGN)
+
+Date: 2026-09-10
+Sprint: 6.8
+Status: methodology/architecture/research only — NO implementation, NO model-version bump
+
+### Part 1 — Force semantic: Global openness vs Trade and capital flows
+
+**Global openness** (force_definitions.py code=`global_openness`):
+"Openness to trade, capital, people, and ideas." This is a BROAD
+conceptual force covering:
+
+- international trade integration
+- capital openness
+- migration / people flows
+- technology / information exchange
+- institutional openness
+- foreign-investment openness
+
+**Trade and capital flows** (force_definitions.py code=`trade_capital_flows`):
+"Size and balance of the country's trade and cross-border capital flows."
+This is a SEPARATE force with live indicators: EXPORTS_GDP, IMPORTS_GDP,
+TRADE_BALANCE, CURRENT_ACCOUNT_GDP.
+
+A trade-intensity measure (exports + imports as % GDP) can only be a
+NARROW PROXY for Global openness — it captures realized trade
+integration only, NOT capital openness, migration, technology exchange,
+institutional openness, or foreign-investment openness. If ever
+promoted, coverage ceiling MUST be PARTIAL. This DEC does NOT
+pre-approve promotion.
+
+### Part 2 — WB provider semantics (verified)
+
+**EXPORTS_GDP** — WB code `NE.EXP.GNFS.ZS`:
+- Official name: "Exports of goods and services (% of GDP)"
+- Long definition: "Exports of goods includes changes in the economic
+  ownership of goods from residents to non-residents... Exports of
+  services includes services provided by residents to non-residents.
+  This indicator is expressed as a percentage of Gross Domestic Product
+  (GDP)..."
+- Source: Country official statistics, NSOs/Central Banks; OECD National
+  Accounts; World Bank staff estimates
+- Topic: Economic Policy & Debt: National accounts: Shares of GDP & other
+- Periodicity: Annual
+- Reference period: 1960–2024
+- Aggregation method: Weighted average
+- Scope: goods + services; excludes compensation of employees and
+  investment income (factor services) and transfer payments
+
+**IMPORTS_GDP** — WB code `NE.IMP.GNFS.ZS`:
+- Official name: "Imports of goods and services (% of GDP)"
+- Long definition: "Imports of goods includes change in the economic
+  ownership of goods from non-residents to residents... Imports of
+  services includes services provided by non-residents to residents.
+  This indicator is expressed as a percentage of GDP..."
+- Same source, topic, periodicity, reference period, aggregation method
+- Same scope: goods + services; excludes factor services and transfers
+
+**Both are independently published ratios with the same denominator
+(GDP)**. Adding two percentages of the same denominator IS
+mathematically legitimate: (X/GDP) + (M/GDP) = (X+M)/GDP. Both use
+current-price national-account basis. Both are published on a common
+%GDP basis and suitable for descriptive cross-country comparison,
+subject to normal national-accounts comparability limitations.
+Exports and imports are separate SourceSeries; national-account
+revisions do not necessarily occur consistently across the two
+series, and derived provenance must preserve both component
+observations independently.
+
+### Part 3 — Derived concept audit: trade_openness_gdp
+
+**Candidate**: `trade_openness_gdp = exports_gdp + imports_gdp`
+
+**Semantic**: total gross trade exposure relative to domestic GDP.
+This is the standard "trade openness ratio" or "trade intensity ratio"
+used in the empirical trade literature (UNCTAD, Penn World Tables,
+World Bank). It is a well-known, widely used descriptive measure.
+
+**Critical distinction: openness/intensity vs economic strength**
+
+This distinction is CRITICAL and determines the verdict:
+
+1. **Is this a standard openness/intensity measure?** YES. The
+   trade-to-GDP ratio is the most widely used measure of trade
+   openness/intensity in the empirical literature.
+
+2. **Does higher always mean "more open"?** Not necessarily in a policy
+   sense. Higher trade intensity reflects geography, size, and
+   re-export activity, not just policy openness.
+
+3. **Can the value exceed 100?** YES. Small open economies (SGP, HKG,
+   LUX) routinely exceed 100%. This is economically valid — gross
+   trade flows can exceed GDP when re-exports, value-chain activity,
+   and small domestic base dominate.
+
+4. **Are values above 100 economically valid?** YES. 32% of WB real
+   economies have latest-year trade openness > 100% (Part 7).
+
+5. **Is high openness necessarily economic strength?** NO. High
+   openness can reflect: (a) small domestic base, (b) re-export hub
+   activity, (c) import dependence, (d) vulnerability to external
+   shocks. Low openness can reflect: (a) large domestic economy (USA),
+   (b) geographic remoteness, (c) trade barriers. The measure
+   conflates integration with strength.
+
+6. **Small open economies vs large domestic economies?** Geography
+   and size STRUCTURALLY DOMINATE the measure. Belgium has higher
+   trade/GDP than the US mainly because the US is larger and trades
+   more with itself. This is a structural confound, not a policy
+   difference.
+
+7. **Does geography structurally dominate?** YES. Landlocked,
+   remote, and large countries systematically have lower trade/GDP.
+   Island, small, and transit-hub economies systematically have higher
+   trade/GDP. This is a structural geographic confound.
+
+8. **Does re-export activity distort it?** YES. HKG (359%), SGP
+   (313%), LUX (351%) have extremely high ratios driven by re-export
+   and financial-hub activity, not by domestic economic strength.
+
+9. **Does it measure policy openness or realized trade intensity?**
+   It measures REALIZED trade intensity, NOT policy openness. A
+   country can have low trade barriers but low trade/GDP due to size
+   or remoteness, or high trade/GDP despite barriers due to re-export
+   activity.
+
+**The measure captures REALIZED TRADE INTENSITY, not economic
+strength, not policy openness, and not complete Global openness.**
+
+### Part 4 — Derived-indicator architecture audit
+
+Current permanent layering:
+
+    Data source -> ingestion -> immutable Observation -> as-of
+    alignment -> AlignedValue -> normalized indicator signal ->
+    force score
+
+TRADE_OPENNESS_GDP does NOT exist as a provider Observation. It is a
+DERIVED indicator = exports_gdp + imports_gdp. Both inputs are
+independently published WB ratios with the same denominator (GDP).
+
+**Architecture questions and answers:**
+
+1. **Do we need a new typed DerivedAlignedValue?** Likely YES. An
+   existing AlignedValue carries `indicator_code`, `source_period`,
+   `raw_value`, `vintage_number` — it represents ONE provider
+   observation. A derived value combines TWO provider observations and
+   must NOT lie about source-series identity. A DerivedAlignedValue
+   (or equivalent) should carry: derived_indicator_code, component
+   AlignedValues (with full provenance), derived_value, and derivation
+   formula/version.
+
+2. **Can an existing AlignedValue safely represent a derived value?**
+   NO. An AlignedValue's `indicator_code` and `source_period` imply a
+   single provider observation. A derived value has TWO source periods
+   and TWO source series. Reusing AlignedValue would lose component
+   provenance and misrepresent source identity.
+
+3. **How should component provenance be retained?** The
+   DerivedAlignedValue must reference both component AlignedValues
+   (or their provenance fields) so the derivation is fully
+   reproducible: which export observation, which import observation,
+   which vintages, which source periods.
+
+4. **How should latest-vintage semantics work independently?** Each
+   component must independently use latest-eligible-vintage as-of
+   alignment (DEC-015 period-complete). The derived value is computed
+   AFTER both components are aligned, not before.
+
+5. **If exports and imports come from different source periods, is
+   derivation allowed?** This is the key period-compatibility question
+   (Part 5). The default should be: both components must align to the
+   SAME source period. Combining exports 2024 + imports 2023 into a
+   fake "2024 trade openness" would be a synthetic observation, not a
+   real one.
+
+6. **Must both components align to the SAME source period?**
+   RECOMMENDED YES. The derivation formula (X+M)/GDP requires both
+   numerator components to refer to the same economic period. Mixing
+   different source periods would create a synthetic value with no
+   real economic meaning. An explicit DEC would be needed to relax
+   this.
+
+7. **How is freshness determined?** The derived value's freshness is
+   the MINIMUM (oldest) of the two component freshness values. If
+   either component is stale, the derived value is stale.
+
+8. **What model/version owns the derivation formula?** A new
+   derivation version (separate from normalization-v0.8 and
+   force-aggregation-v0.3) should own the derivation formula and
+   component-compatibility rules. This is a third version layer.
+
+9. **Should derived indicators ever be persisted?** Preferred default:
+   derived values are computed ON DEMAND, never written as raw
+   Observations. No synthetic Observation rows. No derived persistence.
+   This preserves the immutable-Observation invariant.
+
+**Architecture verdict: READY_FOR_DERIVED_INDICATOR_LAYER_DESIGN**
+
+The derived-indicator architecture is conceptually clear and
+separable from the economic question. A DerivedAlignedValue layer
+(with component provenance, period-compatibility rules, and on-demand
+computation) can be designed in a future sprint. The architecture is
+useful for any future derived indicator, not just trade openness.
+However, because the economic verdict is DEFER (Part 8), no force is
+added.
+
+### Part 5 — Missingness / period / vintage rules
+
+**A. Both aligned inputs required**
+
+    missing exports OR missing imports -> derived value None
+
+Never zero-fill. Missing != zero (permanent invariant).
+
+**B. Period compatibility**
+
+RECOMMENDED: `exports source_period == imports source_period` must be
+required. Do NOT silently combine exports 2024 + imports 2023 into a
+fake 2024 trade-openness value. If the latest common source period is
+2023, the derived value uses 2023 for both. An explicit DEC would be
+needed to relax this rule.
+
+**C. Vintage**
+
+Each source component must independently use latest eligible vintage,
+same country, period-complete as-of alignment (DEC-015). The derived
+value is computed AFTER both components are aligned.
+
+**D. Release dates**
+
+Still CURRENT/RESEARCH only. backtest_safe = False. No release-date
+safety until Milestone 9.
+
+### Part 6 — Empirical tracked_8 profile
+
+Read-only script: `scripts/_sprint_6_8_trade_openness_profile.py`
+
+| Country | n common | first | latest | latest exp | latest imp | latest sum | min | median | max |
+|---|---|---|---|---|---|---|---|---|---|
+| USA | 25 | 2000 | 2024 | 10.97 | 14.04 | 25.02 | 22.29 | 26.45 | 30.84 |
+| CHN | 26 | 2000 | 2025 | 21.07 | 16.89 | 37.96 | 34.34 | 40.60 | 63.57 |
+| CHE | 26 | 2000 | 2025 | 78.05 | 69.11 | 147.16 | 89.75 | 120.34 | 147.16 |
+| DEU | 26 | 2000 | 2025 | 40.43 | 38.08 | 78.51 | 58.33 | 76.48 | 88.79 |
+| FRA | 26 | 2000 | 2025 | 33.39 | 33.80 | 67.19 | 52.20 | 61.13 | 75.96 |
+| GBR | 26 | 2000 | 2025 | 30.60 | 31.86 | 62.46 | 50.07 | 58.94 | 69.20 |
+| JPN | 25 | 2000 | 2024 | 21.98 | 22.87 | 44.85 | 19.28 | 30.66 | 44.86 |
+| IND | 26 | 2000 | 2025 | 22.26 | 24.01 | 46.27 | 25.99 | 45.55 | 55.79 |
+
+Pooled tracked_8 (all common-year sums, n=206): min 19.28%, median
+53.56%, max 147.16%. 21 of 206 sums > 100 (all CHE).
+
+Latest-year sums: min 25.02% (USA), median 54.36%, max 147.16% (CHE).
+1 of 8 > 100 (CHE).
+
+Key observations:
+- CHE routinely exceeds 100% — small open economy, re-export/financial
+  hub activity. This is economically valid.
+- USA has the lowest trade openness (25%) — large domestic economy.
+  This does NOT mean the US is "less open" in a policy sense.
+- The tracked_8 range (25% to 147%) spans an order of magnitude,
+  driven primarily by country size and geography, not by policy.
+
+### Part 7 — Broader WB real-economy profile
+
+Read-only script: `scripts/_sprint_6_8_wb_broader_profile.py`
+Source: WB API, real economies only (aggregates removed using WB
+country metadata).
+
+- Economy count (with both exports + imports): 233
+- Year range: 2000–2024
+- Total country-year pairs: 5,447
+
+All country-year sums (n=5,447):
+- min = 0.00%
+- p25 = 52.20%
+- median = 71.74%
+- p75 = 103.24%
+- p90 = 139.20%
+- p95 = 164.29%
+- max = 863.20%
+- > 100 = 1,462 (26.8%)
+
+Latest-year sums per economy (n=233):
+- min = 2.00% (SDN)
+- p25 = 51.65%
+- median = 77.58%
+- p75 = 109.94%
+- p90 = 151.96%
+- p95 = 175.87%
+- max = 359.39% (HKG)
+- > 100 = 74 (31.8%)
+
+Top 10 highest: HKG 359%, LUX 351%, SMR 341%, SGP 313%, IRL 246%,
+DJI 241%, MLT 218%, VIR 206%, ARE 199%, GUY 194%.
+
+Bottom 10 lowest: ARG 28%, PAK 28%, BGD 27%, VEN 26%, USA 25%,
+NER 24%, HTI 19%, ETH 17%, SDN 2%.
+
+Key findings:
+- 32% of real economies have trade openness > 100%. Values above 100
+  are the norm for small open economies, not edge cases.
+- The distribution is extremely wide (2% to 359% in latest year).
+- The top is dominated by small economies, re-export hubs, and
+  financial centers (HKG, SGP, LUX, SMR, MLT, IRL).
+- The bottom is dominated by large economies (USA), geographically
+  remote countries, and fragile states.
+- Country size and geography STRUCTURALLY DOMINATE the measure.
+  This is a descriptive measure of trade intensity, NOT a normative
+  measure of openness or strength.
+
+This profile is descriptive research only. It is NOT used as a score
+curve. The empirical distribution is NOT a defensible calibration
+universe for a level score (it reflects size/geography confounds, not
+strength).
+
+### Part 8 — Level-method candidate comparison
+
+| Candidate | Meaning | Type | Parameters | Midpoint | Size bias | Geography confound | Outlier behavior | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| A. RAW_VALUE_AS_LEVEL | trade intensity = level | LEVEL | none | n/a | EXTREME | EXTREME | unbounded | REJECTED — no 0-100 meaning; values exceed 100 |
+| B. CAPPED_AT_100 | clamp at 100 | LEVEL | cap=100 | n/a | EXTREME | EXTREME | destroys valid info | REJECTED — arbitrary clamp; destroys valid economic information for 32% of economies |
+| C. MONOTONIC_POSITIVE fixed curve | higher = stronger | LEVEL | anchors/thresholds | needs benchmark | EXTREME | EXTREME | unbounded | REJECTED — no defensible anchors; geography dominates |
+| D. MONOTONIC_SATURATING | diminishing returns | LEVEL | saturation shape | needs justification | HIGH | HIGH | bounded | NOT defensible — no external evidence for shape; parameters invented |
+| E. CROSS_SECTIONAL_RELATIVE | rank in universe | RELATIVE | universe, window | median of universe | removes (by design) | partial | bounded | NOT a LEVEL — relative dimension |
+| F. OWN_HISTORY | change vs own past | MOMENTUM | window | n/a | none | none | bounded | NOT a LEVEL — momentum dimension |
+| G. STRUCTURAL/SIZE-ADJUSTED | observed vs expected given size/geography | LEVEL | population, GDP, geography model | depends on model | REMOVES (by design) | REMOVES | bounded | POTENTIALLY DEFENSIBLE but requires additional data and a structural model not available this sprint |
+| H. CONTEXTUAL_DEFERRED | none | none | n/a | n/a | n/a | n/a | n/a | VALID — no defensible absolute strength mapping exists |
+
+**Verdict: NO defensible Atlas 0-100 LEVEL mapping exists for
+trade_openness_gdp.**
+
+The fundamental problem is that trade openness measures REALIZED
+TRADE INTENSITY, not economic STRENGTH. Higher trade intensity does
+not mean stronger — it may mean small, vulnerable, re-export-dependent,
+or import-dependent. Lower trade intensity does not mean weaker — it
+may mean large, self-sufficient, or geographically remote. No
+parameter-free transformation maps trade intensity to a 0-100 strength
+score. Any fixed curve, saturation, or cap would invent arbitrary
+parameters without external justification.
+
+The ONLY potentially defensible approach is G (structural/size-adjusted
+expectation), which would compare realized trade intensity to an
+expected value conditional on population, GDP size, geography, and
+landlocked/island status. This would remove the structural confounds.
+But this requires additional data (population, geography classifi-
+cations) and a structural model that does not exist in Atlas today.
+It is a candidate for a FUTURE sprint, not this one.
+
+**Therefore: CONTEXTUAL_DEFERRED is the appropriate status.**
+
+### Part 9 — Proxy-force eligibility
+
+Because NO executable LEVEL is defensible (Part 8 verdict: DEFER):
+
+- TRADE_OPENNESS_GDP cannot become PROXY_CONDITION (no level to copy)
+- Global openness cannot become IDENTITY_SINGLE (no scoring component)
+- Global openness remains UNSCORED
+- EXPORTS_GDP and IMPORTS_GDP remain SUPPORTING_CONTEXT for Global
+  openness (they are live data, but non-scoring)
+- Coverage ceiling question is moot (no score to cap)
+- No relative/momentum/confidence (no level to relativize or momentum)
+
+**Do NOT use raw exports alone merely to force a score.** The
+conceptual force is "Global openness" (trade, capital, people, ideas),
+not "export intensity." A single trade indicator without a defensible
+level mapping cannot become a proxy condition.
+
+### Part 10 — Relation to Trade and capital flows
+
+Trade and capital flows is a SEPARATE force with its own live
+indicators: EXPORTS_GDP, IMPORTS_GDP, TRADE_BALANCE,
+CURRENT_ACCOUNT_GDP. This DEC does NOT promote Trade and capital
+flows.
+
+A single raw source indicator (EXPORTS_GDP, IMPORTS_GDP) may inform
+multiple conceptual forces only when each mapping has an explicit
+semantic justification. Currently:
+- For Global openness: exports + imports as trade-intensity proxy ->
+  DEFERRED (no level)
+- For Trade and capital flows: exports, imports, trade balance,
+  current account -> DEFERRED_MULTI (no composition approved)
+
+No double-counting discussion at cycle-composite level yet. Both
+forces remain unscored.
+
+### Part 11 — Verdict
+
+**Economic verdict: DEFER_GLOBAL_OPENNESS_LEVEL**
+
+No defensible Atlas 0-100 level mapping exists for trade_openness_gdp.
+The measure captures realized trade intensity, not economic strength.
+It is structurally confounded by country size and geography. Values
+exceed 100 for 32% of real economies. DIRECT_0_100 is invalid
+(unbounded). CAPPED_AT_100 destroys valid information. No fixed curve
+or saturation has defensible parameters. A structural/size-adjusted
+approach is potentially defensible but requires additional data and
+a model not available. CONTEXTUAL_DEFERRED is the appropriate status.
+
+**Architecture verdict: READY_FOR_DERIVED_INDICATOR_LAYER_DESIGN**
+
+The derived-indicator architecture is conceptually clear and separable
+from the economic question. A DerivedAlignedValue layer (with component
+provenance, period-compatibility rules, and on-demand computation) can
+be designed in a future sprint. The architecture is useful for any
+future derived indicator, not just trade openness. However, because
+the economic verdict is DEFER, no force is added and no implementation
+is queued.
+
+**No model-version bump.** normalization-v0.8 and
+force-aggregation-v0.3 unchanged. 5/17 forces executable, 12/17
+intentionally deferred.
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO model-version bump. No migration, no ingestion, no
+derived persistence. No commit/push.
+
+Read-only research artifacts (NEW):
+- `scripts/_sprint_6_8_trade_openness_profile.py` — tracked-8
+  empirical profile using live DB observations
+- `scripts/_sprint_6_8_wb_broader_profile.py` — broader WB
+  real-economy profile using WB API
+
+pytest 620 passed (unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872).
+
+### Reason
+
+Trade openness (exports + imports as % GDP) is a standard, widely
+used measure of realized trade intensity. But it measures INTENSITY,
+not STRENGTH. It is structurally confounded by country size (small
+economies have higher ratios) and geography (landlocked/remote
+economies have lower ratios). Values exceed 100 for 32% of real
+economies, making DIRECT_0_100 invalid. No parameter-free
+transformation maps trade intensity to a 0-100 strength score. A
+structural/size-adjusted approach could remove the confounds but
+requires additional data and a model not available in Atlas today.
+Therefore the level is DEFERRED. The derived-indicator architecture
+is conceptually ready for future design but is not implemented
+because no force needs it yet.
+
+### Future unblockers
+
+1. **Structural/size-adjusted expectation model**: compare realized
+   trade intensity to an expected value conditional on population,
+   GDP size, geography (landlocked/island), and distance to trade
+   partners. This would remove the structural confounds and could
+   produce a defensible level. Requires: population data, geography
+   classifications, a structural trade model (gravity model or similar).
+2. **Capital openness measure**: Chinn-Ito index or similar would
+   address the capital-openness dimension of Global openness.
+3. **Migration/people-flow measure**: would address the people-flow
+   dimension.
+4. **Derived-indicator architecture**: design and implement the
+   DerivedAlignedValue layer when any derived indicator receives an
+   approved level.
+
+### Recommended Sprint 6.9
+
+**Sprint 6.9 — owner to choose.** Candidates:
+
+(a) **Gini normalization audit** — GINI_INDEX is SUPPORTING_CONTEXT;
+    a defensible 0-100 level curve would need its own DEC (income
+    inequality != wealth concentration; survey-concept incomparability
+    per DEC-024).
+(b) **Derived-indicator architecture design** — design the
+    DerivedAlignedValue layer (component provenance, period-
+    compatibility, on-demand computation) without implementing any
+    specific derived indicator. Useful for any future derived
+    indicator.
+(c) **Structural/size-adjusted trade-openness model** — research
+    whether a gravity-model-based expected trade intensity can
+    produce a defensible level. Requires additional data.
+(d) **Force confidence methodology** — DEC-023 deferred; needs
+    external calibration basis.
+(e) **Big Cycle phase/stage** — requires all 17 forces or explicit
+    partial-force methodology.
+(f) **Release-date discipline** — Milestone 9; backtest_safe
+    currently False everywhere.
+
+The most natural next step is **(a) Gini normalization audit** or
+**(b) Derived-indicator architecture design**, as both follow the
+established audit-then-implement pattern.
+
+---
+
+## DEC-036 — Infrastructure & Investment Proxy Level Audit (DEFER_INFRASTRUCTURE_PROXY_LEVEL)
+
+Date: 2026-09-10
+Sprint: 6.9
+Status: methodology/source research only — NO implementation, NO model-version bump
+
+### Part 1 — Force semantic: Infrastructure and investment
+
+**Infrastructure and investment** (force_definitions.py code=`infrastructure_investment`):
+"Level and quality of infrastructure and fixed investment." This is a
+BROAD conceptual force covering:
+
+- transport/logistics infrastructure
+- electricity/energy infrastructure
+- digital/communications infrastructure
+- productive capital stock / investment
+- infrastructure quality and reliability
+
+A single candidate indicator can only be a PROXY. Infrastructure
+ACCESS is NOT complete infrastructure + investment strength. If
+promoted, coverage ceiling would likely be PARTIAL — but this DEC
+does NOT pre-approve promotion.
+
+### Part 2 — Existing GCF verdict (DEC-018 reconfirmed)
+
+`GROSS_CAPITAL_FORMATION_GDP` remains CONTEXTUAL_DEFERRED under
+DEC-018. No new evidence justifies an absolute level.
+
+GCF measures INVESTMENT EFFORT, not infrastructure quality. High GCF
+can reflect productive investment OR credit-driven overinvestment /
+inefficient allocation. Both tails carry meaning. A "healthy" GCF
+level is economy-model-dependent (tracked_8 medians: CHN 42.4% vs
+GBR 18.5%). No universal band, target, or saturation threshold has
+defensible external justification. No ideal GCF = X% is invented.
+
+GCF stays CONTEXTUAL_DEFERRED. It remains SUPPORTING_CONTEXT for the
+force (live data, non-scoring).
+
+### Part 3 — Official candidate source inventory
+
+Four WB candidate indicators were researched from official WB
+DataBank metadata. No guessing codes.
+
+| # | Code | Name | Scale | Period | Source |
+|---|---|---|---|---|---|
+| 1 | LP.LPI.OVRL.XQ | LPI Overall score | 1=low to 5=high | 2007–2022 (every few years) | WB LPI survey |
+| 2 | LP.LPI.INFR.XQ | LPI Quality of trade/transport infrastructure | 1=low to 5=high | 2007–2022 (every few years) | WB LPI survey |
+| 3 | EG.ELC.ACCS.ZS | Access to electricity (% of population) | 0–100% | 1990–2024 (annual) | WB/IEA/IRENA GED |
+| 4 | IT.NET.USER.ZS | Individuals using Internet (% of population) | 0–100% | 1990–2025 (annual) | ITU |
+
+### Part 4 — LPI audit
+
+**LPI Overall (LP.LPI.OVRL.XQ)**:
+- Scale: 1 to 5 (provider-fixed endpoints, higher = better)
+- Definition: perception-based composite of 6 logistics dimensions
+  (customs, infrastructure, shipments, logistics services, tracking,
+  timeliness), aggregated via PCA
+- Source: WB LPI survey of logistics professionals
+- Frequency: every few years (2007, 2010, 2012, 2014, 2016, 2018, 2023)
+- Reference period: 2007–2022
+- **DISCONTINUED**: "The survey-based LPI is not updated anymore
+  beyond the 2023 edition" (lpi.worldbank.org/about). LPI 2.0 uses
+  different speed-based indicators, not the 1-5 survey score.
+- Tracked-8: all 8 have data (7 obs each), latest 2022
+- Broader: 212 economies, min 1.71, max 4.30
+
+**LPI Infrastructure (LP.LPI.INFR.XQ)**:
+- Scale: 1 to 5 (same endpoints)
+- Definition: survey question on "quality of trade- and transport-
+  related infrastructure (ports, railroads, roads, IT)"
+- Same source, frequency, discontinuation
+- Tracked-8: all 8 have data (7 obs each), latest 2022
+- Broader: 212 economies, min 1.67, max 4.60
+
+**Critical issues with LPI**:
+1. **DISCONTINUED** — the survey-based LPI is not updated beyond
+   2023. No future data points will be produced. A dead series cannot
+   serve as a live scoring input.
+2. **PERCEPTION-BASED** — it is a survey of logistics professionals,
+   not a direct measure of infrastructure. Perception scores reflect
+   respondent bias, sample composition, and survey design.
+3. **INFREQUENT** — every few years, not annual. 7 data points over
+   15 years (2007–2022) is too sparse for a structural level signal.
+4. **LOGISTICS-FOCUSED** — measures logistics performance, not
+   infrastructure broadly. The infrastructure subcomponent is closer
+   but still framed as trade/transport infrastructure.
+5. **COMPOSITE** — the overall score uses PCA to aggregate 6
+   dimensions. This is a provider-designed composite, not a direct
+   measure. Atlas would be preserving a provider composite, not an
+   independent indicator.
+
+**PROVIDER_BOUNDED_LINEAR evaluation** (for evaluation only — NOT
+approved):
+
+    score = 100 * (raw - 1) / (5 - 1) = 100 * (raw - 1) / 4
+
+- level_score = 0 → LPI = 1 (worst possible logistics performance)
+- level_score = 50 → LPI = 3 (middle of the provider scale)
+- level_score = 100 → LPI = 5 (best possible logistics performance)
+
+The endpoints ARE provider-fixed and the midpoint IS meaningful.
+Linear rescaling would preserve the provider's level. BUT: the
+series is DISCONTINUED, perception-based, infrequent, and logistics-
+focused. A technically scoreable but dead series does not materially
+improve Big Cycle Atlas.
+
+**LPI verdict: REJECTED** — discontinued series, perception-based,
+infrequent, logistics-focused. Not a material improvement.
+
+### Part 5 — Bounded access indicators audit
+
+**Access to electricity (EG.ELC.ACCS.ZS)**:
+- Scale: 0–100% (bounded percentage of population with access)
+- Definition: percentage of population with access to electricity
+- Source: WB Global Electrification Database (GED), IEA/IRENA/UNSD/
+  WB/WHO
+- Frequency: annual
+- Tracked-8: all 8 have data through 2024
+- **CRITICAL: 7 of 8 tracked-8 countries are at 100.00%** (USA, CHN,
+  CHE, DEU, FRA, GBR, JPN all at 100%; only IND has variation at
+  60.30%→99.90%)
+- Broader: 258 economies, median 100%, 69.4% >= 95%, 57.8% >= 99%
+
+**DIRECT_0_100 evaluation**:
+- level_score = 0 → 0% of population has electricity access
+- level_score = 50 → 50% of population has electricity access
+- level_score = 100 → 100% of population has electricity access
+
+The raw percentage has absolute meaning and higher IS unambiguously
+stronger for the measured proxy. BUT:
+1. **NEAR-UNIVERSAL SATURATION among tracked-8**: 7/8 countries at
+   100%. The indicator does NOT materially distinguish the countries
+   Atlas tracks. A score where 7 of 8 countries receive identical
+   100.00 is not a useful force signal.
+2. **ACCESS != QUALITY**: 100% access does not mean reliable or
+   high-quality infrastructure. A country with 100% access can have
+   chronic blackouts, aging grid, or insufficient capacity.
+3. **MEASURES ACCESS, NOT INFRASTRUCTURE**: this is a service-
+   adoption measure, not a structural infrastructure measure.
+
+**Electricity verdict: REJECTED** — near-universal saturation among
+tracked-8 (7/8 at 100%); measures access not quality; does not
+materially distinguish the countries Atlas tracks.
+
+**Internet users (IT.NET.USER.ZS)**:
+- Scale: 0–100% (bounded percentage of population using internet)
+- Definition: individuals who have used the internet in the last 3
+  months
+- Source: ITU World Telecommunication/ICT Indicators Database
+- Frequency: annual
+- Tracked-8: all 8 have data through 2024/2025
+- Range tracked-8: IND 70.00% to CHE 97.32% (less saturated than
+  electricity)
+- Broader: 238 economies, min 0%, median 80.57%, max 100%
+- 13% >= 95%, 3.4% >= 99% (less saturated than electricity)
+
+**DIRECT_0_100 evaluation**:
+- level_score = 0 → 0% of population uses the internet
+- level_score = 50 → 50% of population uses the internet
+- level_score = 100 → 100% of population uses the internet
+
+The raw percentage has absolute meaning. Less saturated than
+electricity. BUT:
+1. **SERVICE ADOPTION, NOT INFRASTRUCTURE**: internet usage reflects
+   income, education, regulation, demographics, and digital
+   literacy — not just infrastructure. A country with low usage may
+   have good infrastructure but restrictive policies or low income.
+2. **WEAK SEMANTIC FIT**: the force is "Infrastructure and
+   investment" — internet usage is a downstream outcome of
+   infrastructure, not a measure of infrastructure itself.
+3. **CONFLATES DEMAND WITH SUPPLY**: high usage may reflect high
+   demand (young population, digital economy) rather than high
+   infrastructure quality.
+
+**Internet verdict: REJECTED** — measures service adoption not
+infrastructure quality; weak semantic fit; conflates demand with
+supply.
+
+### Part 6 — Tracked-8 empirical profile
+
+Read-only script: `scripts/_sprint_6_9_infra_profile.py`
+
+**LPI Overall (LP.LPI.OVRL.XQ, 1–5 scale)**:
+
+| Country | n | first | latest | latest val | min | median | max |
+|---|---|---|---|---|---|---|---|
+| USA | 7 | 2007 | 2022 | 3.80 | 3.80 | 3.89 | 3.99 |
+| CHN | 7 | 2007 | 2022 | 3.70 | 3.32 | 3.53 | 3.70 |
+| CHE | 7 | 2007 | 2022 | 4.10 | 3.80 | 3.97 | 4.10 |
+| DEU | 7 | 2007 | 2022 | 4.10 | 4.03 | 4.11 | 4.23 |
+| FRA | 7 | 2007 | 2022 | 3.90 | 3.76 | 3.85 | 3.90 |
+| GBR | 7 | 2007 | 2022 | 3.70 | 3.70 | 3.99 | 4.07 |
+| JPN | 7 | 2007 | 2022 | 3.90 | 3.90 | 3.97 | 4.03 |
+| IND | 7 | 2007 | 2022 | 3.40 | 3.07 | 3.12 | 3.42 |
+
+All 8 tracked-8 have data. Only 7 observations over 15 years. Latest
+is 2022 (survey discontinued). Range: IND 3.07 to DEU 4.23.
+
+**LPI Infrastructure (LP.LPI.INFR.XQ, 1–5 scale)**:
+
+| Country | n | first | latest | latest val | min | median | max |
+|---|---|---|---|---|---|---|---|
+| USA | 7 | 2007 | 2022 | 3.90 | 3.90 | 4.14 | 4.18 |
+| CHN | 7 | 2007 | 2022 | 4.00 | 3.20 | 3.67 | 4.00 |
+| CHE | 7 | 2007 | 2022 | 4.40 | 3.98 | 4.13 | 4.40 |
+| DEU | 7 | 2007 | 2022 | 4.30 | 4.19 | 4.32 | 4.44 |
+| FRA | 7 | 2007 | 2022 | 3.80 | 3.80 | 3.98 | 4.01 |
+| GBR | 7 | 2007 | 2022 | 3.70 | 3.70 | 4.03 | 4.21 |
+| JPN | 7 | 2007 | 2022 | 4.20 | 4.10 | 4.16 | 4.25 |
+| IND | 7 | 2007 | 2022 | 3.20 | 2.87 | 2.91 | 3.34 |
+
+All 8 tracked-8 have data. Same 7 obs, same discontinuation. Range:
+IND 2.87 to DEU 4.44.
+
+**Access to electricity (EG.ELC.ACCS.ZS, 0–100%)**:
+
+| Country | n | first | latest | latest val | min | median | max |
+|---|---|---|---|---|---|---|---|
+| USA | 25 | 2000 | 2024 | 100.00 | 100.00 | 100.00 | 100.00 |
+| CHN | 25 | 2000 | 2024 | 100.00 | 96.70 | 99.90 | 100.00 |
+| CHE | 25 | 2000 | 2024 | 100.00 | 100.00 | 100.00 | 100.00 |
+| DEU | 25 | 2000 | 2024 | 100.00 | 100.00 | 100.00 | 100.00 |
+| FRA | 25 | 2000 | 2024 | 100.00 | 100.00 | 100.00 | 100.00 |
+| GBR | 25 | 2000 | 2024 | 100.00 | 100.00 | 100.00 | 100.00 |
+| JPN | 25 | 2000 | 2024 | 100.00 | 100.00 | 100.00 | 100.00 |
+| IND | 25 | 2000 | 2024 | 99.90 | 60.30 | 79.90 | 99.90 |
+
+**7 of 8 at 100.00% — near-universal saturation.** Only IND has
+variation. This indicator does NOT materially distinguish the
+countries Atlas tracks.
+
+**Internet users (IT.NET.USER.ZS, 0–100%)**:
+
+| Country | n | first | latest | latest val | min | median | max |
+|---|---|---|---|---|---|---|---|
+| USA | 25 | 2000 | 2024 | 94.69 | 43.08 | 74.00 | 94.69 |
+| CHN | 26 | 2000 | 2025 | 91.60 | 1.78 | 44.05 | 92.00 |
+| CHE | 26 | 2000 | 2025 | 97.32 | 47.10 | 85.20 | 97.34 |
+| DEU | 25 | 2000 | 2024 | 93.50 | 30.22 | 82.35 | 93.50 |
+| FRA | 25 | 2000 | 2024 | 88.65 | 14.31 | 78.01 | 88.65 |
+| GBR | 25 | 2000 | 2024 | 95.47 | 26.82 | 87.48 | 96.20 |
+| JPN | 25 | 2000 | 2024 | 85.54 | 29.99 | 79.50 | 93.18 |
+| IND | 26 | 2000 | 2025 | 70.00 | 0.53 | 11.70 | 70.00 |
+
+All 8 have data. Less saturated than electricity. Range: IND 70.00%
+to CHE 97.32%. Some differentiation, but measures service adoption.
+
+### Part 7 — Broader provider universe profile
+
+**LPI Overall**: 212 economies, latest-year range 1.71 (TLS) to 4.30
+(SGP). Median 2.71. Meaningful global variation, but series is
+discontinued.
+
+**LPI Infrastructure**: 212 economies, latest-year range 1.67 (TLS)
+to 4.60 (SGP). Median 2.55. Same discontinuation.
+
+**Electricity access**: 258 economies, median 100%, 69.4% >= 95%,
+57.8% >= 99%. Extreme global saturation — most of the world has
+near-universal electricity access.
+
+**Internet users**: 238 economies, median 80.57%, 13% >= 95%, 3.4%
+>= 99%. Less saturated globally; meaningful variation exists.
+
+### Part 8 — Normalization candidate comparison
+
+| Candidate | Family | Meaning of 0 | Meaning of 50 | Meaning of 100 | Verdict |
+|---|---|---|---|---|---|
+| LPI Overall (1–5) | PROVIDER_BOUNDED_LINEAR | LPI=1 (worst) | LPI=3 (mid) | LPI=5 (best) | REJECTED — discontinued, perception, infrequent, logistics-focused |
+| LPI Infrastructure (1–5) | PROVIDER_BOUNDED_LINEAR | LPI=1 (worst) | LPI=3 (mid) | LPI=5 (best) | REJECTED — same issues as Overall |
+| Electricity access (0–100%) | DIRECT_0_100 | 0% access | 50% access | 100% access | REJECTED — 7/8 tracked-8 at 100% saturation; access != quality |
+| Internet users (0–100%) | DIRECT_0_100 | 0% usage | 50% usage | 100% usage | REJECTED — service adoption, not infrastructure; weak semantic fit |
+| GCF | CONTEXTUAL_DEFERRED | n/a | n/a | n/a | RECONFIRMED — investment effort, not quality; no level (DEC-018) |
+
+**No candidate receives a defensible executable LEVEL.**
+
+### Part 9 — Force eligibility
+
+Because NO candidate receives a defensible executable LEVEL:
+- No indicator can become PROXY_CONDITION
+- Infrastructure and investment cannot become IDENTITY_SINGLE
+- The force remains DEFERRED_MULTI / unscored
+- GROSS_CAPITAL_FORMATION_GDP remains SUPPORTING_CONTEXT (live, non-scoring)
+- Coverage ceiling question is moot (no score to cap)
+
+### Part 10 — Priority test
+
+**Does implementing any candidate materially improve Big Cycle Atlas?**
+
+- **LPI**: NO — discontinued series (no future updates), perception-
+  based, infrequent (7 obs / 15 years), logistics-focused. A dead
+  series cannot serve as a live scoring input.
+- **Electricity access**: NO — 7/8 tracked-8 at 100%. A score where
+  7 of 8 countries receive identical 100.00 does not materially
+  distinguish the countries Atlas tracks.
+- **Internet users**: WEAK — less saturated but measures service
+  adoption, not infrastructure quality. Weak semantic fit with the
+  force "Infrastructure and investment."
+
+**Do not create a sixth force just to increase 5/17 -> 6/17.** A
+technically scoreable but economically weak/saturated/discontinued
+proxy does not materially improve the framework.
+
+### Part 11 — Verdict
+
+**DEFER_INFRASTRUCTURE_PROXY_LEVEL**
+
+No defensible Atlas 0-100 level mapping exists for any audited
+candidate:
+1. LPI (Overall and Infrastructure) is a discontinued, perception-
+   based, infrequent survey composite focused on logistics — not a
+   live infrastructure measure.
+2. Electricity access is near-universally saturated at 100% among
+   tracked-8 (7/8 countries) — does not materially distinguish.
+3. Internet users measures service adoption, not infrastructure
+   quality — weak semantic fit.
+4. GCF measures investment effort, not infrastructure quality —
+   reconfirmed CONTEXTUAL_DEFERRED (DEC-018).
+
+Infrastructure and investment remains DEFERRED_MULTI / unscored.
+GROSS_CAPITAL_FORMATION_GDP remains SUPPORTING_CONTEXT.
+
+**No model-version bump.** normalization-v0.8 and
+force-aggregation-v0.3 unchanged. 5/17 forces executable, 12/17
+intentionally deferred.
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO model-version bump. No migration, no ingestion, no
+persistence. No commit/push.
+
+Read-only research artifact (NEW):
+`scripts/_sprint_6_9_infra_profile.py` — tracked-8 + broader WB
+profile for LPI Overall, LPI Infrastructure, electricity access,
+internet users.
+
+pytest 620 passed (unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872).
+
+### Smallest concrete unblocker
+
+A direct, annually-updated, cross-country infrastructure QUALITY
+measure (not a perception survey, not an access percentage) would
+need to be identified and verified from official provider metadata.
+Candidates for future research:
+- WB LPI 2.0 speed-based indicators (still being developed; not the
+  discontinued 1-5 survey score)
+- OECD infrastructure investment quality measures (if they exist)
+- Physical infrastructure metrics normalized for cross-country
+  comparison (road density, port throughput, etc.)
+- A structural model adjusting GCF for efficiency/quality (requires
+  additional data)
+
+### Recommended Sprint 6.10
+
+**Sprint 6.10 — owner to choose.** Candidates:
+
+(a) **Gini normalization audit** — GINI_INDEX is SUPPORTING_CONTEXT;
+    a defensible 0-100 level curve would need its own DEC (income
+    inequality != wealth concentration; survey-concept incomparability
+    per DEC-024).
+(b) **Derived-indicator architecture design** — design the
+    DerivedAlignedValue layer (DEC-035 READY_FOR_DESIGN).
+(c) **Structural/size-adjusted trade-openness model** — research
+    whether a gravity model can produce a defensible level (DEC-035
+    unblocker).
+(d) **Force confidence methodology** — DEC-023 deferred; needs
+    external calibration basis.
+(e) **Big Cycle phase/stage** — requires all 17 forces or explicit
+    partial-force methodology.
+(f) **Release-date discipline** — Milestone 9; backtest_safe
+    currently False everywhere.
+
+The most natural next step is **(a) Gini normalization audit** or
+**(b) Derived-indicator architecture design**, as both follow the
+established audit-then-implement pattern.
+
+---
+
+## DEC-037 — Derived Aligned Value Architecture (DESIGN_ONLY — typed contract, NO formula approved, NO derivation implemented)
+
+Date: 2026-09-10
+Sprint: 6.10
+Status: architecture/design only — minimal non-executable frozen dataclass + focused tests, NO model-version bump, NO formula approved, NO derivation implemented
+
+### Part 1 — Objective
+
+Design the smallest safe architecture for derived indicators built from
+two or more already-aligned source observations. The sprint must produce
+one clear, versionable contract that allows a future sprint to implement
+a derived indicator without re-deciding provenance, country scope,
+alignment, vintages, missingness, release safety, or normalization
+boundaries.
+
+The exact required layering is preserved:
+
+    DataSource / SourceSeries
+      -> immutable Observation
+      -> as-of alignment
+      -> AlignedValue
+      -> derived aligned layer        <-- THIS SPRINT
+      -> normalization
+      -> force aggregation
+
+A derived value must NEVER create or masquerade as a raw Observation.
+
+### Part 2 — Current architecture findings
+
+**AlignedValue** (`apps/api/app/cycle/normalization_definitions.py`,
+lines 216-244) is a frozen dataclass carrying: indicator_code,
+country_iso3, scoring_period, source_period, raw_value, age_periods,
+effective_period_end, freshness_factor, is_stale, vintage_number. It
+is typed-only, NOT persisted. It represents ONE selected provider
+observation aligned to a quarterly scoring period.
+
+**Gaps identified for the derived contract**: AlignedValue does NOT
+carry Observation.id, source_series_id, data_source_id, or release-date
+metadata. The derived provenance contract requires all of these per
+component.
+
+**Alignment service** (`apps/api/app/services/alignment_service.py`)
+implements `align_observation_as_of(...)`: resolves country and
+indicator, derives the scoring snapshot's as-of date, applies
+period-complete eligibility (DEC-015), selects latest vintage per
+source period, selects the most recent eligible period, returns an
+AlignedValue, performs no writes. This is the ONLY source of component
+selection for derived values — the derived layer must NOT query raw
+Observation records independently or introduce a second as-of
+algorithm.
+
+**Normalization** (`apps/api/app/cycle/normalizer.py`) operates AFTER
+alignment: `Observation -> AlignedValue -> indicator normalizer ->
+NormalizedSignal`. A derived layer must remain UPSTREAM of
+NormalizedSignal.
+
+### Part 3 — Design decision: separate component provenance wrapper
+
+**Option A — enrich AlignedValue with source-identity fields**: REJECTED
+for Sprint 6.10. Changing AlignedValue would require broad test and
+alignment-service updates, risking regressions across the 620-test
+baseline for a design sprint that adds no executable behavior.
+
+**Option B — separate DerivedComponentProvenance wrapper**: CHOSEN. A
+new frozen dataclass associates each component's existing AlignedValue
+with the additional source-identity metadata the derived contract
+requires (observation_id, source_series_id, data_source_id, release_date,
+component_backtest_safe). AlignedValue stays unchanged; the wrapper
+extends provenance without mutation.
+
+### Part 4 — Object contract
+
+Two frozen dataclasses added to `normalization_definitions.py`:
+
+**DerivedComponentProvenance** (per required component):
+- `indicator_code: str` — the component's canonical indicator code
+- `aligned_value: Optional[AlignedValue]` — None when the component is
+  missing; set when present (carries indicator, country, scoring period,
+  source period, raw value, age, effective period end, freshness,
+  staleness, vintage)
+- `observation_id: Optional[int]` — the raw Observation primary key
+  (required when present; None when missing)
+- `source_series_id: Optional[int]` — the SourceSeries identity
+  (required when present; None when missing)
+- `data_source_id: Optional[int]` — the DataSource identity
+  (required when present; None when missing)
+- `release_date: Optional[date]` — None until Milestone 9
+- `component_backtest_safe: bool` — False by default; True only when
+  the component has valid release-date provenance
+- `missing_reason: Optional[str]` — None when present; explains the
+  absence when missing
+
+**DerivedAlignedValue** (the derived result):
+- `derived_indicator_code: str` — stable identity (e.g. a future
+  "TRADE_OPENNESS_GDP")
+- `country_iso3: str` — the single country of the derivation
+- `scoring_period: ScoringPeriod` — the shared scoring snapshot
+- `formula_id: str` — stable formula identity
+- `formula_version: str` — formula version (SEPARATE namespace from
+  normalization-v0.8 and force-aggregation-v0.3)
+- `components: tuple[DerivedComponentProvenance, ...]` — one entry per
+  required component (present or missing)
+- `derived_value: Optional[float]` — None when any required component
+  is missing (MISSING != ZERO — never zero-filled)
+- `backtest_safe: bool` — False unless ALL present components are
+  component_backtest_safe
+
+### Part 5 — Provenance model
+
+Each component retains INDEPENDENT provenance. Components are never
+collapsed into a synthetic source identity. For every component:
+
+- indicator identity (in AlignedValue + DerivedComponentProvenance)
+- source-series identity (in DerivedComponentProvenance)
+- Observation identity (in DerivedComponentProvenance)
+- selected vintage (in AlignedValue)
+- native/source period (in AlignedValue)
+- aligned scoring period (in AlignedValue)
+- age (in AlignedValue)
+- effective period end (in AlignedValue)
+- freshness/staleness metadata (in AlignedValue)
+- country identity (in AlignedValue + DerivedAlignedValue)
+- release-date safety (in DerivedComponentProvenance)
+
+The derived_indicator_code is distinct from every component's
+indicator_code — a derived value does not masquerade as a provider
+indicator.
+
+### Part 6 — Country-isolation rule
+
+Every present component in one derived value must belong to the SAME
+country, matching the derived value's country_iso3. A mixed-country
+derivation is REJECTED at construction (ValueError). Missing components
+carry indicator_code but no country, so they do not violate isolation.
+
+### Part 7 — As-of and vintage rules
+
+**As-of reuse**: each component must first pass the normal process
+`Observation -> AlignedValue` via the existing
+`align_observation_as_of`. The derived layer consumes those aligned
+values. It must NOT query raw observations independently, select
+vintages itself, introduce a second as-of algorithm, bypass
+period-complete eligibility, or bypass country/source identity
+scoping. All present components must be aligned to the SAME
+scoring_period as the derived value (enforced at construction).
+
+**Vintage preservation**: each component keeps its OWN selected vintage.
+Different components may legitimately have different vintage numbers
+(e.g. exports vintage 1 + imports vintage 3). The component-level
+provenance makes this visible. No shared vintage is invented across
+components.
+
+### Part 8 — Missingness rule
+
+If any required component is missing (aligned_value is None):
+- the derived numeric value MUST be None (never zero-filled)
+- the missing component's missing_reason explains the absence
+- the missing component's indicator_code identifies which requirement
+  was unmet
+
+MISSING != ZERO (permanent invariant). Partial-input formulas (where
+some components are optional rather than required) are DEFERRED — no
+such behavior is approved in Sprint 6.10. A future formula contract
+could explicitly support optional/partial inputs, but that requires
+its own DEC.
+
+### Part 9 — Release-date / backtest rule
+
+A derived value is backtest_safe ONLY if EVERY present component has
+valid release-date provenance supporting point-in-time use
+(component_backtest_safe=True). If any present component is unsafe or
+lacks valid release-date data, the derived result MUST remain
+backtest_safe=False. No formula can "upgrade" unsafe inputs into a safe
+result. This is enforced at construction: backtest_safe=True with any
+unsafe present component raises ValueError.
+
+Current state: release dates are not stored (Milestone 9 owns that),
+so component_backtest_safe defaults to False and every derived value
+defaults to backtest_safe=False. This is consistent with the existing
+NormalizedSignal.backtest_safe=False everywhere.
+
+### Part 10 — Formula identity and version rule
+
+Every DerivedAlignedValue carries:
+- `formula_id: str` — a stable formula identity (e.g.
+  "sum_two_components")
+- `formula_version: str` — a formula version in a SEPARATE namespace
+  from normalization-v0.8 and force-aggregation-v0.3 (e.g.
+  "derived-formula-v0.1")
+
+Sprint 6.10 does NOT approve any formula_id. No formula business
+logic is implemented. The fields exist as a versioning contract so a
+future implementation sprint can populate them without re-designing
+the provenance or versioning model.
+
+### Part 11 — Normalization boundary
+
+Normalization receives ONLY the completed DerivedAlignedValue. The
+derived layer must NOT:
+- normalize components before the formula if the intended formula
+  operates on raw aligned values
+- embed normalization into the derivation contract
+- let a derived indicator masquerade as a raw provider indicator
+- add a normalization family or score
+
+A future derived indicator that needs normalization would consume the
+DerivedAlignedValue as input to a new normalization path — separate
+from the existing indicator-level normalizer, and approved by its own
+DEC.
+
+### Part 12 — Persistence verdict
+
+**Default: derived values are computed ON DEMAND.** Sprint 6.10 adds
+NO database table, NO migration, NO raw persistence, NO ingestion, NO
+derived persistence. A future persistence design would require a
+separate DEC if computational or audit requirements justify it. The
+dataclasses are non-executable: they perform validation only and never
+query the database.
+
+### Part 13 — Naming evaluation
+
+`DerivedAlignedValue` is the chosen name. It is distinct from:
+- raw `Observation` (a provider data row)
+- `AlignedValue` (one selected provider observation)
+- `NormalizedSignal` (post-normalization)
+
+The "Aligned" suffix emphasizes that the value is built from
+already-aligned components and is aligned to a scoring period. The
+"Derived" prefix distinguishes it from single-observation alignment.
+No alternative name better matches the existing conventions.
+
+### Part 14 — LPI edition / provider-period resolution
+
+Sprint 6.9's DEC-036 referred to the "2023 LPI edition" while empirical
+provider periods appeared as 2022. This is now RESOLVED from
+authoritative WB metadata:
+
+- **WB DataBank glossary** (LP.LPI.OVRL.XQ): "The 2023 LPI survey was
+  conducted from September 6 to November 5, 2022."
+- **WB press release** (April 21, 2023): "The World Bank today released
+  its 2023 Logistics Performance Index report."
+- **Reference period**: 2007-2022 (WB DataBank).
+
+The 2023 LPI EDITION is represented by a 2022 OBSERVATION PERIOD in the
+WB API because the survey was conducted in late 2022, even though the
+report was published in 2023. The edition year (2023) and the provider
+period year (2022) are DIFFERENT labels for the same data point. This
+is now documented; no guessing was required.
+
+### Part 15 — Implementation scope
+
+**Added (minimal non-executable contract):**
+- `DerivedComponentProvenance` frozen dataclass
+  (`apps/api/app/cycle/normalization_definitions.py`)
+- `DerivedAlignedValue` frozen dataclass (same file)
+- 17 focused offline tests
+  (`apps/api/tests/test_derived_aligned_value.py`) proving the six
+  required invariants:
+  1. Country mixing is rejected
+  2. Component provenance remains independent
+  3. Missing required input does not become zero
+  4. Different component vintages remain distinct
+  5. An unsafe component makes the derived result non-backtest-safe
+  6. Derivation does not create a raw Observation
+
+**NOT implemented (deliberately deferred):**
+- No formula approved (no formula_id value is blessed)
+- No derivation logic (no function computes a derived_value)
+- No trade-openness formula (DEC-035 DEFER_GLOBAL_OPENNESS_LEVEL stands)
+- No derived scoring
+- No source ingestion
+- No force promotion
+- No force aggregation
+- No confidence
+- No phase/stage
+- No cycle composites
+- No public API/frontend
+- No forecasting
+- No backtesting
+- No trading
+- No normalization family added
+- No model-version bump (normalization-v0.8, force-aggregation-v0.3
+  unchanged)
+- No migration, no ingestion, no persistence
+
+### Part 16 — Verification
+
+- Focused tests: 17 passed (all offline, no external APIs, no DB writes)
+- Full pytest: **637 passed** (620 baseline + 17 new), 0 failures
+- DB unchanged: 6814 observations / 27 indicators / 22 SourceSeries /
+  10 DataSources / 1872 indicator_diagnostics
+- No migration, no ingestion, no persistence, no model-version bump
+- No commit/push
+
+### Part 17 — What remains deferred
+
+- The FIRST executable derived indicator (e.g. trade_openness_gdp)
+  requires: (a) an approved formula_id + formula_version, (b) an
+  approved normalization family for the derived value, (c) an approved
+  force role if the derived indicator feeds a force, (d) a separate
+  implementation DEC. DEC-035's DEFER_GLOBAL_OPENNESS_LEVEL stands —
+  no level mapping for trade openness is approved.
+- Partial-input / optional-component formulas (some components
+  optional rather than required) — deferred unless a future formula
+  contract explicitly authorizes this.
+- Derived-value persistence — deferred unless computational or audit
+  requirements justify a separate DEC.
+- Release-date-safe derivation — deferred until Milestone 9
+  (release-date discipline); until then every derived value is
+  backtest_safe=False.
+- Enriching AlignedValue itself with source-identity fields
+  (observation_id, source_series_id, data_source_id) — deferred; the
+  DerivedComponentProvenance wrapper is the safer design-first
+  approach. A future sprint MAY enrich AlignedValue if the wrapper
+  proves insufficient, but that requires its own DEC and test updates.
+
+### Reason
+
+A derived indicator combines two or more provider observations. The
+existing AlignedValue represents ONE observation and lacks the
+source-identity fields (Observation.id, source_series_id,
+data_source_id) and release-date metadata that a full provenance
+contract requires. Rather than mutating AlignedValue (risky for a
+620-test baseline), a separate DerivedComponentProvenance wrapper
+extends provenance without mutation. The DerivedAlignedValue
+dataclass enforces the six required invariants at construction:
+country isolation, independent component provenance, missing-not-zero,
+distinct vintages, backtest-safety propagation, and no-raw-observation
+creation. The contract is non-executable (validation only, no DB
+queries) so a future implementation sprint can populate it without
+re-deciding the architecture.
+
+### Recommended Sprint 6.11
+
+**Sprint 6.11 — owner to choose.** Candidates:
+
+(a) **Gini normalization audit** — GINI_INDEX is SUPPORTING_CONTEXT;
+    a defensible 0-100 level curve would need its own DEC (income
+    inequality != wealth concentration; survey-concept incomparability
+    per DEC-024).
+(b) **First executable derived indicator** — requires an approved
+    formula + normalization family + force role (separate DEC). The
+    DEC-037 contract is ready; the economic question (which derived
+    indicator has a defensible level) remains open.
+(c) **Structural/size-adjusted trade-openness model** — research
+    whether a gravity model can produce a defensible level (DEC-035
+    unblocker). Requires additional data.
+(d) **Force confidence methodology** — DEC-023 deferred; needs
+    external calibration basis.
+(e) **Big Cycle phase/stage** — requires all 17 forces or explicit
+    partial-force methodology.
+(f) **Release-date discipline** — Milestone 9; backtest_safe
+    currently False everywhere.
+
+The most natural next step is **(a) Gini normalization audit** or
+**(b) the first executable derived indicator** (if an economic
+verdict approves one), as both follow the established audit-then-
+implement pattern.

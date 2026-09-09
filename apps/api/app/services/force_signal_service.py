@@ -28,6 +28,17 @@ Sprint 6.4 / force-aggregation-v0.2 (DEC-032):
   confidence stay None.
 - confidence = None everywhere; backtest_safe = False everywhere.
 - No persistence. No public API.
+
+Sprint 6.7 / force-aggregation-v0.3 (DEC-034):
+- 5 of 17 forces approved for IDENTITY_SINGLE (Rule of law, Corruption,
+  Internal conflict proxy, Education, Wealth-gap).
+- 12 of 17 forces DEFERRED_MULTI (level/relative/momentum = None).
+- Wealth-gap is a PROXY_CONDITION (PARTIAL ceiling) — its level copies the
+  WEALTH_SHARE_TOP_10 level_score (100 * (1 - raw_share)); GINI_INDEX stays
+  SUPPORTING_CONTEXT (not averaged, not combined); relative/momentum/
+  confidence stay None.
+- confidence = None everywhere; backtest_safe = False everywhere.
+- No persistence. No public API.
 """
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession

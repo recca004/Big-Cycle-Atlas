@@ -30,6 +30,17 @@ fourth executable force:
 - Education level copies TERTIARY_ATTAINMENT_25_34's level_score (aligned
   raw OECD percentage); Education relative/momentum/confidence stay None
 - confidence = None everywhere; backtest_safe = False everywhere
+
+Sprint 6.7 (DEC-034) / force-aggregation-v0.3 promotes Wealth-gap to the
+fifth executable force:
+- IDENTITY_SINGLE for Rule of law, Corruption, Internal conflict proxy,
+  Education (PROXY_CONDITION, PARTIAL ceiling), Wealth-gap (PROXY_CONDITION,
+  PARTIAL ceiling)
+- DEFERRED_MULTI for all other 12 forces (level/relative/momentum = None)
+- Wealth-gap level copies WEALTH_SHARE_TOP_10's level_score
+  (100 * (1 - raw_share)); GINI_INDEX stays SUPPORTING_CONTEXT (not
+  averaged, not combined); Wealth-gap relative/momentum/confidence stay None
+- confidence = None everywhere; backtest_safe = False everywhere
 """
 from dataclasses import dataclass, field
 from typing import Optional

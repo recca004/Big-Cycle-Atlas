@@ -6,6 +6,7 @@ Synthetic observations persisted via the real persistence layer against
 seeded SQLite — no external calls, no live APIs. No signal is persisted; no
 force score, weight, momentum, relative score, or confidence exists here.
 """
+from dataclasses import replace
 from datetime import date, datetime, timezone
 
 import pytest
@@ -25,6 +26,7 @@ from app.cycle.normalization_definitions import (
     FreshnessThresholds,
     ModelVersionConfig,
     MomentumWindowResult,
+    NORMALIZATION_REGISTRY,
     NormalizationFamily,
     OneSidedVulnerabilityConfig,
     ScoringPeriod,
@@ -516,7 +518,6 @@ async def test_credit_gap_requires_explicit_model_config_entry(client):
     config = ModelVersionConfig(
         version_id="no-credit-gap-config",
         normalization_method="t",
-        force_mapping_version="m5.4",
         reference_universe_id="tracked_8",
     )
     with pytest.raises(NormalizationNotImplementedError) as excinfo:
@@ -638,7 +639,6 @@ async def test_model_config_claiming_backtest_safety_is_rejected(client):
     config = ModelVersionConfig(
         version_id="pretend-safe",
         normalization_method="test",
-        force_mapping_version="m5.4",
         reference_universe_id="tracked_8",
         backtest_safe=True,
     )
@@ -711,13 +711,13 @@ def test_shift_scoring_period_years_moves_year_keeps_quarter():
         shift_scoring_period_years(ScoringPeriod(1902, 2), 5)
 
 
-def test_current_model_version_is_v0_6_credit_gap_one_sided_level():
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.6"
+def test_current_model_version_is_v0_7_education_direct_explicit_gates():
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.7"
     assert (
         CURRENT_MODEL_VERSION.normalization_method
-        == "sprint-5.12-credit-gap-one-sided-level-r1"
+        == "sprint-6.4-education-direct-0-100-explicit-dimension-gates"
     )
-    # Sprint 5.10 (unchanged by 5.12): OWN_HISTORY level for EXACTLY
+    # Sprint 5.10 (unchanged by 5.12/6.4): OWN_HISTORY level for EXACTLY
     # DEBT_SERVICE_RATIO.
     own_history = CURRENT_MODEL_VERSION.own_history_level_configs
     assert set(own_history) == {"DEBT_SERVICE_RATIO"}
@@ -735,6 +735,21 @@ def test_current_model_version_is_v0_6_credit_gap_one_sided_level():
     ) == (2.0, 10.0, 50.0, 0.0)
     assert CURRENT_MODEL_VERSION.backtest_safe is False
     assert CURRENT_MODEL_VERSION.reference_universe_id == "tracked_8"
+    # Sprint 6.4 (DEC-032): explicit dimension approval sets — WGI x3 only.
+    # Education (TERTIARY_ATTAINMENT_25_34) is deliberately NOT in either set.
+    wgi_x3 = {
+        "RULE_OF_LAW_WGI_SCORE",
+        "CONTROL_OF_CORRUPTION_WGI_SCORE",
+        "POLITICAL_STABILITY_WGI_SCORE",
+    }
+    assert CURRENT_MODEL_VERSION.direct_momentum_approved_indicators == wgi_x3
+    assert CURRENT_MODEL_VERSION.direct_relative_approved_indicators == wgi_x3
+    assert "TERTIARY_ATTAINMENT_25_34" not in (
+        CURRENT_MODEL_VERSION.direct_momentum_approved_indicators
+    )
+    assert "TERTIARY_ATTAINMENT_25_34" not in (
+        CURRENT_MODEL_VERSION.direct_relative_approved_indicators
+    )
     for indicator in WGI_VALUES:
         spec = get_normalization_spec(indicator)
         assert CURRENT_MODEL_VERSION.momentum_windows[indicator] == spec.momentum_windows
@@ -750,7 +765,6 @@ def test_model_config_rejects_primary_window_outside_windows():
         ModelVersionConfig(
             version_id="bad",
             normalization_method="t",
-            force_mapping_version="m",
             reference_universe_id="tracked_8",
             momentum_windows={"RULE_OF_LAW_WGI_SCORE": (3, 5)},
             momentum_primary_window_years={"RULE_OF_LAW_WGI_SCORE": 4},
@@ -759,7 +773,6 @@ def test_model_config_rejects_primary_window_outside_windows():
         ModelVersionConfig(
             version_id="bad",
             normalization_method="t",
-            force_mapping_version="m",
             reference_universe_id="tracked_8",
             momentum_anchor_tolerance_periods={"RULE_OF_LAW_WGI_SCORE": 1},
         )
@@ -975,3 +988,156 @@ async def test_momentum_computed_from_aligned_raw_not_level_score(client):
     )
     signal = await _normalize("CHE", "RULE_OF_LAW_WGI_SCORE", ScoringPeriod(2025, 2))
     assert signal.momentum == pytest.approx(signal.raw_value - 80.0)
+
+
+# --- Sprint 6.4.1: approval-set fail-loud validation ---------------------------
+
+
+def test_current_v0_7_config_validates_clean():
+    """The current v0.7 config must pass validation without error."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    _validate_direct_dimension_approvals(CURRENT_MODEL_VERSION, NORMALIZATION_REGISTRY)
+
+
+def test_education_excluded_from_both_approved_sets():
+    """Education is deliberately NOT in either approved set (DEC-032)."""
+    assert "TERTIARY_ATTAINMENT_25_34" not in (
+        CURRENT_MODEL_VERSION.direct_momentum_approved_indicators
+    )
+    assert "TERTIARY_ATTAINMENT_25_34" not in (
+        CURRENT_MODEL_VERSION.direct_relative_approved_indicators
+    )
+
+
+def test_unknown_momentum_approved_indicator_fails():
+    """An approved momentum indicator not in the registry must fail loudly."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        direct_momentum_approved_indicators=frozenset({"NONEXISTENT_INDICATOR"}),
+    )
+    with pytest.raises(ValueError, match="unknown.*NONEXISTENT_INDICATOR"):
+        _validate_direct_dimension_approvals(bad_config, NORMALIZATION_REGISTRY)
+
+
+def test_momentum_approved_wrong_level_family_fails():
+    """A momentum-approved indicator with wrong level family must fail."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    # DSR is OWN_HISTORY level, not DIRECT_0_100 — approving it for direct
+    # momentum is a config mistake.
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        direct_momentum_approved_indicators=frozenset({"DEBT_SERVICE_RATIO"}),
+    )
+    with pytest.raises(ValueError, match="DEBT_SERVICE_RATIO.*DIRECT_0_100"):
+        _validate_direct_dimension_approvals(bad_config, NORMALIZATION_REGISTRY)
+
+
+def test_momentum_approved_wrong_momentum_family_fails():
+    """A momentum-approved indicator with wrong momentum family must fail."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    # Education is DIRECT_0_100 but its momentum_family is OWN_HISTORY (candidate).
+    # Construct a bad registry where Education's momentum_family is None.
+    # We must also clear its momentum_windows to pass NormalizationSpec.__post_init__.
+    edu_spec = NORMALIZATION_REGISTRY["TERTIARY_ATTAINMENT_25_34"]
+    bad_registry = dict(NORMALIZATION_REGISTRY)
+    bad_registry["TERTIARY_ATTAINMENT_25_34"] = replace(
+        edu_spec, momentum_family=None, momentum_windows=()
+    )
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        direct_momentum_approved_indicators=frozenset({"TERTIARY_ATTAINMENT_25_34"}),
+    )
+    with pytest.raises(ValueError, match="TERTIARY_ATTAINMENT_25_34.*OWN_HISTORY"):
+        _validate_direct_dimension_approvals(bad_config, bad_registry)
+
+
+def test_momentum_approved_missing_primary_window_fails():
+    """A momentum-approved indicator without a primary window must fail."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    # Remove the primary window for RULE_OF_LAW_WGI_SCORE.
+    bad_primary = dict(CURRENT_MODEL_VERSION.momentum_primary_window_years)
+    del bad_primary["RULE_OF_LAW_WGI_SCORE"]
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        momentum_primary_window_years=bad_primary,
+    )
+    with pytest.raises(ValueError, match="RULE_OF_LAW_WGI_SCORE.*primary"):
+        _validate_direct_dimension_approvals(bad_config, NORMALIZATION_REGISTRY)
+
+
+def test_momentum_approved_missing_tolerance_fails():
+    """A momentum-approved indicator without anchor tolerance must fail."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    bad_tolerance = dict(CURRENT_MODEL_VERSION.momentum_anchor_tolerance_periods)
+    del bad_tolerance["RULE_OF_LAW_WGI_SCORE"]
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        momentum_anchor_tolerance_periods=bad_tolerance,
+    )
+    with pytest.raises(ValueError, match="RULE_OF_LAW_WGI_SCORE.*tolerance"):
+        _validate_direct_dimension_approvals(bad_config, NORMALIZATION_REGISTRY)
+
+
+def test_momentum_approved_missing_windows_fails():
+    """A momentum-approved indicator with empty windows in model config must fail."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    # Pass an empty tuple for RULE_OF_LAW_WGI_SCORE's windows in the model
+    # config. The helper's fallback to spec.momentum_windows is only used when
+    # the indicator is NOT in model_config.momentum_windows; an explicit
+    # empty tuple means "no windows configured" and must fail.
+    bad_windows = dict(CURRENT_MODEL_VERSION.momentum_windows)
+    bad_windows["RULE_OF_LAW_WGI_SCORE"] = ()
+    bad_primary = dict(CURRENT_MODEL_VERSION.momentum_primary_window_years)
+    del bad_primary["RULE_OF_LAW_WGI_SCORE"]
+    bad_tolerance = dict(CURRENT_MODEL_VERSION.momentum_anchor_tolerance_periods)
+    del bad_tolerance["RULE_OF_LAW_WGI_SCORE"]
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        momentum_windows=bad_windows,
+        momentum_primary_window_years=bad_primary,
+        momentum_anchor_tolerance_periods=bad_tolerance,
+    )
+    with pytest.raises(ValueError, match="RULE_OF_LAW_WGI_SCORE.*windows"):
+        _validate_direct_dimension_approvals(bad_config, NORMALIZATION_REGISTRY)
+
+
+def test_unknown_relative_approved_indicator_fails():
+    """An approved relative indicator not in the registry must fail loudly."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        direct_relative_approved_indicators=frozenset({"NONEXISTENT_INDICATOR"}),
+    )
+    with pytest.raises(ValueError, match="unknown.*NONEXISTENT_INDICATOR"):
+        _validate_direct_dimension_approvals(bad_config, NORMALIZATION_REGISTRY)
+
+
+def test_relative_approved_wrong_level_family_fails():
+    """A relative-approved indicator with wrong level family must fail."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    # DSR is OWN_HISTORY level, not DIRECT_0_100 — approving it for direct
+    # relative is a config mistake.
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        direct_relative_approved_indicators=frozenset({"DEBT_SERVICE_RATIO"}),
+    )
+    with pytest.raises(ValueError, match="DEBT_SERVICE_RATIO.*DIRECT_0_100"):
+        _validate_direct_dimension_approvals(bad_config, NORMALIZATION_REGISTRY)
+
+
+def test_relative_approved_wrong_relative_family_fails():
+    """A relative-approved indicator with wrong relative family must fail."""
+    from app.cycle.normalization_definitions import _validate_direct_dimension_approvals
+    # Construct a bad registry where RULE_OF_LAW_WGI_SCORE has relative_family
+    # = None (instead of CROSS_SECTIONAL_RELATIVE). The level family stays
+    # DIRECT_0_100 so the level check passes; the relative family check fails.
+    rl_spec = NORMALIZATION_REGISTRY["RULE_OF_LAW_WGI_SCORE"]
+    bad_registry = dict(NORMALIZATION_REGISTRY)
+    bad_registry["RULE_OF_LAW_WGI_SCORE"] = replace(rl_spec, relative_family=None)
+    bad_config = replace(
+        CURRENT_MODEL_VERSION,
+        direct_relative_approved_indicators=frozenset({"RULE_OF_LAW_WGI_SCORE"}),
+    )
+    with pytest.raises(ValueError, match="RULE_OF_LAW_WGI_SCORE.*CROSS_SECTIONAL"):
+        _validate_direct_dimension_approvals(bad_config, bad_registry)

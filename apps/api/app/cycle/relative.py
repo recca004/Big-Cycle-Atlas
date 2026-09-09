@@ -47,6 +47,7 @@ from app.cycle.freshness import (
     own_period_age,
 )
 from app.cycle.normalization_definitions import (
+    CURRENT_MODEL_VERSION,
     AlignedValue,
     NormalizationDataError,
     NormalizationFamily,
@@ -125,6 +126,7 @@ async def build_relative_cross_section(
     scoring_period,
     universe: ReferenceUniverseSpec,
     freshness_policy: FreshnessPolicy | None = None,
+    approved_indicators: frozenset[str] | None = None,
 ) -> RelativeCrossSection:
     """Align every universe member at the SAME scoring period and rank them.
 
@@ -133,12 +135,15 @@ async def build_relative_cross_section(
     period-complete eligibility, and no-future-leakage are all inherited.
     Read-only: nothing is persisted, raw observations are never touched.
 
-    Execution gate (Sprint 5.9 hardening): the indicator must have level
-    family DIRECT_0_100 AND relative family CROSS_SECTIONAL_RELATIVE. Under
-    the current registry this resolves exactly to the WGI x3 — a direct call
-    for any other indicator (e.g. GINI_INDEX, whose registry entry also says
-    CROSS_SECTIONAL_RELATIVE but whose level methodology is NOT approved)
-    raises NormalizationNotImplementedError instead of silently ranking it.
+    Execution gate (Sprint 6.4 hardening): the indicator must have level
+    family DIRECT_0_100, relative family CROSS_SECTIONAL_RELATIVE, AND be
+    in the explicit approved-indicator set. The approved set defaults to
+    CURRENT_MODEL_VERSION.direct_relative_approved_indicators (the WGI x3
+    for v0.7). A direct call for any other indicator — including
+    TERTIARY_ATTAINMENT_25_34, which is DIRECT_0_100 +
+    CROSS_SECTIONAL_RELATIVE but NOT approved (DEC-032) — raises
+    NormalizationNotImplementedError instead of silently ranking it. A
+    registry family declaration alone NEVER enables a dimension.
     """
     spec = get_normalization_spec(indicator_code)
     if not (
@@ -150,6 +155,15 @@ async def build_relative_cross_section(
             f"relative CROSS_SECTIONAL_RELATIVE (got {spec.level_family.value} "
             f"+ {spec.relative_family.value if spec.relative_family else None}) — "
             "approved for the WGI x3 only"
+        )
+    approved = approved_indicators
+    if approved is None:
+        approved = CURRENT_MODEL_VERSION.direct_relative_approved_indicators
+    if indicator_code not in approved:
+        raise NormalizationNotImplementedError(
+            f"{indicator_code}: relative scoring is not approved in the "
+            f"current model version ({CURRENT_MODEL_VERSION.version_id!r}) — "
+            f"approved indicators: {sorted(approved)}"
         )
     policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
 

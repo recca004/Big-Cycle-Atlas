@@ -18,6 +18,16 @@ Sprint 5.22 / force-aggregation-v0.1:
 - 14 of 17 forces DEFERRED_MULTI (level/relative/momentum = None).
 - confidence = None everywhere; backtest_safe = False everywhere.
 - No persistence. No public API.
+
+Sprint 6.4 / force-aggregation-v0.2 (DEC-032):
+- 4 of 17 forces approved for IDENTITY_SINGLE (Rule of law, Corruption,
+  Internal conflict proxy, Education).
+- 13 of 17 forces DEFERRED_MULTI (level/relative/momentum = None).
+- Education is a PROXY_CONDITION (PARTIAL ceiling) — its level copies the
+  TERTIARY_ATTAINMENT_25_34 aligned raw percentage; relative/momentum/
+  confidence stay None.
+- confidence = None everywhere; backtest_safe = False everywhere.
+- No persistence. No public API.
 """
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -76,7 +86,7 @@ async def build_force_signals_as_of(
         cov = coverage_by_code[force_def.code]
 
         # Build component NormalizedSignals.
-        component_signals: dict[str, Optional[NormalizedSignal]] = {}
+        component_signals: dict[str, NormalizedSignal | None] = {}
         for comp in spec.components:
             if comp.role is ForceIndicatorRole.supporting_context:
                 # Do NOT invoke unsupported numeric normalization for

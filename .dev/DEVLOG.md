@@ -1,5 +1,40 @@
 # Devlog
 
+## 2026-09-10 — Sprint 6.4: Education DIRECT_0_100 + Fourth Executable Force
+
+### Summary
+
+Sprint 6.4 implemented DEC-032: TERTIARY_ATTAINMENT_25_34 reclassified from
+MONOTONIC_POSITIVE to DIRECT_0_100 — the level_score IS the aligned raw OECD
+percentage (ISCED 5-8, % of same-age population) preserved unchanged. Education
+promoted to the fourth executable force via PROXY_CONDITION + IDENTITY_SINGLE
+(coverage stays PARTIAL). Critical execution-gate hazard fixed by adding
+explicit dimension approval sets (WGI x3 only) — registry family declarations
+alone never enable a dimension. normalization-v0.7, force-aggregation-v0.2.
+pytest 560 (526 baseline + 34 new). DB unchanged. No commit/push.
+
+### Key changes
+
+- `app/cycle/normalization_definitions.py`: v0.7 + `direct_momentum_approved_indicators`
+  + `direct_relative_approved_indicators` (both WGI x3) + Education registry
+  reclassification to DIRECT_0_100.
+- `app/cycle/normalizer.py`: momentum and relative gates now require explicit
+  approved-set membership; DIRECT_0_100 docstring generalized.
+- `app/cycle/relative.py`: `build_relative_cross_section` adds
+  `approved_indicators` parameter (defaults to v0.7 approved set).
+- `app/cycle/force_aggregation_definitions.py`: Education PROXY_CONDITION +
+  IDENTITY_SINGLE; v0.2.
+- `app/cycle/force_signal.py` + `app/services/force_signal_service.py`:
+  docstrings updated (4 executable forces, 13 deferred).
+- `tests/test_sprint_6_4_education.py` (NEW): 32 tests covering the A-G matrix.
+- Existing tests updated for new versions and Education's new role.
+
+### Live smoke (2025-Q4, read-only)
+
+USA 52.77, CHE 50.60, DEU 40.88, FRA 53.35, GBR 61.19, JPN 67.53, IND 23.10,
+CHN None (stale 2010). Education relative/momentum/confidence None everywhere.
+Other 3 forces unaffected. No writes (6814/27/22/10/1872 unchanged).
+
 ## 2026-09-10 — Sprint 6.1: Indebtedness Composition Methodology Audit
 
 ### Summary

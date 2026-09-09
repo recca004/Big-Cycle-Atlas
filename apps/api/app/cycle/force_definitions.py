@@ -4,10 +4,13 @@ Authoritative wording: docs/data-model.md (names) and packages/shared/src/index.
 (FORCES keys) — both preserved verbatim here. Do not rename forces casually.
 
 This module is a typed CONFIGURATION layer, not a scoring engine. It contains no
-weights, no normalization parameters, and no score formulas — those arrive only
-with a validated methodology (Milestone 5+). Coverage is not strength: a force
+weights, no normalization parameters, and no score formulas — those live in
+the separately versioned normalization (normalization-v0.7) and force
+aggregation (force-aggregation-v0.2) layers. Coverage is not strength: a force
 marked "available" means the mapped live indicators have observations, nothing
-more.
+more. Four force-level identity/proxy signals are executable via IDENTITY_SINGLE
+(Rule of law, Corruption, Internal conflict proxy, Education proxy); 13/17
+forces are intentionally unscored.
 
 Mapping discipline:
 - live_indicator_codes — canonical indicators with a defensible, direct
@@ -72,7 +75,7 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         coverage_notes=(
             "Live input: OECD tertiary attainment age 25-34 (ISCED 5-8, "
             "% of population, annual, Sprint 5.20). Attainment != enrollment. "
-            "CHN has only 1 data point (2010); IND has 11 sparse data points. "
+            "CHN has only 1 data point (2010); IND has 8 sparse data points. "
             "Still missing: secondary attainment/enrollment, learning "
             "outcomes/test scores, education quality, years of schooling, "
             "skills. One tertiary series cannot make Education AVAILABLE — "

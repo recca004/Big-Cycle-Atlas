@@ -593,7 +593,6 @@ class ModelVersionConfig:
 
     version_id: str
     normalization_method: str
-    force_mapping_version: str
     reference_universe_id: str
     calibration_window_end: Optional[date] = None
     calibration_window_start: Optional[date] = None
@@ -622,6 +621,20 @@ class ModelVersionConfig:
     one_sided_vulnerability_configs: dict[str, OneSidedVulnerabilityConfig] = field(
         default_factory=dict
     )
+    # Sprint 6.4 (DEC-032) — EXPLICIT DIMENSION APPROVAL SETS for the
+    # DIRECT_0_100 path. A registry level/relative/momentum family
+    # declaration alone NEVER auto-enables a dimension — an indicator must
+    # ALSO appear in the corresponding approved set here. This separates
+    # candidate families (declared in the registry for future methodology)
+    # from approved execution (declared here, versioned). Sprint 5.7/5.8
+    # relied on family-combination gates that resolved to the WGI x3 only
+    # because no other DIRECT_0_100 indicator existed; Sprint 6.4 adds
+    # TERTIARY_ATTAINMENT_25_34 as DIRECT_0_100 and these explicit sets keep
+    # its candidate OWN_HISTORY momentum and CROSS_SECTIONAL_RELATIVE
+    # relative families from silently executing. Both sets are exactly the
+    # WGI x3; Education is deliberately NOT a member (DEC-032).
+    direct_momentum_approved_indicators: frozenset[str] = field(default_factory=frozenset)
+    direct_relative_approved_indicators: frozenset[str] = field(default_factory=frozenset)
     backtest_safe: bool = False  # False until Milestone 9 (release-date discipline)
 
     def __post_init__(self) -> None:
@@ -653,6 +666,12 @@ class ModelVersionConfig:
                 raise ValueError(
                     f"{indicator}: anchor tolerance declared without windows"
                 )
+        # Sprint 6.4: the direct-momentum approved set is the EXECUTION gate
+        # (checked in the normalizer). We do NOT validate here that
+        # momentum_windows is a subset of direct_momentum_approved_indicators
+        # — test fixtures legitimately build configs with WGI momentum
+        # windows without setting the approved set, and the approved set
+        # only matters at execution time on the DIRECT_0_100 path.
 
 
 CURRENT_MODEL_VERSION = ModelVersionConfig(
@@ -704,9 +723,28 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # only and NEVER scales the score. Credit-gap relative stays
     # CONTEXTUAL_DEFERRED (None) and registry momentum windows (4q/8q) stay
     # UNAPPROVED (momentum None). All v0.5 WGI + DSR configuration unchanged.
-    version_id="normalization-v0.6",
-    normalization_method="sprint-5.12-credit-gap-one-sided-level-r1",
-    force_mapping_version="m5.4",
+    # v0.7: Sprint 6.4 (DEC-032) — Education DIRECT_0_100 level + explicit
+    # dimension approval gates. TERTIARY_ATTAINMENT_25_34 reclassified from
+    # MONOTONIC_POSITIVE to DIRECT_0_100: the level_score is the aligned raw
+    # OECD percentage (ISCED 5-8, % of same-age population) preserved
+    # unchanged — no rescale, percentile, z-score, invert, or winsorize.
+    # OECD publishes tertiary attainment as a bounded absolute percentage
+    # and uses it for cross-country attainment comparison; Atlas
+    # independently preserves that percentage as the indicator-level level
+    # proxy. Education relative and momentum stay None: DEC-032 approves
+    # neither dimension. HAZARD FIXED: the Sprint 5.7/5.8 family-combination
+    # gates (DIRECT_0_100 + OWN_HISTORY, DIRECT_0_100 +
+    # CROSS_SECTIONAL_RELATIVE) resolved to the WGI x3 only because no other
+    # DIRECT_0_100 indicator existed. Education's registry candidate families
+    # (OWN_HISTORY momentum, CROSS_SECTIONAL_RELATIVE relative) would have
+    # SILENTLY passed those gates once the level family changed. v0.7 adds
+    # EXPLICIT approved indicator sets (direct_momentum_approved_indicators,
+    # direct_relative_approved_indicators) — both exactly the WGI x3 — so a
+    # registry family declaration alone NEVER enables a dimension. Education
+    # is deliberately NOT in either set. All v0.6 WGI + DSR + credit-gap
+    # configuration unchanged.
+    version_id="normalization-v0.7",
+    normalization_method="sprint-6.4-education-direct-0-100-explicit-dimension-gates",
     reference_universe_id="tracked_8",
     momentum_windows={
         "RULE_OF_LAW_WGI_SCORE": (3, 5),
@@ -741,6 +779,22 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
             saturated_score=0.0,
         ),
     },
+    # Sprint 6.4 (DEC-032): EXPLICIT dimension approval for the DIRECT_0_100
+    # path. Both sets are exactly the WGI x3 — the only indicators approved
+    # for direct momentum or relative scoring. Education
+    # (TERTIARY_ATTAINMENT_25_34) is DIRECT_0_100 but deliberately NOT in
+    # either set: its candidate OWN_HISTORY / CROSS_SECTIONAL_RELATIVE
+    # families stay unapproved (dimensions None, never auto-enabled).
+    direct_momentum_approved_indicators=frozenset({
+        "RULE_OF_LAW_WGI_SCORE",
+        "CONTROL_OF_CORRUPTION_WGI_SCORE",
+        "POLITICAL_STABILITY_WGI_SCORE",
+    }),
+    direct_relative_approved_indicators=frozenset({
+        "RULE_OF_LAW_WGI_SCORE",
+        "CONTROL_OF_CORRUPTION_WGI_SCORE",
+        "POLITICAL_STABILITY_WGI_SCORE",
+    }),
     backtest_safe=False,
 )
 
@@ -1155,7 +1209,10 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
         NormalizationSpec(
             indicator_code="TERTIARY_ATTAINMENT_25_34",
             direction=IndicatorStrengthDirection.positive,
-            level_family=NormalizationFamily.monotonic_positive,
+            level_family=NormalizationFamily.direct_0_100,
+            # Candidate families kept for future methodology — they do NOT
+            # auto-enable: v0.7 explicit approved sets (WGI x3 only) gate
+            # execution. Education is NOT in either approved set (DEC-032).
             relative_family=NormalizationFamily.cross_sectional_relative,
             momentum_family=NormalizationFamily.own_history,
             momentum_windows=(3, 5),
@@ -1164,14 +1221,20 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
             relative_comparable=True,
             notes=(
                 "Tertiary educational attainment, age 25-34 (OECD EAG LSO "
-                "NEAC, ISCED 5-8, % of population, Sprint 5.20). Direction: "
-                "higher attainment = stronger education system. "
-                "MONOTONIC_POSITIVE direction is defensible, but NO numeric "
-                "curve is approved — no tracked_8 min-max, no percentile "
-                "fallback, no executable level score. Attainment != "
-                "enrollment. CHN (1 data point) and IND (11 sparse) have "
-                "incomplete coverage. Feeds the PARTIAL-capped Education "
-                "force (one tertiary series cannot make Education AVAILABLE)."
+                "NEAC, ISCED 5-8, % of same-age population, Sprint 5.20). "
+                "Sprint 6.4 (DEC-032): level reclassified to DIRECT_0_100 — "
+                "the level_score IS the aligned raw OECD percentage preserved "
+                "unchanged (no rescale, percentile, z-score, invert, or "
+                "winsorize). OECD publishes this as a bounded absolute "
+                "percentage and uses it for cross-country attainment "
+                "comparison; Atlas independently preserves that percentage "
+                "as the indicator-level level proxy. Education relative and "
+                "momentum stay None (DEC-032 approves neither) — the candidate "
+                "OWN_HISTORY / CROSS_SECTIONAL_RELATIVE families are kept for "
+                "future methodology but gated by the v0.7 explicit approved "
+                "sets (WGI x3 only). Attainment != enrollment. CHN (1 data "
+                "point 2010) and IND (sparse) have incomplete coverage. Feeds "
+                "the PARTIAL-capped Education force as a PROXY_CONDITION."
             ),
         ),
         # -- WID ---------------------------------------------------------------
@@ -1264,6 +1327,105 @@ def validate_normalization_registry() -> None:
             raise ValueError(
                 f"{indicator}: one-sided vulnerability level config but "
                 f"registry level family is {spec.level_family.value}"
+            )
+    # Sprint 6.4: explicit dimension approval sets must be consistent with
+    # the registry. A registry family declaration alone NEVER enables a
+    # dimension — the approved set is the execution gate. But an approved
+    # indicator MUST have compatible registry families and complete
+    # configuration, otherwise the gate would pass at runtime but produce
+    # wrong/missing behavior.
+    _validate_direct_dimension_approvals(
+        CURRENT_MODEL_VERSION, NORMALIZATION_REGISTRY
+    )
+
+
+def _validate_direct_dimension_approvals(
+    model_config: "ModelVersionConfig",
+    registry: dict[str, "NormalizationSpec"],
+) -> None:
+    """Validate explicit DIRECT_0_100 dimension approval sets against the registry.
+
+    Pure helper — accepts any model config and any registry, so test fixtures
+    can validate malformed configs without mutating module globals.
+
+    For each direct_momentum approved indicator, requires:
+    - indicator exists in the registry
+    - level_family == DIRECT_0_100
+    - momentum_family == OWN_HISTORY
+    - non-empty momentum windows (in model config or spec)
+    - primary window configured
+    - primary window belongs to windows
+    - anchor tolerance configured
+
+    For each direct_relative approved indicator, requires:
+    - indicator exists in the registry
+    - level_family == DIRECT_0_100
+    - relative_family == CROSS_SECTIONAL_RELATIVE
+
+    Fails loudly for: unknown approved indicator, incompatible level family,
+    incompatible dimension family, incomplete momentum configuration.
+    """
+    # --- direct_momentum_approved_indicators ---
+    for indicator in model_config.direct_momentum_approved_indicators:
+        spec = registry.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"direct_momentum_approved_indicators contains unknown "
+                f"indicator: {indicator}"
+            )
+        if spec.level_family is not NormalizationFamily.direct_0_100:
+            raise ValueError(
+                f"{indicator}: approved for direct momentum but level family "
+                f"is {spec.level_family.value} (must be DIRECT_0_100)"
+            )
+        if spec.momentum_family is not NormalizationFamily.own_history:
+            raise ValueError(
+                f"{indicator}: approved for direct momentum but momentum "
+                f"family is {spec.momentum_family.value if spec.momentum_family else None} "
+                f"(must be OWN_HISTORY)"
+            )
+        windows = model_config.momentum_windows.get(indicator, spec.momentum_windows)
+        if not windows:
+            raise ValueError(
+                f"{indicator}: approved for direct momentum but no momentum "
+                f"windows configured"
+            )
+        primary = model_config.momentum_primary_window_years.get(indicator)
+        if primary is None:
+            raise ValueError(
+                f"{indicator}: approved for direct momentum but no primary "
+                f"window configured"
+            )
+        if primary not in windows:
+            raise ValueError(
+                f"{indicator}: approved for direct momentum but primary "
+                f"window {primary} is not in windows {windows}"
+            )
+        tolerance = model_config.momentum_anchor_tolerance_periods.get(indicator)
+        if tolerance is None:
+            raise ValueError(
+                f"{indicator}: approved for direct momentum but no anchor "
+                f"tolerance configured"
+            )
+
+    # --- direct_relative_approved_indicators ---
+    for indicator in model_config.direct_relative_approved_indicators:
+        spec = registry.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"direct_relative_approved_indicators contains unknown "
+                f"indicator: {indicator}"
+            )
+        if spec.level_family is not NormalizationFamily.direct_0_100:
+            raise ValueError(
+                f"{indicator}: approved for direct relative but level family "
+                f"is {spec.level_family.value} (must be DIRECT_0_100)"
+            )
+        if spec.relative_family is not NormalizationFamily.cross_sectional_relative:
+            raise ValueError(
+                f"{indicator}: approved for direct relative but relative "
+                f"family is {spec.relative_family.value if spec.relative_family else None} "
+                f"(must be CROSS_SECTIONAL_RELATIVE)"
             )
 
 

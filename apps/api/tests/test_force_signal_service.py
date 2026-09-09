@@ -183,11 +183,16 @@ async def test_indebtedness_force_level_none(client):
 
 @pytest.mark.asyncio
 async def test_deferred_indicators_dont_crash_build(client):
-    """Education, Gini, WID, etc. are SUPPORTING_CONTEXT — must not crash."""
+    """Gini, WID, etc. are SUPPORTING_CONTEXT — must not crash.
+
+    Education is now PROXY_CONDITION (Sprint 6.4): with no observation it
+    returns level_score None and the indicator lands in missing_components
+    (not deferred_components).
+    """
     signals = await _build_signals("CHE", ScoringPeriod(2025, 2))
     edu = next(s for s in signals if s.force_code == "education")
     assert edu.level_score is None
-    assert "TERTIARY_ATTAINMENT_25_34" in edu.deferred_components
+    assert "TERTIARY_ATTAINMENT_25_34" in edu.missing_components
 
 
 # --- No raw writes / no derived persistence ------------------------------------
@@ -233,8 +238,8 @@ async def test_backtest_safe_false_on_all_signals(client):
 async def test_versions_on_all_signals(client):
     signals = await _build_signals("CHE", ScoringPeriod(2025, 2))
     for s in signals:
-        assert s.force_model_version == "force-aggregation-v0.1"
-        assert s.normalization_model_version == "normalization-v0.6"
+        assert s.force_model_version == "force-aggregation-v0.2"
+        assert s.normalization_model_version == "normalization-v0.7"
 
 
 # --- Country isolation ---------------------------------------------------------

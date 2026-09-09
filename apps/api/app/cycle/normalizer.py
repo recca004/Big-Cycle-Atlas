@@ -1,16 +1,19 @@
 """Indicator-level normalizer — Sprint 5.6 + Sprint 5.7 momentum + Sprint 5.8
 relative + Sprint 5.10 DSR own-history level + Sprint 5.12 credit-gap
-one-sided vulnerability level.
+one-sided vulnerability level + Sprint 6.4 Education DIRECT_0_100 + explicit
+dimension approval gates.
 
 Layering (NORMALIZATION.md, preserved):
 
     Observation -> as-of alignment -> AlignedValue -> indicator normalizer -> NormalizedSignal
 
 This module works entirely at the INDICATOR level. No force aggregation, no
-force weights, no Big Cycle phase — the force layer does not exist yet.
+force weights, no Big Cycle phase — force aggregation is owned by a
+separately versioned layer (`force-aggregation-v0.2`, DEC-029/Sprint 5.21 +
+DEC-032/Sprint 6.4); 4 of 17 forces are executable via IDENTITY_SINGLE.
 
-Implemented (Sprint 5.6): DIRECT_0_100 level only (the three WGI governance
-scores). Implemented (Sprint 5.7, DEC-016): OWN_HISTORY momentum for the WGI
+Implemented (Sprint 5.6): DIRECT_0_100 level for the three WGI governance
+scores. Implemented (Sprint 5.7, DEC-016): OWN_HISTORY momentum for the WGI
 x3 — the SIGNED change in the provider's own 0-100 points between the current
 aligned raw value and the anchor aligned raw value, for the model-versioned
 windows (3y, 5y). Implemented (Sprint 5.8, DEC-017):
@@ -48,18 +51,36 @@ MODEL PARAMETER, not Basel methodology truth — the gap remains a common
 reference point, NOT a mechanical standalone rule. Same execution-gate
 pattern as DSR: a registry ONE_SIDED_VULNERABILITY family alone never
 auto-enables — an explicit one_sided_vulnerability_configs entry in the model
-version is required, and v0.6 carries exactly one: CREDIT_TO_GDP_GAP. No
+version is required, and v0.7 carries exactly one: CREDIT_TO_GDP_GAP. No
 minimum-history gate (the curve is parametric). Freshness gates the CURRENT
 observation only and NEVER scales the score. Credit-gap relative stays
 CONTEXTUAL_DEFERRED (None) and registry momentum windows (4q/8q) stay
 UNAPPROVED (momentum None). Confidence stays None.
 
+Implemented (Sprint 6.4, DEC-032): DIRECT_0_100 LEVEL for
+TERTIARY_ATTAINMENT_25_34 — the third non-WGI level signal. The level_score
+IS the aligned raw OECD percentage (ISCED 5-8, % of same-age population)
+preserved unchanged (no rescale, percentile, z-score, invert, or winsorize).
+OECD publishes tertiary attainment as a bounded absolute percentage and
+uses it for cross-country attainment comparison; Atlas independently
+chooses to preserve that percentage unchanged as the tertiary-attainment
+proxy level_score. Education relative and momentum stay None (DEC-032
+approves neither) — the candidate OWN_HISTORY / CROSS_SECTIONAL_RELATIVE
+families are gated by the v0.7 explicit approved sets (WGI x3 only).
+Confidence stays None.
+
 Execution gates: OWN_HISTORY level requires BOTH the registry level family
 AND an explicit own_history_level_configs entry in the model version — a
 registry OWN_HISTORY entry alone never auto-enables an indicator; the same
 gate applies to ONE_SIDED_VULNERABILITY (explicit
-one_sided_vulnerability_configs entry required). No generic fallback exists
-anywhere.
+one_sided_vulnerability_configs entry required). Sprint 6.4 (DEC-032) added
+EXPLICIT dimension approval sets for the DIRECT_0_100 path:
+direct_momentum_approved_indicators and direct_relative_approved_indicators
+(both WGI x3 only for v0.7). A registry family declaration alone NEVER
+enables a dimension — the approved set is the execution gate. Education
+(TERTIARY_ATTAINMENT_25_34) is DIRECT_0_100 but deliberately NOT in either
+approved set, so its momentum and relative stay None. No generic fallback
+exists anywhere.
 
 Still None on every signal: confidence (composition unresolved, §17 — the
 freshness FACTOR is carried, but it is not the confidence score).
@@ -256,9 +277,9 @@ async def normalize_indicator_as_of(
         )
     raise NormalizationNotImplementedError(
         f"{indicator_code}: level family {spec.level_family.value} is not "
-        "implemented (executable: DIRECT_0_100 for the WGI x3, OWN_HISTORY for "
-        "DEBT_SERVICE_RATIO only, ONE_SIDED_VULNERABILITY for "
-        "CREDIT_TO_GDP_GAP only)"
+        "implemented (executable: DIRECT_0_100 for the WGI x3 + "
+        "TERTIARY_ATTAINMENT_25_34, OWN_HISTORY for DEBT_SERVICE_RATIO only, "
+        "ONE_SIDED_VULNERABILITY for CREDIT_TO_GDP_GAP only)"
     )
 
 
@@ -420,7 +441,20 @@ async def _normalize_direct_0_100_as_of(
     model_config: ModelVersionConfig,
     freshness_policy: FreshnessPolicy | None,
 ) -> NormalizedSignal | None:
-    """DIRECT_0_100 path (Sprints 5.6-5.8): WGI x3 level + momentum + relative.
+    """DIRECT_0_100 path: provider's bounded absolute 0-100 scale preserved.
+
+    Generalized in Sprint 6.4 (DEC-032) beyond WGI-specific assumptions: any
+    indicator whose level family is DIRECT_0_100 publishes level_score = the
+    aligned raw provider percentage, validated to [0, 100] (no clamp),
+    freshness-gated for usability (freshness NEVER scales the score), and
+    missing/stale -> None (never zero).
+
+    Momentum and relative are SEPARATE dimensions, each gated by an
+    EXPLICIT approved-indicator set in the model config (v0.7: WGI x3 only).
+    A registry family declaration alone NEVER enables a dimension —
+    Education (TERTIARY_ATTAINMENT_25_34) is DIRECT_0_100 with candidate
+    OWN_HISTORY / CROSS_SECTIONAL_RELATIVE families but is NOT in either
+    approved set, so its momentum and relative stay None (DEC-032).
 
     Behavior is UNCHANGED by Sprint 5.10's dispatch refactor — WGI outputs
     must not depend on the new DSR own-history path.
@@ -448,73 +482,89 @@ async def _normalize_direct_0_100_as_of(
         )
 
     # --- Momentum (Sprint 5.7, DEC-016): WGI x3 OWN_HISTORY only -------------
-    # Execution gate: BOTH the level family (DIRECT_0_100) and the momentum
-    # family (OWN_HISTORY) must hold. For Sprint 5.7 this resolves exactly to
-    # the WGI x3 — other indicators' registry OWN_HISTORY momentum_family
-    # entries do NOT make their momentum approved, and no generic fallback
-    # exists.
-    if not (
-        spec.level_family is NormalizationFamily.direct_0_100
-        and spec.momentum_family is NormalizationFamily.own_history
-    ):
-        raise NormalizationNotImplementedError(
-            f"{indicator_code}: momentum gate requires level DIRECT_0_100 + "
-            f"momentum OWN_HISTORY (got {spec.level_family.value} + "
-            f"{spec.momentum_family.value if spec.momentum_family else None})"
-        )
-    windows = model_config.momentum_windows.get(indicator_code, spec.momentum_windows)
-    primary_window = model_config.momentum_primary_window_years.get(indicator_code)
-    tolerance = model_config.momentum_anchor_tolerance_periods.get(indicator_code)
-    if not windows or primary_window is None or tolerance is None:
-        raise NormalizationNotImplementedError(
-            f"{indicator_code}: momentum windows/primary/tolerance are not "
-            f"configured in model version {model_config.version_id!r}"
-        )
-
-    # Computed from ALIGNED RAW values — never from level_score (which only
-    # happens to equal raw for DIRECT_0_100 today).
-    window_results = tuple(
-        [
-            await _momentum_window_result(
-                session,
-                country_iso3,
-                indicator_code,
-                scoring_period,
-                window_years,
-                tolerance,
-                raw,
-            )
-            for window_years in windows
-        ]
-    )
-    primary_result = next(
-        (r for r in window_results if r.window_years == primary_window), None
-    )
+    # Execution gate (Sprint 6.4 hardening): BOTH the level family
+    # (DIRECT_0_100), the momentum family (OWN_HISTORY), AND explicit
+    # membership in model_config.direct_momentum_approved_indicators must
+    # hold. The approved set is versioned in the model config — a registry
+    # family declaration alone NEVER enables a dimension. For v0.7 the
+    # approved set is exactly the WGI x3; Education
+    # (TERTIARY_ATTAINMENT_25_34) is DIRECT_0_100 + OWN_HISTORY but NOT
+    # approved, so its momentum stays None (not raised — dimension
+    # separation: unapproved = None, not error).
     momentum: float | None = None
     momentum_window_years: int | None = None
-    if primary_result is not None and primary_result.change is not None:
-        momentum = primary_result.change
-        momentum_window_years = primary_window
-    # If the primary window is unavailable: momentum stays None — NO
-    # averaging with other windows and NO silent fallback to a shorter one;
-    # the other windows remain visible in momentum_windows provenance.
+    window_results: tuple[MomentumWindowResult, ...] = ()
+    if (
+        spec.level_family is NormalizationFamily.direct_0_100
+        and spec.momentum_family is NormalizationFamily.own_history
+        and indicator_code in model_config.direct_momentum_approved_indicators
+    ):
+        windows = model_config.momentum_windows.get(indicator_code, spec.momentum_windows)
+        primary_window = model_config.momentum_primary_window_years.get(indicator_code)
+        tolerance = model_config.momentum_anchor_tolerance_periods.get(indicator_code)
+        if not windows or primary_window is None or tolerance is None:
+            raise NormalizationNotImplementedError(
+                f"{indicator_code}: approved for direct momentum but "
+                f"windows/primary/tolerance are not configured in model "
+                f"version {model_config.version_id!r}"
+            )
+
+        # Computed from ALIGNED RAW values — never from level_score (which
+        # only happens to equal raw for DIRECT_0_100 today).
+        window_results = tuple(
+            [
+                await _momentum_window_result(
+                    session,
+                    country_iso3,
+                    indicator_code,
+                    scoring_period,
+                    window_years,
+                    tolerance,
+                    raw,
+                )
+                for window_years in windows
+            ]
+        )
+        primary_result = next(
+            (r for r in window_results if r.window_years == primary_window), None
+        )
+        if primary_result is not None and primary_result.change is not None:
+            momentum = primary_result.change
+            momentum_window_years = primary_window
+        # If the primary window is unavailable: momentum stays None — NO
+        # averaging with other windows and NO silent fallback to a shorter
+        # one; the other windows remain visible in momentum_windows
+        # provenance.
+    # else: momentum stays None — the dimension is not approved for this
+    # indicator (not an error — dimension separation).
 
     # --- Relative (Sprint 5.8, DEC-017): WGI x3 CROSS_SECTIONAL_RELATIVE ------
-    # Execution gate: BOTH the relative family (CROSS_SECTIONAL_RELATIVE) and
-    # the level family (DIRECT_0_100 — checked above) must hold. For Sprint
-    # 5.8 this resolves exactly to the WGI x3: GDP_GROWTH, GCF, Gini, and
-    # labour productivity also say CROSS_SECTIONAL_RELATIVE in the registry,
-    # but their level families are NOT executable/approved, so they raise at
-    # the level gate — their relative scoring must NOT silently enable.
+    # Execution gate (Sprint 6.4 hardening): BOTH the relative family
+    # (CROSS_SECTIONAL_RELATIVE), the level family (DIRECT_0_100 — checked
+    # above), AND explicit membership in
+    # model_config.direct_relative_approved_indicators must hold. The
+    # approved set is versioned in the model config — a registry family
+    # declaration alone NEVER enables a dimension. For v0.7 the approved set
+    # is exactly the WGI x3; Education (TERTIARY_ATTAINMENT_25_34) is
+    # DIRECT_0_100 + CROSS_SECTIONAL_RELATIVE but NOT approved, so its
+    # relative stays None (not raised — dimension separation).
     relative_score: float | None = None
     relative_rank: float | None = None
     reference_universe_id: str | None = None
     universe_expected_n: int | None = None
     universe_usable_n: int | None = None
-    if spec.relative_family is NormalizationFamily.cross_sectional_relative:
+    if (
+        spec.relative_family is NormalizationFamily.cross_sectional_relative
+        and indicator_code in model_config.direct_relative_approved_indicators
+    ):
         universe = REFERENCE_UNIVERSES[model_config.reference_universe_id]
         cross_section = await build_relative_cross_section(
-            session, indicator_code, scoring_period, universe, freshness_policy=policy
+            session,
+            indicator_code,
+            scoring_period,
+            universe,
+            freshness_policy=policy,
+            approved_indicators=model_config.direct_relative_approved_indicators,
         )
         # Provenance travels even when the universe is INCOMPLETE — a 7/8
         # cross-section is never silently scored as tracked_8.
@@ -527,14 +577,19 @@ async def _normalize_direct_0_100_as_of(
             relative_score = member.relative_score
         # Freshness gates member usability inside the cross-section — it
         # NEVER scales relative_score (economic position, not trust).
-    elif spec.relative_family is not None:
+    elif (
+        spec.relative_family is not None
+        and spec.relative_family is not NormalizationFamily.cross_sectional_relative
+    ):
+        # A non-CROSS_SECTIONAL_RELATIVE relative family is not implemented.
         raise NormalizationNotImplementedError(
             f"{indicator_code}: relative family {spec.relative_family.value} is "
             "not implemented (Sprint 5.8 implements CROSS_SECTIONAL_RELATIVE "
             "for the WGI x3 only)"
         )
-    # spec.relative_family None: the dimension is not defensible for this
-    # indicator — relative_score stays None.
+    # else: relative_family is None OR the indicator is not in the approved
+    # set — relative_score stays None (dimension separation: unapproved =
+    # None, not error).
 
     return NormalizedSignal(
         indicator_code=indicator_code,

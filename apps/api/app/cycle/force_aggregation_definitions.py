@@ -1,5 +1,6 @@
 """Force aggregation configuration — Sprint 5.21 (methodology) + Sprint 5.22
-(hardening). Companion to .dev/FORCE_AGGREGATION.md.
+(hardening) + Sprint 6.4 (Education promotion, DEC-032). Companion to
+.dev/FORCE_AGGREGATION.md.
 
 This module is a typed CONFIGURATION layer. It defines:
 
@@ -22,15 +23,20 @@ Sprint 5.22 added structural hardening to this config layer:
 - proxy-condition ceiling guard (PROXY_CONDITION identity requires PARTIAL)
 - dimension approval guard (relative/momentum identity_copy only on WGI x3)
 
+Sprint 6.4 (DEC-032) promoted Education to the fourth executable force:
+- Education: SUPPORTING_CONTEXT → PROXY_CONDITION; DEFERRED_MULTI →
+  IDENTITY_SINGLE. Coverage stays PARTIAL. relative/momentum/confidence
+  stay deferred. 4/17 forces executable; 13/17 intentionally unscored.
+
 Validation rules fail loudly at import time. Every one of the 17 forces is
 represented explicitly — either with an approved aggregation config or with
 DEFERRED_MULTI / no config (the design distinguishes approved aggregation
 configs from intentionally unconfigured forces).
 
 Versioning (FORCE_AGGREGATION.md §10):
-- Indicator normalization version: normalization-v0.6 (unchanged, owned by
+- Indicator normalization version: normalization-v0.7 (Sprint 6.4, owned by
   app/cycle/normalization_definitions.py)
-- Force aggregation version: force-aggregation-v0.1 (this module)
+- Force aggregation version: force-aggregation-v0.2 (this module, Sprint 6.4)
 """
 from dataclasses import dataclass
 from enum import Enum
@@ -176,11 +182,11 @@ class ForceAggregationSpec:
     notes: str = ""
 
     def __post_init__(self) -> None:
-        # confidence_mode is always deferred in force-aggregation-v0.1.
+        # confidence_mode is always deferred in force-aggregation-v0.2.
         if self.confidence_mode is not ForceDimensionMode.deferred:
             raise ValueError(
                 f"{self.force_code}: confidence_mode must be 'deferred' in "
-                f"force-aggregation-v0.1 (got {self.confidence_mode})"
+                f"force-aggregation-v0.2 (got {self.confidence_mode})"
             )
 
         # No duplicate component indicators.
@@ -334,20 +340,31 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
         confidence_mode=_DEFERRED,
         notes="No live indicators; requires qualitative/expert source.",
     ),
-        # 2. Education — SUPPORTING_CONTEXT only (level normalization deferred)
+        # 2. Education — IDENTITY_SINGLE (PROXY_CONDITION), PARTIAL ceiling
+        # Sprint 6.4 (DEC-032): TERTIARY_ATTAINMENT_25_34 promoted to
+        # PROXY_CONDITION. level_mode = identity_copy promotes Education to
+        # the fourth executable force. relative/momentum/confidence stay
+        # DEFERRED (DEC-032 approves only the level). coverage_ceiling stays
+        # PARTIAL — one tertiary-attainment measure does not represent
+        # complete Education.
         ForceAggregationSpec(
             force_code="education",
             components=(
                 ForceIndicatorComponentSpec(
                     indicator_code="TERTIARY_ATTAINMENT_25_34",
-                    role=ForceIndicatorRole.supporting_context,
+                    role=ForceIndicatorRole.proxy_condition,
                 ),
             ),
-            level_mode=_DEFERRED,
+            level_mode=_IDENTITY,
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred; coverage capped PARTIAL.",
+            notes=(
+                "Sprint 6.4 (DEC-032): single OECD tertiary-attainment proxy "
+                "condition; identity copies the indicator level_score "
+                "(aligned raw percentage). relative/momentum/confidence "
+                "stay deferred. coverage stays PARTIAL."
+            ),
         ),
         # 3. Character / determination — no live indicators
         ForceAggregationSpec(
@@ -656,4 +673,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.1"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v0.2"

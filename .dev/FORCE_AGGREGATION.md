@@ -33,6 +33,23 @@ semantics, or improperly ignores government debt. Indebtedness stays
 DEFERRED_MULTI with level=None. force-aggregation-v0.1 unchanged. Next:
 Sprint 6.2 government-debt normalization methodology audit.
 
+**Sprint 6.4 implementation note (2026-09-10, DEC-032):** Sprint 6.4
+promoted Education to the fourth executable force. Education is now
+PROXY_CONDITION + IDENTITY_SINGLE — the force level_score copies the
+TERTIARY_ATTAINMENT_25_34 aligned raw OECD percentage (ISCED 5-8, % of
+same-age population). Coverage stays PARTIAL (one tertiary-attainment
+measure does not represent complete Education). Education
+relative/momentum/confidence stay None (DEC-032 approves only the
+level). 4 of 17 forces are now executable (Rule of law, Corruption,
+Internal conflict proxy, Education); 13 of 17 are intentionally None.
+force-aggregation-v0.1 → force-aggregation-v0.2 (Education promotion
+only — no new arithmetic, no new aggregation mode; the existing
+IDENTITY_SINGLE path already supported PROXY_CONDITION). No force
+persistence, no public force API. Critical hazard fixed in the
+normalization layer (see NORMALIZATION.md Sprint 6.4): explicit
+dimension approval gates prevent Education's candidate OWN_HISTORY /
+CROSS_SECTIONAL_RELATIVE families from silently executing.
+
 ## 1. Permanent force-layer invariants
 
 These rules are permanent. They cannot be relaxed by a future sprint
@@ -155,7 +172,7 @@ unless a different non-numeric role is methodologically justified.
 
 | Force | Indicators | Role | Reason |
 |---|---|---|---|
-| Education | `TERTIARY_ATTAINMENT_25_34` | `SUPPORTING_CONTEXT` | No level normalization approved. |
+| Education | `TERTIARY_ATTAINMENT_25_34` | `PROXY_CONDITION` (Sprint 6.4, DEC-032) | DIRECT_0_100 level executable (normalization-v0.7). Aligned raw OECD percentage preserved unchanged. Coverage stays PARTIAL. No relative, no momentum, no confidence. |
 | Productivity / output growth | `GDP_GROWTH`, `LABOUR_PRODUCTIVITY_PER_HOUR` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
 | Cost competitiveness | `UNIT_LABOUR_COST_GROWTH`, `INFLATION_CPI` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
 | Trade and capital flows | `EXPORTS_GDP`, `IMPORTS_GDP`, `TRADE_BALANCE`, `CURRENT_ACCOUNT_GDP` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
@@ -202,7 +219,12 @@ Used whenever:
 Result: `force dimension = None` while component signals remain visible
 in provenance. Do not pick equal weights merely because no weights exist.
 
-## 5. Initial force-level approval matrix (17 forces)
+## 5. Initial force-level approval matrix (17 forces) — HISTORICAL (force-aggregation-v0.1)
+
+> **HISTORICAL — force-aggregation-v0.1 initial matrix (Sprint 5.21/5.22).**
+> Superseded by the current v0.2 matrix below. Retained for provenance.
+> Education was `SUPPORTING_CONTEXT` / `DEFERRED_MULTI` here; Sprint 6.4
+> (DEC-032) promoted it to `PROXY_CONDITION` / `IDENTITY_SINGLE`.
 
 | # | Force | Coverage ceiling | Mapped indicators | Roles | Exec level | Exec relative | Exec momentum | Aggregation mode | Level approved? | Relative approved? | Momentum approved? | Why |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -224,8 +246,36 @@ in provenance. Do not pick equal weights merely because no weights exist.
 | 16 | Geography | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
 | 17 | Acts of nature | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
 
-**Summary: 3 forces approved for IDENTITY_SINGLE level + relative + momentum
-(Rule of law, Corruption, Internal conflict proxy). 14 forces deferred.**
+**Summary (v0.1 historical): 3 forces approved for IDENTITY_SINGLE level +
+relative + momentum (Rule of law, Corruption, Internal conflict proxy).
+14 forces deferred.**
+
+## 5.1 Current force-level approval matrix (17 forces) — force-aggregation-v0.2
+
+| # | Force | Coverage ceiling | Mapped indicators | Roles | Exec level | Exec relative | Exec momentum | Aggregation mode | Level approved? | Relative approved? | Momentum approved? | Why |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Leadership capabilities | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
+| 2 | Education | PARTIAL | `TERTIARY_ATTAINMENT_25_34` | PROXY_CONDITION | YES | — | — | IDENTITY_SINGLE | YES | NO | NO | Single OECD tertiary-attainment proxy (DEC-032); DIRECT_0_100 level; coverage stays PARTIAL |
+| 3 | Character / determination | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
+| 4 | Rule of law | — | `RULE_OF_LAW_WGI_SCORE` | CORE_CONDITION | YES | YES | YES | IDENTITY_SINGLE | YES | YES | YES | Single WGI core condition; identity inherits semantics |
+| 5 | Corruption | — | `CONTROL_OF_CORRUPTION_WGI_SCORE` | CORE_CONDITION | YES | YES | YES | IDENTITY_SINGLE | YES | YES | YES | Single WGI core condition; identity inherits semantics |
+| 6 | Resource allocation efficiency | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
+| 7 | Global openness | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators (trade data is candidate context only) |
+| 8 | Productivity / output growth | — | `GDP_GROWTH`, `LABOUR_PRODUCTIVITY_PER_HOUR` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; 2 components |
+| 9 | Cost competitiveness | — | `UNIT_LABOUR_COST_GROWTH`, `INFLATION_CPI` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; 2 components |
+| 10 | Trade and capital flows | — | `EXPORTS_GDP`, `IMPORTS_GDP`, `TRADE_BALANCE`, `CURRENT_ACCOUNT_GDP` | SUPPORTING_CONTEXT ×4 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; 4 components |
+| 11 | Infrastructure and investment | — | `GROSS_CAPITAL_FORMATION_GDP` | SUPPORTING_CONTEXT | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred |
+| 12 | Indebtedness | — | `DEBT_SERVICE_RATIO`, `CREDIT_TO_GDP_GAP`, `GOVERNMENT_DEBT_GDP` | CORE_CONDITION + VULNERABILITY_PENALTY + SUPPORTING_CONTEXT | DSR only | — | — | DEFERRED_MULTI | NO | NO | NO | DSR + credit gap cannot be naively averaged; government debt unscored; no composition formula approved |
+| 13 | Military strength | PARTIAL | `MILITARY_EXPENDITURE_USD`, `MILITARY_EXPENDITURE_GDP` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; force capped PARTIAL |
+| 14 | Wealth / opportunity / values gaps | PARTIAL | `GINI_INDEX`, `WEALTH_SHARE_TOP_10` | SUPPORTING_CONTEXT ×2 | — | — | — | DEFERRED_MULTI | NO | NO | NO | Level normalization deferred; force capped PARTIAL |
+| 15 | Internal conflict | PARTIAL | `POLITICAL_STABILITY_WGI_SCORE` | PROXY_CONDITION | YES | YES | YES | IDENTITY_SINGLE | YES | YES | YES | Single WGI proxy condition; identity inherits semantics; coverage stays PARTIAL |
+| 16 | Geography | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
+| 17 | Acts of nature | — | — | — | — | — | — | (unconfigured) | NO | NO | NO | No live indicators |
+
+**Summary (v0.2 current): 4 forces approved for IDENTITY_SINGLE level (Rule of
+law, Corruption, Internal conflict proxy, Education proxy). Education
+relative/momentum/confidence stay None (DEC-032 approves only the level).
+13 forces deferred.**
 
 ## 6. Relative score policy
 
@@ -288,12 +338,13 @@ everywhere.
 
 Two separate version layers:
 
-- Indicator normalization version: `normalization-v0.6` (unchanged)
-- Force aggregation version: `force-aggregation-v0.1`
+- Indicator normalization version: `normalization-v0.7` (Sprint 6.4)
+- Force aggregation version: `force-aggregation-v0.2` (Sprint 6.4)
 
 A future `ForceSignal` records BOTH. Sprint 5.21 itself changes no
-executable economic output — `force-aggregation-v0.1` is the methodology
-+ typed configuration version, not a scored-output version.
+executable economic output — `force-aggregation-v0.1` was the methodology
++ typed configuration version, not a scored-output version. Sprint 6.4
+promoted Education to the 4th executable force (v0.2).
 
 ## 11. ForceSignal type design (not executed)
 

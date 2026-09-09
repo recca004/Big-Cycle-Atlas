@@ -1853,9 +1853,14 @@ ModelVersionConfig:
     calibration_window         # Section 15
     momentum_windows           # Section 9
     freshness_policy           # Section 5
-    force_mapping_version      # indicator→force mapping revision (M5.4 config)
     backtest_safe              # Section 4 — False until Milestone 9
 ```
+
+**Sprint 6.4.1 note:** `force_mapping_version` was removed from
+`ModelVersionConfig`. It had no runtime consumer — the indicator→force
+mapping is owned by `force-aggregation-v0.2` (a separately versioned layer
+since DEC-029/Sprint 5.21). Normalization owns indicator normalization
+only; force aggregation owns force roles/aggregation semantics.
 
 No `model_versions` DB table exists yet (planned in docs/data-model.md). Sprint
 5.5 adds configuration-first typed structures only — no migration unless a
@@ -2017,3 +2022,449 @@ the 14 remaining non-WGI indicators still raise
 - `level_score`, `relative_score`, `momentum`, `confidence` remain
   `Optional`/`None` in the typed structures until each dimension's
   methodology is implemented and versioned.
+
+## Sprint 6.2 methodology status (2026-09-10) — GOVERNMENT-DEBT NORMALIZATION AUDIT (DEC-031)
+
+A METHODOLOGY / RESEARCH sprint. NO `GOVERNMENT_DEBT_GDP` level_score was
+implemented; NO NormalizedSignal output changed; NO force code changed;
+the model version stays `normalization-v0.6` and the force aggregation
+version stays `force-aggregation-v0.1`. `GOVERNMENT_DEBT_GDP` stays
+`CONTEXTUAL_DEFERRED` in the registry. Indebtedness stays `DEFERRED_MULTI`
+with `level_score = None`. No DB writes, no migrations, no commit/push.
+
+### Verdict: DEFER_GOVERNMENT_DEBT_LEVEL
+
+No defensible semantic target exists for a government-debt/GDP LEVEL
+signal that is (a) cross-country comparable, (b) composable with DSR
+(OWN_HISTORY flow-stress) and credit gap (ONE_SIDED_VULNERABILITY excess-
+credit), and (c) implementable from data currently in the Atlas.
+
+### Official-source evidence (primary)
+
+- **IMF (2011, "Modernizing the Framework for Fiscal Policy and Public
+  Debt Sustainability Analysis")**: "no sound basis for integrating
+  specific sustainability thresholds into the DSA framework"; a 60%
+  reference point may be used FLEXIBLY to trigger deeper analysis, and
+  other vulnerabilities can require deeper analysis even below 60%.
+- **IMF (2013, "Staff Guidance Note for Public Debt Sustainability
+  Analysis in Market-Access Countries")**: differentiated triggers
+  (60% for advanced economies, 50% for emerging markets) — these are
+  TRIGGERS, not thresholds, and they differ by WEO classification.
+- **IMF (2022, SRDSF)**: replaces the MAC DSA with a multivariate logit
+  model, debt fanchart, and rollover-risk modules. Risk is divided into
+  low/moderate/high zones calibrated by false-alarm and missed-crisis
+  probabilities (10% each), NOT by a universal debt/GDP threshold. "The
+  framework does not in fact use binary decision rules."
+- **EU Maastricht Treaty (Protocol on the Excessive Deficit
+  Procedure)**: 60% debt/GDP reference value for EU member states with a
+  shared monetary/institutional framework. The treaty allows the ratio
+  to exceed 60% if "sufficiently diminishing and approaching the
+  reference value at a satisfactory pace" — a convergence/fiscal-rule
+  criterion, not a universal strength boundary.
+- **World Bank (2010, Caner et al., WPS5391)**: growth-effect threshold
+  of 77% (full sample) / 64% (developing economies). The threshold
+  "differs substantially for developing and developed economies" — NOT
+  universal.
+- **World Bank (2018, "Debt Intolerance")**: thresholds depend on debt
+  COMPOSITION (foreign private holdings share) — conditional, not
+  universal.
+- **Reinhart & Rogoff (2010) — 90% threshold**: debunked by Herndon,
+  Ash & Pollin (2013) — coding errors, selective exclusion,
+  unconventional weighting. Corrected mean growth above 90% is +2.2%,
+  not -0.1%.
+- **IMF (2014, "No Magic Threshold", Finance & Development)**: "little
+  evidence that there is any particular debt ratio above which growth
+  falls sharply."
+
+**Synthesis:** No official source supports a universal debt/GDP
+threshold for cross-country strength comparison. The IMF explicitly
+states "no sound basis for specific sustainability thresholds." The 60%
+Maastricht reference is a fiscal-rule convergence criterion for EU
+member states. The 90% Reinhart-Rogoff threshold was debunked. The IMF
+SRDSF uses multivariate risk bands, not a single debt/GDP threshold.
+
+### Candidate families audited
+
+| Family | Semantic | Cross-country comparable | Composable with DSR + CG | Defensible midpoint | Implementable now | Verdict |
+|---|---|---|---|---|---|---|
+| A. OWN_HISTORY_STRESS (DEC-019 analog) | trend / regime-position | NO | NO (third semantic) | NO (median-of-own-history is a trend signal) | yes | NOT a LEVEL — could be a MOMENTUM candidate |
+| B. ABSOLUTE_FISCAL_BURDEN (monotonic) | higher debt = weaker | NO (JPN 214% sustained; IND 84% different constraints) | NO | NO (no official threshold) | yes | NOT defensible — encodes arbitrary norms |
+| C. CROSS_SECTIONAL_LEVEL (rank within universe) | relative position | mechanically yes, but RELATIVE not LEVEL | NO (third semantic) | NO (tracked_8 prohibited as calibration universe) | yes | NOT a LEVEL — a future relative dimension needs its own DEC + universe |
+| D. STRUCTURAL_BREAK_AWARE | position within current regime | NO | NO | NO | NO (no break-detection method) | NOT defensible as LEVEL in this sprint |
+| E. SUSTAINABILITY/CAPACITY-ADJUSTED (multivariate) | debt/GDP adjusted for rates/growth/monetary-sovereignty/currency/maturity/fiscal-capacity | YES (the adjustment makes it comparable) | YES (would be a LEVEL signal) | YES (calibrated) | NO (data not in the Atlas) | The CORRECT long-term approach — requires additional data ingestion + multivariate model |
+| F. CONTEXTUAL_DEFERRED (no curve) | none | n/a | n/a | n/a | yes | ACCEPTED — the only defensible current state |
+
+### Empirical tracked_8 profile (read-only, 297 obs)
+
+Per-country government-debt/GDP (latest vintage, IMF WEO
+GGXWDG_NGDP): debt/GDP spans 20.4%–228.8%; JPN sustained debt/GDP >200%
+for an extended period, demonstrating that debt/GDP alone does not
+mechanically imply a universal distress threshold (the debt profile
+itself contains no sovereign-distress outcome data; no causal claim is
+made); CHE remains low (39.4%) but its DSR stress is high (level 16.7)
+— rate-driven, not stock-driven. This confirms DSR (flow) and government
+debt (stock) are not substitutes. The tracked_8 cross-sectional median
+rose from 66.5% (2005) to 96.4% (2025) — a tracked_8 cross-sectional
+trend (tracked_8 is not a global universe); any absolute threshold
+would shift meaning over time.
+
+### Own-history counterfactual (RESEARCH ONLY, not a published signal)
+
+DEC-019-style mid-rank stress position applied to government debt:
+
+| Country | current | own-history rank | hypothetical level |
+|---|---:|---:|---:|
+| JPN | 214.5 | 41/45 | 10.0 |
+| CHE | 39.4 | 8/36 | 79.2 |
+| USA | 123.9 | 23/25 | 10.0 |
+| CHN | 90.4 | 30/30 | 1.7 |
+| FRA | 113.2 | 44/45 | 3.3 |
+
+This confirms candidate A is a TREND signal, not a LEVEL: JPN and USA
+both get level 10 despite very different absolute burdens (214% vs
+124%); CHN gets the worst score (1.7) because 90.4% is its all-time
+high, even though 90.4% is below JPN's 1990 starting point. If JPN's
+debt fell to 130% (below its median), it would get a strong own-history
+score despite 130% debt/GDP — one of the highest in the world.
+
+### Relation to DSR + credit gap composability
+
+DSR (CORE_CONDITION, OWN_HISTORY): current debt-service FLOW burden
+relative to own history. Credit gap (VULNERABILITY_PENALTY,
+ONE_SIDED_VULNERABILITY): excess-credit vulnerability; neutral 50 = no
+excess (NOT strength). Government debt (SUPPORTING_CONTEXT, currently
+CONTEXTUAL_DEFERRED): stock of sovereign debt as % of GDP.
+
+For government debt to be composable, it would need a LEVEL semantic
+that is cross-country comparable, shares the "higher = weaker"
+orientation, and has a defensible midpoint. None of the candidate
+families satisfy all three. Even if a level curve were approved, a
+separate composition DEC would still be required (DEC-030 Blocker 2
+remains).
+
+### Missingness and coverage boundary
+
+This sprint does NOT generalize DEC-030's "all three required"
+composition rule. Coverage boundary (preserved from DEC-029 §1.2 and
+the Sprint 6.2 correction to DEC-030): coverage_status = data
+availability. If DSR + credit-gap + government-debt observations are all
+available, coverage MAY be AVAILABLE even while level_score = None. No
+coverage ceiling is added to Indebtedness.
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO phase, cycle composite, force confidence, relative
+aggregation, momentum aggregation, persistence, API, or frontend.
+Model versions unchanged: `normalization-v0.6`, `force-aggregation-v0.1`.
+`GOVERNMENT_DEBT_GDP` stays `CONTEXTUAL_DEFERRED`. Indebtedness stays
+`DEFERRED_MULTI` with `level_score = None`. confidence = None.
+backtest_safe = False. Read-only profile script
+(`scripts/gov_debt_profile.py`) retained as a research artifact (no
+scores, no writes).
+
+### Recommended Sprint 6.3
+
+**Sprint 6.3 — Government-debt momentum candidate audit.** Since a
+LEVEL curve is deferred but government debt is live, audit whether a
+MOMENTUM signal (debt/GDP change relative to own history, DEC-016 analog)
+is defensible. Momentum is a trend signal, which is what own-history
+actually measures (candidate A reclassified from level to momentum).
+This would NOT enable Indebtedness composition (still DEFERRED_MULTI),
+but it would make government debt useful as a non-level signal and
+inform future composition. If momentum is also not defensible, the next
+option is to ingest additional data (interest rates, growth, monetary
+sovereignty) for a future sustainability-adjusted level (candidate E).
+
+## Sprint 6.3 methodology status (2026-09-10) — EDUCATION LEVEL CALIBRATION + PROXY-FORCE ELIGIBILITY AUDIT (DEC-032)
+
+A METHODOLOGY / RESEARCH sprint. NO `TERTIARY_ATTAINMENT_25_34`
+level_score was implemented; NO NormalizedSignal output changed; NO
+force code changed; the model version stays `normalization-v0.6` and
+the force aggregation version stays `force-aggregation-v0.1`.
+`TERTIARY_ATTAINMENT_25_34` stays in the registry with
+`level_family=monotonic_positive` (NOT yet `direct_0_100` — that
+reclassification is a Sprint 6.4 implementation step). Education force
+stays `SUPPORTING_CONTEXT` / `DEFERRED_MULTI` with `level_score = None`.
+No DB writes, no migrations, no commit/push.
+
+### Verdict: READY_FOR_EDUCATION_LEVEL_DESIGN
+
+A defensible LEVEL semantic exists for
+`TERTIARY_ATTAINMENT_25_34`: DIRECT_0_100 (raw percentage identity).
+Sprint 6.4 MAY implement it subject to the conditions in DEC-032.
+
+### The semantic target
+
+`TERTIARY_ATTAINMENT_25_34` measures exactly one concept: the share of
+the 25-34 year-old population that has successfully completed ISCED
+2011 levels 5-8 (short-cycle tertiary, bachelor's, master's, doctoral
+or equivalent). The OECD defines this precisely (Education at a Glance
+2025, Sources/Methodologies/Technical Notes; OECD dataflow
+`DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA` v1.0):
+
+- **Denominator**: total population in the same sex and age group
+  (`UNIT_MEASURE=PT_POP_SEX_AGE`).
+- **Numerator**: individuals whose highest successfully completed
+  education level is ISCED 2011 5-8.
+- **Age 25-34 rationale**: the OECD explicitly uses 25-34 as the
+  "younger adults" cohort because it represents recent cohorts and is
+  more responsive to the current education system than 25-64 (DEC-026
+  confirmed this choice).
+- **Attainment, not enrollment**: a stock measure of completed
+  qualifications, not a flow measure of current participation
+  (DEC-007 honored).
+
+The indicator does NOT measure: overall education quality, school-
+system performance, literacy, test scores (PIAAC), secondary completion,
+skills quality, older cohorts, or human-capital quality generally.
+Any force use is therefore a PROXY. Education coverage MUST stay
+PARTIAL (DEC-009, DEC-026).
+
+### Why DIRECT_0_100 is defensible here (and NOT just because the range is 0-100)
+
+The provider value is a percentage 0-100, but numeric-range matching
+alone does NOT justify `level_score = raw percentage`. DIRECT_0_100 is
+defensible here because the semantic meaning of the raw value IS the
+level signal:
+
+1. **The raw percentage has an absolute, cross-country comparable
+   meaning.** 50% tertiary attainment means 50% of the 25-34
+   population has completed ISCED 5-8 — this statement is true in the
+   USA, in IND, in JPN, and in any OECD dataflow country, using the
+   same ISCED 2011 classification and the same denominator definition.
+   The OECD itself uses this indicator for cross-country level
+   comparison (Education at a Glance Chapter A1, "To what level have
+   adults studied?"; the OECD data dashboard "Population with tertiary
+   education").
+
+2. **Higher = stronger is defensible.** More tertiary attainment means
+   a more educated young-adult cohort. The OECD frames rising tertiary
+   attainment as a positive trend. The Atlas direction
+   `MONOTONIC_POSITIVE` (already in the registry) is correct.
+
+3. **No arbitrary threshold or curve is invented.** DIRECT_0_100 means
+   `level_score = raw value` — no breakpoints, no bands, no caps, no
+   rescaling. This is the same family as the WGI x3 (Sprint 5.6), where
+   the provider's fixed 0-100 scale IS the level signal. The OECD
+   percentage IS the level signal for the same reason: the provider
+   designed the scale to be the indicator.
+
+4. **Midpoint meaning is defensible.** 50 = "half of the 25-34
+   population has tertiary attainment." This is a meaningful,
+   interpretable statement — unlike the government-debt case where no
+   official source supports a universal 50% threshold. The OECD does
+   NOT endorse 50% as a policy target, but 50 has a clear semantic
+   meaning as a population share.
+
+5. **This is NOT the government-debt case.** DEC-031 deferred
+   government-debt because no official source supports a universal
+   debt/GDP threshold and the raw ratio does not have a defensible
+   cross-country level meaning. Tertiary attainment is different: the
+   OECD itself uses the raw percentage for cross-country level
+   comparison, the scale is bounded 0-100 by construction, and higher
+   unambiguously means more educated.
+
+### No official benchmark / target percentage
+
+The OECD does NOT publish a target or benchmark percentage for
+tertiary attainment. The OECD reports the OECD average (48% of 25-34
+year-olds in 2024) as a descriptive statistic, NOT as a normative
+target. Therefore DIRECT_0_100 does NOT encode an OECD-endorsed target
+— it preserves the raw population share as the level signal. A future
+FIXED_MONOTONIC_CURVE with externally-justified thresholds would
+require an official benchmark that does not exist today.
+
+### Comparability limits (documented, not blocking)
+
+The OECD itself notes comparability caveats: ISCED mapping differences
+across countries; ISCED-97 → ISCED-2011 break (trend data before 2013
+on ISCED 5+ no longer reliable for some countries); country-specific
+methodology differences (e.g., UK GCSE equivalencies mapped to ISCED
+3 completion). These are documented by the OECD and do not invalidate
+the cross-country level comparison. The Atlas carries the same
+comparability caveat as the OECD.
+
+### Empirical tracked_8 profile (read-only, 200 obs)
+
+| Country | n | earliest | latest | min | median | max | current |
+|---|---:|---|---|---:|---:|---:|---:|
+| USA | 35 | 1990 | 2025 | 23.76 | 40.39 | 52.77 | 52.77 |
+| CHN | 1 | 2010 | 2010 | 17.95 | 17.95 | 17.95 | 17.95 |
+| CHE | 33 | 1991 | 2025 | 21.26 | 38.02 | 52.97 | 50.60 |
+| DEU | 33 | 1991 | 2025 | 20.34 | 25.66 | 40.88 | 40.88 |
+| FRA | 32 | 1991 | 2024 | 20.08 | 42.16 | 53.35 | 53.35 |
+| GBR | 29 | 1997 | 2025 | 24.68 | 46.91 | 61.19 | 61.19 |
+| JPN | 29 | 1997 | 2025 | 45.74 | 58.37 | 67.53 | 67.53 |
+| IND | 8 | 2011 | 2023 | 9.64 | 20.31 | 23.10 | 23.10 |
+
+Pooled (200 obs): min 9.64, p25 28.94, median 40.18, p75 50.29, max 67.53.
+
+Sparsity: CHN n=1 (2010 only — extremely sparse; freshness will gate
+post-2010 snapshots); IND n=8 (sparse — momentum not viable); 6/8
+countries have 29-35 annual observations (adequate for level/momentum
+candidates). Sparsity affects level eligibility ONLY through freshness
+(a stale observation is gated, not zeroed). It does NOT block the
+DIRECT_0_100 family itself.
+
+### Broader OECD dataflow universe (read-only external SDMX fetch)
+
+The OECD dataflow contains 51 economies (not just OECD member states),
+year span 1981-2025. Latest cross-section (2025): n=40, min 7.0%,
+median 45.0%, max 71.1%. This is the OECD/dataflow universe — NOT
+tracked_8, and NOT world/global. A CROSS_SECTIONAL_RELATIVE score
+within this universe is a RELATIVE dimension, not a LEVEL. DIRECT_0_100
+answers the level question directly.
+
+### Candidate normalization methods audited
+
+| Family | Semantic | Cross-country comparable | Defensible midpoint | CHN/IND sparsity | Result type | Verdict |
+|---|---|---|---|---|---|---|
+| A. RAW_PERCENT_IDENTITY (DIRECT_0_100) | share of 25-34 pop with ISCED 5-8 | YES (OECD-designed) | YES (50 = half the cohort) | level OK; momentum gated by freshness | LEVEL | **DEFENSIBLE — selected** |
+| B. FIXED_MONOTONIC_CURVE | externally-justified thresholds | would be | would need benchmark | same | LEVEL | NOT defensible — no official benchmark |
+| C. SAME-YEAR OECD/DATAFLOW CROSS-SECTION | relative position | mechanically | median of dataflow | same | RELATIVE | NOT a LEVEL — belongs in relative_score |
+| D. EXPANDING BROADER-UNIVERSE CALIBRATION | percentile in expanding universe | mechanically | n/a | same | RELATIVE | NOT a LEVEL — relative dimension |
+| E. OWN_HISTORY | progress vs own past | NO | NO | CHN n=1 impossible | MOMENTUM | NOT a LEVEL — momentum candidate |
+| F. CONTEXTUAL_DEFERRED | none | n/a | n/a | n/a | none | Rejected — a defensible LEVEL exists (A) |
+
+### Absolute vs relative
+
+DIRECT_0_100 is a LEVEL signal, not a RELATIVE signal: it answers
+"what share of the 25-34 population has tertiary attainment" — an
+absolute, interpretable statement. It does NOT answer "where does this
+country rank" (relative) or "is this country improving" (momentum).
+The OECD itself uses the raw percentage for cross-country level
+comparison.
+
+### Proxy force eligibility
+
+If DEC-032 is accepted (it is), Sprint 6.4 MAY implement:
+1. Indicator level: `TERTIARY_ATTAINMENT_25_34` DIRECT_0_100 (reclassify
+   registry `level_family` from `monotonic_positive` to `direct_0_100`;
+   bump `normalization-v0.6` → `normalization-v0.7`).
+2. Force aggregation: Education `SUPPORTING_CONTEXT` →
+   `PROXY_CONDITION`; `DEFERRED_MULTI` → `IDENTITY_SINGLE`; bump
+   `force-aggregation-v0.1` → `force-aggregation-v0.2`.
+3. Coverage ceiling stays PARTIAL (DEC-009, DEC-026). No numeric
+   modification of level_score by coverage.
+4. Force notes must explicitly state this is a tertiary-attainment
+   proxy.
+
+### Relative / momentum / confidence boundaries
+
+A level READY verdict does NOT automatically approve other dimensions:
+- **Relative**: NOT approved. No reference-universe methodology
+  approved. The OECD dataflow universe (51 economies) is a candidate
+  but is NOT tracked_8 and is NOT global. Relative stays None.
+- **Momentum**: NOT approved. CHN (n=1) cannot support momentum.
+  Momentum stays None.
+- **Confidence**: stays None (DEC-023).
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO phase, cycle composite, force confidence, relative
+aggregation, momentum aggregation, persistence, API, or frontend.
+Model versions unchanged: `normalization-v0.6`, `force-aggregation-v0.1`.
+`TERTIARY_ATTAINMENT_25_34` stays `monotonic_positive` in the registry.
+Education stays `SUPPORTING_CONTEXT` / `DEFERRED_MULTI` with
+`level_score = None`. confidence = None. backtest_safe = False.
+Read-only research artifact `scripts/education_profile.py` retained
+(no scores, no writes).
+
+### Recommended Sprint 6.4
+
+**Sprint 6.4 — Education level + proxy-force implementation.**
+Implement DIRECT_0_100 for TERTIARY_ATTAINMENT_25_34 and promote
+Education to the 4th executable force via PROXY_CONDITION +
+IDENTITY_SINGLE. Specific steps: (1) reclassify registry
+`level_family` to `direct_0_100`, bump normalization-v0.7; (2) promote
+Education to PROXY_CONDITION + IDENTITY_SINGLE, bump
+force-aggregation-v0.2; (3) force notes state this is a tertiary-
+attainment proxy, coverage stays PARTIAL; (4) relative/momentum/
+confidence stay None; (5) tests for DIRECT_0_100 level, IDENTITY_SINGLE
+force, PARTIAL coverage, CHN/IND sparsity/freshness, no regression on
+existing 3 forces.
+
+Deliberately NOT queued in 6.4: relative score for education (needs
+its own reference-universe DEC); momentum for education (CHN n=1
+blocks; needs its own DEC); confidence (DEC-023); force persistence;
+public force API; frontend force scores; cycle composite; phase/stage;
+backtesting; trading; any other indicator's normalization curve.
+
+## Sprint 6.4 implementation status (2026-09-10) — EDUCATION DIRECT_0_100 + EXPLICIT DIMENSION APPROVAL GATES (DEC-032)
+
+### What changed
+
+`TERTIARY_ATTAINMENT_25_34` reclassified from `MONOTONIC_POSITIVE` to
+`DIRECT_0_100`. The level_score IS the aligned raw OECD percentage (ISCED
+5-8, % of same-age population) preserved unchanged — no rescale, percentile,
+z-score, invert, or winsorize. OECD publishes tertiary attainment as a
+bounded absolute percentage and uses it for cross-country attainment
+comparison; Atlas independently preserves that percentage as the
+indicator-level level proxy.
+
+### Critical hazard fixed: explicit dimension approval gates
+
+The Sprint 5.7/5.8 family-combination gates (DIRECT_0_100 + OWN_HISTORY
+for momentum; DIRECT_0_100 + CROSS_SECTIONAL_RELATIVE for relative)
+resolved to the WGI x3 only because no other DIRECT_0_100 indicator
+existed. Education's registry candidate families (OWN_HISTORY momentum,
+CROSS_SECTIONAL_RELATIVE relative) would have SILENTLY passed those gates
+once the level family changed.
+
+v0.7 adds EXPLICIT approved indicator sets to `ModelVersionConfig`:
+- `direct_momentum_approved_indicators` = WGI x3 exactly
+- `direct_relative_approved_indicators` = WGI x3 exactly
+
+A registry family declaration alone NEVER enables a dimension. The
+direct relative helper (`build_relative_cross_section`) now also checks
+the approved set. Education is deliberately NOT in either set — its
+relative and momentum stay None (dimension separation: unapproved = None,
+not error).
+
+### Dimensions
+
+- **Level**: DIRECT_0_100 identity (aligned raw percentage, validated
+  [0, 100], no clamp, out-of-range raises `NormalizationDataError`).
+- **Relative**: None (DEC-032: not approved; not in
+  `direct_relative_approved_indicators`).
+- **Momentum**: None (DEC-032: not approved; not in
+  `direct_momentum_approved_indicators`).
+- **Confidence**: None (DEC-023).
+
+### Freshness / period-complete
+
+Unchanged: annual freshness class, period-complete eligibility (annual
+first eligible at its own Q4), no-future-leakage, latest-vintage. CHN
+(1 obs, 2010) is stale at 2025-Q4 → None. IND (sparse) is usable when
+fresh. Freshness gates usability but NEVER scales the direct raw score.
+
+### Model versions
+
+- `normalization-v0.6` → `normalization-v0.7`
+  (method: `sprint-6.4-education-direct-0-100-explicit-dimension-gates`)
+- `force-aggregation-v0.1` → `force-aggregation-v0.2`
+
+### Tests
+
+32 new tests in `tests/test_sprint_6_4_education.py` covering the A-G
+matrix (level, missing/stale, out-of-range, dimension separation,
+execution-gate regression, WGI regression, force behavior, 17-force
+orchestration, no-writes, version propagation). 528 existing tests
+updated for new versions and Education's new role. 560 total pass.
+
+### Live smoke (tracked_8 @2025-Q4, read-only)
+
+USA 52.77, CHE 50.60, DEU 40.88, FRA 53.35, GBR 61.19, JPN 67.53,
+IND 23.10, CHN None (stale 2010). Education relative/momentum/confidence
+None everywhere. Other 3 forces unaffected. DB counts unchanged
+(6814/27/22/10/1872). No writes.
+
+### What did NOT change
+
+All v0.6 WGI + DSR + credit-gap configuration unchanged. WGI x3 level,
+momentum, and relative outputs are byte-equivalent. DSR own-history level
+unchanged. Credit-gap one-sided-vulnerability level unchanged. No force
+persistence. No public force API. No frontend force scores. No cycle
+composite. No phase/stage. No backtesting. No commit/push.

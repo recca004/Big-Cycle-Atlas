@@ -137,7 +137,6 @@ async def test_registry_own_history_alone_does_not_auto_enable(client):
         ModelVersionConfig(
             version_id="test-no-own-history",
             normalization_method="test",
-            force_mapping_version="m5.4",
             reference_universe_id="tracked_8",
             momentum_windows=CURRENT_MODEL_VERSION.momentum_windows,
             momentum_primary_window_years=CURRENT_MODEL_VERSION.momentum_primary_window_years,
@@ -156,10 +155,10 @@ async def test_own_history_level_config_requires_positive_minimum(client):
 
 
 async def test_current_model_version_enables_exactly_dsr(client):
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.6"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.7"
     assert (
         CURRENT_MODEL_VERSION.normalization_method
-        == "sprint-5.12-credit-gap-one-sided-level-r1"
+        == "sprint-6.4-education-direct-0-100-explicit-dimension-gates"
     )
     # Sprint 5.12 left the DSR configuration untouched.
     assert set(CURRENT_MODEL_VERSION.own_history_level_configs) == {DSR}
@@ -433,7 +432,7 @@ async def test_dsr_dimensions_stay_none_and_backtest_unsafe(client):
     assert signal.momentum_windows == ()
     assert signal.confidence is None
     assert signal.backtest_safe is False
-    assert signal.model_version == "normalization-v0.6"
+    assert signal.model_version == "normalization-v0.7"
 
 
 # --- 28-30. WGI outputs unchanged -------------------------------------------------
@@ -480,7 +479,7 @@ async def test_wgi_level_momentum_relative_unchanged_with_dsr_present(client):
     assert signal.own_history_level is None  # DSR provenance absent on WGI
     assert signal.reference_universe_id == "tracked_8"
     assert signal.relative_score is not None  # complete 8/8 universe
-    assert signal.model_version == "normalization-v0.6"
+    assert signal.model_version == "normalization-v0.7"
 
 
 # --- 32/33. No writes; no force scores --------------------------------------------

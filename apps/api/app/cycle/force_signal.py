@@ -21,6 +21,15 @@ Sprint 5.22 implements exactly DEC-029 / force-aggregation-v0.1:
 - DEFERRED_MULTI for all other forces (level/relative/momentum = None)
 - confidence = None everywhere
 - backtest_safe = False everywhere
+
+Sprint 6.4 (DEC-032) / force-aggregation-v0.2 promotes Education to the
+fourth executable force:
+- IDENTITY_SINGLE for Rule of law, Corruption, Internal conflict proxy,
+  Education (PROXY_CONDITION, PARTIAL ceiling)
+- DEFERRED_MULTI for all other 13 forces (level/relative/momentum = None)
+- Education level copies TERTIARY_ATTAINMENT_25_34's level_score (aligned
+  raw OECD percentage); Education relative/momentum/confidence stay None
+- confidence = None everywhere; backtest_safe = False everywhere
 """
 from dataclasses import dataclass, field
 from typing import Optional
@@ -60,8 +69,8 @@ def _resolve_normalization_version(
     TODO(future): when normalization versioning becomes per-indicator
     (different indicators on different approved versions), this resolver
     must be replaced with an explicit per-component version map rather than
-    a single shared string. For force-aggregation-v0.1 all implemented
-    indicators share normalization-v0.6, so a single string is correct.
+    a single shared string. For force-aggregation-v0.2 all implemented
+    indicators share normalization-v0.7, so a single string is correct.
     """
     if not present_signals:
         return CURRENT_MODEL_VERSION.version_id
@@ -81,13 +90,15 @@ def _resolve_normalization_version(
 class ForceSignal:
     """Per-force derived signal. NON-PERSISTED (Sprint 5.22).
 
-    Published dimensions (Sprint 5.22, force-aggregation-v0.1):
+    Published dimensions (Sprint 5.22, force-aggregation-v0.1; Sprint 6.4,
+    force-aggregation-v0.2):
     - level_score: identity copy from the single eligible component for the
-      3 approved WGI forces; None for all other forces.
-    - relative_score: identity copy (with full provenance) for the 3 approved
-      WGI forces; None for all other forces.
-    - momentum: identity copy for the 3 approved WGI forces; None for all
-      other forces.
+      4 approved forces (Rule of law, Corruption, Internal conflict proxy,
+      Education); None for all other forces.
+    - relative_score: identity copy (with full provenance) for the 3
+      approved WGI forces; None for Education and all other forces.
+    - momentum: identity copy for the 3 approved WGI forces; None for
+      Education and all other forces.
     - confidence: None everywhere (DEC-023 deferred numeric confidence).
 
     Still None everywhere: confidence. backtest_safe = False everywhere.

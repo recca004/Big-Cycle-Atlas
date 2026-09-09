@@ -58,7 +58,7 @@ def _make_wgi_signal(
         raw_value=level if level is not None else 0.0,
         source_period="2024",
         method=NormalizationFamily.direct_0_100,
-        model_version="normalization-v0.6",
+        model_version="normalization-v0.7",
         level_score=level,
         relative_score=relative,
         momentum=momentum,
@@ -83,7 +83,7 @@ def _make_dsr_signal(
         raw_value=15.0,
         source_period="2025-Q1",
         method=NormalizationFamily.own_history,
-        model_version="normalization-v0.6",
+        model_version="normalization-v0.7",
         level_score=level,
         relative_score=None,
         momentum=None,
@@ -104,7 +104,7 @@ def _make_credit_gap_signal(
         raw_value=1.0,
         source_period="2025-Q1",
         method=NormalizationFamily.one_sided_vulnerability,
-        model_version="normalization-v0.6",
+        model_version="normalization-v0.7",
         level_score=level,
         relative_score=None,
         momentum=None,
@@ -352,27 +352,64 @@ def test_versions_correct():
         component_signals={"RULE_OF_LAW_WGI_SCORE": signal},
         coverage_status=ForceCoverageStatus.available,
     )
-    assert fs.force_model_version == "force-aggregation-v0.1"
-    assert fs.normalization_model_version == "normalization-v0.6"
+    assert fs.force_model_version == "force-aggregation-v0.2"
+    assert fs.normalization_model_version == "normalization-v0.7"
 
 
 # --- 15: supporting context cannot alter numeric result ----------------------
 
 
 def test_supporting_context_cannot_alter_numeric_result():
-    """A deferred force with supporting context must have None scores."""
-    spec = FORCE_AGGREGATION_CONFIGS["education"]
-    # Even if a signal somehow exists for TERTIARY_ATTAINMENT_25_34, it must
-    # NOT contribute numerically — it is SUPPORTING_CONTEXT.
+    """A deferred force with supporting context must have None scores.
+
+    Uses wealth_opportunity_values_gaps (SUPPORTING_CONTEXT, DEFERRED_MULTI)
+    — Education was promoted to PROXY_CONDITION in Sprint 6.4 so it no
+    longer fits this test.
+    """
+    spec = FORCE_AGGREGATION_CONFIGS["wealth_opportunity_values_gaps"]
     fake_signal = NormalizedSignal(
-        indicator_code="TERTIARY_ATTAINMENT_25_34",
+        indicator_code="GINI_INDEX",
         country_iso3="CHE",
         as_of_period=ScoringPeriod(2025, 2),
         raw_value=45.0,
         source_period="2024",
-        method=NormalizationFamily.contextual_deferred,
-        model_version="normalization-v0.6",
+        method=NormalizationFamily.monotonic_negative,
+        model_version="normalization-v0.7",
         level_score=90.0,  # fake — should NOT propagate
+    )
+    fs = aggregate_force_from_signals(
+        force_spec=spec,
+        country_iso3="CHE",
+        scoring_period="2025-Q2",
+        component_signals={"GINI_INDEX": fake_signal},
+        coverage_status=ForceCoverageStatus.partial,
+    )
+    assert fs.level_score is None
+    assert fs.aggregation_method is ForceAggregationMode.deferred_multi
+    assert "GINI_INDEX" in fs.deferred_components
+
+
+def test_education_proxy_identity_copies_exact_level():
+    """Sprint 6.4 (DEC-032): Education is PROXY_CONDITION + IDENTITY_SINGLE.
+
+    The force level_score must equal the indicator level_score (aligned raw
+    OECD percentage). relative/momentum/confidence stay None.
+    """
+    spec = FORCE_AGGREGATION_CONFIGS["education"]
+    assert spec.level_mode is ForceDimensionMode.identity_copy
+    assert spec.relative_mode is ForceDimensionMode.deferred
+    assert spec.momentum_mode is ForceDimensionMode.deferred
+    roles = {c.indicator_code: c.role for c in spec.components}
+    assert roles["TERTIARY_ATTAINMENT_25_34"] is ForceIndicatorRole.proxy_condition
+    fake_signal = NormalizedSignal(
+        indicator_code="TERTIARY_ATTAINMENT_25_34",
+        country_iso3="CHE",
+        as_of_period=ScoringPeriod(2025, 2),
+        raw_value=52.0,
+        source_period="2024",
+        method=NormalizationFamily.direct_0_100,
+        model_version="normalization-v0.7",
+        level_score=52.0,
     )
     fs = aggregate_force_from_signals(
         force_spec=spec,
@@ -381,9 +418,31 @@ def test_supporting_context_cannot_alter_numeric_result():
         component_signals={"TERTIARY_ATTAINMENT_25_34": fake_signal},
         coverage_status=ForceCoverageStatus.partial,
     )
+    assert fs.level_score == 52.0  # exact copy of indicator level
+    assert fs.relative_score is None  # DEC-032: not approved
+    assert fs.momentum is None  # DEC-032: not approved
+    assert fs.confidence is None
+    assert fs.aggregation_method is ForceAggregationMode.identity_single
+    assert fs.scoring_component_indicator == "TERTIARY_ATTAINMENT_25_34"
+    assert fs.backtest_safe is False
+
+
+def test_education_missing_indicator_level_none():
+    """Sprint 6.4: missing/stale Education indicator -> force level None."""
+    spec = FORCE_AGGREGATION_CONFIGS["education"]
+    fs = aggregate_force_from_signals(
+        force_spec=spec,
+        country_iso3="CHN",
+        scoring_period="2025-Q4",
+        component_signals={"TERTIARY_ATTAINMENT_25_34": None},
+        coverage_status=ForceCoverageStatus.partial,
+    )
     assert fs.level_score is None
-    assert fs.aggregation_method is ForceAggregationMode.deferred_multi
-    assert "TERTIARY_ATTAINMENT_25_34" in fs.deferred_components
+    assert fs.relative_score is None
+    assert fs.momentum is None
+    assert fs.confidence is None
+    assert fs.aggregation_method is ForceAggregationMode.identity_single
+    assert "TERTIARY_ATTAINMENT_25_34" in fs.missing_components
 
 
 # --- 16: Indebtedness DSR + credit gap both present -> force level None -------
@@ -603,7 +662,7 @@ def test_normalization_version_copied_from_component_signal():
         coverage_status=ForceCoverageStatus.available,
     )
     assert fs.normalization_model_version == signal.model_version
-    assert fs.normalization_model_version == "normalization-v0.6"
+    assert fs.normalization_model_version == "normalization-v0.7"
 
 
 def test_normalization_version_fallback_when_no_signal():

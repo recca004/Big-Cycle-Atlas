@@ -1,19 +1,22 @@
-# Big Cycle Forces — Data Coverage (2026-09-08, Milestone 5.4)
+# Big Cycle Forces — Data Coverage (living, updated through Sprint 6.4)
 
-Data-gap report for the 17 Big Cycle forces. Coverage is **not** strength — no
-force scores, weights, or phases exist yet (Milestone 5+). Definitions live in
+Data-gap report for the 17 Big Cycle forces. Coverage is not strength. Four
+force-level identity/proxy signals are executable (Rule of law, Corruption,
+Internal conflict proxy, Education proxy via IDENTITY_SINGLE), but coverage
+status remains a separate measurement-availability dimension; no overall
+cycle score/phase exists. Definitions live in
 `apps/api/app/cycle/force_definitions.py` (typed config layer, matching
 docs/data-model.md and packages/shared `FORCES`); per-country coverage is
 computed by `apps/api/app/services/force_coverage_service.py` and exposed at
 `GET /api/countries/{iso3}/force-coverage`.
 
-**Sprint 5.21 note:** Coverage status (AVAILABLE / PARTIAL /
+**Sprint 6.4 note:** Coverage status (AVAILABLE / PARTIAL /
 DEFINED_NOT_SOURCED / MISSING) measures DATA AVAILABILITY only. It is
 distinct from NUMERIC FORCE ELIGIBILITY — a force with AVAILABLE coverage
 may still have no approved force score if its indicator normalization is
 deferred or its aggregation mode is DEFERRED_MULTI. See
-`.dev/FORCE_AGGREGATION.md` for the force-level approval matrix (3 of 17
-approved for IDENTITY_SINGLE; 14 deferred).
+`.dev/FORCE_AGGREGATION.md` for the force-level approval matrix (4 of 17
+executable for IDENTITY_SINGLE; 13 intentionally unscored).
 
 ## Status meanings
 
@@ -38,6 +41,7 @@ because the mapping is an explicitly incomplete proxy for the conceptual force.
 - **Wealth / opportunity / values gaps** — capped at PARTIAL (live input: GINI_INDEX). Gini measures income inequality only; wealth inequality, opportunity gaps, and values/social gaps remain missing.
 - **Internal conflict** — capped at PARTIAL (live input: POLITICAL_STABILITY_WGI_SCORE). The WGI series is an institutional/conflict-risk proxy; it does not measure every form of domestic conflict. Status change from AVAILABLE → PARTIAL in M5.3 is a **methodology correction, not a regression**.
 - **Military strength** — capped at PARTIAL (M5.4; live inputs: MILITARY_EXPENDITURE_USD + MILITARY_EXPENDITURE_GDP, WB series republishing the SIPRI Military Expenditure Database). SIPRI describes military expenditure as an INPUT measure — resources absorbed by the military — not a measure of capability or security. Personnel capability, equipment quality/quantity, technology, logistics, readiness, combat experience, alliances/force projection, and nuclear capability are not measured, so spending alone can never make this force AVAILABLE.
+- **Education** — capped at PARTIAL (Sprint 6.4, DEC-032; live proxy: TERTIARY_ATTAINMENT_25_34). One tertiary-attainment measure does not represent complete Education — secondary attainment/enrollment, learning outcomes, test scores, education quality, years of schooling, and skills remain missing. Sprint 6.4 promotes Education to the fourth executable force as a PROXY_CONDITION (IDENTITY_SINGLE); coverage stays PARTIAL.
 
 Default is `coverage_ceiling = None` (unchanged behavior); rule_of_law,
 corruption, productivity, cost competitiveness, indebtedness, trade, and
@@ -71,7 +75,15 @@ infrastructure are deliberately NOT capped.
 | 16 | Geography | — | — | natural endowments, location (mostly static) | static reference data, not time-series ingestion | LOW |
 | 17 | Acts of nature | — | — | disaster/pandemic/climate exposure | EM-DAT, climate indices | LOW |
 
-## Current per-country coverage (live data, 2026-09-08, after Milestone 5.4)
+## HISTORICAL — M5.4 per-country coverage snapshot (live data, 2026-09-08)
+
+> **HISTORICAL SNAPSHOT — Milestone 5.4.** The per-country coverage table below
+> was captured after Milestone 5.4 (2026-09-08) and does NOT reflect subsequent
+> data additions (Sprint 5.19 IMF WEO debt, Sprint 5.20 OECD education + WID
+> wealth, Sprint 5.22 force layer). It is preserved as a dated historical
+> record. Current coverage is computed live by
+> `force_coverage_service.py` from the live DB (6814 observations / 27
+> indicators / 22 SourceSeries / 10 DataSources).
 
 | Country | Available | Partial | Defined not sourced | Missing |
 |---|---|---|---|---|
@@ -100,24 +112,34 @@ weights, or phases exist. WGI is perception-based and carries measurement
 uncertainty: the dedicated WGI source (WB source id 3) publishes, per
 dimension, standard errors (`GOV_WGI_RL.SE`), 90% confidence-interval bounds
 for the governance score (`GOV_WGI_RL.SC_LB` / `GOV_WGI_RL.SC_UB`), and number
-of underlying sources (`GOV_WGI_RL.SR`). These uncertainty series are NOT
-imported yet — they are the intended input for future force-confidence work.
-Never treat WGI as perfectly measured.
+of underlying sources (`GOV_WGI_RL.SR`). **Sprint 5.15: the LB/UB/SR
+diagnostics ARE NOW IMPORTED — 1872 rows in `indicator_diagnostics` (8
+countries × 3 WGI indicators × LB/UB/SR × 26 score years). Numeric
+indicator confidence remains None (DEC-023 — DEFER_NUMERIC_CONFIDENCE:
+no defensible calibration basis exists yet).** Never treat WGI as perfectly
+measured.
 
 ## Semantic audits (Milestone 5.1, 2026-09-08 — outcomes resolved 2026-09-08)
 
-**Education — RESOLVED: Option C (DEC-007).** The WB gross enrollment ratios
-(SE.TER.ENRR / SE.SEC.ENRR) do not match the canonical age-specific concepts;
-the owner chose better-matching indicators over redefining the catalog. No
-education persistence; the catalog keeps TERTIARY_ENROLLMENT /
-SECONDARY_ENROLLMENT as candidates until OECD attainment / WB net-enrollment
-mappings are approved in a future sprint.
+**Education — RESOLVED: Option C (DEC-007). IMPLEMENTED (Sprint 5.20).**
+The WB gross enrollment ratios (SE.TER.ENRR / SE.SEC.ENRR) do not match
+the canonical age-specific concepts; the owner chose better-matching
+indicators over redefining the catalog. **Sprint 5.20: OECD tertiary
+attainment `TERTIARY_ATTAINMENT_25_34` (age 25-34, ISCED 5-8) is now LIVE
+— 200 observations across 8 tracked_8 countries (CHN/IND sparse).**
+Education stays PARTIAL (DEC-009 ceiling — one tertiary series cannot make
+Education AVAILABLE). Attainment != enrollment (DEC-007 honored).
 
-**Government debt — RESOLVED: keep general-government (DEC-008).** WB
-GC.DOD.TOTL.GD.ZS is central-government debt, narrower than the canonical
-general-government concept; the owner declined the rename and the proxy. A
-genuine general-government source (e.g. IMF WEO) is evaluated in a future
-sprint; GOVERNMENT_DEBT_GDP stays a catalog-only candidate.
+**Government debt — RESOLVED: keep general-government (DEC-008). IMPLEMENTED
+(Sprint 5.19).** WB GC.DOD.TOTL.GD.ZS is central-government debt, narrower
+than the canonical general-government concept; the owner declined the rename
+and the proxy. A genuine general-government source (IMF WEO) was implemented
+in Sprint 5.19: `GOVERNMENT_DEBT_GDP` (IMF WEO `GGXWDG_NGDP`, general
+government gross debt, % of GDP) is now LIVE — 297 observations across all 8
+tracked_8 countries, historical-only via SDMX 3.0 with
+`LATEST_ACTUAL_ANNUAL_DATA` filtering. It feeds the Indebtedness force as a
+raw coverage input; no Atlas normalization curve is approved
+(CONTEXTUAL_DEFERRED — DEC-030 deferred Indebtedness composition).
 
 **Global openness — deliberately not promoted (unchanged).** Trade data
 (exports, imports, trade balance, current account) is live but kept as

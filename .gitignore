@@ -18,6 +18,7 @@ design.md
 # Env / secrets
 .env
 .env.*
+apps/api/.env
 !.env.example
 
 # Python

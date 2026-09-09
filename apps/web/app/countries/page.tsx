@@ -8,7 +8,7 @@ export default function CountriesPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-16">
       <h1 className="headline-lg">Countries</h1>
-      <p className="body-md mt-4 max-w-xl text-secondary">
+      <p className="body-md mt-4 max-w-[25rem] text-secondary">
         All countries currently tracked by the Atlas. Data is served by the API and
         stored in the database.
       </p>

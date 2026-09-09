@@ -1,3 +1,7 @@
+import pytest
+from httpx import AsyncClient
+
+@pytest.mark.asyncio
 async def test_list_countries(client):
     response = await client.get("/api/countries")
     assert response.status_code == 200
@@ -10,6 +14,7 @@ async def test_list_countries(client):
     assert iso3s == {"USA", "CHN", "CHE", "DEU", "FRA", "GBR", "JPN", "IND"}
 
 
+@pytest.mark.asyncio
 async def test_list_countries_ordered_by_name(client):
     response = await client.get("/api/countries")
     countries = response.json()
@@ -17,6 +22,7 @@ async def test_list_countries_ordered_by_name(client):
     assert names == sorted(names)
 
 
+@pytest.mark.asyncio
 async def test_get_country_found(client):
     response = await client.get("/api/countries/CHE")
     assert response.status_code == 200
@@ -26,12 +32,14 @@ async def test_get_country_found(client):
     assert country["region"] == "Europe"
 
 
+@pytest.mark.asyncio
 async def test_get_country_case_insensitive(client):
     response = await client.get("/api/countries/che")
     assert response.status_code == 200
     assert response.json()["iso3"] == "CHE"
 
 
+@pytest.mark.asyncio
 async def test_get_country_not_found(client):
     response = await client.get("/api/countries/ZZZ")
     assert response.status_code == 404

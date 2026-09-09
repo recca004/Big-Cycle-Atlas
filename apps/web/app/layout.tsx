@@ -13,7 +13,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
+      {/* suppressHydrationWarning silences false-positive attribute mismatches
+          injected by browser extensions (e.g. cz-shortcut-listen on <body>) */}
+      <body suppressHydrationWarning>
         <div className="flex min-h-screen flex-col">
           <header className="border-b border-border bg-surface">
             <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-6">

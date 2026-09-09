@@ -2,19 +2,20 @@
 
 ## Now
 
-- Install Docker Desktop and verify the Postgres path end-to-end (see ISSUE-001)
-- Owner approval of Milestone 1
+- Nothing blocking. Sprint 5.11 (credit-to-GDP gap evidence audit, DEC-020) is complete and verified (312 tests; family reclassified to ONE_SIDED_VULNERABILITY, credit gap still unscored, no thresholds invented). Dev processes remain down (Sprints 5.5–5.11 touched no frontend and needed no dev servers). Restart them in your own terminals when browser work resumes (`uv run --no-sync python run.py` from apps/api; `npm run dev -w apps/web` from the repo root).
 
 ## Next
 
-- Milestone 2: data model + indicator system (data_sources, indicators, observations, indicator_revisions tables; ingestion run records)
-- Milestone 3: World Bank connector (first real data source adapter)
+- **Sprint 5.12 — owner to choose.** Candidates: (1) **Credit-gap ONE_SIDED_VULNERABILITY curve design + implementation** (now evidence-backed per DEC-020 — the owner must approve the neutral ceiling, positive-side curve shape, endpoint behavior, the score interpretation of the no-excess region, and the score-interpretation limits carried from the Basel caveats; pairs with the DSR level toward the Indebtedness force's indicator layer); (2) confidence-dimension design (§17 composition; WGI uncertainty series documented in DATA_SOURCES.md but not imported — small import first); (3) Gini calibration-universe decision (global empirical history vs tracked_8 + survey-base comparability); (4) productivity expanded calibration universe (OECD-wide distribution; tracked_8 min-max explicitly rejected); (5) data-side work (education Option C/DEC-007, IMF WEO/DEC-008, WID wealth shares — lifts the Wealth-gap PARTIAL ceiling). Deliberately NOT queued: DSR momentum (registry 4q/8q windows unapproved) and non-WGI relative (cross-country raw-DSR ranking prohibited per BIS caution; credit-gap relative stays CONTEXTUAL_DEFERRED). Owner decisions now closed: decay shape = exponential (DEC-013, §17.1); WGI momentum (DEC-016); WGI relative universe/formula/tie/complete-universe rule (DEC-017 — WGI ONLY); non-WGI level family audit + DSR as next target (DEC-018); DSR OWN_HISTORY level methodology — expanding calibration, mid-rank stress percentile, min 20, ties average rank, freshness gates-only (DEC-019, normalization-v0.5); credit-gap family reclassification — positive-side breakpoints supported by Basel +2/+10 + BIS 2018 EWI ~9/amber 4–9, negative-side penalty retracted as unevidenced (DEC-020 — no numeric Atlas breakpoints approved). Open §17 items: sign conventions for non-WGI momentum, confidence composition, force weights, credit-gap numeric curve parameters (owner decision).
+- Education Option C indicators (DEC-007): OECD educational attainment (tertiary) / WB net enrollment SE.SEC.NENR (secondary)
+- General-government debt source (DEC-008): IMF WEO or equivalent — WB central-government series rejected
+- Wealth-share / opportunity indicators (WID wealth or income shares, social polarization) — would lift the Wealth-gap PARTIAL ceiling (DEC-009); ACLED event data would lift the Internal-conflict ceiling; military capability data (personnel/equipment/readiness — NOT more spending series) would lift the Military-strength ceiling
+- Other data sources (FRED/ALFRED, Eurostat, ECB, SNB, UN Comtrade) — deferred: fewer force gaps per unit of work than extending the existing WB connector
 - Decide on font licensing: Suisse Intl vs free alternative (Inter or similar)
 
 ## Later
 
-- Milestone 4: BIS, OECD, FRED, Eurostat, ECB, SNB, Comtrade connectors
-- Milestone 5: 17-force calculation engine
+- Milestone 5 implementation: 17-force calculation engine (design DONE in Sprint 5.5 — see .dev/NORMALIZATION.md + DEC-012; first executable path DONE in Sprint 5.6 — DIRECT_0_100 level signals for the WGI ×3; alignment hardened by Part 0/DEC-015 to period-complete eligibility — an annual observation is first eligible at its own Q4 snapshot; momentum DONE in Sprint 5.7/DEC-016 — OWN_HISTORY signed raw-point change for the WGI ×3, windows (3, 5) with 5y primary, anchor tolerance 1 annual period, model version normalization-v0.3, NOT approved for cross-indicator aggregation; relative DONE in Sprint 5.8/DEC-017 — CROSS_SECTIONAL_RELATIVE mid-rank positions within the frozen typed tracked_8 universe for the WGI ×3, complete-universe rule 8/8-or-nobody, ties = average rank, model version normalization-v0.4, NOT a global percentile and NOT approved for cross-indicator aggregation; audit + hardening DONE in Sprint 5.9/DEC-018 — relative helper enforces its own execution gate (level DIRECT_0_100 AND relative CROSS_SECTIONAL_RELATIVE → exactly the WGI ×3), and the non-WGI level families were audited: GDP_GROWTH / GCF / INFLATION_CPI / UNIT_LABOUR_COST_GROWTH → CONTEXTUAL_DEFERRED, Gini direction confirmed without a numeric curve, credit-gap asymmetric TARGET_BAND confirmed with thresholds unresolved, DSR OWN_HISTORY confirmed and selected as the next implementation target, productivity direction confirmed with the absolute level curve deferred — no numeric thresholds invented; DSR OWN_HISTORY level DONE in Sprint 5.10/DEC-019 — the first non-WGI level signal, for exactly DEBT_SERVICE_RATIO: expanding as-of own-history calibration of real latest-vintage observations, empirical mid-rank stress percentile with ties = average rank, level = 100 − stress_percentile, minimum 20 observations (Atlas MODEL PARAMETER, below → None never 0), freshness gates the current value only and never scales, model version normalization-v0.5, DSR relative prohibited (BIS caution) and DSR momentum not implemented; credit-gap evidence audit DONE in Sprint 5.11/DEC-020 — family reclassified asymmetric TARGET_BAND → ONE_SIDED_VULNERABILITY (positive-side breakpoints supported by Basel CCyB guide +2/+10 and BIS 2018 EWI ~9/amber 4–9; negative-side penalty RETRACTED — the guide is flat zero below +2 and a persistent negative gap is a boom-contaminated-trend artifact; deleveraging/weak-credit belongs to other signals; numeric Atlas breakpoints remain owner decisions; no score implemented); remaining: confidence, credit-gap curve design, Gini calibration universe, productivity calibration universe, other families/weights)
 - Milestone 6: Big Cycle stage calculation
 - Milestone 7: historical charts (ECharts) and /compare
 - Milestone 8: forecast model (probability windows)
@@ -25,6 +26,8 @@
 
 ## Ideas
 
-- Admin data-health page driven by ingestion_runs
+- Global openness narrower proxy methodology (trade-based openness ratio) — needs owner approval before any promotion or derived ratio
+- Admin data-health page driven by ingestion_runs (scripts/coverage_report.py already provides the query patterns)
 - Model version changelog surfaced on /methodology
 - TimescaleDB hypertables for observations if query performance requires it
+- Milestone 4 hardening for World Bank: scheduled refresh, ingestion monitoring/alerting, then flip status `testing` → `active`

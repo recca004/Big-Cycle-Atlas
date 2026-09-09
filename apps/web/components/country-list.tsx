@@ -58,6 +58,7 @@ export function CountryList() {
             <th className="px-4 py-3 text-xs font-medium text-tertiary">Country</th>
             <th className="px-4 py-3 text-xs font-medium text-tertiary">ISO3</th>
             <th className="px-4 py-3 text-xs font-medium text-tertiary">Region</th>
+            <th className="px-4 py-3 text-xs font-medium text-tertiary">Data coverage</th>
           </tr>
         </thead>
         <tbody>
@@ -66,6 +67,11 @@ export function CountryList() {
               <td className="px-4 py-3 text-[15px]">{country.name}</td>
               <td className="px-4 py-3 text-[13px] text-tertiary">{country.iso3}</td>
               <td className="px-4 py-3 text-[13px] text-tertiary">{country.region}</td>
+              <td className="px-4 py-3 text-[13px] text-tertiary">
+                {country.indicator_count
+                  ? `${country.indicator_count} indicator${country.indicator_count === 1 ? "" : "s"} · through ${country.latest_observation_year}`
+                  : "No data yet"}
+              </td>
             </tr>
           ))}
         </tbody>

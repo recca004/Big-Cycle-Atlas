@@ -1,5 +1,6 @@
 """Indicator-level normalizer — Sprint 5.6 + Sprint 5.7 momentum + Sprint 5.8
-relative + Sprint 5.10 DSR own-history level.
+relative + Sprint 5.10 DSR own-history level + Sprint 5.12 credit-gap
+one-sided vulnerability level.
 
 Layering (NORMALIZATION.md, preserved):
 
@@ -35,10 +36,30 @@ are not decayed. Cross-country DSR ranking is prohibited (relative None);
 DSR momentum is NOT implemented in this sprint (registry 4q/8q windows stay
 unapproved); confidence stays None.
 
+Implemented (Sprint 5.12, DEC-021): ONE_SIDED_VULNERABILITY LEVEL for EXACTLY
+CREDIT_TO_GDP_GAP — the second non-WGI level signal, with the OWNER-APPROVED
+curve: level_score = 50 for a gap at or below +2pp (the no-excess region is
+deliberately NEUTRAL 50, not 100 — absence of excess credit is not evidence
+of strength), then LINEAR from (+2, 50) to (+10, 0), and 0 at or above +10pp
+(endpoint clamps: no floor below +2, no cap above +10 — a negative gap
+carries NO penalty per DEC-020). The +2/+10 breakpoints coincide with the
+Basel CCyB guide's L/H reference points; the 50/0 score mapping is an Atlas
+MODEL PARAMETER, not Basel methodology truth — the gap remains a common
+reference point, NOT a mechanical standalone rule. Same execution-gate
+pattern as DSR: a registry ONE_SIDED_VULNERABILITY family alone never
+auto-enables — an explicit one_sided_vulnerability_configs entry in the model
+version is required, and v0.6 carries exactly one: CREDIT_TO_GDP_GAP. No
+minimum-history gate (the curve is parametric). Freshness gates the CURRENT
+observation only and NEVER scales the score. Credit-gap relative stays
+CONTEXTUAL_DEFERRED (None) and registry momentum windows (4q/8q) stay
+UNAPPROVED (momentum None). Confidence stays None.
+
 Execution gates: OWN_HISTORY level requires BOTH the registry level family
 AND an explicit own_history_level_configs entry in the model version — a
-registry OWN_HISTORY entry alone never auto-enables an indicator. No generic
-fallback exists anywhere.
+registry OWN_HISTORY entry alone never auto-enables an indicator; the same
+gate applies to ONE_SIDED_VULNERABILITY (explicit
+one_sided_vulnerability_configs entry required). No generic fallback exists
+anywhere.
 
 Still None on every signal: confidence (composition unresolved, §17 — the
 freshness FACTOR is carried, but it is not the confidence score).
@@ -65,6 +86,8 @@ from app.cycle.normalization_definitions import (
     NormalizationNotImplementedError,
     NormalizationSpec,
     NormalizedSignal,
+    OneSidedVulnerabilityConfig,
+    OneSidedVulnerabilityResult,
     OwnHistoryLevelResult,
     REFERENCE_UNIVERSES,
     ScoringPeriod,
@@ -171,6 +194,31 @@ def own_history_stress_position(
     return average_rank, stress_percentile
 
 
+def one_sided_vulnerability_level(
+    value: float, config: OneSidedVulnerabilityConfig
+) -> float:
+    """Owner-approved ONE_SIDED_VULNERABILITY level curve (DEC-021, Sprint 5.12).
+
+    value <= neutral_ceiling  -> no_excess_score (deliberately neutral —
+        absence of excess credit is NOT evidence of strength).
+    neutral_ceiling < value < saturation_value -> LINEAR from
+        (ceiling, no_excess_score) to (saturation, saturated_score).
+    value >= saturation_value -> saturated_score (endpoint clamp).
+
+    Higher score = less excess-credit vulnerability. Pure function: no DB
+    access, no persistence.
+    """
+    if value <= config.neutral_ceiling:
+        return config.no_excess_score
+    if value >= config.saturation_value:
+        return config.saturated_score
+    span = config.saturation_value - config.neutral_ceiling
+    fraction = (value - config.neutral_ceiling) / span
+    return config.no_excess_score + fraction * (
+        config.saturated_score - config.no_excess_score
+    )
+
+
 async def normalize_indicator_as_of(
     session: AsyncSession,
     country_iso3: str,
@@ -202,10 +250,82 @@ async def normalize_indicator_as_of(
         return await _normalize_own_history_as_of(
             session, spec, country_iso3, scoring_period, model_config, freshness_policy
         )
+    if spec.level_family is NormalizationFamily.one_sided_vulnerability:
+        return await _normalize_one_sided_vulnerability_as_of(
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy
+        )
     raise NormalizationNotImplementedError(
         f"{indicator_code}: level family {spec.level_family.value} is not "
         "implemented (executable: DIRECT_0_100 for the WGI x3, OWN_HISTORY for "
-        "DEBT_SERVICE_RATIO only)"
+        "DEBT_SERVICE_RATIO only, ONE_SIDED_VULNERABILITY for "
+        "CREDIT_TO_GDP_GAP only)"
+    )
+
+
+async def _normalize_one_sided_vulnerability_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+) -> NormalizedSignal | None:
+    """ONE_SIDED_VULNERABILITY level (DEC-021, Sprint 5.12): credit gap only.
+
+    The registry's one_sided_vulnerability level family does NOT auto-enable
+    an indicator — an explicit one_sided_vulnerability_configs entry in the
+    model version is required, and v0.6 carries exactly one:
+    CREDIT_TO_GDP_GAP, with the owner-approved curve (flat 50 at/below +2pp,
+    linear to 0 at +10pp, clamped above). No minimum-history gate: the curve
+    is parametric, unlike the DSR own-history calibration.
+    """
+    config = model_config.one_sided_vulnerability_configs.get(spec.indicator_code)
+    if config is None:
+        raise NormalizationNotImplementedError(
+            f"{spec.indicator_code}: registry ONE_SIDED_VULNERABILITY level "
+            f"family, but no one-sided vulnerability level config exists in "
+            f"model version {model_config.version_id!r} — not auto-enabled"
+        )
+
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+    aligned = await align_observation_as_of(
+        session, country_iso3, spec.indicator_code, scoring_period
+    )
+    if aligned is None:
+        return None  # no eligible observation — no signal, never a zero
+
+    freshness = evaluate_freshness(
+        own_period_age(aligned.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        # Too stale: no signal for this snapshot — never a zero score.
+        return None
+
+    level_score = one_sided_vulnerability_level(aligned.raw_value, config)
+
+    return NormalizedSignal(
+        indicator_code=spec.indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=aligned.raw_value,
+        source_period=aligned.source_period,
+        method=NormalizationFamily.one_sided_vulnerability,
+        model_version=model_config.version_id,
+        level_score=level_score,
+        relative_score=None,  # CONTEXTUAL_DEFERRED — deliberately unresolved
+        momentum=None,  # registry 4q/8q windows stay UNAPPROVED (DEC-021)
+        confidence=None,  # deliberately not calculated (composition unresolved, §17)
+        reference_universe_id=None,
+        one_sided_vulnerability_level=OneSidedVulnerabilityResult(
+            neutral_ceiling=config.neutral_ceiling,
+            saturation_value=config.saturation_value,
+            no_excess_score=config.no_excess_score,
+            saturated_score=config.saturated_score,
+            level_score=level_score,
+        ),
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
     )
 
 
@@ -221,7 +341,8 @@ async def _normalize_own_history_as_of(
 
     The registry's own_history level family does NOT auto-enable an
     indicator — an explicit own_history_level_configs entry in the model
-    version is required, and v0.5 carries exactly one: DEBT_SERVICE_RATIO.
+    version is required, and the current model version carries exactly one:
+    DEBT_SERVICE_RATIO.
     """
     config = model_config.own_history_level_configs.get(spec.indicator_code)
     if config is None:

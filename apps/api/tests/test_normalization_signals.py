@@ -26,6 +26,7 @@ from app.cycle.normalization_definitions import (
     ModelVersionConfig,
     MomentumWindowResult,
     NormalizationFamily,
+    OneSidedVulnerabilityConfig,
     ScoringPeriod,
     get_normalization_spec,
 )
@@ -33,6 +34,7 @@ from app.cycle.normalizer import (
     NormalizationDataError,
     NormalizationNotImplementedError,
     normalize_indicator_as_of,
+    one_sided_vulnerability_level,
 )
 from app.data_sources.base import ObservationDTO
 from app.db import session as session_module
@@ -440,13 +442,139 @@ def test_sprint_5_9_audit_level_families_exact():
         assert spec.level_family is family, indicator
 
 
-async def test_credit_to_gdp_gap_still_unscored_after_sprint_5_11(client):
-    # The Sprint 5.11 reclassification (DEC-020) is METHODOLOGY ONLY: the
-    # one_sided_vulnerability family carries no executable score yet, and
-    # no numeric Atlas breakpoint was approved.
+# --- Sprint 5.12 (DEC-021): credit-gap ONE_SIDED_VULNERABILITY level --------------
+
+
+# The owner-approved curve, verbatim: flat 50 at or below +2pp, linear from
+# (+2, 50) to (+10, 0), 0 at or above +10pp.
+OWNER_CURVE_TABLE = (
+    # (year, quarter, raw gap, expected level_score)
+    (2024, 1, -20.0, 50.0),
+    (2024, 2, 0.0, 50.0),
+    (2024, 3, 2.0, 50.0),
+    (2024, 4, 4.0, 37.5),
+    (2025, 1, 6.0, 25.0),
+    (2025, 2, 9.0, 6.25),
+    (2025, 3, 10.0, 0.0),
+    (2025, 4, 20.0, 0.0),
+)
+
+
+async def test_credit_gap_owner_curve_exact_table(client):
+    # Sprint 5.12 (DEC-021): every point from the owner's table must
+    # reproduce EXACTLY through the full align -> freshness -> curve path.
+    for year, quarter, value, expected in OWNER_CURVE_TABLE:
+        await _persist([_bis_gap_dto("CHE", year, quarter, value)])
+        signal = await _normalize(
+            "CHE", "CREDIT_TO_GDP_GAP", ScoringPeriod(year, quarter)
+        )
+        assert signal is not None, (year, quarter, value)
+        assert signal.level_score == pytest.approx(expected), (year, quarter, value)
+
+
+def test_one_sided_vulnerability_level_pure_curve():
+    # The pure curve function: clamps, continuity at the breakpoints, and the
+    # config's own parameter validation.
+    curve = CURRENT_MODEL_VERSION.one_sided_vulnerability_configs["CREDIT_TO_GDP_GAP"]
+    assert curve.neutral_ceiling == 2.0
+    assert curve.saturation_value == 10.0
+    assert curve.no_excess_score == 50.0
+    assert curve.saturated_score == 0.0
+    # At/below the ceiling: flat NEUTRAL 50 — including deep negatives, which
+    # carry NO penalty (DEC-020: negative-side penalty retracted).
+    for value in (-29.65, -20.0, 0.0, 1.9, 2.0):
+        assert one_sided_vulnerability_level(value, curve) == pytest.approx(50.0)
+    # At/above saturation: clamped 0.
+    for value in (10.0, 10.1, 29.42):
+        assert one_sided_vulnerability_level(value, curve) == pytest.approx(0.0)
+    # Linear between the breakpoints (continuity at both ends).
+    assert one_sided_vulnerability_level(2.5, curve) == pytest.approx(46.875)
+    assert one_sided_vulnerability_level(6.0, curve) == pytest.approx(25.0)
+    assert one_sided_vulnerability_level(9.9, curve) == pytest.approx(0.625)
+    # Invalid curve configurations fail loudly.
+    with pytest.raises(ValueError):  # saturation must exceed the ceiling
+        OneSidedVulnerabilityConfig(
+            neutral_ceiling=10.0,
+            saturation_value=2.0,
+            no_excess_score=50.0,
+            saturated_score=0.0,
+        )
+    with pytest.raises(ValueError):  # stress must not fall above the ceiling
+        OneSidedVulnerabilityConfig(
+            neutral_ceiling=2.0,
+            saturation_value=10.0,
+            no_excess_score=0.0,
+            saturated_score=50.0,
+        )
+
+
+async def test_credit_gap_requires_explicit_model_config_entry(client):
+    # Execution gate: the registry ONE_SIDED_VULNERABILITY family alone never
+    # auto-enables an indicator — a model version without the config entry
+    # raises, even with data present.
+    await _persist([_bis_gap_dto("CHE", 2025, 2, 4.0)])
+    config = ModelVersionConfig(
+        version_id="no-credit-gap-config",
+        normalization_method="t",
+        force_mapping_version="m5.4",
+        reference_universe_id="tracked_8",
+    )
     with pytest.raises(NormalizationNotImplementedError) as excinfo:
-        await _normalize("CHE", "CREDIT_TO_GDP_GAP", ScoringPeriod(2025, 2))
-    assert "not implemented" in str(excinfo.value)
+        await _normalize(
+            "CHE",
+            "CREDIT_TO_GDP_GAP",
+            ScoringPeriod(2025, 2),
+            model_config=config,
+        )
+    assert "not auto-enabled" in str(excinfo.value)
+
+
+async def test_credit_gap_no_signal_without_observation(client):
+    # No eligible observation -> no signal, never a zero score.
+    assert await _normalize("CHE", "CREDIT_TO_GDP_GAP", ScoringPeriod(2025, 2)) is None
+
+
+async def test_credit_gap_too_stale_is_not_produced(client):
+    # Quarterly unusable threshold is 12 own periods: a 2022-Q2 observation at
+    # the 2025-Q2 snapshot is too stale -> no signal, never a zero score.
+    await _persist([_bis_gap_dto("CHE", 2022, 2, 5.0)])
+    assert await _normalize("CHE", "CREDIT_TO_GDP_GAP", ScoringPeriod(2025, 2)) is None
+
+
+async def test_credit_gap_freshness_never_scales_score(client):
+    # Age 3 quarterly periods (> full confidence 2, < unusable 12): stale but
+    # usable — the freshness factor decays, the level score does NOT.
+    await _persist([_bis_gap_dto("CHE", 2024, 3, 4.0)])
+    signal = await _normalize("CHE", "CREDIT_TO_GDP_GAP", ScoringPeriod(2025, 2))
+    assert signal is not None
+    assert signal.is_stale is True
+    assert 0.0 < signal.freshness_factor < 1.0
+    assert signal.level_score == pytest.approx(37.5)  # unscaled curve value
+
+
+async def test_credit_gap_other_dimensions_stay_none(client):
+    # DEC-021: only the level is implemented — relative stays
+    # CONTEXTUAL_DEFERRED, registry momentum windows (4q/8q) stay UNAPPROVED,
+    # and confidence stays unresolved.
+    await _persist([_bis_gap_dto("CHE", 2025, 2, 9.0)])
+    signal = await _normalize("CHE", "CREDIT_TO_GDP_GAP", ScoringPeriod(2025, 2))
+    assert signal is not None
+    assert signal.method is NormalizationFamily.one_sided_vulnerability
+    assert signal.model_version == CURRENT_MODEL_VERSION.version_id
+    assert signal.level_score == pytest.approx(6.25)
+    assert signal.momentum is None
+    assert signal.momentum_windows == ()
+    assert signal.relative_score is None
+    assert signal.reference_universe_id is None
+    assert signal.confidence is None
+    assert signal.backtest_safe is False
+    provenance = signal.one_sided_vulnerability_level
+    assert provenance is not None
+    assert provenance.neutral_ceiling == 2.0
+    assert provenance.saturation_value == 10.0
+    assert provenance.no_excess_score == 50.0
+    assert provenance.saturated_score == 0.0
+    assert provenance.level_score == pytest.approx(6.25)
 
 
 async def test_sprint_5_9_reclassified_indicators_still_raise(client):
@@ -583,16 +711,28 @@ def test_shift_scoring_period_years_moves_year_keeps_quarter():
         shift_scoring_period_years(ScoringPeriod(1902, 2), 5)
 
 
-def test_current_model_version_is_v0_5_dsr_own_history_level():
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.5"
+def test_current_model_version_is_v0_6_credit_gap_one_sided_level():
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.6"
     assert (
         CURRENT_MODEL_VERSION.normalization_method
-        == "sprint-5.10-dsr-own-history-level-r1"
+        == "sprint-5.12-credit-gap-one-sided-level-r1"
     )
-    # Sprint 5.10 enables OWN_HISTORY level for EXACTLY DEBT_SERVICE_RATIO.
+    # Sprint 5.10 (unchanged by 5.12): OWN_HISTORY level for EXACTLY
+    # DEBT_SERVICE_RATIO.
     own_history = CURRENT_MODEL_VERSION.own_history_level_configs
     assert set(own_history) == {"DEBT_SERVICE_RATIO"}
     assert own_history["DEBT_SERVICE_RATIO"].minimum_sample_n == 20
+    # Sprint 5.12 (DEC-021): ONE_SIDED_VULNERABILITY level for EXACTLY
+    # CREDIT_TO_GDP_GAP, with the owner-approved curve parameters.
+    one_sided = CURRENT_MODEL_VERSION.one_sided_vulnerability_configs
+    assert set(one_sided) == {"CREDIT_TO_GDP_GAP"}
+    curve = one_sided["CREDIT_TO_GDP_GAP"]
+    assert (
+        curve.neutral_ceiling,
+        curve.saturation_value,
+        curve.no_excess_score,
+        curve.saturated_score,
+    ) == (2.0, 10.0, 50.0, 0.0)
     assert CURRENT_MODEL_VERSION.backtest_safe is False
     assert CURRENT_MODEL_VERSION.reference_universe_id == "tracked_8"
     for indicator in WGI_VALUES:

@@ -1,4 +1,4 @@
-"""Read-only smoke check for the normalization path (Sprints 5.6-5.10).
+"""Read-only smoke check for the normalization path (Sprints 5.6-5.12).
 
 Examples (from apps/api):
 
@@ -64,6 +64,18 @@ def _print_signal(signal) -> None:
             stress = f"{oh.stress_percentile:g}" if oh.stress_percentile is not None else "n/a"
             print(f"Historical rank: {rank}   Stress percentile: {stress}"
                   "  (level = 100 - stress percentile)")
+    elif signal.method is NormalizationFamily.one_sided_vulnerability:
+        osv = signal.one_sided_vulnerability_level
+        print(f"Level score: {signal.level_score:.2f}  (ONE_SIDED_VULNERABILITY - "
+              "owner-approved curve, DEC-021; indicator-level signal, NOT a "
+              "force score)")
+        if osv is not None:
+            print(f"Curve: {osv.no_excess_score:g} at or below +{osv.neutral_ceiling:g}pp "
+                  f"(neutral - absence of excess credit is NOT evidence of strength), "
+                  f"linear to {osv.saturated_score:g} at +{osv.saturation_value:g}pp, "
+                  f"clamped at {osv.saturated_score:g} above (Atlas MODEL PARAMETERS - "
+                  "breakpoints coincide with the Basel CCyB guide L/H, score "
+                  "mapping is an Atlas choice)")
     else:
         print(f"Level score: {signal.level_score:g}  (DIRECT_0_100 - provider's "
               "absolute scale, indicator-level signal, NOT a force score)")
@@ -110,6 +122,12 @@ def _print_signal(signal) -> None:
     if signal.indicator_code == "DEBT_SERVICE_RATIO":
         print("Note: cross-country raw-DSR ranking is prohibited (BIS caution) - "
               "relative score stays not-calculated by design.")
+    if signal.indicator_code == "CREDIT_TO_GDP_GAP":
+        print("Note: the gap is a common reference point, NOT a mechanical "
+              "standalone rule (Basel caution, DEC-020) - GDP-denominator "
+              "distortions, trend turning points, and post-bust artifacts "
+              "limit score interpretation. Relative stays deferred; momentum "
+              "windows (4q/8q) stay unapproved.")
 
 
 async def _load_signal(session, country: str, indicator: str, scoring_period):

@@ -43,14 +43,16 @@ non-WGI live indicators. *(Historical status as of Sprint 5.6 — superseded:
 Sprint 5.7/DEC-016 added WGI momentum and Sprint 5.8/DEC-017 added WGI
 relative scores, so `momentum` and `relative_score` are no longer None for
 the WGI ×3; Sprint 5.10/DEC-019 then implemented the DEBT_SERVICE_RATIO
-OWN_HISTORY level. Current truth: WGI ×3 have executable level + momentum +
-relative; DEBT_SERVICE_RATIO has an executable OWN_HISTORY level;
-`confidence` remains None on every signal, and every OTHER non-WGI level
-indicator still raises NormalizationNotImplementedError. No force
+OWN_HISTORY level, and Sprint 5.12/DEC-021 implemented the
+CREDIT_TO_GDP_GAP ONE_SIDED_VULNERABILITY level. Current truth: WGI ×3 have
+executable level + momentum + relative; DEBT_SERVICE_RATIO has an executable
+OWN_HISTORY level; CREDIT_TO_GDP_GAP has an executable ONE_SIDED_VULNERABILITY
+level; `confidence` remains None on every signal, and every OTHER non-WGI
+level indicator still raises NormalizationNotImplementedError. No force
 aggregation, no weights, no Big Cycle phase, no persistence, no HTTP
 endpoint. Every signal: `backtest_safe = false` (alignment is by
 observation period, not release date — Milestone 9 owns that); current
-model version `normalization-v0.5`.)* Tests:
+model version `normalization-v0.6`.)* Tests:
 `apps/api/tests/test_normalization_signals.py` (27, offline).
 
 ## Part 0 implementation status (2026-09-09) — PERIOD-COMPLETE ALIGNMENT
@@ -564,6 +566,223 @@ DEFER was rejected because the positive side IS defensibly supported —
 deferring would discard documented, dual-source official evidence; KEEP
 was rejected because the negative-side penalty has no evidence at all.
 
+## Sprint 5.12 implementation status (2026-09-09) — CREDIT-GAP ONE_SIDED_VULNERABILITY LEVEL (DEC-021)
+
+The owner approved the numeric Atlas curve (DEC-021), implementing the Sprint
+5.11 verdict. Enabled for EXACTLY CREDIT_TO_GDP_GAP, via an explicit
+`one_sided_vulnerability_configs` entry in the model version (the same
+execution-gate pattern as DSR: a registry family alone never auto-enables —
+a model version without the entry raises). Model version bumped
+`normalization-v0.5` → `normalization-v0.6` (method
+`sprint-5.12-credit-gap-one-sided-level-r1`). All v0.5 WGI + DSR
+configuration is unchanged.
+
+The owner-approved curve (Atlas MODEL PARAMETERS, versioned):
+
+| Credit-to-GDP gap (pp) | level_score |
+|---|---|
+| ≤ +2 (including ALL negative gaps) | 50.00 |
+| +2 < gap < +10 | linear: 50 at +2 falling to 0 at +10 (−6.25 per pp) |
+| ≥ +10 | 0.00 |
+
+Verbatim owner table: −20 → 50.00, 0 → 50.00, +2 → 50.00, +4 → 37.50,
++6 → 25.00, +9 → 6.25, +10 → 0.00, +20 → 0.00.
+
+Design decisions locked by the approval:
+
+- **Neutral ceiling = +2pp, saturation = +10pp.** The breakpoints COINCIDE
+  with the Basel CCyB guide's L/H reference points (bcbs187) — but the
+  guide's role is a policy add-on communication reference, and the SCORE
+  mapping (50/0) is an Atlas choice, not Basel methodology truth. The three
+  threshold concepts separated in Sprint 5.11 §2 stay separated.
+- **No-excess region = 50, deliberately NOT 100.** Absence of excess credit
+  is not evidence of strength — the indicator is SILENT about health at or
+  below +2. This answers the Sprint 5.11 open question (flat-max "strong"
+  vs "no-signal"): the region reads as NEUTRAL, per §1's 50 = neutral
+  middle reference.
+- **Negative gaps carry NO penalty** (DEC-020 retraction preserved): deep
+  negatives score the same neutral 50 as +2.
+- **Endpoint clamps:** flat 50 at/below +2 (no floor), flat 0 at/above +10
+  (no cap); strictly linear in between.
+- **No minimum-history gate:** the curve is parametric (unlike the DSR
+  own-history calibration) — any single eligible observation scores.
+- **Freshness gates the current observation only and NEVER scales the
+  score** (quarterly class); too stale → no signal, never zero.
+- **Unchanged dimensions:** relative stays CONTEXTUAL_DEFERRED (None),
+  registry momentum windows (4q/8q) stay UNAPPROVED (momentum None),
+  confidence None, backtest_safe False.
+
+Score-interpretation limits carried from the Sprint 5.11 Basel caution: the
+gap is a common reference point, NOT a mechanical standalone rule —
+GDP-denominator distortions, trend turning points, structural breaks,
+endpoint revisions, and post-bust artifacts limit what this score can
+claim about underlying debt health.
+
+Live smoke (tracked_8 @2025-Q4, read-only, model normalization-v0.6): USA
+−11.54 → 50, CHN −7.69 → 50, CHE −17.04 → 50, DEU −3.96 → 50, FRA −15.11
+→ 50, GBR −17.82 → 50, JPN +6.78 → 20.10, IND +1.74 → 50. Seven of eight
+sit in the neutral region at this snapshot; JPN is the only one in the
+declining region (descriptive — NOT evidence the breakpoints are
+economically correct; the Sprint 5.11 evidence matrix is the justification).
+
+Tests: 318 offline (312 + 6 net new: the owner-table regression through the
+full align → freshness → curve path, the pure-curve clamps/continuity/
+config-validation, the no-auto-enable execution gate, no-observation →
+None, too-stale → None, freshness-decays-but-never-scales,
+other-dimensions-stay-None; the Sprint 5.11 "still unscored" regression was
+replaced by these).
+
+## Sprint 5.13 methodology status (2026-09-09) — CONFIDENCE LAYERING + WGI UNCERTAINTY AUDIT (DEC-022)
+
+Architecture sprint: NO scores changed, NO confidence numbers invented, NO
+code change required. Every Sprint 5.12 numerical output is unchanged; the
+model version stays `normalization-v0.6` (a documentation/design sprint never
+bumps the version — a future FIRST EXECUTABLE confidence formula does).
+
+Outcomes:
+
+1. **Confidence layering resolved (§10 rewritten).** INDICATOR confidence
+   (trust in one indicator's signal) and FORCE confidence (completeness of a
+   force's input coverage) are now separate sections with an explicit rule:
+   coverage completeness and proxy ceilings are FORCE-LAYER concepts and are
+   never folded into an individual NormalizedSignal. A high-quality fresh
+   POLITICAL_STABILITY_WGI_SCORE signal is not lowered because the Internal
+   conflict force it feeds is PARTIAL/ceiling-capped.
+2. **Confidence ≠ strength, permanently.** `level_score = 90, confidence =
+   0.4` means "strong measured condition, weak trust in the estimate" — it
+   must never become 36. Economic scores are never multiplied by confidence;
+   `relative_score *= confidence` and `momentum *= confidence` are
+   prohibited. Confidence travels ALONGSIDE the economic dimensions.
+3. **Confidence ≠ freshness.** `freshness_factor` (DEC-013 exponential
+   policy) is the one source of freshness truth; a future confidence may
+   CONSUME it but never recomputes age with another formula, and confidence
+   is never simply set equal to freshness_factor.
+4. **WGI uncertainty series audited live (read-only probe, 2026-09-09).**
+   Verified against WB API v2: score series `GOV_WGI_{RL,CC,PV}_SC` (WDI,
+   source 2) plus dedicated-source (source id 3) uncertainty series
+   `GOV_WGI_{dim}.SC_LB` / `.SC_UB` (90% CI bounds FOR THE GOVERNANCE SCORE),
+   `.SE` (standard error OF THE ESTIMATE), `.SR` (number of underlying
+   sources). All 8 tracked countries have all 4 uncertainty series for all
+   26 score years (1996–2024 minus the 1997/1999/2001 biennial gaps; no 2025
+   values yet); one-to-one year alignment with the score series is PERFECT
+   for every country/dimension (208 obs per series = 8 × 26). Scale facts:
+   LB ≤ score ≤ UB for all 624 points (bounds bracket the score on the SAME
+   0–100 score scale; UB clamps at 100, e.g. CHE CC 2020); the CI is
+   symmetric around the score; SE is on the UNDERLYING ESTIMATE scale
+   (values ~0.15–0.25), and empirically width ≈ 56.5 × SE — NOT the 65.8 × SE
+   a naive 90%-normal multiplier (20 × 2 × 1.645) would give — so SE does NOT
+   reconstruct the published bounds. SR is integer-valued count data
+   (observed range 4–16). Sample 2024 values (score / LB / UB / width / SE /
+   SR): CHE RL 87.32 / 82.04 / 92.60 / 10.56 / 0.1871 / 10; USA RL 73.52 /
+   69.25 / 77.78 / 8.53 / 0.1511 / 13.
+5. **Initial WGI uncertainty input set selected: LB + UB + SR (Option B of
+   A/B/C).** CI width = UB − LB is the primary measurement-uncertainty
+   diagnostic — directly on the imported score scale, intuitive measurement
+   meaning, no scale mixing. SR (source count) is a second, distinct
+   data-richness diagnostic. SE is DEFERRED: it is on the estimate scale,
+   cannot reconstruct the published CI (the 56.5 vs 65.8 finding), and adds
+   no score-scale information the bounds do not already carry. SE can be
+   added later through the same mechanism if an approved methodology ever
+   needs estimate-scale precision. NO CI-width or source-count → confidence
+   curve is designed or approved here — the inputs are identified, their
+   numeric composition deliberately deferred.
+6. **Storage architecture audited; representation chosen (DEC-022).** The
+   WGI uncertainty data must NOT become ordinary canonical indicators or
+   observations (the full decision matrix is in this section below). Chosen:
+   dedicated auxiliary-diagnostics storage associated with the BASE
+   indicator. It requires a migration → NOT implemented this sprint; the
+   minimal design is specified for Sprint 5.14.
+7. **As-of semantics for uncertainty locked.** Any future WGI confidence
+   uses uncertainty associated with the SAME eligible WGI source period —
+   same country, same dimension, same source period as the aligned score
+   observation, latest appropriate vintage. Never a later year's bounds,
+   never today's source count, never another country's uncertainty. No
+   future uncertainty metadata; backtest_safe stays False (release dates
+   remain unavailable).
+8. **Missing-uncertainty rule locked.** Score present but measurement
+   uncertainty missing → do NOT assume perfect confidence, do NOT set any
+   factor to 1, do NOT set confidence to 0. The score itself stays usable;
+   the measurement-uncertainty component is UNKNOWN (None) until an approved
+   methodology says how partial confidence components aggregate. Missing
+   confidence metadata ≠ missing economic observation.
+9. **No arbitrary provider-quality constants.** No World Bank = 0.95 /
+   BIS = 0.97 style numbers exist or are approved. Qualitative provenance
+   categories may be TYPED later (official_primary, official_republished,
+   proxy_measure, perception_composite); any numeric mapping is a future,
+   calibrated, versioned decision. SIPRI-spending-as-input belongs to FORCE
+   proxy completeness, not a fake low source-quality score.
+
+### Sprint 5.13 storage-architecture decision matrix (WGI uncertainty)
+
+Option A — auxiliary canonical indicators (e.g.
+`RULE_OF_LAW_WGI_LOWER_BOUND` as Indicator + SourceSeries + Observation
+rows): **REJECTED.** Would appear in `/api/indicators` as economic
+indicators, inflate the per-country `indicator_count` (it counts distinct
+sourced indicators), add rows to the catalog the force-coverage aggregate
+reads, create "25 → 34 indicators" semantic confusion, and let uncertainty
+metadata masquerade as a force input. The immutable-raw and
+provenance requirements do not need this pollution.
+
+Option B — multiple SourceSeries under the EXISTING WGI canonical
+indicator (score + LB + UB + SR all pointing at e.g.
+`RULE_OF_LAW_WGI_SCORE`): **INVALID.** `align_observation_as_of` and
+`own_history_as_of` select by indicator, and the latest-vintage subquery
+groups by (source series, period) — with two active series carrying the
+same period, alignment could return an LB instead of the score
+(nondeterministic tie-break by row id). Exactly the forbidden
+interchangeable-resolution design. Also, the WB adapter resolves external
+series to a canonical indicator, so persisting LB through the normal path
+would store bound values as score observations.
+
+Option C — dedicated auxiliary/diagnostics storage associated with the
+base indicator: **CHOSEN.** A separate table (working name
+`indicator_diagnostics`): rows keyed to the BASE canonical indicator
+(RULE_OF_LAW_WGI_SCORE etc.) + country + diagnostic kind
+(ci_lower_bound / ci_upper_bound / source_count) + provider series code +
+period + value + retrieved-at + vintage semantics. Keeps the canonical
+catalog, indicator counts, force coverage, normalization registry, and
+alignment ALL untouched; provider values stay raw with revision/vintage
+handling (WGI's 2025 revision DID revise historical values); extensible
+beyond WGI (any provider can add diagnostic kinds); uncertainty can never
+enter force coverage or score alignment. Deliberately does NOT create
+SourceSeries rows for the uncertainty series — a SourceSeries pointing at
+the base indicator is one careless ingest away from Option B's failure;
+the diagnostics ingestion path is structurally separate from
+`persist_observations`. **Requires an Alembic migration → STOPPED before
+implementation; Sprint 5.14 spec below.**
+
+Option D — provider metadata stored in per-observation raw_payload:
+**FACTUALLY UNAVAILABLE.** The WB API v2 record for the score series
+carries only indicator/country/date/value/unit/obs_status/decimal — no
+uncertainty fields. The uncertainty series are separate source-3 series;
+the provider does not transmit them alongside the score. (raw_payload
+remains good provenance hygiene for whatever the provider DOES carry.)
+
+Evaluation axes (all options): immutable raw-data rule, revision/vintage
+preservation, source provenance, country isolation, period alignment,
+API/catalog pollution, force-coverage pollution, normalization ambiguity,
+future extensibility beyond WGI, migration complexity. C wins on every
+axis except migration complexity — and forcing the data through A/B/D to
+avoid a migration is the exact failure this audit exists to prevent.
+
+### Sprint 5.14 spec (minimal, if the owner accepts the recommendation)
+
+1. Alembic migration: `indicator_diagnostics` table (country_id FK,
+   indicator_id FK = base canonical indicator, data_source_id FK,
+   diagnostic_kind, external_series_code, period_start, value,
+   observation_date, retrieved_at, vintage_number,
+   supersedes-diagnostic-id optional; unique identity
+   (country, indicator, kind, period, vintage)). No SourceSeries rows.
+2. Ingestion: a WB fetch path for GOV_WGI_{dim}.SC_LB/.SC_UB/.SR reusing
+   the adapter's SSL/date conventions but persisting ONLY into the
+   diagnostics table (never `persist_observations`); idempotent,
+   revision-aware like the observation path; recorded as IngestionRun.
+3. Derived-layer lookup helper: diagnostics for (country, base indicator,
+   kinds) at the ALIGNED source period, latest vintage — the same-period
+   rule above; missing → None.
+4. Nothing else: no confidence formula, no NormalizedSignal change, no
+   model-version bump, no public API.
+
 ## 1. Score semantics — four separable dimensions
 
 A score is never a single number. Every derived signal keeps these dimensions
@@ -689,7 +908,7 @@ dimension (level / relative / momentum), or is explicitly DEFERRED. Families
 | `MONOTONIC_NEGATIVE` | Less is better (Gini). |
 | `MONOTONIC_SATURATING` | More is better with diminishing returns; twice the input is never twice the health (gross capital formation). |
 | `TARGET_BAND` | Healthiest inside a band / near a target; both tails can be unhealthy, possibly asymmetrically. Band thresholds are versioned model parameters, never invented silently. (Sprint 5.11/DEC-020: the credit gap LEFT this family — see ONE_SIDED_VULNERABILITY below.) |
-| `ONE_SIDED_VULNERABILITY` | No stress is signaled at or below a neutral ceiling; stress rises monotonically ABOVE it (added by Sprint 5.11/DEC-020 for the credit-to-GDP gap: authoritative evidence supports positive-side excess-credit breakpoints but NO negative-side penalty — the below-ceiling region carries no health signal from this indicator). Breakpoints are versioned model parameters, never invented silently. |
+| `ONE_SIDED_VULNERABILITY` | No stress is signaled at or below a neutral ceiling; stress rises monotonically ABOVE it (added by Sprint 5.11/DEC-020 for the credit-to-GDP gap: authoritative evidence supports positive-side excess-credit breakpoints but NO negative-side penalty — the below-ceiling region carries no health signal from this indicator). Breakpoints are versioned model parameters, never invented silently. **IMPLEMENTED (Sprint 5.12/DEC-021)** for CREDIT_TO_GDP_GAP with the owner-approved curve: 50 at/below +2pp, linear to 0 at +10pp, clamped above. |
 | `OWN_HISTORY` | Level meaning comes from the country's own historical distribution — cross-country levels are not comparable (BIS DSR caution). |
 | `CROSS_SECTIONAL_RELATIVE` | Position within the comparison universe for the relative dimension. Robust statistics required (Section 15); never treated as global truth with n=8 (Section 14). |
 | `RELATIVE_SHARE` | Country's share of a universe total (future: military expenditure share of tracked/global spending). |
@@ -720,7 +939,7 @@ they cannot be accidentally promoted into force scoring.
 | RULE_OF_LAW_WGI_SCORE | DIRECT_0_100 | CROSS_SECTIONAL_RELATIVE (optional, later) | OWN_HISTORY (3y, 5y) | annual | Provider's fixed 0–100 absolute scale preserved — never percentile-ranked. Perception uncertainty documented (CI/SE series not imported). |
 | CONTROL_OF_CORRUPTION_WGI_SCORE | DIRECT_0_100 | CROSS_SECTIONAL_RELATIVE (optional, later) | OWN_HISTORY (3y, 5y) | annual | Higher = stronger control; raw value never reversed. Perception uncertainty. |
 | POLITICAL_STABILITY_WGI_SCORE | DIRECT_0_100 | CROSS_SECTIONAL_RELATIVE (optional, later) | OWN_HISTORY (3y, 5y) | annual | Feeds the ceiling-capped internal-conflict force; the indicator spec itself is a normal DIRECT_0_100 entry (ceilings act at the force layer only). |
-| CREDIT_TO_GDP_GAP | ONE_SIDED_VULNERABILITY (reclassified from asymmetric TARGET_BAND by Sprint 5.11 evidence audit, DEC-020) | CONTEXTUAL_DEFERRED | OWN_HISTORY (4q, 8q) | quarterly | The indicator measures EXCESS-CREDIT vulnerability on the positive side: authoritative evidence supports positive breakpoints (Basel CCyB guide +2/+10; BIS 2018 EWI red ~9 / amber 4–9) but NO negative-side penalty — the guide is flat zero below +2 and a persistent negative gap is a post-boom measurement artifact, not an unhealthy-debt signal. Deleveraging/weak-credit conditions belong to other signals (DSR level, credit growth, output). Numeric Atlas breakpoints unresolved pending owner approval — NOT implemented. |
+| CREDIT_TO_GDP_GAP | ONE_SIDED_VULNERABILITY (reclassified from asymmetric TARGET_BAND by Sprint 5.11 evidence audit, DEC-020; **IMPLEMENTED Sprint 5.12/DEC-021** with the owner-approved curve: 50 at/below +2pp, linear to 0 at +10pp, clamped 0 above — breakpoints coincide with the Basel CCyB guide L/H; the 50/0 mapping is an Atlas MODEL PARAMETER and the no-excess region is deliberately NEUTRAL 50, not 100) | CONTEXTUAL_DEFERRED | OWN_HISTORY (4q, 8q — UNAPPROVED, momentum stays None) | quarterly | The indicator measures EXCESS-CREDIT vulnerability on the positive side: authoritative evidence supports positive breakpoints (Basel CCyB guide +2/+10; BIS 2018 EWI red ~9 / amber 4–9) but NO negative-side penalty — the guide is flat zero below +2 and a persistent negative gap is a post-boom measurement artifact, not an unhealthy-debt signal. Deleveraging/weak-credit conditions belong to other signals (DSR level, credit growth, output). Score-interpretation limits from the Basel caution are carried (Sprint 5.12 section). |
 | DEBT_SERVICE_RATIO | OWN_HISTORY (confirmed by DEC-018; selected as the next implementation target) | none (explicitly discouraged) | OWN_HISTORY (4q, 8q) | quarterly | Never cross-sectionally rank raw DSR (income definitions differ). Level = own-history stress-position percentile (Sprint 5.10). |
 | LABOUR_PRODUCTIVITY_PER_HOUR | MONOTONIC_POSITIVE, numeric level curve deferred (direction confirmed by DEC-018) | CROSS_SECTIONAL_RELATIVE | OWN_HISTORY (3y, 5y) | annual | Level AND growth stay distinguishable: high level + weak growth ≠ low level + fast improvement. Absolute 0–100 mapping deferred pending an expanded calibration universe decision (tracked_8 min-max explicitly rejected). |
 | UNIT_LABOUR_COST_GROWTH | CONTEXTUAL_DEFERRED (reclassified by DEC-018 — Sprint 5.9 audit; superseded the Sprint 5.5 TARGET_BAND proposal) | CONTEXTUAL_DEFERRED | OWN_HISTORY (4q, 8q) | quarterly | Raw domestic ULC growth is not by itself a relative-competitiveness measure — needs FX + partner-country ULC + inflation-regime context (none imported). Series stays live for coverage. |
@@ -782,26 +1001,89 @@ Separate from level, always from change through time:
   momentum is WGI-scale-specific — NOT approved for direct cross-indicator
   aggregation. Sign conventions for every other indicator remain open.
 
-## 10. Confidence architecture
+## 10. Confidence architecture — two separate layers (rewritten Sprint 5.13, DEC-022)
 
-Confidence is a composition of qualitative factors, per signal:
+Confidence is TRUST in a signal, never economic strength, and it lives at
+two DISTINCT layers. The old single-factor table mixed them; they are now
+separated permanently.
 
-| Factor | Captures |
-|---|---|
-| `source_confidence` | Provider/methodology quality (WGI: strong coverage, perception uncertainty; SIPRI input measure). |
-| `freshness_confidence` | Section 5 decay (e.g. a 2020 Gini scores low even though Gini itself is well measured). |
-| `coverage_confidence` | Fraction of the force's inputs usable for this snapshot (CHN productivity: GDP growth only → lower force confidence; never zero-fill the missing OECD series). |
-| `measurement_confidence` | Known uncertainty (WGI CI/SE documented, not imported). |
-| `proxy_confidence` | Ceiling-capped forces (GINI / POLITICAL_STABILITY / military spending) are explicit proxies. |
+### 10.1 Permanent rules (apply to both layers)
 
-Rules:
-
-- The exact composition (product vs weighted) is an unresolved question;
+- **Confidence is independent from strength.** `level_score = 90,
+  confidence = 0.4` means "strong measured condition, weak trust in that
+  estimate" — it must NEVER be collapsed to 36. Economic scores are never
+  multiplied by confidence; `relative_score *= confidence` and
+  `momentum *= confidence` are prohibited. Confidence travels ALONGSIDE the
+  economic dimensions.
+- **Confidence is not freshness.** `freshness_factor` (Section 5, DEC-013
+  exponential policy) is the one source of freshness truth. A future
+  confidence may CONSUME freshness_factor as an input; it must never
+  recompute age with another formula, and `confidence = freshness_factor`
+  is not a confidence methodology.
+- **Missing ≠ perfect ≠ zero.** Missing confidence metadata never implies
+  perfect confidence (no default factor 1) and never zeroes anything.
+  Unknown components stay UNKNOWN (None) until an approved methodology
+  defines how partial components aggregate. Missing confidence metadata is
+  not a missing economic observation — the score itself stays usable.
+- **No arbitrary numeric provider-quality constants.** No "World Bank =
+  0.95" style numbers — there is no defensible calibrated scale. Qualitative
+  provenance categories may be TYPED later (official_primary,
+  official_republished, proxy_measure, perception_composite); any numeric
+  mapping is a future, calibrated, versioned decision.
+- The exact numeric composition (product vs weighted mean, component
+  weights, floors) remains an UNRESOLVED question (Section 17 item 6);
   whatever is chosen is a versioned model parameter — no fake `0.873`
-  precision from arbitrary constants.
-- Coverage ceilings affect confidence/completeness of the FORCE, never the
-  normalized indicator values themselves (Section 12).
-- Missing inputs reduce confidence and coverage; they never enter as zero.
+  precision from arbitrary constants. The first executable confidence
+  formula bumps the model version; a design/documentation change never does.
+
+### 10.2 INDICATOR confidence (per NormalizedSignal — trust in ONE indicator's signal)
+
+Eventual diagnostic inputs (typed metadata first; NO numeric conversion
+approved yet):
+
+| Component | Captures | Examples |
+|---|---|---|
+| `source_quality` | Provider/methodology quality — QUALITATIVE/typed metadata only | WGI perception-composite methodology; BIS DSR income-definition caveats; Basel/BIS credit-gap interpretation caveats |
+| `freshness_factor` | Existing numeric provenance (Section 5) — reused, never recomputed | current: the DEC-013 exponential decay factor |
+| `measurement_uncertainty` | Optional provider-specific diagnostics | WGI: 90% CI bounds on the governance score (width = UB − LB), number of underlying sources (audited Sprint 5.13; NOT yet imported) |
+| `method_sufficiency` | Optional method-specific diagnostics | DSR: own-history sample_n / minimum_sample_n / calibration span (OwnHistoryLevelResult provenance already carries these); credit gap: parametric curve needs no Atlas history sample; WGI: CI width + source count |
+
+Method-diagnostics note: these describe how WELL-DETERMINED the method's
+output is, not how to invent cross-indicator equivalences. No
+"20 DSR observations = confidence 0.6" style conversions are approved; any
+such mapping needs its own evidence/calibration basis and a model-version
+bump. Future shape (NOT implemented): an `IndicatorConfidenceDiagnostics`
+provenance object on NormalizedSignal (`confidence` itself stays None until
+an executable formula exists and is versioned).
+
+WGI measurement-uncertainty alignment rule (Sprint 5.13): any future WGI
+confidence uses uncertainty associated with the SAME eligible source period
+— same country, same dimension, same source period as the aligned score,
+latest appropriate vintage. Never a later year's bounds, never today's
+source count, never another country's uncertainty, no future metadata.
+
+### 10.3 FORCE confidence (per force, at the aggregation layer — NOT on individual signals)
+
+Force-layer concepts ONLY — they must never be folded into an individual
+NormalizedSignal merely because that indicator feeds a partial/proxy force:
+
+| Component | Captures |
+|---|---|
+| usable-input confidence | Combination of the confidence of the force's usable indicator inputs |
+| coverage/completeness | Fraction of the force's inputs usable for this snapshot (CHN productivity: GDP growth only → lower FORCE confidence; never zero-fill the missing OECD series) |
+| missing required inputs | Missing inputs reduce force confidence/coverage; they never enter as zero |
+| proxy completeness / DEC-009 ceilings | Ceiling-capped forces (wealth gaps / internal conflict / military strength) are explicit proxies — the ceiling reduces FORCE confidence and score eligibility, never the indicator values |
+
+**The layering rule (locked):** a high-quality, fresh
+POLITICAL_STABILITY_WGI_SCORE signal is NOT lowered because the Internal
+conflict force is PARTIAL/ceiling-capped — the raw indicator signal stays
+what it is, and the force layer reports the reduced completeness. Likewise
+SIPRI spending being an input proxy belongs to Military-strength FORCE
+completeness, not to a fake low indicator source-quality number. Force
+confidence (a future `ForceConfidence` combining the four rows above) is
+NOT designed or implemented here; it arrives only with the versioned force
+aggregation sprint. Sections 11 and 12 continue to govern missing-data and
+ceiling behavior unchanged.
 
 ## 11. Missing-data rules
 
@@ -921,8 +1203,10 @@ CROSS_SECTIONAL_RELATIVE indicators.
    **UPDATED Sprint 5.11 (DEC-020)**: the credit gap ALSO left TARGET_BAND —
    the Sprint 5.11 evidence audit reclassified it to ONE_SIDED_VULNERABILITY
    (positive-side breakpoints supported by Basel/BIS evidence; negative-side
-   penalty NOT supported). Its numeric Atlas breakpoints remain UNRESOLVED
-   pending owner approval — no values invented.
+   penalty NOT supported). **RESOLVED 2026-09-09 (DEC-021)**: the owner
+   approved the credit-gap numeric curve — neutral ceiling +2pp, linear to
+   0 at +10pp, no-excess region = 50 — implemented in Sprint 5.12 (model
+   version normalization-v0.6). No other TARGET_BAND indicator remains.
 3. MONOTONIC_SATURATING curve for gross capital formation. **RESOLVED
    Sprint 5.9 (DEC-018)**: the proposal was DISPROVED (very high GCF can be
    credit-driven overinvestment; no defensible universal healthy level) —
@@ -935,6 +1219,13 @@ CROSS_SECTIONAL_RELATIVE indicators.
    1 annual period). Every other indicator's sign convention and window
    values remain open until its momentum is implemented.
 6. Confidence composition (product vs weighted factors) and factor weights.
+   **Sprint 5.13 (DEC-022)**: the LAYERING is resolved — indicator
+   confidence (§10.2) is separated from force confidence (§10.3), the
+   permanent rules (confidence ≠ strength, confidence ≠ freshness, missing
+   ≠ perfect ≠ zero, no arbitrary provider-quality constants) are locked,
+   and the WGI uncertainty inputs are identified (LB + UB + SR). The
+   NUMERIC composition and weights remain open — that openness is now the
+   only remaining confidence question.
 7. Labour productivity: levels (favor advanced economies) vs growth rates for
    fairness — final choice deferred to scoring sprint. **UPDATED Sprint 5.9
    (DEC-018)**: the MONOTONIC_POSITIVE direction is approved, but the
@@ -944,7 +1235,18 @@ CROSS_SECTIONAL_RELATIVE indicators.
 8. Military relative-share concept (tracked-8 share vs global share vs
    PPP-adjusted resources).
 9. Whether/when to import WGI uncertainty series (SE/CI/number of sources)
-   for measurement_confidence.
+   for measurement_confidence. **RESOLVED 2026-09-09 (Sprint 5.13, DEC-022)**:
+   audited live and verified — LB/UB are 90% CI bounds on the SAME 0–100
+   governance-score scale as the imported score, SE is on the underlying
+   estimate scale (and cannot reconstruct the published bounds), SR is an
+   integer source count, all 8 tracked countries have all four series for
+   every score year 1996–2024. Selected initial input set: LB + UB + SR
+   (CI width as the primary measurement diagnostic; SE deferred).
+   Representation: dedicated auxiliary-diagnostics storage (the Sprint
+   5.13 decision matrix rejected auxiliary canonical indicators, multiple
+   SourceSeries per indicator, and raw_payload metadata). INGESTION IS NOT
+   IMPLEMENTED — it requires a migration and is specified for Sprint 5.14
+   (nothing is ingested merely because the series exist).
 10. WGI biennial-gap handling in scoring snapshots (missing 1997/1999/2001).
     **RESOLVED FOR THE CURRENT WGI PATH ONLY (2026-09-09)**: level and
     relative snapshots handle the gaps via DEC-015 as-of alignment (a
@@ -961,9 +1263,10 @@ CROSS_SECTIONAL_RELATIVE indicators.
 *(Sprint 5.5 closing scope — superseded by the sprint-status sections above:
 `level_score` (Sprint 5.6), `momentum` (Sprint 5.7/DEC-016), and
 `relative_score` (Sprint 5.8/DEC-017) are now executable for the WGI ×3,
-and `level_score` is now executable for DEBT_SERVICE_RATIO via OWN_HISTORY
-(Sprint 5.10/DEC-019). The points below remain true for everything else —
-the 15 remaining non-WGI indicators still raise
+`level_score` is now executable for DEBT_SERVICE_RATIO via OWN_HISTORY
+(Sprint 5.10/DEC-019), and for CREDIT_TO_GDP_GAP via ONE_SIDED_VULNERABILITY
+(Sprint 5.12/DEC-021). The points below remain true for everything else —
+the 14 remaining non-WGI indicators still raise
 `NormalizationNotImplementedError`.)*
 
 - No force scores, no force weights, no Big Cycle phase.

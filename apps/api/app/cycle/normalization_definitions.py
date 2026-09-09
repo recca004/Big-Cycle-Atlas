@@ -342,6 +342,77 @@ class OwnHistoryLevelConfig:
             )
 
 
+# --- One-sided vulnerability level (Sprint 5.12: credit gap only, DEC-021) -------
+
+
+@dataclass(frozen=True)
+class OneSidedVulnerabilityConfig:
+    """Versioned MODEL PARAMETERS for one indicator's ONE_SIDED_VULNERABILITY
+    level (DEC-021, Sprint 5.12).
+
+    The curve signals EXCESS-credit vulnerability on the positive side only:
+    no stress is scored at or below `neutral_ceiling` (the flat no-excess
+    region carries the `no_excess_score` — deliberately neutral, NOT a health
+    claim), and stress rises LINEARLY from the ceiling to
+    `saturation_value`, where the score reaches `saturated_score` and stays
+    there (endpoint clamps, DEC-020 owner approval).
+
+    Sprint 5.12 enables exactly one indicator: CREDIT_TO_GDP_GAP, with the
+    owner-approved curve (neutral ceiling +2pp, saturation +10pp, no-excess
+    region = 50, saturation = 0). These are ATLAS MODEL PARAMETERS — the
+    breakpoints COINCIDE with the Basel CCyB guide's L/H reference points
+    (bcbs187), but the score mapping (especially the 50 no-excess score) is
+    an Atlas choice, not provider or Basel methodology truth.
+    """
+
+    neutral_ceiling: float
+    saturation_value: float
+    no_excess_score: float
+    saturated_score: float
+
+    def __post_init__(self) -> None:
+        if self.saturation_value <= self.neutral_ceiling:
+            raise ValueError(
+                f"saturation_value ({self.saturation_value}) must exceed "
+                f"neutral_ceiling ({self.neutral_ceiling})"
+            )
+        validate_level_score(self.no_excess_score)
+        validate_level_score(self.saturated_score)
+        # Stress must rise (score fall) monotonically above the ceiling.
+        if self.saturated_score > self.no_excess_score:
+            raise ValueError(
+                f"saturated_score ({self.saturated_score}) must be <= "
+                f"no_excess_score ({self.no_excess_score})"
+            )
+
+
+@dataclass(frozen=True)
+class OneSidedVulnerabilityResult:
+    """Provenance for a ONE_SIDED_VULNERABILITY level (DEC-021, Sprint 5.12).
+
+    Carries the exact curve parameters applied, so a signal is reproducible
+    from its model version alone. level_score is None only when the signal
+    was not produced at all (no eligible observation / too stale) — the
+    curve itself always yields a score for any real value.
+    """
+
+    neutral_ceiling: float
+    saturation_value: float
+    no_excess_score: float
+    saturated_score: float
+    level_score: float
+
+    def __post_init__(self) -> None:
+        validate_level_score(self.level_score)
+        # The applied curve must be a valid configuration.
+        OneSidedVulnerabilityConfig(
+            neutral_ceiling=self.neutral_ceiling,
+            saturation_value=self.saturation_value,
+            no_excess_score=self.no_excess_score,
+            saturated_score=self.saturated_score,
+        )
+
+
 # --- Normalized signal (Sections 1 + 4) ----------------------------------------
 
 
@@ -351,8 +422,11 @@ class NormalizedSignal:
     DIRECT_0_100 (WGI x3) and momentum for the WGI x3 OWN_HISTORY primary
     window. Published (Sprint 5.8, DEC-017): relative_score for the WGI x3 —
     the country's relative position within the tracked_8 comparison universe
-    (mid-rank plotting position; NEVER a global/world percentile). Still None
-    everywhere: confidence — and momentum for every non-WGI indicator,
+    (mid-rank plotting position; NEVER a global/world percentile).
+    Published (Sprint 5.10, DEC-019): level_score for DEBT_SERVICE_RATIO
+    (OWN_HISTORY). Published (Sprint 5.12, DEC-021): level_score for
+    CREDIT_TO_GDP_GAP (ONE_SIDED_VULNERABILITY — owner-approved curve). Still
+    None everywhere: confidence — and momentum for every non-WGI indicator,
     relative_score for every non-WGI indicator. No force aggregation exists
     at this layer.
     """
@@ -394,6 +468,10 @@ class NormalizedSignal:
     # for every indicator without an own-history level config (WGI carries
     # momentum_windows instead; the dimensions stay separable).
     own_history_level: Optional[OwnHistoryLevelResult] = None
+    # One-sided vulnerability provenance (Sprint 5.12, DEC-021 — credit gap
+    # only): the exact curve parameters + the resulting level_score. None for
+    # every indicator without a one-sided vulnerability level config.
+    one_sided_vulnerability_level: Optional[OneSidedVulnerabilityResult] = None
 
     @classmethod
     def unscored(
@@ -536,6 +614,14 @@ class ModelVersionConfig:
     own_history_level_configs: dict[str, OwnHistoryLevelConfig] = field(
         default_factory=dict
     )
+    # Sprint 5.12 (DEC-021) — MODEL PARAMETERS: ONE_SIDED_VULNERABILITY level
+    # is enabled per indicator by an explicit entry here; a registry
+    # ONE_SIDED_VULNERABILITY level_family alone never auto-enables it.
+    # Currently exactly one entry: CREDIT_TO_GDP_GAP (owner-approved curve —
+    # flat 50 at/below +2pp, linear to 0 at +10pp, clamped 0 above).
+    one_sided_vulnerability_configs: dict[str, OneSidedVulnerabilityConfig] = field(
+        default_factory=dict
+    )
     backtest_safe: bool = False  # False until Milestone 9 (release-date discipline)
 
     def __post_init__(self) -> None:
@@ -601,8 +687,25 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # NOT implemented (registry 4q/8q windows stay unapproved), confidence
     # None. All v0.4 WGI configuration unchanged. Research/current scoring
     # only — NOT production validated, NOT backtest safe.
-    version_id="normalization-v0.5",
-    normalization_method="sprint-5.10-dsr-own-history-level-r1",
+    # v0.6: Sprint 5.12 (DEC-021) CREDIT_TO_GDP_GAP ONE_SIDED_VULNERABILITY
+    # LEVEL — the second non-WGI level signal, enabled for EXACTLY
+    # CREDIT_TO_GDP_GAP via an explicit one_sided_vulnerability_configs entry
+    # (registry family alone never auto-enables). OWNER-APPROVED curve
+    # (DEC-021): level_score = 50 for a gap at or below +2pp (the no-excess
+    # region is deliberately NEUTRAL 50, not 100 — absence of excess credit is
+    # not evidence of strength), then LINEAR from (+2, 50) to (+10, 0), and 0
+    # at or above +10pp (endpoint clamps: no floor below +2, no cap above
+    # +10). The +2/+10 breakpoints COINCIDE with the Basel CCyB guide's L/H
+    # reference points (bcbs187); the 50/0 score mapping is an Atlas MODEL
+    # PARAMETER, not Basel methodology truth — the gap remains a common
+    # reference point, NOT a mechanical standalone rule (DEC-020 caveats
+    # carried). No minimum-history gate: the curve is parametric, unlike the
+    # DSR own-history calibration. Freshness gates the CURRENT observation
+    # only and NEVER scales the score. Credit-gap relative stays
+    # CONTEXTUAL_DEFERRED (None) and registry momentum windows (4q/8q) stay
+    # UNAPPROVED (momentum None). All v0.5 WGI + DSR configuration unchanged.
+    version_id="normalization-v0.6",
+    normalization_method="sprint-5.12-credit-gap-one-sided-level-r1",
     force_mapping_version="m5.4",
     reference_universe_id="tracked_8",
     momentum_windows={
@@ -625,6 +728,18 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
         # observations ~ 5 years of the country's own history — an Atlas
         # versioned MODEL PARAMETER, not a BIS threshold or provider fact.
         "DEBT_SERVICE_RATIO": OwnHistoryLevelConfig(minimum_sample_n=20),
+    },
+    one_sided_vulnerability_configs={
+        # Sprint 5.12 (DEC-021): the owner-approved credit-gap curve. The
+        # breakpoints coincide with the Basel CCyB guide L/H reference points;
+        # the 50/0 score mapping is an Atlas choice (no-excess region is
+        # deliberately neutral, NOT a health claim).
+        "CREDIT_TO_GDP_GAP": OneSidedVulnerabilityConfig(
+            neutral_ceiling=2.0,
+            saturation_value=10.0,
+            no_excess_score=50.0,
+            saturated_score=0.0,
+        ),
     },
     backtest_safe=False,
 )
@@ -934,11 +1049,16 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "unhealthy-debt signal in itself. The DEC-018 'very negative "
                 "= deleveraging/weak credit' penalty expectation is RETRACTED "
                 "by DEC-020; deleveraging/weak-credit conditions belong to "
-                "other signals (DSR level, credit growth, output). Numeric "
-                "Atlas breakpoints (neutral ceiling, curve shape, endpoints, "
-                "score interpretation of the no-excess region) remain "
-                "UNRESOLVED pending owner approval — NOT implemented, still "
-                "raises NormalizationNotImplementedError."
+                "other signals (DSR level, credit growth, output). "
+                "IMPLEMENTED in Sprint 5.12 (DEC-021) with the owner-approved "
+                "curve: level_score = 50 at or below +2pp (no-excess region "
+                "deliberately NEUTRAL, not 100), linear from (+2, 50) to "
+                "(+10, 0), 0 at or above +10pp. The +2/+10 breakpoints "
+                "coincide with the Basel guide L/H reference points; the "
+                "50/0 mapping is an Atlas MODEL PARAMETER. The gap remains a "
+                "common reference point, NOT a mechanical standalone rule "
+                "(DEC-020 caveats). Relative CONTEXTUAL_DEFERRED (None); "
+                "registry momentum windows (4q/8q) stay UNAPPROVED."
             ),
         ),
         NormalizationSpec(
@@ -1055,6 +1175,21 @@ def validate_normalization_registry() -> None:
             raise ValueError(
                 f"{indicator}: own-history level config but registry level family "
                 f"is {spec.level_family.value}"
+            )
+    # One-sided vulnerability configs (Sprint 5.12 gate): an entry for an
+    # indicator whose registry level family is not ONE_SIDED_VULNERABILITY is
+    # a configuration mistake — fail loudly.
+    for indicator in CURRENT_MODEL_VERSION.one_sided_vulnerability_configs:
+        spec = NORMALIZATION_REGISTRY.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"one-sided vulnerability level config for an unknown "
+                f"indicator: {indicator}"
+            )
+        if spec.level_family is not NormalizationFamily.one_sided_vulnerability:
+            raise ValueError(
+                f"{indicator}: one-sided vulnerability level config but "
+                f"registry level family is {spec.level_family.value}"
             )
 
 

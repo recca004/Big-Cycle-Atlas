@@ -121,6 +121,14 @@ Mappings are seeded idempotently into the `source_series` table.
 - **Sprint 5.19 extrapolation counts** (data_quality=2): USA 0, CHN 0, CHE 0, DEU 24, FRA 80, GBR 93, JPN 0, IND 0. Three countries (DEU, FRA, GBR) have significant extrapolation. Interpolation counts (data_quality=1): DEU 1, IND 4; all others 0.
 - **Sprint 5.20 data_quality policy (DEC-027)**: DEFER filtering — import ALL rows, preserve data_quality in raw_payload, do NOT delete provider data using an inferred code meaning. WID does NOT provide an official code dictionary. The Sprint 5.19 recommendation to exclude data_quality=2 is RETRACTED.
 - **Sprint 5.20.1 raw provenance hardening**: `raw_payload` now carries both `data_quality_raw` (the raw provider CSV field, stripped of surrounding whitespace) and `data_quality` (the typed convenience value: int or None). The provider representation is preserved for traceability — unknown codes such as "A" stay "A" (not None-or-zero); empty string stays "". DEC-027 NO-filtering policy unchanged.
+- **Sprint 6.6.2 raw-preservation guard fix**: the previous [0,1] range
+  rejection (Sprint 5.20) is RETRACTED. [0,1] is the COMPLEMENT_0_100
+  normalization domain, NOT a WID ingestion validity domain. A finite
+  provider value outside [0,1] is preserved as the immutable raw
+  Observation.value; whether Atlas can normalize it is a later-layer
+  question (NormalizationDataError if scoring is attempted). The adapter
+  still rejects: empty value, non-numeric text, NaN, +inf, -inf, wrong
+  variable/percentile/age/pop/country identity.
 - Ceiling: does NOT lift DEC-009 PARTIAL ceiling (wealth share addresses wealth inequality only, not opportunity or values/social gaps)
 - Imported data: 670 observations across 8 countries (shwealj992, p90p100, pop=j). Idempotency verified (0 inserted / 117 skipped on USA re-import).
 - Status: testing (Sprint 5.20 IMPLEMENTED)

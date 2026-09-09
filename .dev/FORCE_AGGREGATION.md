@@ -173,7 +173,7 @@ unless a different non-numeric role is methodologically justified.
 | Force | Indicators | Role | Reason |
 |---|---|---|---|
 | Education | `TERTIARY_ATTAINMENT_25_34` | `PROXY_CONDITION` (Sprint 6.4, DEC-032) | DIRECT_0_100 level executable (normalization-v0.7). Aligned raw OECD percentage preserved unchanged. Coverage stays PARTIAL. No relative, no momentum, no confidence. |
-| Productivity / output growth | `GDP_GROWTH`, `LABOUR_PRODUCTIVITY_PER_HOUR` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
+| Productivity / output growth | `GDP_GROWTH`, `LABOUR_PRODUCTIVITY_PER_HOUR` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. DEC-033/Sprint 6.5: DEFER_PRODUCTIVITY_LEVEL + DEFER_GDP_GROWTH_LEVEL — productivity raw USD PPP/hour is unbounded with no 0-100 semantics and no official benchmark; GDP growth is inherently a rate of change, not a level. Both stay SUPPORTING_CONTEXT. |
 | Cost competitiveness | `UNIT_LABOUR_COST_GROWTH`, `INFLATION_CPI` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
 | Trade and capital flows | `EXPORTS_GDP`, `IMPORTS_GDP`, `TRADE_BALANCE`, `CURRENT_ACCOUNT_GDP` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
 | Infrastructure and investment | `GROSS_CAPITAL_FORMATION_GDP` | `SUPPORTING_CONTEXT` | Level CONTEXTUAL_DEFERRED. |
@@ -404,3 +404,72 @@ No DB table. No persistence. No public API yet.
 - No Gini normalization
 - No education normalization
 - No WID normalization
+
+---
+
+## Sprint 6.6 — WID Top-10 Wealth-Share Normalization + Wealth-Gap Proxy Audit (DEC-034)
+
+### Status
+
+**READY_FOR_WID_WEALTH_LEVEL_DESIGN** (methodology/research only — NO
+implementation, NO model-version bump, NO force code changes).
+
+### Verdict
+
+`WEALTH_SHARE_TOP_10` (WID `shwealj992`, `p90p100`, pop=`j` equal-split
+adults) can receive a defensible Atlas 0-100 level_score via a NEW
+normalization family COMPLEMENT_0_100: `level_score = 100 * (1 - raw_share)`.
+
+The WID publishes the top-10% net personal wealth share as a
+cross-country comparable, absolute distributional measure (fraction
+0-1). The complement is a parameter-free,
+bounded [0,100] transformation with clear semantics: "bottom-90%
+wealth share × 100." No arbitrary thresholds, breakpoints, or curve
+shapes are invented. Midpoint 50 = "bottom 90% holds half of net
+personal wealth" (meaningful, not a normative target). All 670
+tracked_8 observations are in [0.4074, 0.9882] — no negative, zero, or
+>1.
+
+### Force eligibility (approved for Sprint 6.7 implementation)
+
+- `WEALTH_SHARE_TOP_10`: `SUPPORTING_CONTEXT` → `PROXY_CONDITION`
+- `GINI_INDEX`: stays `SUPPORTING_CONTEXT` (DEC-024 deferred — income
+  inequality ≠ wealth concentration; not averaged, not combined)
+- Force: `DEFERRED_MULTI` → `IDENTITY_SINGLE`
+- Coverage ceiling: stays PARTIAL (DEC-009, DEC-028)
+- Score explicitly means wealth-concentration proxy only
+- No claim of complete Wealth/opportunity/values strength
+- Coverage does NOT scale score (DEC-029 invariant)
+- Confidence stays None (DEC-023)
+- Relative, momentum stay None (not approved in DEC-034)
+
+### Why IDENTITY_SINGLE is eligible with a non-scoring second input
+
+GINI_INDEX stays SUPPORTING_CONTEXT (non-scoring). A
+SUPPORTING_CONTEXT indicator does NOT block IDENTITY_SINGLE when
+methodology explicitly says the force level is defined by one
+structural condition and the other input is non-scoring context
+(DEC-029). DEC-034 explicitly approves that architecture: the
+Wealth-gap force level is defined by WEALTH_SHARE_TOP_10 (PROXY_CONDITION)
+alone; GINI_INDEX provides non-scoring context (income inequality is
+related but NOT interchangeable with wealth concentration).
+
+### Impact
+
+NO production code changed. NO force aggregation code changes. NO
+normalization code changes. Model versions unchanged:
+`normalization-v0.7`, `force-aggregation-v0.2`. Wealth-gap force stays
+`SUPPORTING_CONTEXT` / `DEFERRED_MULTI` with `level_score = None`.
+confidence = None. backtest_safe = False.
+
+pytest 571 passed (unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872). No migration, no ingestion, no persistence.
+No commit/push.
+
+### Next
+
+Sprint 6.7 — WID wealth-share level + wealth-gap proxy implementation.
+Implement COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 and promote the
+Wealth-gap force to the 5th executable force via PROXY_CONDITION +
+IDENTITY_SINGLE. Bump normalization-v0.7 → v0.8 and
+force-aggregation-v0.2 → v0.3.

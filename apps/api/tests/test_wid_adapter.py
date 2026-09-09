@@ -134,20 +134,74 @@ async def test_finite_validation_rejects_inf(tmp_path):
         await adapter.fetch_indicator("USA", WEALTH_CODE)
 
 
-async def test_range_validation_rejects_negative(tmp_path):
+async def test_finite_validation_rejects_neg_inf(tmp_path):
+    rows = [_wealth_row("US", 2020, "-Infinity")]
+    zip_bytes = _make_zip("US", rows)
+    adapter = _make_adapter(zip_bytes, tmp_path)
+    with pytest.raises(DataSourceParseError, match="not finite"):
+        await adapter.fetch_indicator("USA", WEALTH_CODE)
+
+
+async def test_non_numeric_value_rejected(tmp_path):
+    rows = [_wealth_row("US", 2020, "not_a_number")]
+    zip_bytes = _make_zip("US", rows)
+    adapter = _make_adapter(zip_bytes, tmp_path)
+    with pytest.raises(DataSourceParseError, match="not numeric"):
+        await adapter.fetch_indicator("USA", WEALTH_CODE)
+
+
+async def test_finite_negative_value_preserved(tmp_path):
+    """Sprint 6.6.2: a finite negative provider value is preserved as the
+    immutable raw Observation.value — [0,1] is the normalization domain,
+    NOT the ingestion validity domain."""
     rows = [_wealth_row("US", 2020, "-0.1")]
     zip_bytes = _make_zip("US", rows)
     adapter = _make_adapter(zip_bytes, tmp_path)
-    with pytest.raises(DataSourceParseError, match="out of range"):
-        await adapter.fetch_indicator("USA", WEALTH_CODE)
+    observations = await adapter.fetch_indicator("USA", WEALTH_CODE)
+    assert len(observations) == 1
+    assert observations[0].value == -0.1
 
 
-async def test_range_validation_rejects_above_one(tmp_path):
-    rows = [_wealth_row("US", 2020, "1.5")]
+async def test_finite_above_one_value_preserved(tmp_path):
+    """Sprint 6.6.2: a finite provider value > 1 is preserved as the
+    immutable raw Observation.value — [0,1] is the normalization domain,
+    NOT the ingestion validity domain."""
+    rows = [_wealth_row("US", 2020, "1.03")]
     zip_bytes = _make_zip("US", rows)
     adapter = _make_adapter(zip_bytes, tmp_path)
-    with pytest.raises(DataSourceParseError, match="out of range"):
-        await adapter.fetch_indicator("USA", WEALTH_CODE)
+    observations = await adapter.fetch_indicator("USA", WEALTH_CODE)
+    assert len(observations) == 1
+    assert observations[0].value == 1.03
+
+
+async def test_boundary_zero_preserved(tmp_path):
+    """Boundary 0 is accepted unchanged."""
+    rows = [_wealth_row("US", 2020, "0")]
+    zip_bytes = _make_zip("US", rows)
+    adapter = _make_adapter(zip_bytes, tmp_path)
+    observations = await adapter.fetch_indicator("USA", WEALTH_CODE)
+    assert len(observations) == 1
+    assert observations[0].value == 0.0
+
+
+async def test_boundary_one_preserved(tmp_path):
+    """Boundary 1 is accepted unchanged."""
+    rows = [_wealth_row("US", 2020, "1")]
+    zip_bytes = _make_zip("US", rows)
+    adapter = _make_adapter(zip_bytes, tmp_path)
+    observations = await adapter.fetch_indicator("USA", WEALTH_CODE)
+    assert len(observations) == 1
+    assert observations[0].value == 1.0
+
+
+async def test_ordinary_value_preserved(tmp_path):
+    """An ordinary 0.65 value is accepted unchanged."""
+    rows = [_wealth_row("US", 2020, "0.65")]
+    zip_bytes = _make_zip("US", rows)
+    adapter = _make_adapter(zip_bytes, tmp_path)
+    observations = await adapter.fetch_indicator("USA", WEALTH_CODE)
+    assert len(observations) == 1
+    assert observations[0].value == 0.65
 
 
 async def test_data_quality_preserved_in_raw_payload(tmp_path):

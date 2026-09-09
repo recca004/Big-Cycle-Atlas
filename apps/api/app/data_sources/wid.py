@@ -48,9 +48,13 @@ class WidAdapter(BaseDataSourceAdapter):
     adapter translates ISO3 → ISO2 via the typed WID_COUNTRY_BY_ISO3 mapping.
     Unknown countries raise DataSourceError.
 
-    Values are fractions (0-1), stored unchanged. Finite validation rejects
-    NaN, +inf, -inf. Range validation rejects values outside [0, 1] — a
-    wealth share cannot be negative or exceed 100%.
+    Values are fractions (0-1) as published by WID, stored unchanged.
+    Finite validation rejects NaN, +inf, -inf. Sprint 6.6.2: the previous
+    [0,1] range rejection is RETRACTED — [0,1] is the COMPLEMENT_0_100
+    normalization domain, NOT a WID ingestion validity domain. A finite
+    provider value outside [0,1] is preserved as the immutable raw
+    Observation.value; whether Atlas can normalize it is a later-layer
+    question (NormalizationDataError if scoring is attempted).
     """
 
     source_key = "wid"
@@ -223,11 +227,21 @@ class WidAdapter(BaseDataSourceAdapter):
                     f"WID value is not finite: {raw_value!r}"
                 )
 
-            # Range validation: wealth share must be in [0, 1]
-            if value < 0.0 or value > 1.0:
-                raise DataSourceParseError(
-                    f"WID wealth share out of range [0, 1]: {value!r}"
-                )
+            # Sprint 6.6.2: raw-preservation guard fix.
+            # [0,1] is the COMPLEMENT_0_100 NORMALIZATION domain, NOT a
+            # WID ingestion validity domain (DEC-034 Sprint 6.6.1/6.6.2).
+            # The WID Codes Dictionary states a representation convention
+            # ("Shares and wealth/income ratios are given as a fraction of
+            # 1"), NOT a formal per-series domain guarantee. The theoretical
+            # domain for a net-wealth top-10% share is NOT strictly [0,1] —
+            # if the bottom 90% has collectively negative net wealth, the
+            # top 10% could hold more than 100% of total net wealth.
+            # Therefore a finite provider value outside [0,1] is accepted
+            # and preserved as the immutable raw Observation.value. Whether
+            # Atlas can normalize it is a LATER-LAYER question
+            # (NormalizationDataError if scoring is attempted outside [0,1]).
+            # The previous [0,1] hard rejection (Sprint 5.20) is RETRACTED as
+            # an Atlas scoring assumption masquerading as a provider contract.
 
             # Parse year
             raw_year = (row.get("year") or "").strip()

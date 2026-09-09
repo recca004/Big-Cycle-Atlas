@@ -1,5 +1,328 @@
 # Devlog
 
+## 2026-09-10 — Sprint 6.6.2: WID Raw-Preservation Guard Fix + Research-Artifact Hardening
+
+### Summary
+
+Sprint 6.6.2 resolved the adapter range guard identified in Sprint 6.6.1.
+The permanent rule is now enforced: provider data validity != Atlas
+normalization representability. A finite WID provider value outside [0,1]
+is preserved as the immutable raw Observation.value; whether Atlas can
+normalize it is a later-layer question. Sprint 6.7 is AUTHORIZED.
+
+### Changes
+
+- **Adapter fix** (`app/data_sources/wid.py`): the [0,1] hard rejection
+  (Sprint 5.20, lines 226–230) is RETRACTED. Finite provider values
+  outside [0,1] are now accepted and preserved. The adapter still rejects:
+  empty value, non-numeric text, NaN, +inf, -inf, wrong
+  variable/percentile/age/pop/country identity.
+- **Adapter tests** (`tests/test_wid_adapter.py`): 2 old range-rejection
+  tests replaced; 7 new tests added (ordinary 0.65, boundary 0, boundary
+  1, finite >1 preserved, finite negative preserved, -inf rejected,
+  non-numeric rejected). Total: 24 adapter tests.
+- **Persistence tests** (`tests/test_wid_persistence.py`, NEW): 3 tests
+  via mocked in-memory SQLite (out-of-range 1.03 persisted unchanged,
+  negative -0.05 persisted unchanged, ordinary 0.72 persisted unchanged).
+- **Research script fix** (`scripts/wid_full_universe_scan.py`):
+  latest-year cross-section bug fixed (was each entity's own latest year;
+  now uses global latest year across all observations). Labeling
+  corrected: "WID archive entities" not "Geographic entities".
+- **Research script hardening** (`scripts/wealth_share_profile.py`):
+  pooled SQL queries now explicitly constrain Country.iso3 to TRACKED_8
+  (previously queried all observations for the indicator without country
+  filtering).
+
+### Impact
+
+NO normalization code changed. NO force code changes. NO model-version
+bump (normalization-v0.7, force-aggregation-v0.2 — unchanged). No current
+economic output changes because all existing 670 observations are
+already within [0,1]. No migration. No production re-ingestion required.
+
+pytest 581 passed (571 baseline + 10 new: 7 adapter + 3 persistence).
+DB unchanged (6814/27/22/10/1872). No commit/push.
+
+### Sprint 6.7 authorization
+
+Sprint 6.7 is **AUTHORIZED** — all 9 gate conditions are met:
+1. Finite provider values no longer discarded solely by [0,1] ✓
+2. Source identity validation remains strict ✓
+3. Non-finite values still fail ✓
+4. Raw provider values remain preserved ✓
+5. DEC-034 separates ingestion domain from normalization domain ✓
+6. Full scan finds no existing exact-series observations outside [0,1] ✓
+7. Tests pass (581 > 571) ✓
+8. DB unchanged ✓
+9. Living docs point to Sprint 6.7 next ✓
+
+---
+
+## 2026-09-10 — Sprint 6.6.1: WID Domain Contract + DEC-034 Hardening
+
+### Summary
+
+Sprint 6.6.1 hardened the WID domain contract before any Sprint 6.7
+implementation. The primary DEC-034 verdict is UNCHANGED
+(KEEP_READY_FOR_WID_WEALTH_LEVEL_DESIGN), but the domain wording is
+corrected, the adapter range guard is identified as an Atlas
+assumption, and Sprint 6.7 is NOT YET AUTHORIZED.
+
+### Findings
+
+- **Domain logic corrected**: [0,1] reclassified from "structurally
+  guaranteed by WID methodology" to "empirically observed for the
+  complete exact-series universe". The WID Codes Dictionary states a
+  representation convention ("Shares and wealth/income ratios are
+  given as a fraction of 1"), NOT a formal per-series domain guarantee.
+  The theoretical domain for a net-wealth top-10% share is NOT strictly
+  [0,1] — if the bottom 90% has collectively negative net wealth, the
+  top 10% could hold more than 100% of total net wealth.
+- **Full bulk scan completed**: read-only scan of the entire WID bulk
+  archive (423 data CSV files) for the EXACT series
+  `shwealj992 / p90p100` found 324 entities, 14,936 observations,
+  1800–2024, min 0.4074, max 0.9882, ZERO values outside [0,1].
+- **Adapter range guard audited**: the WID adapter's [0,1] range guard
+  (wid.py lines 226–230, raises DataSourceParseError) is an ATLAS
+  ASSUMPTION introduced in Sprint 5.20 — NOT a verified provider
+  contract. It is a POTENTIAL data correctness bug (if a valid provider
+  value >1 appeared, the adapter would discard it). Empirical risk is
+  very low (zero out-of-range values in 14,936 obs). Sprint 6.6.2
+  (adapter review) is REQUIRED before Sprint 6.7.
+- **Normalization error semantics corrected**: (1) no aligned
+  observation → None per alignment policy; (2) present value outside
+  [0,1] → fail-loud NormalizationDataError, never clamp, never
+  silently return None; (3) present value in [0,1] →
+  level_score = 100*(1-raw_share).
+- **As-of wording corrected**: "Uses current period-complete as-of
+  alignment and does not select future-period observations. It is
+  CURRENT/RESEARCH scoring only; historical release-date safety is not
+  established and backtest_safe remains False." Previous wording
+  ("As-of safe", "No future leakage") is RETRACTED as overclaiming.
+- **Tracked_8 wording corrected**: "Global (all 670 obs)" → "Pooled
+  tracked_8 (all 670 local observations)". Never call tracked_8
+  global/world.
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO adapter code changes. Model versions unchanged:
+`normalization-v0.7`, `force-aggregation-v0.2`. pytest 571 passed
+(unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872). No migration, no ingestion, no persistence.
+No commit/push.
+
+Read-only research artifact: `scripts/wid_full_universe_scan.py` (NEW —
+full bulk scan of the WID archive for `shwealj992 / p90p100`;
+descriptive statistics only, no scores, no writes).
+
+### Next
+
+Sprint 6.6.2 — WID adapter range-guard review. Review the [0,1] hard
+rejection in wid.py lines 226–230. Either (a) confirm it as a safe Atlas
+policy with explicit documentation, or (b) relax it to a warning + None
+(preserve the raw value, mark as non-scoring) if valid provider values
+>1 are deemed possible. Sprint 6.7 is authorized ONLY AFTER Sprint 6.6.2
+resolves the adapter range guard.
+
+---
+
+## 2026-09-10 — Sprint 6.6: WID Top-10 Wealth-Share Normalization + Wealth-Gap Proxy Audit
+
+### Summary
+
+Sprint 6.6 audited whether `WEALTH_SHARE_TOP_10` (WID `shwealj992`,
+`p90p100`, pop=`j` equal-split adults) can receive a defensible Atlas
+0-100 level_score and, if so, whether the Wealth / opportunity /
+values gaps force may become the fifth executable force through
+PROXY_CONDITION + IDENTITY_SINGLE. The verdict is
+**READY_FOR_WID_WEALTH_LEVEL_DESIGN** (DEC-034).
+
+### Findings
+
+- **WID series semantics verified** from the official WID Codes
+  Dictionary: `s`=share, `hweal`=net personal wealth, `992`=adults,
+  `j`=equal-split adults, `p90p100`=top 10%. Values are fractions 0-1,
+  stored unchanged. The WID publishes the share for cross-country
+  comparison using homogeneous concepts.
+- **Domain audit**: all 670 tracked_8 observations are in [0.4074,
+  0.9882] — no negative, zero, or >1. The WID adapter validates [0,1]
+  and rejects out-of-range values (returns None — missing ≠ zero). The
+  theoretical edge case (share > 1 if bottom-90% has collectively
+  negative net wealth) is not observed and is handled by the adapter.
+- **Candidate transforms evaluated**: SIMPLE_COMPLEMENT
+  (100*(1-share)) selected as the only defensible LEVEL mapping. It is
+  parameter-free, bounded [0,100], with clear semantics ("bottom-90%
+  wealth share × 100") and a meaningful midpoint (50 = "bottom 90%
+  holds half of net personal wealth"). No arbitrary thresholds,
+  breakpoints, or curve shapes are invented.
+- **Education analogy**: NOT valid for DIRECT_0_100 reuse. WID needs a
+  NEW normalization family COMPLEMENT_0_100 (fraction 0-1, negative
+  direction, score = 100*(1-raw)). The complement is analogous to
+  DIRECT_0_100 in its parameter-free simplicity, but it is a separate
+  family because the raw value needs inversion (not identity), the
+  direction is negative (not positive), and the raw value is a fraction
+  (not a percentage).
+- **Gini relationship**: GINI_INDEX stays DEFERRED (DEC-024). Gini
+  measures income inequality; WID measures wealth concentration. They
+  are related but NOT interchangeable. Gini stays SUPPORTING_CONTEXT
+  (non-scoring) and does NOT block IDENTITY_SINGLE.
+- **Force eligibility**: WEALTH_SHARE_TOP_10 may become a PROXY_CONDITION
+  and the Wealth-gap force may become IDENTITY_SINGLE. Coverage ceiling
+  stays PARTIAL (DEC-009, DEC-028). The score explicitly means
+  wealth-concentration proxy only — no claim of complete
+  Wealth/opportunity/values strength. Coverage does NOT scale score.
+  Confidence stays None.
+
+### Impact
+
+NO production code changed. NO force code changes. NO normalization
+code changes. NO phase, cycle composite, force confidence, relative
+aggregation, momentum aggregation, persistence, API, or frontend.
+Model versions unchanged: `normalization-v0.7`, `force-aggregation-v0.2`.
+`WEALTH_SHARE_TOP_10` stays `MONOTONIC_NEGATIVE` with deferred level
+curve (the COMPLEMENT_0_100 reclassification is a Sprint 6.7
+implementation step). Wealth-gap force stays `SUPPORTING_CONTEXT` /
+`DEFERRED_MULTI` with `level_score = None`. confidence = None.
+backtest_safe = False.
+
+Read-only research artifact: `scripts/wealth_share_profile.py` (NEW —
+descriptive statistics only, no scores, no writes, clearly labeled
+research support).
+
+pytest 571 passed (unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872). No migration, no ingestion, no persistence.
+No commit/push.
+
+### Next
+
+Sprint 6.7 — WID wealth-share level + wealth-gap proxy implementation.
+Implement COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 and promote the
+Wealth-gap force to the 5th executable force via PROXY_CONDITION +
+IDENTITY_SINGLE. Bump normalization-v0.7 → v0.8 and
+force-aggregation-v0.2 → v0.3.
+
+---
+
+## 2026-09-10 — Sprint 6.5: Productivity / Output Growth Methodology Audit
+
+### Summary
+
+Sprint 6.5 audited whether `LABOUR_PRODUCTIVITY_PER_HOUR` and/or
+`GDP_GROWTH` can receive a defensible Atlas 0-100 level_score and whether
+the Productivity / output growth force may become the fifth executable
+force. Verdict: **DEFER_PRODUCTIVITY_LEVEL + DEFER_GDP_GROWTH_LEVEL**
+(DEC-033). No implementation, no model-version bump, no force code
+changes. pytest 571 unchanged. DB unchanged. No commit/push.
+
+### Key findings
+
+- **Force semantic target**: the force name conflates two distinct
+  dimensions — structural productivity level (stock: output per hour)
+  and output-growth dynamics (flow: GDP growth rate). These must not be
+  numerically combined without an explicit composition DEC.
+- **LABOUR_PRODUCTIVITY_PER_HOUR**: the OECD publishes and uses PPP-adjusted GDP per hour
+  worked for cross-country productivity-level comparison (USD PPP/hour),
+  but the raw value is unbounded with no 0-100 Atlas-score semantics.
+  No official OECD productivity benchmark/threshold exists to justify a
+  FIXED_MONOTONIC_CURVE. The OECD/dataflow universe (51 economies) is
+  too advanced-economy-heavy for absolute calibration. tracked_8
+  explicitly rejected (DEC-018). No defensible LEVEL mapping exists.
+- **GDP_GROWTH**: inherently a rate of change, not a structural level.
+  DEC-018 rejected a universal TARGET_BAND (potential growth differs
+  by development stage, demographics, convergence, business-cycle
+  position). No new evidence has emerged. Every numeric candidate from
+  GDP growth is a MOMENTUM or RELATIVE statistic, not a LEVEL.
+- **Level vs momentum architecture**: the DEC-012 four-dimension
+  separation applies cleanly — productivity level is a LEVEL candidate
+  (but blocked), GDP growth is a MOMENTUM/CONTEXT candidate (not a
+  level). A future Productivity force MAY have level_score from
+  productivity and momentum from GDP growth separately — but the level
+  mapping blocker must be resolved first.
+- **CHN/IND policy**: OECD productivity does not cover CHN/IND. If
+  Productivity were to become an identity force (it does NOT in this
+  sprint), CHN/IND level_score would remain None — no GDP-growth
+  substitution, no zero fill, no inference.
+
+### Candidate evaluation
+
+Productivity level (7 candidates A-G): all fail — raw value unbounded,
+no official benchmark, no defensible calibration universe, own-history
+is momentum not level, OECD/dataflow percentile is relative not level.
+Verdict: CONTEXTUAL_DEFERRED (candidate G).
+
+GDP growth level (6 candidates A-F): all fail — universal band rejected
+by DEC-018, own-history deviation is momentum, trend growth is
+momentum, relative growth is relative, potential-growth gap requires
+data not in the Atlas. Verdict: SUPPORTING_CONTEXT / DEFER (candidate F).
+
+### Files changed
+
+- `.dev/DECISIONS.md`: DEC-033 added (full audit + verdict).
+- `apps/api/scripts/productivity_profile.py` (NEW): read-only
+  descriptive statistics for both indicators across tracked_8.
+- `.dev/PROJECT_STATUS.md`, `.dev/HANDOFF.md`, `.dev/BACKLOG.md`,
+  `.dev/DEVLOG.md`, `.dev/NORMALIZATION.md`, `.dev/FORCE_AGGREGATION.md`:
+  Sprint 6.5 entry added; next = Sprint 6.6 (WID wealth-share audit).
+
+### Verification
+
+- pytest 571 passed (unchanged — no code changes).
+- DB counts unchanged: 6814 / 27 / 22 / 10 / 1872.
+- No migration, no ingestion, no persistence.
+- No version bump (normalization-v0.7, force-aggregation-v0.2 unchanged).
+- No commit/push.
+
+## 2026-09-10 — Sprint 6.4.1: Education Closeout + Version/Config Provenance Hardening
+
+### Summary
+
+Sprint 6.4.1 is a correctness/source-of-truth sprint only — no code
+methodology changes, no model-version changes, no new indicator score, no
+fifth force. pytest 571 passed (560 + 11 new). DB unchanged. No version
+bump. No commit/push.
+
+### Key changes
+
+- `app/cycle/normalization_definitions.py`: added pure helper
+  `_validate_direct_dimension_approvals(model_config, registry)` —
+  validates `direct_momentum_approved_indicators` (indicator exists, level
+  DIRECT_0_100, momentum OWN_HISTORY, non-empty windows, primary
+  configured, primary in windows, tolerance configured) and
+  `direct_relative_approved_indicators` (indicator exists, level
+  DIRECT_0_100, relative CROSS_SECTIONAL_RELATIVE); called at import time
+  after the registry exists; v0.7 approved sets remain exactly WGI x3;
+  Education excluded from both. Removed `force_mapping_version` field from
+  `ModelVersionConfig` (no runtime consumer — normalization and force
+  aggregation are now cleanly separate versioned layers).
+- `app/cycle/force_definitions.py`: Education IND count reconciled with
+  live DB — "11 sparse data points" → "8 sparse data points" (CHN=1,
+  IND=8 per live read-only query).
+- `app/cycle/normalizer.py`, `app/cycle/force_aggregation_definitions.py`,
+  `app/cycle/force_definitions.py`, `app/services/force_signal_service.py`:
+  module docstrings updated to reflect normalization-v0.7, Education
+  DIRECT_0_100, explicit relative/momentum approval gates,
+  force-aggregation-v0.2, four executable forces.
+- `tests/test_normalization_signals.py`: 11 new approval-set validation
+  tests (current v0.7 config validates clean; Education excluded from both
+  approved sets; unknown momentum/relative approved indicator fails;
+  momentum-approved wrong level/momentum family fails; momentum-approved
+  missing primary/tolerance/windows fails; relative-approved wrong
+  level/relative family fails). `force_mapping_version` removed from 4
+  test fixtures.
+- `.dev/PROJECT_STATUS.md`, `.dev/HANDOFF.md`, `.dev/BACKLOG.md`,
+  `.dev/NORMALIZATION.md`, `.dev/FORCE_AGGREGATION.md`,
+  `.dev/FORCE_COVERAGE.md`: living docs updated to 4/17 executable, 13/17
+  intentionally unscored, v0.7/v0.2, pytest 571.
+
+### Verification
+
+- pytest 571 passed (560 + 11 new).
+- DB counts unchanged: 6814 / 27 / 22 / 10 / 1872.
+- No migration, no ingestion, no persistence.
+- No version bump (normalization-v0.7, force-aggregation-v0.2 unchanged).
+- No commit/push.
+
 ## 2026-09-10 — Sprint 6.4: Education DIRECT_0_100 + Fourth Executable Force
 
 ### Summary

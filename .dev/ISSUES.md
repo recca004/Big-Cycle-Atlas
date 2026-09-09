@@ -59,3 +59,42 @@ Browser verification with all 8 countries loaded showed every /country/[iso3] pa
 
 ### Resolution
 Added `Observation.country_id == country_id` to the outer query and the count query (indicator_id filters already existed in both scopes). Regression suite `tests/test_current_observations_scoping.py` (3 tests, owner-specified cases): USA vs CHE same series/period stay scoped; `?indicator=GDP_GROWTH` returns only that indicator; latest vintage only (superseded value never served); count matches filtered items. Suite: 65 passed. Verified live: USA/CHE/CHN/IND endpoints and pages each return only their own values.
+
+## ISSUE-005 — WID adapter [0,1] range guard discarded valid provider values
+Status: closed
+Priority: high
+Created: 2026-09-10 (Sprint 6.6.1)
+Resolved: 2026-09-10 (Sprint 6.6.2)
+
+### Problem
+The WID adapter's [0,1] range guard (`apps/api/app/data_sources/wid.py`,
+lines 226–230, introduced in Sprint 5.20) raised `DataSourceParseError` for
+any finite value < 0 or > 1. This was an Atlas assumption masquerading as a
+provider contract. The WID Codes Dictionary states a representation convention
+("Shares and wealth/income ratios are given as a fraction of 1"), NOT a formal
+per-series domain guarantee. The theoretical domain for a net-wealth top-10%
+share is NOT strictly [0,1] — if the bottom 90% has collectively negative net
+wealth, the top 10% could hold more than 100% of total net wealth. A valid WID
+provider value > 1 is theoretically possible, and the adapter would have
+discarded it.
+
+### Root cause
+The [0,1] guard was introduced in Sprint 5.20 as an Atlas scoring assumption
+without verifying an official WID provider contract. It conflated the
+normalization domain (COMPLEMENT_0_100 needs [0,1]) with the ingestion
+validity domain (what WID publishes as valid).
+
+### Resolution
+Sprint 6.6.2 retracted the [0,1] hard rejection. A finite provider value
+outside [0,1] is now accepted and preserved as the immutable raw
+`Observation.value`. [0,1] is the COMPLEMENT_0_100 normalization domain, NOT a
+WID ingestion validity domain. The adapter still rejects: empty value,
+non-numeric text, NaN, +inf, -inf, wrong variable/percentile/age/pop/country
+identity. 7 new adapter regression tests + 3 new persistence regression tests.
+pytest 581 passed. No existing live data affected (all 670 obs are in [0,1]).
+
+### Lesson
+Provider data validity != Atlas normalization representability. Never convert
+a real provider value to missing merely because a planned transform cannot
+represent it. The layering is: provider value -> immutable Observation ->
+AlignedValue -> NormalizedSignal eligibility.

@@ -1647,7 +1647,7 @@ they cannot be accidentally promoted into force scoring.
 
 | Indicator | Level family | Relative family | Momentum family (windows) | Freshness class | Notes |
 |---|---|---|---|---|---|
-| GDP_GROWTH | CONTEXTUAL_DEFERRED (reclassified by DEC-018 — Sprint 5.9 audit; superseded the Sprint 5.5 TARGET_BAND proposal) | CROSS_SECTIONAL_RELATIVE | OWN_HISTORY (3y, 5y annual) | annual | Output growth ≠ productivity. A universal band would punish catch-up growth / reward stagnation (tracked_8 growth medians span 0.8–7.2). Future design candidate: own-history deviation + potential-growth gap. |
+| GDP_GROWTH | CONTEXTUAL_DEFERRED (reclassified by DEC-018 — Sprint 5.9 audit; superseded the Sprint 5.5 TARGET_BAND proposal; DEFER_GDP_GROWTH_LEVEL by DEC-033/Sprint 6.5 — GDP growth is inherently a rate of change, not a structural level; every numeric candidate is MOMENTUM or RELATIVE, not LEVEL) | CROSS_SECTIONAL_RELATIVE | OWN_HISTORY (3y, 5y annual) | annual | Output growth ≠ productivity. A universal band would punish catch-up growth / reward stagnation (tracked_8 growth medians span 0.8–7.2). DEC-033 audited 6 candidate families (A-F); all fail for LEVEL. Future design candidate: own-history deviation as MOMENTUM + relative growth as RELATIVE — NOT a level. |
 | GDP_CURRENT_USD | CONTEXTUAL_DEFERRED | CONTEXTUAL_DEFERRED | — | annual | Deliberately unassigned (economic scale/context). Nominal USD; any future role (relative power) needs PPP/deflation — a separate justified decision. |
 | GDP_PER_CAPITA | CONTEXTUAL_DEFERRED | CONTEXTUAL_DEFERRED | — | annual | Deliberately unassigned. Nominal; needs PPP + likely log before any use. |
 | EXPORTS_GDP | CONTEXTUAL_DEFERRED | CONTEXTUAL_DEFERRED | OWN_HISTORY (3y, 5y) | annual | High exports = integration/demand, not automatically "good". Trade force is a multi-indicator contextual case (Section 7.1). |
@@ -1664,7 +1664,7 @@ they cannot be accidentally promoted into force scoring.
 | POLITICAL_STABILITY_WGI_SCORE | DIRECT_0_100 | CROSS_SECTIONAL_RELATIVE (optional, later) | OWN_HISTORY (3y, 5y) | annual | Feeds the ceiling-capped internal-conflict force; the indicator spec itself is a normal DIRECT_0_100 entry (ceilings act at the force layer only). |
 | CREDIT_TO_GDP_GAP | ONE_SIDED_VULNERABILITY (reclassified from asymmetric TARGET_BAND by Sprint 5.11 evidence audit, DEC-020; **IMPLEMENTED Sprint 5.12/DEC-021** with the owner-approved curve: 50 at/below +2pp, linear to 0 at +10pp, clamped 0 above — breakpoints coincide with the Basel CCyB guide L/H; the 50/0 mapping is an Atlas MODEL PARAMETER and the no-excess region is deliberately NEUTRAL 50, not 100) | CONTEXTUAL_DEFERRED | OWN_HISTORY (4q, 8q — UNAPPROVED, momentum stays None) | quarterly | The indicator measures EXCESS-CREDIT vulnerability on the positive side: authoritative evidence supports positive breakpoints (Basel CCyB guide +2/+10; BIS 2018 EWI red ~9 / amber 4–9) but NO negative-side penalty — the guide is flat zero below +2 and a persistent negative gap is a post-boom measurement artifact, not an unhealthy-debt signal. Deleveraging/weak-credit conditions belong to other signals (DSR level, credit growth, output). Score-interpretation limits from the Basel caution are carried (Sprint 5.12 section). |
 | DEBT_SERVICE_RATIO | OWN_HISTORY (confirmed by DEC-018; selected as the next implementation target) | none (explicitly discouraged) | OWN_HISTORY (4q, 8q) | quarterly | Never cross-sectionally rank raw DSR (income definitions differ). Level = own-history stress-position percentile (Sprint 5.10). |
-| LABOUR_PRODUCTIVITY_PER_HOUR | MONOTONIC_POSITIVE, numeric level curve deferred (direction confirmed by DEC-018) | CROSS_SECTIONAL_RELATIVE | OWN_HISTORY (3y, 5y) | annual | Level AND growth stay distinguishable: high level + weak growth ≠ low level + fast improvement. Absolute 0–100 mapping deferred pending an expanded calibration universe decision (tracked_8 min-max explicitly rejected). |
+| LABOUR_PRODUCTIVITY_PER_HOUR | MONOTONIC_POSITIVE, numeric level curve deferred (direction confirmed by DEC-018; DEFER_PRODUCTIVITY_LEVEL by DEC-033/Sprint 6.5 — raw USD PPP/hour is unbounded with no 0-100 Atlas-score semantics; no official OECD benchmark; OECD/dataflow universe too advanced-economy-heavy for calibration) | CROSS_SECTIONAL_RELATIVE | OWN_HISTORY (3y, 5y) | annual | Level AND growth stay distinguishable: high level + weak growth ≠ low level + fast improvement. Absolute 0–100 mapping deferred pending an expanded calibration universe decision (tracked_8 min-max explicitly rejected; OECD/dataflow universe 51 economies is NOT global). DEC-033 audited 7 candidate families (A-G); all fail for LEVEL. Future unblocker: official OECD productivity benchmark OR defensible global calibration universe including developing economies. GDP growth may serve as MOMENTUM in a future DEC — NOT a level. |
 | UNIT_LABOUR_COST_GROWTH | CONTEXTUAL_DEFERRED (reclassified by DEC-018 — Sprint 5.9 audit; superseded the Sprint 5.5 TARGET_BAND proposal) | CONTEXTUAL_DEFERRED | OWN_HISTORY (4q, 8q) | quarterly | Raw domestic ULC growth is not by itself a relative-competitiveness measure — needs FX + partner-country ULC + inflation-regime context (none imported). Series stays live for coverage. |
 
 ### 7.1 Multi-indicator contextual forces
@@ -2468,3 +2468,173 @@ momentum, and relative outputs are byte-equivalent. DSR own-history level
 unchanged. Credit-gap one-sided-vulnerability level unchanged. No force
 persistence. No public force API. No frontend force scores. No cycle
 composite. No phase/stage. No backtesting. No commit/push.
+
+---
+
+## Sprint 6.6 — WID Top-10 Wealth-Share Normalization + Wealth-Gap Proxy Audit (DEC-034)
+
+### Status
+
+**READY_FOR_WID_WEALTH_LEVEL_DESIGN** (methodology/research only — NO
+implementation, NO model-version bump, NO force code changes).
+
+### Indicator
+
+`WEALTH_SHARE_TOP_10` (WID `shwealj992`, `p90p100`, pop=`j` equal-split
+adults). External unit: share (0-1). 670 tracked_8 observations, all in
+[0.4074, 0.9882] — no negative, zero, or >1.
+
+### WID series semantics (verified from official WID Codes Dictionary)
+
+- `s` = share (fraction of 1)
+- `hweal` = net personal wealth (household net wealth — assets minus
+  liabilities)
+- `992` = adults (age group)
+- `j` = equal-split adults (population unit — WID benchmark convention)
+- `p90p100` = top 10% (richest 10% of the adult population)
+
+The WID publishes the top-10% net personal wealth share as a
+cross-country comparable, absolute distributional measure (fraction
+0-1). The adapter validates [0,1] and rejects out-of-range values
+(raises DataSourceParseError — missing ≠ zero). NOTE (Sprint 6.6.1):
+[0,1] is EMPIRICALLY OBSERVED for the complete exact-series universe
+(14,936 obs, 324 entities, 1800–2024, zero values outside [0,1]); it is
+NOT a provider-guaranteed contract (the WID states a representation
+convention, not a formal per-series domain guarantee) and NOT a
+theoretical guarantee (net wealth can be negative).
+
+### Domain audit
+
+- **Theoretical**: a top-10% share of total net personal wealth is a
+  share of a total. If total net wealth is positive and the top-10%
+  group's wealth is positive, the share is positive. However, net
+  wealth includes liabilities — if the bottom 90% has collectively
+  negative net wealth (debts exceed assets), the top 10% could
+  theoretically hold more than 100% of total net wealth, making share >
+  1. The theoretical domain is NOT strictly [0,1]. The edge case is not
+  observed (see empirical below) and is handled by the adapter (reject
+  → DataSourceParseError) and the normalizer (fail-loud
+  NormalizationDataError if a present value reaches the normalizer
+  outside [0,1]).
+- **Empirical (tracked_8)**: all 670 observations in [0.4074, 0.9882].
+  No observations < 0, == 0, or > 1. The adapter's [0,1] range
+  validation has never rejected a WID observation in the tracked_8 data.
+- **Empirical (full exact-series universe, Sprint 6.6.1 bulk scan)**:
+  324 entities, 14,936 observations, 1800–2024, min 0.4074, max 0.9882,
+  ZERO values outside [0,1]. Entity classification (approximate):
+  sovereign ≈ 239, region/aggregate ≈ 23, unknown ≈ 62.
+
+### Candidate level transforms
+
+| Candidate | Verdict |
+|---|---|
+| **A. SIMPLE_COMPLEMENT (100*(1-share))** | **DEFENSIBLE — selected** |
+| B. PERCENT_COMPLEMENT (100 - raw_percent) | Same as A (algebraically identical) |
+| C. FIXED_MONOTONIC_CURVE | NOT defensible — no official WID benchmark |
+| D. MONOTONIC_SATURATING | NOT defensible — no external evidence for shape |
+| E. SAME-YEAR WID CROSS-SECTIONAL PERCENTILE | NOT a LEVEL — relative dimension |
+| F. FIXED WID-UNIVERSE CALIBRATION | NOT a LEVEL — relative dimension; universe drift |
+| G. OWN_HISTORY | NOT a LEVEL — momentum dimension |
+| H. CONTEXTUAL_DEFERRED | Rejected — a defensible LEVEL exists (A) |
+
+**Selected: A. SIMPLE_COMPLEMENT — `level_score = 100 * (1 - share)`**
+
+Justification:
+- Mathematically valid: share ∈ [0,1] → score ∈ [0,100]. No clamping.
+- Clear semantic meaning: score = "bottom-90% net personal wealth
+  share × 100." Interpretable, absolute distributional fact.
+- No arbitrary parameters: parameter-free linear inversion. No
+  breakpoints, no curve shape, no saturation parameters.
+- Defensible midpoint: 50 = "bottom 90% holds half of net personal
+  wealth." Meaningful, interpretable, NOT a normative target.
+- Direction correct: higher score = more equal = stronger. Aligns
+  with MONOTONIC_NEGATIVE (DEC-028).
+- Cross-country comparable: WID publishes the share using homogeneous
+  concepts (equal-split adults, net personal wealth).
+- **As-of behavior**: uses current period-complete as-of alignment and
+  does not select future-period observations. It is CURRENT/RESEARCH
+  scoring only; historical release-date safety is not established and
+  backtest_safe remains False.
+- No information loss: the complement is a bijection.
+
+### Education analogy verdict
+
+**NO, WID needs a separate normalization family/semantics.**
+
+The complement is NOT DIRECT_0_100 because:
+1. The raw value needs inversion (complement), not identity
+2. The direction is negative, not positive
+3. The raw value is a fraction 0-1, not a percentage 0-100
+4. The semantic meaning is different (distributional share vs population
+   proportion)
+
+The complement IS defensible as a NEW family (COMPLEMENT_0_100) with
+similar simplicity and transparency to DIRECT_0_100:
+- Both are parameter-free (no invented thresholds or curve shapes)
+- Both map to [0,100] for all empirically observed provider values
+- Both have clear, interpretable midpoints
+- Both use provider-published values for cross-country comparison
+- Both are proxies for a broader force (PROXY_CONDITION, PARTIAL ceiling)
+
+### Normalization family: COMPLEMENT_0_100 (NEW — Sprint 6.7 implementation)
+
+- **Family**: COMPLEMENT_0_100 (fraction 0-1, negative direction,
+  score = 100*(1-raw))
+- **Formula**: `level_score = 100 * (1 - raw_share)` where
+  raw_share ∈ [0,1]
+- **Valid raw range**: [0, 1] (enforced by adapter)
+- **Out-of-domain behavior**: return None (adapter rejects; missing ≠ zero)
+- **Midpoint semantics**: 50 = "bottom 90% holds half of net personal
+  wealth" — meaningful, interpretable, NOT a normative target
+- **Direction**: MONOTONIC_NEGATIVE (higher share = more concentration =
+  weaker; higher score = more equal = stronger)
+- **Missingness**: missing observation → None, never 0
+- **Freshness**: FreshnessClass.annual (existing); stale → None
+- **As-of behavior**: point-in-time distributional fact; no future leakage
+- **Provenance**: WID shwealj992 p90p100 pop=j equal-split adults
+- **Data-quality policy**: data_quality preserved in raw_payload but NOT
+  used for filtering (DEC-027 — unchanged)
+
+### Gini relationship
+
+GINI_INDEX stays DEFERRED (DEC-024). Gini measures income inequality;
+WID measures wealth concentration. They are related but NOT
+interchangeable. Gini stays SUPPORTING_CONTEXT (non-scoring) and does
+NOT block IDENTITY_SINGLE for the WID component.
+
+### Force eligibility (approved for Sprint 6.7 implementation)
+
+- `WEALTH_SHARE_TOP_10`: `SUPPORTING_CONTEXT` → `PROXY_CONDITION`
+- `GINI_INDEX`: stays `SUPPORTING_CONTEXT`
+- Force: `DEFERRED_MULTI` → `IDENTITY_SINGLE`
+- Coverage ceiling: stays PARTIAL (DEC-009, DEC-028)
+- Score explicitly means wealth-concentration proxy only
+- No claim of complete Wealth/opportunity/values strength
+- Coverage does NOT scale score (DEC-029 invariant)
+- Confidence stays None (DEC-023)
+
+### Impact
+
+NO production code changed. NO normalization code changes. NO force
+code changes. Model versions unchanged: `normalization-v0.7`,
+`force-aggregation-v0.2`. `WEALTH_SHARE_TOP_10` stays
+`MONOTONIC_NEGATIVE` with deferred level curve (the COMPLEMENT_0_100
+reclassification is a Sprint 6.7 implementation step). Wealth-gap force
+stays `SUPPORTING_CONTEXT` / `DEFERRED_MULTI` with `level_score = None`.
+confidence = None. backtest_safe = False.
+
+Read-only research artifact: `scripts/wealth_share_profile.py` (NEW —
+descriptive statistics only, no scores, no writes, clearly labeled
+research support).
+
+pytest 571 passed (unchanged — no code changes). DB unchanged
+(6814/27/22/10/1872). No migration, no ingestion, no persistence.
+No commit/push.
+
+### Next
+
+Sprint 6.7 — WID wealth-share level + wealth-gap proxy implementation.
+Implement COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 and promote the
+Wealth-gap force to the 5th executable force via PROXY_CONDITION +
+IDENTITY_SINGLE. Bump normalization-v0.7 → v0.8 and
+force-aggregation-v0.2 → v0.3.

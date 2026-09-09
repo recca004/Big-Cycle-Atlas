@@ -962,6 +962,23 @@ system. Coverage is NOT materially different between the two age groups
 at PARTIAL (DEC-009) — one tertiary attainment series cannot make
 Education AVAILABLE. Attainment != enrollment (DEC-007 honored).
 
+### Sprint 5.20.1 implementation clarification (2026-09-10)
+
+The Sprint 5.20 implementation recorded the education external identity
+as `EAG_LSO_NEAC/{cc}._T.Y25T34...` — a synthetic abbreviation forced by
+the `SourceSeries.external_code` varchar(100) column limit. The exact
+identity (agency `OECD.EDU.IMEP` + dataflow
+`DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA` + version `1.0` + 17-dimension
+SDMX key) is 140 chars and did not fit. Sprint 5.20.1 widened the column
+to varchar(255) (Alembic `a8f3c2d1e5b7`) and replaced the abbreviation
+with the exact serialized identity:
+`OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A`
+(140 chars). The delimiter choice (comma-separated agency/dataflow/version,
+slash-separated key) mirrors the OECD SDMX REST URL path component
+`{agency_id},{dataflow_id},{version}/{key}`. The existing SourceSeries
+row was updated in place by seed — no duplicate created, no observation
+FK changed. The retired `EAG_LSO_NEAC/...` abbreviation is gone.
+
 ## DEC-027 — WID data_quality filtering: DEFERRED (official semantics unverified)
 
 Date: 2026-09-10
@@ -976,6 +993,18 @@ dictionary for the data_quality values (0, 1, 2 observed). The Sprint
 RETRACTED — no inferred row deletion is allowed without official
 documentation. If official semantics are found later, a future sprint
 may add filtering.
+
+### Sprint 5.20.1 implementation clarification (2026-09-10)
+
+The provider `data_quality` representation is preserved for traceability.
+`raw_payload` now carries both `data_quality_raw` (the raw provider CSV
+field, stripped of surrounding whitespace — the adapter's normalized
+representation) and `data_quality` (the typed convenience value: int for
+"0"/"1"/"2", None for empty or non-integer codes). The provider code is
+never lost — unknown future provider codes such as "A" are PRESERVED as
+"A" (not None-or-zero, not filtered, not disappeared). Empty string
+stays "". No meanings such as 0=observed, 1=interpolated, 2=extrapolated
+are assigned unless official WID documentation is later found.
 
 ## DEC-028 — WID top-10 wealth share: PARTIAL ceiling confirmed
 
@@ -992,3 +1021,300 @@ wealth inequality only, not opportunity gaps or values/social
 polarization. No numeric normalization curve is approved —
 MONOTONIC_NEGATIVE direction confirmed, but "100 - share*100" is NOT an
 approved mapping.
+
+## DEC-029 — Initial force aggregation methodology
+
+Date: 2026-09-10
+Status: Accepted (Sprint 5.21)
+
+### Decision
+
+Sprint 5.21 defines when Atlas is allowed to turn normalized indicator
+signals into force-level signals. This is methodology + typed
+configuration only — no force calculation, no force persistence, no force
+API.
+
+**Permanent invariants:**
+
+1. **Dimensions remain separate.** Force output preserves level_score,
+   relative_score, momentum, and confidence as independent dimensions.
+   No single "force score" that secretly mixes them. No `score *=
+   confidence`, no `level *= coverage`.
+
+2. **Coverage != strength.** Coverage status (AVAILABLE / PARTIAL /
+   DEFINED_NOT_SOURCED / MISSING) does NOT numerically alter level_score.
+   A force may have level_score = 82 with coverage = PARTIAL. Proxy
+   ceilings remain completeness semantics, not numeric penalties.
+
+3. **Missing != zero.** Missing or unapproved force dimensions are None,
+   never 0. The credit-gap indicator's approved 50 (DEC-021) is an
+   indicator-level meaning, not a generalizable missing-data rule.
+
+4. **Only executable normalized signals may enter numeric aggregation.**
+   Required layering: Observation → AlignedValue → NormalizedSignal →
+   ForceSignal. Never Observation → ForceSignal. CONTEXTUAL_DEFERRED
+   indicators contribute no numeric value.
+
+**Indicator role taxonomy:**
+
+- CORE_CONDITION — normalized 0-100 condition, higher = stronger, eligible
+  for level aggregation under an approved rule.
+- PROXY_CONDITION — same orientation but narrower proxy; requires PARTIAL
+  ceiling semantics.
+- VULNERABILITY_PENALTY — asymmetric vulnerability/risk; must NOT be naively
+  averaged with CORE_CONDITION; requires a force-specific composition
+  formula.
+- SUPPORTING_CONTEXT — relevant context with no approved numeric
+  contribution.
+
+**Aggregation modes:**
+
+- IDENTITY_SINGLE — the ONLY approved numeric aggregation. force.level_score
+  = indicator.level_score for exactly one eligible component (CORE_CONDITION
+  or PROXY_CONDITION). No rescaling, no weighting, no averaging. Transparent
+  identity mapping.
+- DEFERRED_MULTI — used whenever 2+ numeric components require composition,
+  a vulnerability penalty must interact with a condition score, or weights
+  are unresolved. Result: force dimension = None. No equal-weight fallback.
+
+**Initial approved-force matrix (3 of 17):**
+
+- Rule of law — IDENTITY_SINGLE, level + relative + momentum approved
+  (CORE_CONDITION: RULE_OF_LAW_WGI_SCORE).
+- Corruption — IDENTITY_SINGLE, level + relative + momentum approved
+  (CORE_CONDITION: CONTROL_OF_CORRUPTION_WGI_SCORE).
+- Internal conflict — IDENTITY_SINGLE, level + relative + momentum approved
+  (PROXY_CONDITION: POLITICAL_STABILITY_WGI_SCORE). Coverage stays PARTIAL.
+
+**Indebtedness deferral:** DEFERRED_MULTI. DSR (CORE_CONDITION) + credit gap
+(VULNERABILITY_PENALTY) + government debt (SUPPORTING_CONTEXT) cannot be
+naively averaged. No composition formula approved. No equal weights.
+
+**Relative policy:** identity copy only, on approved single-WGI forces.
+Copy entire provenance (reference_universe_id, expected/usable n, rank).
+Never recompute ranks at force layer. Never average relative scores. Never
+label tracked_8 as global.
+
+**Momentum policy:** identity copy only, on approved single-WGI forces.
+DEC-016: WGI momentum is WGI-scale-specific, not approved for cross-indicator
+aggregation. Indebtedness momentum = None.
+
+**Confidence policy:** None everywhere. DEC-023 deferred numeric WGI
+confidence. No force-confidence numeric composition. Do not use
+freshness_factor, coverage percentage, proxy ceiling, source quality
+constants, or indicator counts as force confidence.
+
+**Backtest safety:** False everywhere. Underlying indicator signals remain
+CURRENT/RESEARCH, not release-date-safe. Force backtest_safe may only be
+True if every contributing component is backtest-safe AND force methodology
+is historically version-safe.
+
+**Versioning:** two separate layers:
+- Indicator normalization version: normalization-v0.6 (unchanged).
+- Force aggregation version: force-aggregation-v0.1.
+
+Not all 17 forces are scoreable. 3 of 17 approved for IDENTITY_SINGLE;
+14 deferred.
+
+### Sprint 5.22 implementation note (2026-09-10)
+
+Sprint 5.22 implemented the first executable ForceSignal layer using ONLY
+this methodology. No DEC-030 is created — the implementation faithfully
+executes the already-approved v0.1 methodology, so force-aggregation-v0.1
+remains the version (no bump).
+
+- ForceSignal type: `app/cycle/force_signal.py` (non-persisted dataclass).
+- Pure aggregator: `aggregate_force_from_signals` (IDENTITY_SINGLE copies
+  level/relative/momentum exactly; DEFERRED_MULTI returns None with
+  component provenance; SUPPORTING_CONTEXT never contributes numerically).
+- Service: `build_force_signals_as_of` in
+  `app/services/force_signal_service.py` (returns exactly 17 forces,
+  calls normalize_indicator_as_of, coverage from existing service).
+- Config hardening: live-input completeness guard, duplicate force-config
+  detection, proxy-condition ceiling guard, dimension approval guard
+  (relative/momentum identity_copy only on WGI x3).
+- 3/17 forces executable (Rule of law, Corruption, Internal conflict proxy);
+  14/17 intentionally None.
+- No force persistence, no public force API.
+- pytest 520 passed (476 baseline + 44 new).
+- Live read-only smoke (2025-Q2, CHE/USA/CHN/IND): all 17 forces returned,
+  3 identity forces have scores, Indebtedness coverage=available + level=None,
+  internal_conflict stays PARTIAL, no writes.
+- Milestone 5 COMPLETE: indicator normalization + first defensible executable
+  force layer.
+
+## DEC-030 — Indebtedness composition: DEFER_INDEBTEDNESS_COMPOSITION (government-debt normalization required first; no defensible penalty shape)
+
+Date: 2026-09-10
+Status: Accepted (Sprint 6.1 — methodology / empirical research sprint, NO implementation)
+
+### Decision
+
+Sprint 6.1 audited whether Atlas can defensibly produce an Indebtedness
+`level_score` from the three live inputs (DSR CORE_CONDITION, credit-gap
+VULNERABILITY_PENALTY, government-debt SUPPORTING_CONTEXT). The verdict is
+**DEFER_INDEBTEDNESS_COMPOSITION** — a durable methodology decision, not a
+postponement of an obvious answer. Atlas cannot yet defensibly compose an
+Indebtedness force level_score.
+
+The deferral rests on two blockers, both empirical (not assumed):
+
+**Blocker 1 — Government-debt normalization is required first.** Government
+debt/GDP is currently `CONTEXTUAL_DEFERRED`: no Atlas curve maps raw % GDP to
+a 0-100 strength. The empirical profile (Sprint 6.1, read-only) shows
+government-debt levels span 20% (CHN min) to 229% (JPN max) across tracked_8,
+with latest values from 39% (CHE) to 214% (JPN). Any composition that
+numerically ignores government debt while claiming to measure "Indebtedness"
+would publish a force score that is silent about the single most
+consequential stock measure of sovereign indebtedness — a country at 214%
+debt/GDP (JPN) and a country at 39% (CHE) would receive Indebtedness scores
+driven only by DSR flow-stress and credit-cycle vulnerability, with the
+stock burden invisible. That is false precision: the score would look
+complete but omit the dominant conceptual input.
+
+  The counter-argument ("DSR already encodes debt-service burden, so
+  government debt is redundant") fails empirically: JPN has the highest
+  debt/GDP (214%) but a mid-range DSR level (41 — debt service is affordable
+  at near-zero rates); CHE has low debt (39%) but high DSR stress (level 17
+  — rate-driven, not stock-driven). DSR is a flow measure (interest +
+  principal / income); government debt is a stock measure. They are not
+  substitutes — they measure different temporal aspects of indebtedness.
+
+**Blocker 2 — No defensible penalty-shape interaction between DSR (base
+condition) and credit-gap (vulnerability penalty) is approved.** The five
+candidate structures were evaluated (see Sprint 6.1 report §5); each either
+introduces arbitrary parameters, mishandles the credit-gap neutral-50
+semantics, or improperly ignores government debt. Specifically:
+
+  - **A. Base-condition + capped vulnerability deduction**: requires an
+    arbitrary cap parameter (e.g. "deduct at most 20 points") with no
+    economic basis. The cap is a convenience constant, not a calibrated
+    parameter.
+  - **B. Multiplicative vulnerability dampener**: `level = DSR * (CG/50)`
+    breaks when CG=50 (neutral): it leaves DSR unchanged, which is correct
+    for the no-excess case, but when CG=0 (saturated excess) it zeroes the
+    DSR score entirely — a country with low DSR stress but high credit-gap
+    excess would get level=0, conflating "vulnerable" with "indebted."
+    The 50-as-neutral semantics of DEC-021 are indicator-level, not a
+    multiplicative base.
+  - **C. Gate / regime rule**: "if CG < 50, force = DSR; else force = None"
+    requires an arbitrary threshold and discards the credit-gap signal
+    magnitude. A gate is a binary regime classification, not a level score.
+  - **D. Worst-component / minimum rule**: `level = min(DSR, CG)` treats
+    credit-gap 50 (neutral no-excess) as a strength of 50, which would cap
+    every no-excess country at 50 — false precision (neutral is not
+    mid-strength).
+  - **E. DEFER_COMPOSITION** (this verdict): honest. Force level stays
+    None. Component signals remain as provenance. No arbitrary parameters.
+    No false precision.
+
+No equal weighting is considered (DEC-029 prohibition). No constants are
+chosen for convenience.
+
+### Missingness policy (would apply IF a composition were approved)
+
+For the record, the missingness policy analysis (Sprint 6.1 §6) concludes
+that any future composition must preserve:
+- **missing != zero**: DSR missing → no base condition → force level None
+  (not a credit-gap-only score). Credit-gap missing → no vulnerability
+  penalty → force level None (DSR alone is a flow measure, not the force).
+  Government-debt missing → no stock context → force level None (the
+  dominant stock input is invisible). A composition requires ALL THREE
+  present; any missing component makes the force unscored, not partially
+  scored.
+- **coverage != strength**: a force with all three components present but
+  government-debt normalization unapproved is conceptually PARTIAL, even if
+  a numeric formula existed.
+- **confidence separate**: force confidence stays None (DEC-023).
+- **momentum separate**: Indebtedness momentum stays None (DEC-029).
+
+### Empirical tracked_8 findings (read-only, 2025-Q2)
+
+| Country | DSR level | CG level | GovDebt% | DSR<50 | CG<50 |
+|---|---|---|---|---|---|
+| USA | 94.1 | 50.0 | 123.9 | no | no |
+| CHN | 1.0 | 50.0 | 90.4 | YES | no |
+| CHE | 16.7 | 50.0 | 39.4 | YES | no |
+| DEU | 78.9 | 50.0 | 62.9 | no | no |
+| FRA | 6.4 | 50.0 | 113.2 | YES | no |
+| GBR | 99.5 | 50.0 | 102.3 | no | no |
+| JPN | 41.2 | 35.9 | 214.5 | YES | YES |
+| IND | 49.0 | 50.0 | 84.1 | YES | no |
+
+Key observations:
+- Credit-gap excess (CG<50) is RARE in the current snapshot: only JPN
+  (level 35.9). 7 of 8 countries are at neutral 50. A composition that
+  weights credit gap heavily would be near-identity to DSR for 7/8
+  countries today — the credit-gap signal rarely activates.
+- DSR stress (level<50) and credit-gap excess (level<50) rarely co-occur
+  in the historical sample: only JPN shows both simultaneously (2022-Q1,
+  2024-Q1, 2025-Q2). CHE and FRA show DSR stress + credit-gap excess in
+  2020-Q1 / 2022-Q1 but not recently. The two signals are largely
+  orthogonal in practice — which means a composition formula would need
+  to define behavior for the common case (one signal active, one neutral),
+  not just the rare co-occurrence.
+- Government debt spans 20%–229% — a 10x range. JPN (214%) and CHE (39%)
+  have similar DSR stress levels (41 vs 17) but wildly different debt
+  stocks. Any composition ignoring government debt is dominated by the
+  flow measure and silent on the stock.
+
+### Government-debt-normalization dependency
+
+**Government-debt normalization is a hard prerequisite, not optional.**
+The empirical profile shows government debt is the dominant
+differentiator when DSR is similar. Without an Atlas curve mapping
+raw % GDP to a 0-100 strength, any Indebtedness composition would be a
+two-input (DSR + credit gap) formula masquerading as a three-input force.
+
+The government-debt normalization itself faces the same DEC-018 audit
+hurdle that reclassified GDP_GROWTH, GCF, INFLATION_CPI, and
+UNIT_LABOUR_COST_GROWTH to CONTEXTUAL_DEFERRED: there is no universal
+"healthy" debt/GDP level. Japan functions at 214%; the EU Maastricht
+reference is 60%; emerging markets face different constraints than
+advanced economies. A universal band would encode arbitrary norms. A
+country-specific own-history approach (like DSR's DEC-019) is a
+candidate but requires its own DEC and owner approval — it is NOT
+inferred from the DSR methodology.
+
+### Reason
+
+DEC-029 deferred Indebtedness because "DSR + credit gap + government debt
+cannot be naively averaged." Sprint 6.1 tested whether a NON-naive
+composition could be defensible. The audit found that every candidate
+structure either (a) requires arbitrary parameters with no economic
+basis, (b) mishandles the credit-gap neutral-50 semantics, or (c)
+improperly ignores government debt — the dominant stock measure. The
+deferral is therefore not "we have not tried" but "we tried, and the
+honest answer is that government-debt normalization must be solved
+first, and even then the DSR × credit-gap interaction shape needs an
+explicit owner-approved formula, not a convenient default."
+
+### Impact
+
+NO production code changed. NO force code changes. NO phase, cycle
+composite, force confidence, relative aggregation, momentum aggregation,
+persistence, API, or frontend. Model versions unchanged:
+`normalization-v0.6`, `force-aggregation-v0.1`. Indebtedness stays
+`DEFERRED_MULTI` with `level_score = None`. Component signals (DSR,
+credit gap, government debt raw) remain as provenance. pytest unchanged
+(526). DB unchanged (6814 / 27 / 22 / 10 / 1872). Read-only empirical
+profile script (`scripts/sprint_6_1_indebtedness_profile.py`) was used
+during the sprint and removed after — no persistent artifact.
+
+### Recommended Sprint 6.2
+
+**Sprint 6.2 — Government-debt normalization methodology audit.** Decide
+whether GOVERNMENT_DEBT_GDP can receive a defensible Atlas level curve.
+Candidates to evaluate: (a) own-history approach (DEC-019 analog — a
+country's debt/GDP relative to its own history, no universal band); (b)
+structural-break-aware level (debt/GDP regimes differ across eras); (c)
+defer (no curve — CONTEXTUAL_DEFERRED stays). If (a) or (b) is approved,
+Sprint 6.3 would then revisit the DSR × credit-gap × government-debt
+composition with all three inputs normalized. If (c), Indebtedness
+remains DEFERRED_MULTI indefinitely unless a non-debt-based composition
+is proposed.
+
+Deliberately NOT queued in 6.2: DSR × credit-gap composition without
+government debt (would publish a two-input score masquerading as the
+force), equal weights, arbitrary caps, multiplicative dampeners,
+gate/regime rules, worst-component rules.

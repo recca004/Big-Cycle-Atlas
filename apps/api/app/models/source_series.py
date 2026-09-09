@@ -10,7 +10,7 @@ class SourceSeries(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     data_source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), index=True)
     indicator_id: Mapped[int] = mapped_column(ForeignKey("indicators.id"), index=True)
-    external_code: Mapped[str] = mapped_column(String(100))
+    external_code: Mapped[str] = mapped_column(String(255))
     external_name: Mapped[Optional[str]] = mapped_column(String(120))
     external_unit: Mapped[Optional[str]] = mapped_column(String(100))
     country_scope: Mapped[Optional[str]] = mapped_column(String(50))

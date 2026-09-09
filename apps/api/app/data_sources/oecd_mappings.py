@@ -142,8 +142,15 @@ TERTIARY_ATTAINMENT_25_34 = OecdMapping(
         "{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z."
         "ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A"
     ),
+    # Exact serialized provider identity (Sprint 5.20.1): agency,dataflow,
+    # version/key — mirrors the OECD SDMX REST URL path component
+    # ({agency_id},{dataflow_id},{version}/{key}). The previous
+    # "EAG_LSO_NEAC/..." abbreviation was a synthetic shortening forced by
+    # the varchar(100) column limit; it discarded the agency and version
+    # components. The column is now varchar(255) and the full, traceable,
+    # provider-native identity is stored without truncation.
     external_code=(
-        "EAG_LSO_NEAC/"
+        "OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/"
         "{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z."
         "ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A"
     ),

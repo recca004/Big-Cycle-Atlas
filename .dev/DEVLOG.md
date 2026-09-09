@@ -1,5 +1,427 @@
 # Devlog
 
+## 2026-09-10 — Sprint 6.1: Indebtedness Composition Methodology Audit
+
+### Summary
+
+Sprint 6.1 audited whether Atlas can defensibly produce an Indebtedness
+`level_score` from DSR (CORE_CONDITION) + credit-gap (VULNERABILITY_PENALTY)
++ government-debt (SUPPORTING_CONTEXT). Methodology/research only — NO
+implementation. Verdict: **DEFER_INDEBTEDNESS_COMPOSITION** (DEC-030).
+
+### Empirical profile (read-only, 2025-Q2)
+
+| Country | DSR level | CG level | GovDebt% | DSR<50 | CG<50 |
+|---|---|---|---|---|---|
+| USA | 94.1 | 50.0 | 123.9 | no | no |
+| CHN | 1.0 | 50.0 | 90.4 | YES | no |
+| CHE | 16.7 | 50.0 | 39.4 | YES | no |
+| DEU | 78.9 | 50.0 | 62.9 | no | no |
+| FRA | 6.4 | 50.0 | 113.2 | YES | no |
+| GBR | 99.5 | 50.0 | 102.3 | no | no |
+| JPN | 41.2 | 35.9 | 214.5 | YES | YES |
+| IND | 49.0 | 50.0 | 84.1 | YES | no |
+
+Key findings:
+- Credit-gap excess (CG<50) is rare: only JPN. 7/8 countries at neutral 50.
+- DSR stress (level<50) and credit-gap excess rarely co-occur (only JPN).
+- Government debt spans 20%–229% — a 10x range. JPN (214%) and CHE (39%)
+  have comparable DSR stress but wildly different debt stocks. DSR is a
+  flow measure; government debt is a stock measure — not substitutes.
+
+### Candidate-formula evaluation
+
+- **A. Base + capped deduction**: arbitrary cap parameter, no economic basis.
+- **B. Multiplicative dampener**: `DSR * (CG/50)` zeroes DSR when CG=0
+  (conflates "vulnerable" with "indebted"); 50-as-neutral is indicator-level.
+- **C. Gate/regime**: arbitrary threshold, discards signal magnitude.
+- **D. Worst-component/min**: treats CG 50 (neutral) as strength 50 —
+  false precision.
+- **E. DEFER_COMPOSITION**: honest. Force level stays None. No arbitrary
+  parameters. No false precision. **Selected.**
+
+### Verdict: DEFER_INDEBTEDNESS_COMPOSITION
+
+Two empirical blockers:
+1. Government-debt normalization is a hard prerequisite (stock measure is
+   the dominant differentiator when DSR is similar).
+2. No defensible DSR × credit-gap interaction shape is approved.
+
+Missingness policy (for the record): any future composition requires ALL
+THREE components present — any missing → force level None.
+
+### Impact
+
+NO production code changed. NO force code changes. NO phase, cycle
+composite, force confidence, relative/momentum aggregation, persistence,
+API, or frontend. Model versions unchanged. Indebtedness stays
+DEFERRED_MULTI with level=None. pytest 526 unchanged. DB unchanged. DEC-030
+created. Read-only profile script used during sprint and removed after.
+
+### Recommended Sprint 6.2
+
+Government-debt normalization methodology audit (the hard prerequisite).
+Candidates: own-history (DEC-019 analog), structural-break-aware, or defer.
+
+## 2026-09-10 — Sprint 5.22.1: Force Provenance Fix + Milestone-5 Source-of-Truth Closeout
+
+### Summary
+
+Sprint 5.22.1 fixes one ForceSignal provenance defect and finishes the
+living-doc cleanup. No economic methodology change, no model-version bump,
+no new DEC. pytest 526 (520 baseline + 6 new).
+
+### Part 1 — Relative provenance fix (DEC-017)
+
+**Bug**: `ForceSignal` copied `reference_universe_id` /
+`reference_universe_expected_n` / `reference_universe_usable_n` /
+`relative_rank` from the contributing `NormalizedSignal` only when
+`relative_score` was non-None. This was wrong for DEC-017 incomplete-universe
+semantics: the universe metadata is real provenance even when the score is
+missing.
+
+**Fix**: provenance is now copied whenever the component signal exists AND
+relative `identity_copy` is approved — even if `relative_score` is None.
+Never fabricates provenance when there is no component signal.
+
+### Part 2 — Version provenance hardening
+
+`ForceSignal.normalization_model_version` is now propagated from the
+contributing `NormalizedSignal.model_version` (validated: if contributing
+signals disagree on version, fail loudly). Falls back to
+`CURRENT_MODEL_VERSION.version_id` only when no signals are present.
+TODO documented for future per-indicator versioning.
+
+### Part 3 — Type / docstring cleanup
+
+- `force_signal_service.py`: `component_signals` typed
+  `dict[str, Optional[NormalizedSignal]]` (was `dict[str, object]`).
+- `force_aggregation_definitions.py` module docstring updated (no longer
+  calls itself a non-scoring "skeleton" — it now sits beside the executable
+  ForceSignal implementation).
+
+### Parts 4-5 — Doc cleanup
+
+- PROJECT_STATUS: pytest 526, Sprint 5.22.1 noted.
+- FORCE_COVERAGE: stale "Education stays defined_not_sourced" replaced with
+  current truth (sourced Sprint 5.20, stays PARTIAL). Historical M5.4 audit
+  sections preserved with dates.
+
+### Part 6 — Tests
+
+6 new tests in `test_force_signal.py`:
+- 3 relative-provenance-with-score-None regressions (all 3 WGI forces,
+  no-signal case, incomplete-universe case).
+- 3 version-provenance tests (copy from signal, fallback when no signal,
+  mismatch raises).
+
+pytest: **526 passed** (520 baseline + 6 new), all offline.
+
+### Files
+
+- `apps/api/app/cycle/force_signal.py` (provenance fix + version resolver)
+- `apps/api/app/services/force_signal_service.py` (typing)
+- `apps/api/app/cycle/force_aggregation_definitions.py` (docstring)
+- `apps/api/tests/test_force_signal.py` (6 new tests)
+- `.dev/PROJECT_STATUS.md`, `.dev/BACKLOG.md`, `.dev/HANDOFF.md`,
+  `.dev/FORCE_COVERAGE.md`
+
+## 2026-09-10 — Sprint 5.22: First Executable ForceSignal Layer + Milestone 5 Closeout
+
+### Summary
+
+Sprint 5.22 implements the first executable ForceSignal layer using ONLY the
+methodology approved in Sprint 5.21 / DEC-029. 3 of 17 forces are now
+executable (Rule of law, Corruption, Internal conflict proxy via
+IDENTITY_SINGLE); 14 of 17 are intentionally None (DEFERRED_MULTI). No force
+persistence, no public force API. This closes Milestone 5.
+
+### Part 0 — Pre-execution hardening
+
+- PROJECT_STATUS stale sections repaired (removed stale "~97%" language,
+  updated to milestone language; current/next milestone updated).
+- FORCE_COVERAGE current sections updated (Education live, Indebtedness live,
+  Wealth gaps live, WGI diagnostics 1872 rows).
+- Live-input config completeness guard: every force live input MUST have a
+  component role — fail loudly at import. No silent omission.
+- Real duplicate force-config detection: tuple-first + _build_config_dict
+  with duplicate check BEFORE dict construction.
+- Proxy-condition ceiling guard: PROXY_CONDITION identity requires
+  coverage_ceiling=PARTIAL (structural enforcement, not just docs/tests).
+- Dimension approval guard: relative/momentum identity_copy only on WGI x3
+  (explicit typed approved-dimension mapping for v0.1).
+
+### Part 1 — ForceSignal type (app/cycle/force_signal.py)
+
+- Non-persisted dataclass with level/relative/momentum/confidence (all
+  Optional, None default), coverage_status/ceiling, component_signals,
+  missing/deferred components, aggregation_method, force/normalization model
+  versions, backtest_safe, relative provenance (universe_id, expected/usable
+  n, rank), scoring_component_indicator.
+- Score range validation (0-100, -100-100, 0-1) — never clamp, invalid
+  -> error.
+
+### Part 2 — Pure aggregator (aggregate_force_from_signals)
+
+- IDENTITY_SINGLE: copies level/relative/momentum exactly from the single
+  eligible component. No rescale, no weight, no average, no rounding.
+- None propagation: each dimension propagates independently. level=None,
+  relative=68.75, momentum=None -> force copies each independently.
+- DEFERRED_MULTI: all numeric dimensions None, component signals preserved
+  as provenance. No averaging.
+- SUPPORTING_CONTEXT: never contributes numerically — recorded as
+  deferred_components.
+
+### Part 3 — Service orchestration (build_force_signals_as_of)
+
+- Calls normalize_indicator_as_of for configured components (no duplicated
+  normalization logic).
+- Returns exactly 17 ForceSignals per country/period.
+- Coverage from the EXISTING deterministic force coverage service.
+- SUPPORTING_CONTEXT components not normalized numerically.
+- No DB writes. No raw Observation accepted into force arithmetic.
+
+### Parts 8-10 — Tests
+
+- 28 pure aggregation tests (test_force_signal.py): identity copies, None
+  propagation, no clamping, confidence None, backtest_safe False, versions,
+  supporting context, Indebtedness deferred, no equal weights, component
+  order independence, independent dimension propagation.
+- 7 config hardening tests (test_force_aggregation_config.py): live-input
+  completeness, duplicate detection, proxy ceiling, dimension approval, WGI
+  x3 validity.
+- 16 service/DB tests (test_force_signal_service.py): 17 forces returned,
+  country isolation, no writes, no API, confidence/backtest/versions,
+  multi-country regression.
+- pytest: **520 passed** (476 baseline + 44 new), all offline, 59.51s.
+
+### Part 11 — Live read-only smoke (2025-Q2)
+
+- CHE: RL=87.32, CC=88.48, IC=82.65 (all PARTIAL for IC), Indebtedness
+  coverage=available + level=None.
+- USA: RL=73.52, CC=69.86, IC=64.27, Indebtedness available + None.
+- CHN: RL=46.99, CC=49.65, IC=63.28, Indebtedness available + None.
+- IND: RL=56.29, CC=41.88, IC=52.47, Indebtedness available + None.
+- All 17 forces returned per country. No writes.
+
+### Parts 12-14 — No API, Milestone 5 closeout, docs
+
+- No public force API. No frontend. No persistence.
+- **Milestone 5 COMPLETE**: indicator normalization + first defensible
+  executable force layer. 3/17 numeric identity forces, 14/17 intentionally
+  unscored. NOT "17 forces fully scored" (that would be false).
+- DEC-029 implementation note appended (no DEC-030 — faithful execution).
+- Docs updated: FORCE_AGGREGATION, FORCE_COVERAGE, HANDOFF, PROJECT_STATUS,
+  BACKLOG, DEVLOG.
+
+### Files
+
+- `apps/api/app/cycle/force_signal.py` (NEW)
+- `apps/api/app/services/force_signal_service.py` (NEW)
+- `apps/api/app/cycle/force_aggregation_definitions.py` (hardened)
+- `apps/api/tests/test_force_signal.py` (NEW, 28 tests)
+- `apps/api/tests/test_force_signal_service.py` (NEW, 16 tests)
+- `apps/api/tests/test_force_aggregation_config.py` (7 new hardening tests)
+- `apps/api/scripts/smoke_force_signals.py` (NEW, read-only)
+- `.dev/FORCE_AGGREGATION.md`, `.dev/FORCE_COVERAGE.md`, `.dev/HANDOFF.md`,
+  `.dev/PROJECT_STATUS.md`, `.dev/BACKLOG.md`, `.dev/DEVLOG.md` updated.
+
+
+## 2026-09-10 — Sprint 5.21: Force Aggregation Methodology + Typed Configuration
+
+### Summary
+
+Sprint 5.21 defines when Atlas is allowed to turn normalized indicator
+signals into force-level signals. This is a methodology/architecture sprint
+— no force calculation, no force persistence, no force API. The answer to
+the core question ("when is Atlas allowed to publish a numeric force
+signal?") is NOT "whenever one or more mapped indicators have numbers."
+Different normalized indicators have different economic semantics.
+
+### Part 0 — Source-of-truth cleanup
+
+- PROJECT_STATUS.md stale current-state sections repaired: "Not built"
+  (removed education/gov-debt persistence — now built; removed WGI
+  diagnostics not-ingested — now ingested; updated normalization state to
+  v0.6), "Current milestone" (updated to Sprint 5.21 in progress, live DB
+  6814/27/22/10/1872, pytest 445), "Next milestone" (Sprint 5.22 after 5.21
+  approval), "Last successful test" (445 passed, Sprint 5.20.1).
+- BACKLOG.md Now/Next updated for Sprint 5.21.
+- WID raw wording consistency: DATA_SOURCES.md and DEC-027 clarified —
+  `data_quality_raw` is the raw provider CSV field stripped of surrounding
+  whitespace (the adapter's normalized representation), not a byte-exact
+  claim. No filtering either way. Provenance only.
+
+### Part 1 — Permanent force-layer invariants (.dev/FORCE_AGGREGATION.md)
+
+- Dimensions remain separate (level / relative / momentum / confidence).
+- Coverage != strength (coverage does NOT numerically alter level_score).
+- Missing != zero (None never 0; credit-gap 50 is indicator-specific).
+- Only executable normalized signals may enter numeric aggregation
+  (Observation → AlignedValue → NormalizedSignal → ForceSignal).
+
+### Part 2 — Indicator role taxonomy
+
+- CORE_CONDITION: normalized 0-100 condition, higher = stronger.
+- PROXY_CONDITION: same orientation, narrower proxy, requires PARTIAL.
+- VULNERABILITY_PENALTY: asymmetric risk, must NOT be naively averaged.
+- SUPPORTING_CONTEXT: context with no approved numeric contribution.
+
+### Part 3 — Initial role assignments
+
+- Rule of law: RULE_OF_LAW_WGI_SCORE = CORE_CONDITION.
+- Corruption: CONTROL_OF_CORRUPTION_WGI_SCORE = CORE_CONDITION.
+- Internal conflict: POLITICAL_STABILITY_WGI_SCORE = PROXY_CONDITION.
+- Indebtedness: DSR = CORE_CONDITION, credit gap = VULNERABILITY_PENALTY,
+  government debt = SUPPORTING_CONTEXT.
+- All other mapped indicators: SUPPORTING_CONTEXT (level normalization
+  deferred). No existing indicator normalization methodology changed.
+
+### Part 4 — Aggregation modes
+
+- IDENTITY_SINGLE: the ONLY approved numeric aggregation. force.level_score
+  = indicator.level_score for exactly one eligible component. No rescaling,
+  no weighting, no averaging.
+- DEFERRED_MULTI: 2+ components, vulnerability penalty interaction, or
+  unresolved weights → force dimension = None. No equal-weight fallback.
+
+### Part 5 — 17-force approval matrix
+
+- 3 of 17 approved for IDENTITY_SINGLE (level + relative + momentum):
+  Rule of law, Corruption, Internal conflict proxy.
+- 14 of 17 deferred (including Indebtedness — DSR + credit gap + government
+  debt cannot be naively averaged).
+
+### Parts 6-9 — Relative / Momentum / Confidence / Backtest policies
+
+- Relative: identity copy only on approved single-WGI forces. Copy entire
+  provenance. Never recompute ranks. Never label tracked_8 as global.
+- Momentum: identity copy only on approved single-WGI forces. Indebtedness
+  momentum = None.
+- Confidence: None everywhere. No force-confidence numeric composition.
+- Backtest safety: False everywhere.
+
+### Part 10 — Typed configuration skeleton
+
+- `apps/api/app/cycle/force_aggregation_definitions.py` (NEW, non-executing):
+  ForceIndicatorRole, ForceAggregationMode, ForceDimensionMode,
+  ForceIndicatorComponentSpec, ForceAggregationSpec,
+  FORCE_AGGREGATION_CONFIGS (all 17 forces explicit), validation at import
+  time. Version: force-aggregation-v0.1.
+
+### Part 11 — ForceSignal type design
+
+- Designed in FORCE_AGGREGATION.md §11 but NOT executed. No DB table, no
+  persistence, no public API.
+
+### Part 12 — Versioning
+
+- Indicator normalization: normalization-v0.6 (unchanged).
+- Force aggregation: force-aggregation-v0.1 (new, this sprint).
+
+### Part 13 — DEC-029
+
+- Created: initial force aggregation methodology. Records all invariants,
+  roles, modes, approval matrix, policies, and versioning.
+
+### Part 14 — Tests
+
+- `apps/api/tests/test_force_aggregation_config.py` (NEW): 31 offline
+  tests for configuration invariants only. No force score execution.
+- pytest: **476 passed** (445 baseline + 31 new). All offline.
+
+### Files
+
+- `.dev/FORCE_AGGREGATION.md` (NEW)
+- `apps/api/app/cycle/force_aggregation_definitions.py` (NEW)
+- `apps/api/tests/test_force_aggregation_config.py` (NEW)
+- `.dev/DECISIONS.md` (DEC-029 added)
+- `.dev/HANDOFF.md`, `.dev/PROJECT_STATUS.md`, `.dev/BACKLOG.md`,
+  `.dev/DEVLOG.md`, `.dev/DATA_SOURCES.md`, `.dev/FORCE_COVERAGE.md` updated.
+
+## 2026-09-10 — Sprint 5.20.1: Source Identity + Raw Provenance Hardening
+
+### Summary
+
+Sprint 5.20.1 fixed two provenance weaknesses discovered during owner review:
+(1) the OECD education provider identity was abbreviated because
+`SourceSeries.external_code` varchar(100) was too short; (2) WID
+`data_quality` raw provider representation was lost when parsing failed or
+when the string was converted to int. No economic/model semantics change.
+No commit/push.
+
+### Part 1 — Widen Source Series External Identity
+
+- **Root cause**: the exact OECD education identity (agency + dataflow +
+  version + 17-dimension SDMX key) is 140 chars. The old varchar(100)
+  column forced a synthetic abbreviation (`EAG_LSO_NEAC/...`) that
+  discarded the agency (`OECD.EDU.IMEP`) and version (`1.0`) components.
+- **Exact serialized identity** (Sprint 5.20.1): `agency,dataflow,version/key`
+  — mirrors the OECD SDMX REST URL path component
+  `{agency_id},{dataflow_id},{version}/{key}`. The education external_code
+  is now:
+  `OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A`
+  (140 chars). Provider-native, deterministic, country-independent ({cc}),
+  no hashes, no opaque alias, no truncation, no invented abbreviation.
+- **Migration**: Alembic `a8f3c2d1e5b7` (down_revision `e3a7c94b1d51`)
+  widens `source_series.external_code` from varchar(100) to varchar(255).
+  Applied to dev PostgreSQL. Existing rows preserved exactly — only column
+  capacity changed. No destructive update.
+- **Model**: `SourceSeries.external_code` updated from `String(100)` to
+  `String(255)`.
+- **Mapping update**: `oecd_mappings.py` `TERTIARY_ATTAINMENT_25_34`
+  `external_code` replaced with the exact serialized identity. The retired
+  `EAG_LSO_NEAC/...` abbreviation is gone. Canonical indicator, provider
+  dimensions, values, force mapping, and normalization family are unchanged.
+- **Seed idempotency**: re-running `seed()` updated the existing
+  SourceSeries row in place (0 inserted, 22 updated). No second Education
+  series created. SourceSeries count remains 22. Education observations
+  (200) are intact — the FK identity (data_source_id + indicator_id) is
+  unchanged; only the `external_code` column was updated.
+- **Tests**: 8 new source identity regression tests (exact agency, exact
+  dataflow, version, complete SDMX key, country-independent {cc}, length >
+  100, no retired abbreviation alias, seed updates-not-duplicates).
+
+### Part 2 — WID Raw data_quality Preservation
+
+- **Root cause**: the WID adapter parsed `data_quality` to int and stored
+  only the typed value. The raw provider string was lost for unexpected
+  values (e.g. "A" → None, with no trace of "A").
+- **Fix**: `raw_payload` now carries both `data_quality_raw` (the exact
+  raw provider string, stripped of surrounding whitespace) and
+  `data_quality` (the typed convenience value: int or None). The raw
+  string is never lost — unknown codes such as "A" stay "A", not
+  None-or-zero. Empty string stays "". DEC-027 NO-filtering policy
+  unchanged.
+- **Tests**: 2 new regression tests (unknown code "A" preserved as raw
+  "A" with typed None and observation retained; empty string preserved as
+  raw "" with typed None). Existing data_quality test expanded to verify
+  both raw and typed values for "0", "1", "2".
+
+### Part 3 — Live Regression
+
+- DB counts verified unchanged: 6,814 observations / 27 indicators / 22
+  SourceSeries / 10 DataSources / 1,872 diagnostics.
+- Education SourceSeries: 1 row (no duplicate), external_code = 140 chars
+  (exceeds old 100-char limit).
+- No WID re-import needed (raw_payload change affects future imports only;
+  existing rows retain their original raw_payload).
+
+### Part 4 — Model Boundaries
+
+- Model version: `normalization-v0.6` (unchanged).
+- Confidence: None (unchanged).
+- Education: PARTIAL (unchanged).
+- Wealth/opportunity/values: PARTIAL (unchanged).
+- GOVERNMENT_DEBT_GDP: unscored (unchanged).
+- No normalized output change, no force score, no force weight, no
+  confidence implementation, no phase, no frontend.
+
+### Tests
+
+- pytest: **445 passed** (435 baseline + 10 new: 8 OECD identity + 2 WID
+  data_quality raw). All offline. No frontend build.
+
 ## 2026-09-10 — Sprint 5.20: Education + WID Implementation + Sprint-5.19 Hardening
 
 ### Summary

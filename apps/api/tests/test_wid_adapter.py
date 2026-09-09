@@ -151,7 +151,12 @@ async def test_range_validation_rejects_above_one(tmp_path):
 
 
 async def test_data_quality_preserved_in_raw_payload(tmp_path):
-    """data_quality is preserved but NOT used for filtering."""
+    """data_quality is preserved but NOT used for filtering.
+
+    Sprint 5.20.1: both the raw provider string (data_quality_raw) and the
+    typed convenience value (data_quality) are preserved. The raw string
+    is never lost — even for unknown codes.
+    """
     rows = [
         _wealth_row("US", 2020, "0.72", dq="0"),
         _wealth_row("US", 2021, "0.73", dq="1"),
@@ -165,6 +170,40 @@ async def test_data_quality_preserved_in_raw_payload(tmp_path):
     assert observations[0].raw_payload["data_quality"] == 0
     assert observations[1].raw_payload["data_quality"] == 1
     assert observations[2].raw_payload["data_quality"] == 2
+    # Raw provider representation preserved exactly
+    assert observations[0].raw_payload["data_quality_raw"] == "0"
+    assert observations[1].raw_payload["data_quality_raw"] == "1"
+    assert observations[2].raw_payload["data_quality_raw"] == "2"
+
+
+async def test_data_quality_raw_preserved_for_unknown_code(tmp_path):
+    """An unknown data_quality code (e.g. 'A') is preserved as the raw
+    string; the typed value is None; the observation is NOT filtered."""
+    rows = [
+        _wealth_row("US", 2020, "0.72", dq="0"),
+        _wealth_row("US", 2021, "0.73", dq="A"),
+    ]
+    zip_bytes = _make_zip("US", rows)
+    adapter = _make_adapter(zip_bytes, tmp_path)
+    observations = await adapter.fetch_indicator("USA", WEALTH_CODE)
+    assert len(observations) == 2  # no row filtered
+    assert observations[0].raw_payload["data_quality_raw"] == "0"
+    assert observations[0].raw_payload["data_quality"] == 0
+    assert observations[1].raw_payload["data_quality_raw"] == "A"
+    assert observations[1].raw_payload["data_quality"] is None
+
+
+async def test_data_quality_raw_preserved_for_empty_string(tmp_path):
+    """An empty data_quality string is preserved as '' and typed as None."""
+    rows = [
+        _wealth_row("US", 2020, "0.72", dq=""),
+    ]
+    zip_bytes = _make_zip("US", rows)
+    adapter = _make_adapter(zip_bytes, tmp_path)
+    observations = await adapter.fetch_indicator("USA", WEALTH_CODE)
+    assert len(observations) == 1
+    assert observations[0].raw_payload["data_quality_raw"] == ""
+    assert observations[0].raw_payload["data_quality"] is None
 
 
 async def test_raw_payload_provenance(tmp_path):
@@ -178,6 +217,7 @@ async def test_raw_payload_provenance(tmp_path):
     assert rp["percentile"] == "p90p100"
     assert rp["age"] == "992"
     assert rp["pop"] == "j"
+    assert rp["data_quality_raw"] == "0"
     assert rp["data_quality"] == 0
     assert rp["value"] == "0.72"
 

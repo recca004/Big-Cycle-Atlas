@@ -240,7 +240,11 @@ class WidAdapter(BaseDataSourceAdapter):
                     f"WID year is not an integer: {raw_year!r}"
                 ) from None
 
-            # Parse data_quality (preserved but not used for filtering)
+            # Parse data_quality (preserved but not used for filtering).
+            # Sprint 5.20.1: preserve the EXACT raw provider representation
+            # (data_quality_raw) alongside the typed convenience value
+            # (data_quality). The raw string is never lost — unknown codes
+            # such as "A" stay "A", not None-or-zero. DEC-027: NO filtering.
             raw_dq = (row.get("data_quality") or "").strip()
             try:
                 data_quality = int(raw_dq) if raw_dq else None
@@ -270,6 +274,7 @@ class WidAdapter(BaseDataSourceAdapter):
                         "percentile": row_percentile,
                         "age": row_age,
                         "pop": row_pop,
+                        "data_quality_raw": raw_dq,
                         "data_quality": data_quality,
                         "value": raw_value,
                     },

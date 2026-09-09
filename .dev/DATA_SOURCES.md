@@ -105,9 +105,9 @@ Mappings are seeded idempotently into the `source_series` table.
 - Import CLI: `$env:PYTHONPATH='.'; uv run --no-sync python scripts/ingest_imf_weo.py --all-countries --all-mapped` (from apps/api; `--country ISO3` / `--indicator CODE` for single runs)
 - Status: testing
 
-## WID (World Inequality Database) — Sprint 5.18 audit + Sprint 5.19 verification, NOT implemented
+## WID (World Inequality Database) — Sprint 5.20 IMPLEMENTED, Sprint 5.20.1 hardened
 
-- Adapter: NOT built (read-only research + bulk-download verification only)
+- Adapter: working (`apps/api/app/data_sources/wid.py`, offline tests with in-memory zip fixture)
 - Official mechanism: four documented access paths (https://wid.world/codes-dictionary/):
   1. Website graphing tools (manual exploration)
   2. Specific-series download from the DATA section (https://wid.world/data/)
@@ -119,10 +119,11 @@ Mappings are seeded idempotently into the `source_series` table.
 - **Sprint 5.19 canonical series correction**: `shwealj992` (age=992 adults, pop=`j` = equal-split adults) — NOT pop=`i` (individuals). Pop=`j` is the ONLY series available for all 8 tracked countries. Pop=`i` exists only for USA and GBR.
 - **Sprint 5.19 coverage audit** (shwealj992, p90p100 + p99p100): all 8 countries have data 1980–2024. Modern-era coverage is good; pre-1900 gaps are expected for WID's long-run series.
 - **Sprint 5.19 extrapolation counts** (data_quality=2): USA 0, CHN 0, CHE 0, DEU 24, FRA 80, GBR 93, JPN 0, IND 0. Three countries (DEU, FRA, GBR) have significant extrapolation. Interpolation counts (data_quality=1): DEU 1, IND 4; all others 0.
-- Extrapolation policy: **exclude data_quality=2 (extrapolated) values during ingestion** — honors the Sprint 5.18 `include_extrapolations = FALSE` recommendation. After exclusion, coverage remains sufficient for all 8 countries.
+- **Sprint 5.20 data_quality policy (DEC-027)**: DEFER filtering — import ALL rows, preserve data_quality in raw_payload, do NOT delete provider data using an inferred code meaning. WID does NOT provide an official code dictionary. The Sprint 5.19 recommendation to exclude data_quality=2 is RETRACTED.
+- **Sprint 5.20.1 raw provenance hardening**: `raw_payload` now carries both `data_quality_raw` (the raw provider CSV field, stripped of surrounding whitespace) and `data_quality` (the typed convenience value: int or None). The provider representation is preserved for traceability — unknown codes such as "A" stay "A" (not None-or-zero); empty string stays "". DEC-027 NO-filtering policy unchanged.
 - Ceiling: does NOT lift DEC-009 PARTIAL ceiling (wealth share addresses wealth inequality only, not opportunity or values/social gaps)
-- Verdict: `WID_IMPLEMENTABLE` (DEC-025, Track C — Sprint 5.19 verified)
-- Status: audited + verified (not implemented)
+- Imported data: 670 observations across 8 countries (shwealj992, p90p100, pop=j). Idempotency verified (0 inserted / 117 skipped on USA re-import).
+- Status: testing (Sprint 5.20 IMPLEMENTED)
 
 ## OECD (Organisation for Economic Co-operation and Development)
 
@@ -134,7 +135,7 @@ Mappings are seeded idempotently into the `source_series` table.
 - Key format: REF_AREA (country) is the FIRST key dimension and uses **ISO3** codes identical to Big Cycle Atlas codes for all 8 tracked countries — no alias translation needed (`OECD_REF_AREA_BY_ISO3` documents the verified 1:1 identity; unlike BIS, which requires ISO2)
 - Verified API findings (2026-09-08): the v2 API's `c[...]` filter parameters are silently broken server-side (observed returning wrong-country rows) — only v1-style exact dot-keys work, and every returned row is still dimension-validated because a correct request is not proof of a correct response; the `DF_PDB_LV` dataflow is broken server-side ("Object reference not set to an instance of an object") — `DF_PDB` is used instead
 - Datasets identified: `OECD.SDD.TPS/DSD_PDB@DF_PDB` v2.0 (annual Productivity Database) and `OECD.SDD.TPS/DSD_PDB@DF_PDB_ULC_Q` v1.0 (quarterly unit labour costs)
-- External identity: `"{dataflow_id}/{sdmx_key_template}"` with `{cc}` as the REF_AREA placeholder (e.g. `DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP`) — country-independent so a single SourceSeries row could later be shared across countries
+- External identity: `"{dataflow_id}/{sdmx_key_template}"` with `{cc}` as the REF_AREA placeholder (e.g. `DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP`) — country-independent so a single SourceSeries row could later be shared across countries. **Sprint 5.20.1**: the education attainment identity uses the exact serialized form `agency,dataflow,version/key` (e.g. `OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}...`) — the previous `EAG_LSO_NEAC/...` abbreviation (forced by varchar(100)) is retired; the column is now varchar(255) (Alembic `a8f3c2d1e5b7`)
 - Mapped concepts: 2 — owner-approved 2026-09-08 and seeded (central config in `apps/api/app/data_sources/oecd_mappings.py`; canonical indicators in the 19-indicator catalog; 2 SourceSeries rows with `{cc}` placeholder identities)
 - Frequencies: annual (2024 → observation_date 2024-01-01) and quarterly (BIS convention: Q1→01-01, Q2→04-01, Q3→07-01, Q4→10-01); `period` stays the year
 - Coverage matrix for the two selected series (verified live 2026-09-08 via exact-key queries): USA YES (prod 1987–2025; ULC 1956-Q1–2025-Q3), CHE YES (1991–2025; 1996-Q1–2025-Q4), DEU YES (1991–2025; 1992-Q1–2026-Q1), FRA YES (1970–2025; 1950-Q1–2026-Q1), GBR YES (1980–2024; 1993-Q2–2025-Q4), JPN YES (1970–2024; 1981-Q1–2026-Q1), CHN NO, IND NO — CHN and IND have no observations in these selected OECD dataflows

@@ -11,7 +11,7 @@ from app.data_sources.oecd import OECDAdapter
 from app.data_sources.oecd_mappings import get_oecd_mapping_by_external_code
 
 ATTAINMENT_CODE = (
-    "EAG_LSO_NEAC/"
+    "OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/"
     "{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z."
     "ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A"
 )
@@ -199,3 +199,93 @@ async def test_sparse_history_preserved():
     assert len(observations) == 1
     assert observations[0].period == 2010
     assert observations[0].value == 17.95
+
+
+# --- Sprint 5.20.1: exact provider identity regression tests ----------------
+
+
+def test_exact_agency_in_external_code():
+    """The exact OECD agency (OECD.EDU.IMEP) appears in the external_code."""
+    mapping = get_oecd_mapping_by_external_code(ATTAINMENT_CODE)
+    assert mapping is not None
+    assert "OECD.EDU.IMEP" in mapping.external_code
+
+
+def test_exact_dataflow_in_external_code():
+    """The exact dataflow (DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA) appears."""
+    mapping = get_oecd_mapping_by_external_code(ATTAINMENT_CODE)
+    assert mapping is not None
+    assert "DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA" in mapping.external_code
+
+
+def test_version_in_external_code():
+    """The version (1.0) appears in the external_code."""
+    mapping = get_oecd_mapping_by_external_code(ATTAINMENT_CODE)
+    assert mapping is not None
+    assert ",1.0/" in mapping.external_code
+
+
+def test_complete_sdmx_key_in_external_code():
+    """The complete no-wildcard SDMX key appears in the external_code."""
+    mapping = get_oecd_mapping_by_external_code(ATTAINMENT_CODE)
+    assert mapping is not None
+    expected_key = (
+        "{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z."
+        "ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A"
+    )
+    assert expected_key in mapping.external_code
+
+
+def test_external_code_is_country_independent():
+    """The {cc} placeholder survives — identity is country-independent."""
+    mapping = get_oecd_mapping_by_external_code(ATTAINMENT_CODE)
+    assert mapping is not None
+    assert "{cc}" in mapping.external_code
+
+
+def test_external_code_exceeds_old_100_char_limit():
+    """The exact identity is longer than the old varchar(100) limit.
+
+    This proves the identity was NOT truncated to fit the old schema.
+    """
+    mapping = get_oecd_mapping_by_external_code(ATTAINMENT_CODE)
+    assert mapping is not None
+    assert len(mapping.external_code) > 100
+
+
+def test_no_abbreviation_alias_in_external_code():
+    """The retired 'EAG_LSO_NEAC' abbreviation must NOT appear."""
+    mapping = get_oecd_mapping_by_external_code(ATTAINMENT_CODE)
+    assert mapping is not None
+    assert "EAG_LSO_NEAC/" not in mapping.external_code
+
+
+@pytest.mark.asyncio
+async def test_seed_updates_existing_series_not_duplicate(client):
+    """Re-running seed updates the education SourceSeries in place, never
+    creates a duplicate."""
+    from app.db import session as session_module
+    from app.db.seed import DEFAULT_DATA_FILE, seed
+    from app.models import DataSource, SourceSeries
+    from sqlalchemy import func, select
+
+    sessionmaker = session_module._sessionmaker
+    await seed(DEFAULT_DATA_FILE)
+    async with sessionmaker() as session:
+        oecd_source = (await session.execute(
+            select(DataSource).where(DataSource.key == "oecd")
+        )).scalar_one()
+        edu_series = (await session.execute(
+            select(SourceSeries).where(SourceSeries.data_source_id == oecd_source.id)
+        )).scalars().all()
+        # Exactly 3 OECD series (productivity, ULC, attainment) — no duplicate
+        assert len(edu_series) == 3
+        # The attainment series has the exact identity
+        attainment = [s for s in edu_series if "{cc}._T.Y25T34" in s.external_code]
+        assert len(attainment) == 1
+        assert "OECD.EDU.IMEP" in attainment[0].external_code
+        # Total SourceSeries stays 22
+        total = (await session.execute(
+            select(func.count()).select_from(SourceSeries)
+        )).scalar_one()
+        assert total == 22

@@ -7,6 +7,14 @@ docs/data-model.md and packages/shared `FORCES`); per-country coverage is
 computed by `apps/api/app/services/force_coverage_service.py` and exposed at
 `GET /api/countries/{iso3}/force-coverage`.
 
+**Sprint 5.21 note:** Coverage status (AVAILABLE / PARTIAL /
+DEFINED_NOT_SOURCED / MISSING) measures DATA AVAILABILITY only. It is
+distinct from NUMERIC FORCE ELIGIBILITY — a force with AVAILABLE coverage
+may still have no approved force score if its indicator normalization is
+deferred or its aggregation mode is DEFERRED_MULTI. See
+`.dev/FORCE_AGGREGATION.md` for the force-level approval matrix (3 of 17
+approved for IDENTITY_SINGLE; 14 deferred).
+
 ## Status meanings
 
 | Status | Rule (deterministic) |
@@ -46,20 +54,20 @@ infrastructure are deliberately NOT capped.
 | # | Force | Live indicators | Catalog-only candidates | Missing concepts | Recommended source(s) | Priority |
 |---|---|---|---|---|---|---|
 | 1 | Leadership capabilities | — | — | capabilities/quality of leadership (qualitative) | expert assessment (owner-curated, later milestone) | LOW |
-| 2 | Education | — | TERTIARY_ENROLLMENT, SECONDARY_ENROLLMENT | attainment, test scores, years of schooling | 5.1 audit resolved 2026-09-08 (DEC-007, Option C): keep the age-specific/attainment concepts — do NOT redefine to WB gross enrollment ratios; pursue OECD attainment (tertiary) / WB net enrollment SE.SEC.NENR (secondary) in a future sprint | MEDIUM (awaiting better indicators) |
+| 2 | Education | TERTIARY_ATTAINMENT_25_34 (OECD, annual, Sprint 5.20) — capped at PARTIAL | TERTIARY_ENROLLMENT, SECONDARY_ENROLLMENT | secondary attainment/enrollment, test scores, learning outcomes, education quality, years of schooling, skills | One tertiary series cannot make Education AVAILABLE — capped at PARTIAL. CHN/IND sparse. | MEDIUM (awaiting better indicators) |
 | 3 | Character / determination | — | — | resourcefulness/determination (qualitative) | expert assessment | LOW |
-| 4 | Rule of law | RULE_OF_LAW_WGI_SCORE (WB WGI 2025 revision, 1996–2024, all 8 countries) | — | — | Done for M5.2. Perception-based composite; source indicator, not a force score | DONE (LOW) |
-| 5 | Corruption | CONTROL_OF_CORRUPTION_WGI_SCORE (WB WGI 2025 revision, 1996–2024, all 8 countries) | — | — | Done for M5.2. Source is Control of Corruption: HIGHER = stronger control / less corruption; raw value never reversed. Perception-based composite | DONE (LOW) |
+| 4 | Rule of law | RULE_OF_LAW_WGI_SCORE (WB WGI 2025 revision, 1996–2024, all 8 countries) | — | — | Done for M5.2. Perception-based composite; source indicator, not a force score. **Sprint 5.22: executable IDENTITY_SINGLE force signal.** | DONE (LOW) |
+| 5 | Corruption | CONTROL_OF_CORRUPTION_WGI_SCORE (WB WGI 2025 revision, 1996–2024, all 8 countries) | — | — | Done for M5.2. Source is Control of Corruption: HIGHER = stronger control / less corruption; raw value never reversed. Perception-based composite. **Sprint 5.22: executable IDENTITY_SINGLE force signal.** | DONE (LOW) |
 | 6 | Resource allocation efficiency | — | — | capital/labor misallocation measures | needs concept definition first (credit-gap variants are mapped to Indebtedness) | LOW |
 | 7 | Global openness | — | — | openness to trade/capital/people/ideas | WB trade data (exports/imports/trade balance/current account) is now live and available as a future openness input candidate — deliberately NOT promoted: trade alone does not cover capital, people, and ideas; a narrower trade-based proxy methodology needs owner approval first | MEDIUM |
 | 8 | Productivity / output growth | GDP_GROWTH (WB), LABOUR_PRODUCTIVITY_PER_HOUR (OECD) | RND_EXPENDITURE_GDP | multi-factor productivity | World Bank/OECD R&D later; current live set is solid | DONE (LOW) |
 | 9 | Cost competitiveness | UNIT_LABOUR_COST_GROWTH (OECD), INFLATION_CPI (WB, 1990–2024/2025) | — | relative price levels; exchange rates and partner-country price/cost comparisons | Done for M5.3: OECD-6 AVAILABLE (ULC + CPI), CHN/IND PARTIAL (CPI only — OECD ULC unavailable). CPI is a domestic price-pressure input, not a relative-competitiveness measure by itself | DONE (LOW) |
 | 10 | Trade and capital flows | EXPORTS_GDP, IMPORTS_GDP, TRADE_BALANCE, CURRENT_ACCOUNT_GDP (all WB, 2000–2025) | — | bilateral flows, capital flow measures beyond the current account | UN Comtrade / capital-flow data later | DONE (LOW) |
 | 11 | Infrastructure and investment | GROSS_CAPITAL_FORMATION_GDP (WB, 2000–2025) | — | infrastructure quality (GCF measures investment effort, not quality) | quality indices later | DONE (MEDIUM) |
-| 12 | Indebtedness | CREDIT_TO_GDP_GAP (BIS), DEBT_SERVICE_RATIO (BIS) | GOVERNMENT_DEBT_GDP | household/corporate debt split; public-sector debt input | 5.1 audit resolved 2026-09-08 (DEC-008): owner keeps the general-government concept — do NOT use WB GC.DOD.TOTL.GD.ZS (central government only); a genuine general-government source (e.g. IMF WEO) is evaluated in a future sprint | MEDIUM |
+| 12 | Indebtedness | CREDIT_TO_GDP_GAP (BIS), DEBT_SERVICE_RATIO (BIS), GOVERNMENT_DEBT_GDP (IMF WEO, Sprint 5.19) | — | household/corporate debt split | Government debt is a raw level input only — no monotonic "higher debt = weaker" curve is approved (CONTEXTUAL_DEFERRED). No Indebtedness force score exists (DEFERRED_MULTI — DSR + credit gap + government debt cannot be naively averaged). | MEDIUM (methodology needed) |
 | 13 | Military strength | MILITARY_EXPENDITURE_USD, MILITARY_EXPENDITURE_GDP (WB republishing SIPRI, 1990–2024, all 8 countries) — capped at PARTIAL (DEC-009, M5.4) | — | personnel capability, equipment quality/quantity, technology, logistics, readiness, combat experience, alliances/force projection, nuclear capability | Done for M5.4 as a spending-input proxy (no direct SIPRI adapter — WDI republish is the pipeline); future strengthening would need capability data, not more spending series | DONE for M5.4 — stays PARTIAL (LOW) |
-| 14 | Wealth / opportunity / values gaps | GINI_INDEX (WB, irregular, country-varying latest year 2020–2024) — capped at PARTIAL (DEC-009) | — | wealth inequality, equality of opportunity, values/social gaps (Gini covers income inequality only) | Done for M5.3 as income-inequality proxy; future strengthening: wealth/income shares (WID), unemployment/opportunity measures, social polarization indicators | DONE for M5.3 — stays PARTIAL (LOW) |
-| 15 | Internal conflict | POLITICAL_STABILITY_WGI_SCORE (WB WGI 2025 revision, 1996–2024, all 8 countries) — capped at PARTIAL (DEC-009, M5.3) | — | polarization, protests, distributional tension (not covered by the WGI proxy) | Initial proxy: WGI Political Stability and Absence of Violence/Terrorism — an institutional/conflict-risk measure, NOT every form of domestic conflict; later ACLED / event data may strengthen this force | DONE — stays PARTIAL (LOW) |
+| 14 | Wealth / opportunity / values gaps | GINI_INDEX (WB, irregular), WEALTH_SHARE_TOP_10 (WID, annual, Sprint 5.20) — capped at PARTIAL (DEC-009) | — | opportunity gaps, values/social gaps (Gini covers income inequality only; WID covers wealth concentration only) | Done for M5.3 as income-inequality proxy + wealth-concentration proxy; future strengthening: unemployment/opportunity measures, social polarization indicators | DONE — stays PARTIAL (LOW) |
+| 15 | Internal conflict | POLITICAL_STABILITY_WGI_SCORE (WB WGI 2025 revision, 1996–2024, all 8 countries) — capped at PARTIAL (DEC-009, M5.3) | — | polarization, protests, distributional tension (not covered by the WGI proxy) | Initial proxy: WGI Political Stability and Absence of Violence/Terrorism — an institutional/conflict-risk measure, NOT every form of domestic conflict; later ACLED / event data may strengthen this force. **Sprint 5.22: executable IDENTITY_SINGLE proxy force signal (coverage stays PARTIAL).** | DONE — stays PARTIAL (LOW) |
 | 16 | Geography | — | — | natural endowments, location (mostly static) | static reference data, not time-series ingestion | LOW |
 | 17 | Acts of nature | — | — | disaster/pandemic/climate exposure | EM-DAT, climate indices | LOW |
 
@@ -160,7 +168,9 @@ full record.**
   1997–2025).
 - Verdict: `EDUCATION_IMPLEMENTABLE_PARTIAL` — implementable for 6/8
   countries with good coverage. CHN and IND too sparse for reliable
-  time-series use. Education force stays defined_not_sourced / partial.
+  time-series use. Education force is now sourced (Sprint 5.20:
+  TERTIARY_ATTAINMENT_25_34 live, OECD) but stays PARTIAL — one tertiary
+  series cannot make Education AVAILABLE.
 
 ### Track C — WID wealth: VERIFIED (Sprint 5.19 corrections)
 
@@ -178,24 +188,16 @@ full record.**
 - Verdict: `WID_IMPLEMENTABLE` — exclude extrapolations (data_quality=2),
   force stays PARTIAL. READY for Sprint 5.21.
 
-## Top next data priorities (ranked by force gaps filled, post-5.19)
+## Top next data priorities (ranked by force gaps filled, post-5.22)
 
-1. **OECD tertiary attainment (PARTIAL, Sprint 5.20)** — would add the
-   first live input to Education (currently defined_not_sourced). 6/8
-   good coverage, 2/8 sparse. Annual (not triennial as previously
-   stated). WB SE.SEC.NENR deferred (stale).
-2. **WID wealth shares (IMPLEMENTABLE, Sprint 5.21)** — would add a
-   wealth-distribution input to Wealth / opportunity / values gaps
-   (currently Gini income-inequality only). Force stays PARTIAL.
-   Exclude data_quality=2 (extrapolations).
-3. **Force Layer + Methodology (Sprint 5.22)** — normalization design,
-   weight design, force aggregation. Requires methodology work before
-   force scores can be created.
-4. **ACLED / event data (LOW-MEDIUM)** — would move Internal conflict
-   beyond its PARTIAL ceiling.
-5. **Military capability data (LOW)** — would move Military strength
-   beyond its PARTIAL ceiling; no more spending series will lift the
-   ceiling.
+1. **Force/cycle methodology (Milestone 6)** — Indebtedness composition formula,
+   Gini/WID/education/productivity normalization curves, force confidence
+   methodology, Big Cycle phase/stage calculation. Requires methodology work
+   before more forces can be scored.
+2. **ACLED / event data (LOW-MEDIUM)** — would move Internal conflict beyond
+   its PARTIAL ceiling.
+3. **Military capability data (LOW)** — would move Military strength beyond
+   its PARTIAL ceiling; no more spending series will lift the ceiling.
 
 FRED/ALFRED (US-only, 1 of 8 countries) and other new providers are deferred:
 they fill fewer force gaps per unit of work than extending WB.

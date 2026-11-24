@@ -16,11 +16,11 @@ Current programme state: **Mission 1 in progress** (2026-03).
 ## Mission 1 scope (this session)
 
 - [x] Doc corrections (HANDOFF current-state block, this file, FORCE_COMPLETION_MATRIX)
-- [ ] DEC-042 Option C: productivity own-history momentum (approved)
+- [x] DEC-042 Option C: productivity own-history % momentum (3y/5y/10y, primary 5y) — shipped
 - [ ] Cost competitiveness (REER/relative-ULC research → supported dimension or context module)
-- [ ] Trade & capital flows; global openness; infrastructure; military resources; resource allocation; character/participation; geography; acts of nature — research module or supported proxy each
-- [ ] Reusable historical force-calculation service + read-only API
+- [~] character/participation: DONE (LFP type-B proxy); military: DONE (relative_share type-C); trade/FDI data: DONE. Remaining: cost competitiveness (REER), openness, infrastructure, resource allocation, geography, acts of nature — context modules or delegated proxies still open
+- [x] Historical force-scores endpoint: GET /api/countries/{iso3}/forces/{force}/history
 - [ ] Methodology states formalised: EXPERIMENTAL / VALIDATED_CANDIDATE / APPROVED_PRODUCTION
-- [ ] Uncertainty response contract (WGI diagnostics — bounds, source counts)
-- [ ] Cross-force dependency map (machine-readable)
+- [x] Uncertainty endpoint: GET /api/countries/{iso3}/indicator-uncertainty (4 WGI indicators, CI bounds + source counts)
+- [x] Cross-force dependency map: .dev/FORCE_DEPENDENCY_MAP.json (generated from live registries)
 - [ ] Progress page reflects real execution state

@@ -484,3 +484,21 @@ Sprint 5.8 is closed and verified (278 tests, live read-only smoke covering top/
 - normalization-v1.0 / force-aggregation-v0.6. 682 backend tests.
 - Option C (own-history momentum for LPPH) still deferred — same momentum machinery question as other forces.
 - Remaining forces still need either new sources (REER, FDI, SIPRI) or approved curves.
+
+
+## Current state (2026-03, Mission 1 checkpoint)
+
+- Branch `feature/big-cycle-atlas-astro-v2`, PR #1, latest `a3c598b`.
+- **9/17 scored forces**: 8 prior + character_determination (type-B LFP
+  participation proxy, PARTIAL ceiling, WDI-universe percentile).
+- Military publishes a type-C relative dimension (share of tracked-8
+  defence spending); 7 context/D modules remain.
+- normalization-v1.3 / force-aggregation-v0.9. 694 backend tests green.
+- Data: 13,458 tracked obs; 7,976 reference obs (oecd_lpph_v1 1,258 +
+  wdi_lfp_v1 6,718); 30 indicators; 2 reference universes.
+- New this checkpoint: ingest_wb_reference.py (WB universe pipeline),
+  fetch_universe_records on WB adapter (country=all + region filter),
+  FDI %GDP context input for trade force.
+- Windows gotcha: uvicorn reload chains hang silently — kill the PID
+  tree via kill script, restart fresh; `run.py` serves stale code
+  otherwise. Check `model_version` in responses to detect staleness.

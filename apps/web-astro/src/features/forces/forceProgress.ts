@@ -76,7 +76,7 @@ export const FORCE_PROGRESS: ForceProgress[] = [
     methodologyProposed: false, methodologyApproved: false, implemented: false,
     testsPassing: false, apiAvailable: false, frontendConnected: true,
     ratification: "pending",
-    note: "DEC-033 research; momentum dimension under investigation (6.14).",
+    note: "DEC-042: level scoring deferred — needs owner-approved calibration distribution (LPPH live for 6/8 countries).",
   },
   {
     code: "cost_competitiveness",

@@ -465,3 +465,13 @@ No frontend, API-route, model, migration, mapping, seed, or raw-data changes. No
 ## Recommended next action
 
 Sprint 5.8 is closed and verified (278 tests, live read-only smoke covering top/bottom/mid relative positions computed from the live aligned cross-section, no frontend change); the WGI ×3 now publish three of the four separable dimensions (level + momentum + relative within tracked_8) with full provenance, model version normalization-v0.4. Recommended Sprint 5.9: the **TARGET_BAND/MONOTONIC parameter-design sprint** (§17.2–17.4, requires owner-approved curve thresholds — unlocks level signals for the debt/productivity/inequality/CPI families), or **confidence composition design** (§17.6 — the last unimplemented dimension). Data-side alternatives: education Option C (DEC-007), IMF WEO debt (DEC-008), WID (lifts the Wealth-gap PARTIAL ceiling).
+
+## Session checkpoint — Sprint 6.21 + DEC-042 (commit b3396e4, 3505482)
+
+- **7/17 executable forces.** Sprint 6.21 added `leadership_capabilities` via WGI Government Effectiveness (DEC-041, normalization-v0.9, force-aggregation-v0.5). USA live score 76.7. PARTIAL-capped, pending owner ratification.
+- **Sprint 6.14 evaluated → deferred (DEC-042).** LPPH PROXY_CONDITION promotion rejected: NormalizationSpec explicitly requires an owner-approved external calibration distribution; tracked-8 min-max rejected by DEC-018 audit. Owner decision options recorded in DECISIONS.md.
+- **No further force is executable without owner decisions.** All remaining live indicators are contextual_deferred or gated on unapproved curves (ULC, GDP growth, LPPH level, trade data, REER not imported).
+- Data state: 12,882 observations, 28 indicators, 23 source series, history from 1960.
+- Owner ratification package pending: DEC-040 (indebtedness v0.4), DEC-041 (leadership), DEC-042 calibration choice (productivity).
+- Tests: 670 backend green, 29 Vitest + 29 Playwright green.
+- Windows gotcha: uvicorn spawn-worker orphans persist — kill via `Get-CimInstance Win32_Process` parent-tree or `taskkill /T /F` on python.exe trees before restarting.

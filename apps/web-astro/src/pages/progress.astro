@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ProgressPanel } from "@/features/site/SitePanels";
+---
+
+<BaseLayout title="Progress">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Build status</p>
+    <h1 class="headline-lg">Progress</h1>
+    <p class="body-sm">
+      Where the engine stands: executable forces, data coverage and API
+      health — reported separately from research completion.
+    </p>
+  </header>
+  <ProgressPanel client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+</style>

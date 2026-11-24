@@ -1,0 +1,42 @@
+---
+interface Props {
+  label: string;
+  value?: string | null;
+  meta?: string;
+  status?: "good" | "warn" | "bad" | "neutral";
+}
+const { label, value, meta, status = "neutral" } = Astro.props;
+---
+
+<div class:list={["metric-card", `metric-${status}`]}>
+  <p class="label-md text-tertiary">{label}</p>
+  {
+    value != null ? (
+      <>
+        <p class="metric-value">{value}</p>
+        {meta && <p class="body-sm metric-meta">{meta}</p>}
+      </>
+    ) : (
+      <p class="body-sm metric-meta">No data</p>
+    )
+  }
+  {Astro.slots.has("default") && <slot />}
+</div>
+
+<style>
+  .metric-card {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--surface-1);
+  }
+  .metric-value {
+    margin-top: var(--space-2);
+  }
+  .metric-meta {
+    margin-top: var(--space-1);
+    font-size: var(--text-xs);
+  }
+  .metric-good .metric-value { color: var(--status-good); }
+  .metric-warn .metric-value { color: var(--status-warn); }
+  .metric-bad .metric-value { color: var(--status-bad); }
+</style>

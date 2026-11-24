@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DomainForces } from "@/features/site/SitePanels";
+---
+
+<BaseLayout title="Trade">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Trade &amp; openness</p>
+    <h1 class="headline-lg">Trade</h1>
+    <p class="body-sm">
+      Trade and capital-flow forces with openness indicators. Trade-capital
+      profile audit completed in Sprint 6.12.
+    </p>
+  </header>
+  <DomainForces
+    client:load
+    forceCodes={["trade_capital_flows", "global_openness"]}
+    indicators={["TRADE_OPENNESS_PCT_GDP", "CURRENT_ACCOUNT_PCT_GDP", "FDI_NET_INFLOWS_PCT_GDP"]}
+  />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+</style>

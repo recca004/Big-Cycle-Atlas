@@ -352,7 +352,7 @@ def test_versions_correct():
         component_signals={"RULE_OF_LAW_WGI_SCORE": signal},
         coverage_status=ForceCoverageStatus.available,
     )
-    assert fs.force_model_version == "force-aggregation-v0.3"
+    assert fs.force_model_version == "force-aggregation-v0.4"
     assert fs.normalization_model_version == "normalization-v0.8"
 
 
@@ -448,7 +448,8 @@ def test_education_missing_indicator_level_none():
 # --- 16: Indebtedness DSR + credit gap both present -> force level None -------
 
 
-def test_indebtedness_dsr_credit_gap_present_force_level_none():
+def test_indebtedness_condition_minus_penalty_neutral_gap():
+    """Sprint 6.13 (DEC-040): neutral credit gap (50) subtracts nothing."""
     spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
     dsr = _make_dsr_signal(level=75.0)
     credit_gap = _make_credit_gap_signal(level=50.0)
@@ -463,13 +464,98 @@ def test_indebtedness_dsr_credit_gap_present_force_level_none():
         },
         coverage_status=ForceCoverageStatus.available,
     )
-    assert fs.level_score is None
+    assert fs.level_score == 75.0  # 75 + (50 - 50)
     assert fs.relative_score is None
     assert fs.momentum is None
-    assert fs.aggregation_method is ForceAggregationMode.deferred_multi
+    assert fs.aggregation_method is ForceAggregationMode.condition_minus_penalty
+    assert fs.scoring_component_indicator == "DEBT_SERVICE_RATIO"
     # Component signals preserved as provenance
     assert len(fs.component_signals) == 2  # DSR + credit gap
     assert "GOVERNMENT_DEBT_GDP" in fs.deferred_components
+
+
+def test_indebtedness_penalty_only_subtracts():
+    """Gap below 50 subtracts; the penalty can never add strength."""
+    spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
+    fs = aggregate_force_from_signals(
+        force_spec=spec,
+        country_iso3="CHE",
+        scoring_period="2025-Q2",
+        component_signals={
+            "DEBT_SERVICE_RATIO": _make_dsr_signal(level=80.0),
+            "CREDIT_TO_GDP_GAP": _make_credit_gap_signal(level=20.0),
+            "GOVERNMENT_DEBT_GDP": None,
+        },
+        coverage_status=ForceCoverageStatus.available,
+    )
+    assert fs.level_score == 50.0  # 80 + (20 - 50)
+
+
+def test_indebtedness_level_clamped_at_zero():
+    spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
+    fs = aggregate_force_from_signals(
+        force_spec=spec,
+        country_iso3="CHE",
+        scoring_period="2025-Q2",
+        component_signals={
+            "DEBT_SERVICE_RATIO": _make_dsr_signal(level=20.0),
+            "CREDIT_TO_GDP_GAP": _make_credit_gap_signal(level=0.0),
+            "GOVERNMENT_DEBT_GDP": None,
+        },
+        coverage_status=ForceCoverageStatus.available,
+    )
+    assert fs.level_score == 0.0  # 20 + (0 - 50) = -30 -> clamped
+
+
+def test_indebtedness_level_clamped_at_hundred():
+    spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
+    fs = aggregate_force_from_signals(
+        force_spec=spec,
+        country_iso3="CHE",
+        scoring_period="2025-Q2",
+        component_signals={
+            "DEBT_SERVICE_RATIO": _make_dsr_signal(level=100.0),
+            "CREDIT_TO_GDP_GAP": _make_credit_gap_signal(level=50.0),
+            "GOVERNMENT_DEBT_GDP": None,
+        },
+        coverage_status=ForceCoverageStatus.available,
+    )
+    assert fs.level_score == 100.0
+
+
+def test_indebtedness_missing_penalty_defers_not_neutral():
+    """Missing credit gap is NOT a neutral 50 — the level defers."""
+    spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
+    fs = aggregate_force_from_signals(
+        force_spec=spec,
+        country_iso3="CHE",
+        scoring_period="2025-Q2",
+        component_signals={
+            "DEBT_SERVICE_RATIO": _make_dsr_signal(level=75.0),
+            "CREDIT_TO_GDP_GAP": None,
+            "GOVERNMENT_DEBT_GDP": None,
+        },
+        coverage_status=ForceCoverageStatus.partial,
+    )
+    assert fs.level_score is None
+    assert "CREDIT_TO_GDP_GAP" in fs.missing_components
+
+
+def test_indebtedness_none_component_level_defers():
+    """A component signal without a level (e.g. insufficient history) defers."""
+    spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
+    fs = aggregate_force_from_signals(
+        force_spec=spec,
+        country_iso3="CHE",
+        scoring_period="2025-Q2",
+        component_signals={
+            "DEBT_SERVICE_RATIO": _make_dsr_signal(level=None),
+            "CREDIT_TO_GDP_GAP": _make_credit_gap_signal(level=50.0),
+            "GOVERNMENT_DEBT_GDP": None,
+        },
+        coverage_status=ForceCoverageStatus.available,
+    )
+    assert fs.level_score is None
 
 
 # --- 17: no equal-weight result exists ---------------------------------------
@@ -492,8 +578,9 @@ def test_no_equal_weight_result_indebtedness():
         coverage_status=ForceCoverageStatus.available,
     )
     # The average would be 60.0 — this must NOT be the result.
+    # Composition (DEC-040): 80 + (40 - 50) = 70.
     assert fs.level_score != 60.0
-    assert fs.level_score is None
+    assert fs.level_score == 70.0
 
 
 # --- 18: component order cannot change deferred output -------------------------
@@ -521,7 +608,7 @@ def test_component_order_does_not_change_deferred_output():
         force_spec=spec, country_iso3="CHE", scoring_period="2025-Q2",
         component_signals=signals_b, coverage_status=ForceCoverageStatus.available,
     )
-    assert fs_a.level_score == fs_b.level_score  # both None
+    assert fs_a.level_score == fs_b.level_score
     assert fs_a.aggregation_method == fs_b.aggregation_method
 
 

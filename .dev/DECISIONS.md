@@ -5095,3 +5095,76 @@ intentionally deferred.
 The most natural next step is **(a) Gini normalization audit**, as it
 follows the established audit-then-implement pattern and would
 promote a sixth executable force if a defensible level is found.
+
+## DEC-040 — Indebtedness force composition: CONDITION_MINUS_PENALTY (sixth executable force)
+
+Date: 2026-11-27
+Sprint: 6.13
+Status: IMPLEMENTED — force-aggregation-v0.4. Recorded for owner ratification;
+reversible by reverting `indebtedness.level_mode` to `deferred`.
+
+### Part 1 — Semantic target
+
+Indebtedness: "Level and trajectory of debt burdens across sectors."
+Components (unchanged roles): DEBT_SERVICE_RATIO = CORE_CONDITION,
+CREDIT_TO_GDP_GAP = VULNERABILITY_PENALTY, GOVERNMENT_DEBT_GDP =
+SUPPORTING_CONTEXT (raw level only — no approved curve; debt
+sustainability is contextual per existing registry notes).
+
+### Part 2 — Approved composition (force-aggregation-v0.4)
+
+**level_score = clamp(DSR_level + (credit_gap_level − 50), 0, 100)**
+
+Derivation from already-approved semantics (no new curve, no weights):
+- DSR level (DEC-019, OWN_HISTORY): 0–100 strength scale; 100 −
+  stress percentile, so higher = lower debt-service burden = stronger.
+- Credit-gap level (DEC-021, ONE_SIDED_VULNERABILITY): 0–50 scale;
+  +2pp-or-below gap is deliberately NEUTRAL 50, saturating to 0 at +10pp.
+- Its contribution is therefore (level − 50): a vulnerability penalty can
+  only SUBTRACT from the condition score, never add — matching the
+  VULNERABILITY_PENALTY role's design intent (DEC-029).
+- Explicitly NOT an average and NOT a multiplication: the two signals
+  occupy different semantic scales and the gap is a penalty, not a
+  second condition.
+
+### Part 3 — Missing-data rule
+
+Every numeric component must be present with a non-None level or the
+force level defers entirely. A missing credit gap is NOT treated as a
+neutral 50 — that would silently convert "no data" into "no excess",
+which is exactly the missing-vs-zero conflation the pipeline forbids.
+When the level defers, component signals are still attached as
+provenance (missing_components / deferred_components populated).
+
+### Part 4 — Deferred dimensions
+
+relative_score, momentum, confidence stay None (no composed methodology
+approved). backtest_safe = False everywhere (release-date discipline
+still pending). GOVERNMENT_DEBT_GDP stays SUPPORTING_CONTEXT — never
+numeric.
+
+### Part 5 — Implementation
+
+- New ForceDimensionMode + ForceAggregationMode: condition_minus_penalty.
+- Config validation: the mode requires exactly one eligible
+  (CORE/PROXY_CONDITION) component and ≥1 VULNERABILITY_PENALTY
+  component — fails loudly otherwise.
+- Pure aggregation in force_signal._build_condition_minus_penalty;
+  clamp [0,100], never rescales component provenance.
+- normalization_model_version unchanged (normalization-v0.8).
+
+### Part 6 — Tests
+
+6 new tests in tests/test_force_signal.py (neutral gap subtracts
+nothing; penalty only subtracts; clamp at 0 and 100; missing penalty
+defers; None component level defers) plus spec-validation updates and
+the no-equal-weight guard converted to assert 70.0 (was "must be None").
+670 tests pass.
+
+### Part 7 — Result
+
+6/17 forces executable: Rule of law, Corruption, Internal conflict
+proxy, Education, Wealth-gap (IDENTITY_SINGLE) + Indebtedness
+(CONDITION_MINUS_PENALTY). 11/17 deferred. Exposed read-only at
+GET /api/countries/{iso3}/force-scores (non-persisted, derived at
+request time).

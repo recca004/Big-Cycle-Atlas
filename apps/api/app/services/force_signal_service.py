@@ -39,6 +39,16 @@ Sprint 6.7 / force-aggregation-v0.3 (DEC-034):
   confidence stay None.
 - confidence = None everywhere; backtest_safe = False everywhere.
 - No persistence. No public API.
+
+Sprint 6.13 / force-aggregation-v0.4 (DEC-040):
+- 5 of 17 forces approved for IDENTITY_SINGLE (Rule of law, Corruption,
+  Internal conflict proxy, Education, Wealth-gap).
+- Indebtedness is the sixth executable force via CONDITION_MINUS_PENALTY:
+  level = clamp(DSR + (credit_gap - 50), 0, 100); both numeric components
+  required — a missing credit gap defers, never neutral.
+- 11 of 17 forces DEFERRED_MULTI (level/relative/momentum = None).
+- confidence = None everywhere; backtest_safe = False everywhere.
+- No persistence. GET /api/countries/{iso3}/force-scores is read-only.
 """
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession

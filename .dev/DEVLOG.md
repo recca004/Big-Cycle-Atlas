@@ -2558,3 +2558,20 @@ Both dev servers had died around the context break — backend restarted on 8000
 - **Live smoke:** `scripts/bis_smoke.py CHE` (read-only, no DB writes) → CHE credit gap 2024-Q1…2025-Q4, 8 observations, latest 2025 Q4 = −17.0378 (matches research probe).
 - **Status:** data_sources BIS planned → `testing` (via app session layer, one row). WB stays `testing`.
 - **Not done (per sprint rules):** no persistence, no frontend changes, no extra providers, no force scores, no phase calc.
+
+## 2026-11-27 — Big Cycle Atlas 2.0 session: Astro frontend + force-scores API + Sprint 6.13
+
+### Phase R0 (completed earlier)
+- Committed Sprint 6.11/6.12 work (07b99af); output.txt archived; .env deduplicated; DB backup verified restorable via schema-isolated restore; npm audit fix; docs refresh (684bd41); branch feature/big-cycle-atlas-astro-v2.
+
+### Frontend (apps/web-astro)
+- 30 static pages: / /countries /country/{iso3}[/forces] /workspace /forces /compare /cycle /economy /debt /trade /data /sources /methodology /progress /settings.
+- Workspace engine: zustand store (versioned localStorage, import/export JSON), react-grid-layout v2 ResponsiveGridLayout, drag/resize in edit mode, keyboard move controls, widget library panel, workspace create/rename/duplicate/reset/delete.
+- Widget registry: ~35 widget types across economic/trade/governance/strength/data/research categories; explicit "not yet available" states — never fictional data.
+- Site panels: force-score cards, compare table, domain panels (forces + ECharts indicator charts), data explorer, sources/ingestion tables, progress metrics, settings (theme, workspace reset).
+- tsc strict clean; astro build clean (30 pages).
+
+### Backend
+- GET /api/countries/{iso3}/force-scores (+ optional ?period=YYYY-Qn): derived, non-persisted, all 17 forces, nulls never zeros. New schemas/force_scores.py + 5 contract tests.
+- Sprint 6.13 / DEC-040 / force-aggregation-v0.4: Indebtedness = 6th executable force via CONDITION_MINUS_PENALTY (level = clamp(DSR + (gap − 50), 0, 100); all numeric components required or defers). First composed aggregation mode.
+- pytest: **670 passed** (was 660).

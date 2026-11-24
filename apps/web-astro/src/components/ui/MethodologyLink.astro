@@ -1,0 +1,26 @@
+---
+interface Props {
+  topic?: string;
+  label?: string;
+}
+const { topic, label } = Astro.props;
+const href = topic ? `/methodology#${topic}` : "/methodology";
+---
+
+<a href={href} class="methodology-link">
+  <span aria-hidden="true">ⓘ</span> {label ?? "Methodology"}
+</a>
+
+<style>
+  .methodology-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+  .methodology-link:hover {
+    text-decoration: underline;
+  }
+</style>

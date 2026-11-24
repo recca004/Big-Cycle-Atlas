@@ -49,6 +49,7 @@ def test_force_indicator_role_values():
 def test_aggregation_mode_values():
     assert {m.value for m in ForceAggregationMode} == {
         "identity_single",
+        "condition_minus_penalty",
         "deferred_multi",
     }
 
@@ -135,10 +136,11 @@ def test_multi_eligible_forces_use_deferred_multi():
 # --- Indebtedness is DEFERRED_MULTI ------------------------------------------
 
 
-def test_indebtedness_is_deferred_multi():
+def test_indebtedness_is_condition_minus_penalty():
+    """Sprint 6.13 (DEC-040): Indebtedness is the sixth executable force."""
     spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
-    assert aggregation_mode(spec) is ForceAggregationMode.deferred_multi
-    assert spec.level_mode is ForceDimensionMode.deferred
+    assert aggregation_mode(spec) is ForceAggregationMode.condition_minus_penalty
+    assert spec.level_mode is ForceDimensionMode.condition_minus_penalty
     assert spec.relative_mode is ForceDimensionMode.deferred
     assert spec.momentum_mode is ForceDimensionMode.deferred
 
@@ -232,7 +234,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
 def test_confidence_mode_always_deferred():
     for force_code, spec in FORCE_AGGREGATION_CONFIGS.items():
         assert spec.confidence_mode is ForceDimensionMode.deferred, (
-            f"{force_code}: confidence must be deferred in force-aggregation-v0.3"
+            f"{force_code}: confidence must be deferred in force-aggregation-v0.4"
         )
 
 
@@ -268,7 +270,7 @@ def test_no_force_persistence_or_api():
 
 
 def test_force_aggregation_version():
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.3"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.4"
 
 
 def test_normalization_version_unchanged():

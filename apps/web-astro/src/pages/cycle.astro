@@ -1,0 +1,57 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import GlassCard from "@/components/glass/GlassCard.astro";
+---
+
+<BaseLayout title="Cycle">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Big Cycle position</p>
+    <h1 class="headline-lg">Cycle</h1>
+    <p class="body-sm">
+      The pipeline ends at <code>FORCE SCORE → CYCLE SCORE → FORECAST</code>.
+      Cycle scoring is the next stage after force aggregation — it is not yet
+      computed, and this page will never show an invented cycle position.
+    </p>
+  </header>
+  <div class="grid-2">
+    <GlassCard>
+      <h2 class="headline-sm">Pipeline status</h2>
+      <ol class="body-sm pipeline-list">
+        <li>Raw observations — ingested, immutable</li>
+        <li>Normalized signals — live (5 normalization versions)</li>
+        <li>Force scores — 5 of 17 executable (identity-copy)</li>
+        <li>Cycle score — <strong>not yet computed</strong> (DEC pending)</li>
+        <li>Forecast — <strong>not yet computed</strong></li>
+      </ol>
+    </GlassCard>
+    <GlassCard>
+      <h2 class="headline-sm">What comes next</h2>
+      <p class="body-sm">
+        A cycle score needs a multi-force composition rule plus phase
+        thresholds — both are model decisions that require a DEC record and
+        owner approval before any number is published.
+      </p>
+      <p class="body-sm">
+        Track implementation status on the
+        <a href="/progress">Progress</a> page.
+      </p>
+    </GlassCard>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+  .grid-2 {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  }
+  .pipeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-left: var(--space-4);
+  }
+</style>

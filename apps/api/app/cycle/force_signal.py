@@ -41,6 +41,14 @@ fifth executable force:
   (100 * (1 - raw_share)); GINI_INDEX stays SUPPORTING_CONTEXT (not
   averaged, not combined); Wealth-gap relative/momentum/confidence stay None
 - confidence = None everywhere; backtest_safe = False everywhere
+
+Sprint 6.13 (DEC-040) / force-aggregation-v0.4 makes Indebtedness the
+sixth executable force — the first composed (non-identity) mode:
+- CONDITION_MINUS_PENALTY: level = clamp(DSR + (credit_gap - 50), 0, 100).
+  The one-sided vulnerability curve can only subtract from the DSR
+  condition score; both numeric components required or the level defers.
+- DEFERRED_MULTI for all other 11 forces (level/relative/momentum = None)
+- confidence = None everywhere; backtest_safe = False everywhere
 """
 from dataclasses import dataclass, field
 from typing import Optional
@@ -53,6 +61,7 @@ from app.cycle.force_aggregation_definitions import (
     ForceDimensionMode,
     ForceIndicatorComponentSpec,
     ForceIndicatorRole,
+    IDENTITY_ELIGIBLE_ROLES,
     aggregation_mode,
 )
 from app.cycle.force_definitions import ForceCoverageStatus
@@ -104,8 +113,9 @@ class ForceSignal:
     Published dimensions (Sprint 5.22, force-aggregation-v0.1; Sprint 6.4,
     force-aggregation-v0.2):
     - level_score: identity copy from the single eligible component for the
-      4 approved forces (Rule of law, Corruption, Internal conflict proxy,
-      Education); None for all other forces.
+      5 identity-approved forces (Rule of law, Corruption, Internal
+      conflict proxy, Education, Wealth-gap), or the CONDITION_MINUS_PENALTY
+      composition for Indebtedness (v0.4); None for all other forces.
     - relative_score: identity copy (with full provenance) for the 3
       approved WGI forces; None for Education and all other forces.
     - momentum: identity copy for the 3 approved WGI forces; None for
@@ -210,6 +220,10 @@ def aggregate_force_from_signals(
         force.momentum = component.momentum (exact copy)
         Each dimension propagates independently — None stays None, never zero.
 
+    CONDITION_MINUS_PENALTY (Indebtedness, v0.4):
+        level = clamp(core + Σ(penalty - 50), 0, 100); all numeric
+        components required or the level defers.
+
     DEFERRED_MULTI (all other forces):
         level/relative/momentum/confidence = None.
         Component signals preserved as provenance. No averaging.
@@ -251,6 +265,18 @@ def aggregate_force_from_signals(
             coverage_ceiling=coverage_ceiling,
         )
 
+    if mode is ForceAggregationMode.condition_minus_penalty:
+        return _build_condition_minus_penalty(
+            force_spec=force_spec,
+            country_iso3=country_iso3,
+            scoring_period=scoring_period,
+            present_signals=present_signals,
+            missing=missing,
+            deferred=deferred,
+            coverage_status=coverage_status,
+            coverage_ceiling=coverage_ceiling,
+        )
+
     # DEFERRED_MULTI — all numeric dimensions None, provenance preserved.
     return ForceSignal(
         country_iso3=country_iso3,
@@ -269,6 +295,84 @@ def aggregate_force_from_signals(
         normalization_model_version=_resolve_normalization_version(
             present_signals
         ),
+    )
+
+
+def _build_condition_minus_penalty(
+    *,
+    force_spec: ForceAggregationSpec,
+    country_iso3: str,
+    scoring_period: str,
+    present_signals: list[NormalizedSignal],
+    missing: list[str],
+    deferred: list[str],
+    coverage_status: ForceCoverageStatus,
+    coverage_ceiling: Optional[ForceCoverageStatus],
+) -> ForceSignal:
+    """CONDITION_MINUS_PENALTY composition (Sprint 6.13, DEC-040).
+
+    level = clamp(core_level + Σ(penalty_level - 50), 0, 100)
+
+    Semantics, derived from the already-approved component curves:
+    - The CORE_CONDITION score is a strength scale (higher = stronger).
+    - A VULNERABILITY_PENALTY score is a one-sided 0-50 scale where 50 is
+      deliberately NEUTRAL (no excess is not evidence of strength). Its
+      contribution is (level - 50): it can only subtract, never add.
+    - EVERY numeric component must be present with a non-None level, or the
+      force level defers entirely. A missing penalty is NOT a neutral
+      penalty — missing data is never a number.
+
+    relative/momentum/confidence stay None (no composed methodology).
+    """
+    signals_by_code = {s.indicator_code: s for s in present_signals}
+
+    core_codes = [
+        c.indicator_code
+        for c in force_spec.components
+        if c.role in IDENTITY_ELIGIBLE_ROLES
+    ]
+    penalty_codes = [
+        c.indicator_code
+        for c in force_spec.components
+        if c.role is ForceIndicatorRole.vulnerability_penalty
+    ]
+
+    numeric_required = core_codes + penalty_codes
+    components_present = (
+        all(code in signals_by_code for code in numeric_required)
+        and all(
+            signals_by_code[code].level_score is not None
+            for code in numeric_required
+        )
+    )
+
+    level_score: Optional[float] = None
+    if components_present:
+        core = signals_by_code[core_codes[0]]
+        penalty_sum = sum(
+            (signals_by_code[code].level_score or 0.0) - 50.0
+            for code in penalty_codes
+        )
+        level_score = min(100.0, max(0.0, (core.level_score or 0.0) + penalty_sum))
+
+    return ForceSignal(
+        country_iso3=country_iso3,
+        force_code=force_spec.force_code,
+        scoring_period=scoring_period,
+        level_score=level_score,
+        relative_score=None,
+        momentum=None,
+        confidence=None,
+        coverage_status=coverage_status,
+        coverage_ceiling=coverage_ceiling,
+        component_signals=tuple(present_signals),
+        missing_components=tuple(missing),
+        deferred_components=tuple(deferred),
+        aggregation_method=ForceAggregationMode.condition_minus_penalty,
+        normalization_model_version=_resolve_normalization_version(
+            present_signals
+        ),
+        scoring_component_indicator=core_codes[0] if core_codes else None,
     )
 
 

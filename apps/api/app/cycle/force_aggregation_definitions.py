@@ -44,7 +44,7 @@ configs from intentionally unconfigured forces).
 Versioning (FORCE_AGGREGATION.md §10):
 - Indicator normalization version: normalization-v0.8 (Sprint 6.7, owned by
   app/cycle/normalization_definitions.py)
-- Force aggregation version: force-aggregation-v0.3 (this module, Sprint 6.7)
+- Force aggregation version: force-aggregation-v0.4 (this module, Sprint 6.7)
 """
 from dataclasses import dataclass
 from enum import Enum
@@ -111,6 +111,7 @@ class ForceAggregationMode(str, Enum):
     """
 
     identity_single = "identity_single"
+    condition_minus_penalty = "condition_minus_penalty"
     deferred_multi = "deferred_multi"
 
 
@@ -118,6 +119,7 @@ class ForceDimensionMode(str, Enum):
     """Per-dimension approval. 'deferred' means the dimension is None."""
 
     identity_copy = "identity_copy"
+    condition_minus_penalty = "condition_minus_penalty"
     deferred = "deferred"
 
 
@@ -190,11 +192,11 @@ class ForceAggregationSpec:
     notes: str = ""
 
     def __post_init__(self) -> None:
-        # confidence_mode is always deferred in force-aggregation-v0.3.
+        # confidence_mode is always deferred in force-aggregation-v0.4.
         if self.confidence_mode is not ForceDimensionMode.deferred:
             raise ValueError(
                 f"{self.force_code}: confidence_mode must be 'deferred' in "
-                f"force-aggregation-v0.3 (got {self.confidence_mode})"
+                f"force-aggregation-v0.4 (got {self.confidence_mode})"
             )
 
         # No duplicate component indicators.
@@ -260,6 +262,23 @@ class ForceAggregationSpec:
                         f"requires coverage_ceiling=PARTIAL (got "
                         f"{force_def.coverage_ceiling})"
                     )
+        elif self.level_mode is ForceDimensionMode.condition_minus_penalty:
+            # CONDITION_MINUS_PENALTY (Sprint 6.13, DEC-040): exactly one
+            # eligible CORE_CONDITION component + at least one
+            # VULNERABILITY_PENALTY component. level = clamp(core +
+            # Σ(penalty - 50), 0, 100); every numeric component must be
+            # present or the level defers (missing != neutral).
+            if len(eligible) != 1:
+                raise ValueError(
+                    f"{self.force_code}: CONDITION_MINUS_PENALTY level "
+                    f"requires exactly one CORE_CONDITION/PROXY_CONDITION "
+                    f"component, got {len(eligible)}"
+                )
+            if not penalties:
+                raise ValueError(
+                    f"{self.force_code}: CONDITION_MINUS_PENALTY level "
+                    f"requires at least one VULNERABILITY_PENALTY component"
+                )
         elif self.level_mode is ForceDimensionMode.deferred:
             # DEFERRED_MULTI: no constraint on component count, but if there
             # are 2+ eligible components, that's the expected reason for
@@ -320,6 +339,8 @@ def aggregation_mode(spec: ForceAggregationSpec) -> ForceAggregationMode:
     """
     if spec.level_mode is ForceDimensionMode.identity_copy:
         return ForceAggregationMode.identity_single
+    if spec.level_mode is ForceDimensionMode.condition_minus_penalty:
+        return ForceAggregationMode.condition_minus_penalty
     return ForceAggregationMode.deferred_multi
 
 
@@ -514,9 +535,9 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             confidence_mode=_DEFERRED,
             notes="Level normalization deferred.",
         ),
-        # 12. Indebtedness — DEFERRED_MULTI
+        # 12. Indebtedness — CONDITION_MINUS_PENALTY (Sprint 6.13, DEC-040)
         #     DSR = CORE_CONDITION, credit gap = VULNERABILITY_PENALTY,
-        #     government debt = SUPPORTING_CONTEXT. Cannot naively average.
+        #     government debt = SUPPORTING_CONTEXT.
         ForceAggregationSpec(
             force_code="indebtedness",
             components=(
@@ -533,13 +554,17 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
                     role=ForceIndicatorRole.supporting_context,
                 ),
             ),
-            level_mode=_DEFERRED,
+            level_mode=ForceDimensionMode.condition_minus_penalty,
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
             notes=(
-                "DSR + credit gap cannot be naively averaged; government debt "
-                "unscored; no composition formula approved."
+                "level = clamp(DSR + (credit_gap - 50), 0, 100): the "
+                "one-sided vulnerability curve can only subtract from the "
+                "DSR condition score; neutral gap (50) contributes nothing. "
+                "Both numeric components required — missing gap defers, it "
+                "is never treated as neutral. Government debt stays "
+                "SUPPORTING_CONTEXT (DEC-040)."
             ),
         ),
         # 13. Military strength — 2 SUPPORTING_CONTEXT, capped PARTIAL
@@ -698,4 +723,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.3"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v0.4"

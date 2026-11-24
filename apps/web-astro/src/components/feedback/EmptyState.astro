@@ -1,0 +1,29 @@
+---
+interface Props {
+  title: string;
+  message?: string;
+}
+const { title, message } = Astro.props;
+---
+
+<div class="empty-state">
+  <p class="headline-sm">{title}</p>
+  {message && <p class="body-sm empty-message">{message}</p>}
+  {Astro.slots.has("default") && <div class="empty-action"><slot /></div>}
+</div>
+
+<style>
+  .empty-state {
+    padding: var(--space-6);
+    text-align: center;
+    border: 1px dashed var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--surface-1);
+  }
+  .empty-message {
+    margin-top: var(--space-2);
+  }
+  .empty-action {
+    margin-top: var(--space-4);
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SourcesPanel } from "@/features/site/SitePanels";
+---
+
+<BaseLayout title="Sources">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Provenance</p>
+    <h1 class="headline-lg">Data sources</h1>
+    <p class="body-sm">
+      Registered providers and ingestion history. Every observation traces
+      to a source, vintage and retrieval timestamp.
+    </p>
+  </header>
+  <SourcesPanel client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+</style>

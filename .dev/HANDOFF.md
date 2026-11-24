@@ -475,3 +475,12 @@ Sprint 5.8 is closed and verified (278 tests, live read-only smoke covering top/
 - Owner ratification package pending: DEC-040 (indebtedness v0.4), DEC-041 (leadership), DEC-042 calibration choice (productivity).
 - Tests: 670 backend green, 29 Vitest + 29 Playwright green.
 - Windows gotcha: uvicorn spawn-worker orphans persist — kill via `Get-CimInstance Win32_Process` parent-tree or `taskkill /T /F` on python.exe trees before restarting.
+
+## Session checkpoint — DEC-042 implemented, 8/17 (commit af66fc3)
+
+- DEC-040 + DEC-041 RATIFIED in DECISIONS.md.
+- DEC-042 Option A implemented: `reference_percentile` normalization family + `ReferenceObservation` table + `oecd_lpph_v1` universe (1,258 reference obs, 38 OECD members) + `scripts/ingest_oecd_reference.py` + `_normalize_reference_percentile_as_of` + 12 tests (`tests/test_reference_percentile.py`).
+- LPPH → PROXY_CONDITION, IDENTITY level → `productivity_output_growth` executable, PARTIAL ceiling. USA 81.4 live. CHN/IND unavailable (non-OECD).
+- normalization-v1.0 / force-aggregation-v0.6. 682 backend tests.
+- Option C (own-history momentum for LPPH) still deferred — same momentum machinery question as other forces.
+- Remaining forces still need either new sources (REER, FDI, SIPRI) or approved curves.

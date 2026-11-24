@@ -1113,6 +1113,7 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         "IMPORTS_GDP",
         "TRADE_BALANCE",
         "CURRENT_ACCOUNT_GDP",
+        "FDI_NET_INFLOWS_GDP",
         "GROSS_CAPITAL_FORMATION_GDP",
         "GINI_INDEX",
         "INFLATION_CPI",
@@ -1196,6 +1197,22 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
             notes=(
                 "Deliberately unassigned. Nominal; would need PPP and likely "
                 "log transform before any use."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="FDI_NET_INFLOWS_GDP",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "V1 Mission 1: FDI net inflows %GDP (BoP basis). Capital "
+                "attraction is NOT automatically positive (tax-haven flows, "
+                "profit-driven M&A, volatility) — no monotonic curve "
+                "invented. Supporting context for trade_capital_flows."
             ),
         ),
         NormalizationSpec(

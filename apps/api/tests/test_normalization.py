@@ -19,7 +19,7 @@ def test_registry_has_no_duplicate_codes():
     codes = list(nd.NORMALIZATION_REGISTRY)
     assert len(codes) == len(set(codes))
     # 22 live SourceSeries = 22 registry entries, one per live indicator.
-    assert len(codes) == 24
+    assert len(codes) == 25
 
 
 def test_every_live_force_input_has_a_normalization_spec():

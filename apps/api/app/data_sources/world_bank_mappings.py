@@ -203,6 +203,17 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
         ),
     ),
     WorldBankMapping(
+        indicator_code="FDI_NET_INFLOWS_GDP",
+        external_code="BX.KLT.DINV.WD.GD.ZS",
+        external_name="Foreign direct investment, net inflows (% of GDP)",
+        external_unit="percent of GDP",
+        transform_notes=(
+            "BoP basis, annual. Negative values = net outflows/disinvestment. "
+            "Capital-attraction input for trade_capital_flows research — "
+            "not automatically 'stronger' (tax-haven FDI distorts)."
+        ),
+    ),
+    WorldBankMapping(
         indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
         external_code="SL.TLF.CACT.ZS",
         external_name="Labor force participation rate, total (% of total population ages 15+) (modeled ILO estimate)",

@@ -551,6 +551,10 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
                     role=ForceIndicatorRole.supporting_context,
                 ),
                 ForceIndicatorComponentSpec(
+                    indicator_code="FDI_NET_INFLOWS_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
                     indicator_code="CURRENT_ACCOUNT_GDP",
                     role=ForceIndicatorRole.supporting_context,
                 ),

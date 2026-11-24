@@ -193,11 +193,13 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
             "IMPORTS_GDP",
             "TRADE_BALANCE",
             "CURRENT_ACCOUNT_GDP",
+            "FDI_NET_INFLOWS_GDP",
         ),
         coverage_notes=(
             "World Bank WDI live (2000–2025, all 8 countries): exports/imports of "
             "goods and services, the published external balance (direct provider "
             "series for trade balance — not derived), and the current account. "
+            "FDI net inflows (%GDP) live 1990+ all 8 countries (V1 Mission 1). "
             "Capital-flow measures beyond the current account and bilateral flows "
             "(UN Comtrade) come later."
         ),

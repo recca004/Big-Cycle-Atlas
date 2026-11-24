@@ -47,6 +47,7 @@ EXPECTED_WB_CODES = {
     "TERTIARY_ENROLLMENT": "SE.TER.ENRR",
     "UNEMPLOYMENT_RATE": "SL.UEM.TOTL.ZS",
     "LABOUR_FORCE_PARTICIPATION_RATE": "SL.TLF.CACT.ZS",
+    "FDI_NET_INFLOWS_GDP": "BX.KLT.DINV.WD.GD.ZS",
 }
 
 TRADE_DTOS_SPEC = [
@@ -54,6 +55,7 @@ TRADE_DTOS_SPEC = [
     ("IMPORTS_GDP", WB_IMPORTS, 58.0),
     ("TRADE_BALANCE", WB_TRADE_BALANCE, 7.0),
     ("CURRENT_ACCOUNT_GDP", WB_CURRENT_ACCOUNT, 8.0),
+    ("FDI_NET_INFLOWS_GDP", "BX.KLT.DINV.WD.GD.ZS", 3.0),
 ]
 
 
@@ -100,7 +102,7 @@ async def coverage_by_code(iso3: str) -> dict:
 
 
 async def test_world_bank_mappings_verified_codes(client):
-    assert len(WORLD_BANK_MAPPINGS) == 22  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 6 new (pop/rnd/enroll/unemp/lfp)
+    assert len(WORLD_BANK_MAPPINGS) == 23  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 6 new (pop/rnd/enroll/unemp/lfp)
     by_indicator = {m.indicator_code: m for m in WORLD_BANK_MAPPINGS}
     for indicator_code, external_code in EXPECTED_WB_CODES.items():
         mapping = by_indicator.get(indicator_code)
@@ -151,7 +153,7 @@ async def test_seed_idempotent_no_duplicate_series(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 29
+        assert total == 30
         dup = (
             await session.execute(
                 select(func.count())
@@ -201,6 +203,7 @@ async def test_trade_force_available_with_all_four_inputs(client):
         "IMPORTS_GDP",
         "TRADE_BALANCE",
         "CURRENT_ACCOUNT_GDP",
+        "FDI_NET_INFLOWS_GDP",
     }
     assert all(i.has_data for i in live.values())
     assert all(i.has_source_series for i in live.values())
@@ -301,6 +304,7 @@ async def test_api_trade_and_infrastructure_available_no_scores(client):
         "IMPORTS_GDP",
         "TRADE_BALANCE",
         "CURRENT_ACCOUNT_GDP",
+        "FDI_NET_INFLOWS_GDP",
     }
     assert all(i["has_source_series"] and i["has_data"] for i in trade_live)
 

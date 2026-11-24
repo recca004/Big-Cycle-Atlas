@@ -33,6 +33,7 @@ EXPECTED_MAPPINGS = {
     "TERTIARY_ENROLLMENT": "SE.TER.ENRR",
     "UNEMPLOYMENT_RATE": "SL.UEM.TOTL.ZS",
     "LABOUR_FORCE_PARTICIPATION_RATE": "SL.TLF.CACT.ZS",
+    "FDI_NET_INFLOWS_GDP": "BX.KLT.DINV.WD.GD.ZS",
 }
 
 
@@ -54,7 +55,7 @@ async def _load_series(session):
 
 @pytest.mark.asyncio
 async def test_module_has_exactly_22_world_bank_mappings():
-    assert len(WORLD_BANK_MAPPINGS) == 22
+    assert len(WORLD_BANK_MAPPINGS) == 23
     assert {m.indicator_code for m in WORLD_BANK_MAPPINGS} == set(EXPECTED_MAPPINGS)
 
 
@@ -73,7 +74,7 @@ async def test_seeded_series_match_verified_mappings(client):
         rows = await _load_series(session)
 
     wb_rows = [row for row in rows if row[1] == "world_bank"]
-    assert len(wb_rows) == 22
+    assert len(wb_rows) == 23
     assert {(indicator, source, code) for indicator, source, code in wb_rows} == {
         (canonical, "world_bank", external)
         for canonical, external in EXPECTED_MAPPINGS.items()
@@ -91,13 +92,13 @@ async def test_seed_is_idempotent(client):
     sessionmaker = session_module._sessionmaker
     async with sessionmaker() as session:
         before = (await session.execute(select(SourceSeries))).scalars().all()
-        assert len(before) == 29  # 21 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
+        assert len(before) == 30  # 21 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
 
     await seed()  # re-run full seed against the same test DB
 
     async with sessionmaker() as session:
         after = (await session.execute(select(SourceSeries))).scalars().all()
-        assert len(after) == 29
+        assert len(after) == 30
         assert {s.external_code for s in after} >= set(EXPECTED_MAPPINGS.values())
 
 

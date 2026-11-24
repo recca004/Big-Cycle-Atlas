@@ -50,7 +50,7 @@ async def test_approved_bis_indicators_seeded(client):
         codes = dict(
             (await session.execute(select(Indicator.code, Indicator.id))).all()
         )
-        assert len(codes) == 29
+        assert len(codes) == 30
         for code in ("CREDIT_TO_GDP_GAP", "DEBT_SERVICE_RATIO"):
             assert code in codes
         gap = (await session.execute(

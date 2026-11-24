@@ -470,6 +470,10 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             notes="No live indicators; trade data is candidate context only.",
         ),
         # 8. Productivity / output growth — 2 SUPPORTING_CONTEXT
+        # Sprint 6.14 (DEC-042): PROXY_CONDITION promotion EVALUATED AND
+        # REJECTED — NormalizationSpec explicitly defers LPPH level pending an
+        # external calibration distribution (tracked_8 min-max rejected;
+        # CHN/IND uncovered). Blocked on owner calibration decision.
         ForceAggregationSpec(
             force_code="productivity_output_growth",
             components=(
@@ -486,7 +490,7 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred; 2 components.",
+            notes="Level normalization deferred (DEC-042: calibration-universe decision required); 2 components.",
         ),
         # 9. Cost competitiveness — 2 SUPPORTING_CONTEXT
         ForceAggregationSpec(

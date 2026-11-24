@@ -5214,3 +5214,21 @@ Individual leaders are never rated (approval boundary).
   correlated family) — flagged for composition-stage deduplication.
 - Score is level-only; no relative or momentum dimension until the
   approved-dimension sets are extended by a future DEC.
+
+## DEC-042 — Productivity / output growth: level scoring remains DEFERRED (Sprint 6.14 evaluation)
+
+**Status:** DEFERRED — owner decision required
+**Sprint:** 6.14
+**Date:** 2026-03-24
+
+**Question evaluated:** Can `productivity_output_growth` become the eighth executable force by promoting OECD `LABOUR_PRODUCTIVITY_PER_HOUR` to PROXY_CONDITION?
+
+**Finding:** No — not without an owner-approved calibration method. The indicator's `NormalizationSpec` already records the Sprint 5.9 audit (DEC-018): the USD-PPP/hour level series has no defensible absolute 0-100 mapping without an external calibration distribution, and tracked-8 min-max is explicitly rejected (CHN/IND uncovered by OECD; the pooled 33.5–90.5 range is not a global distribution). Implementing `monotonic_positive` would require inventing curve parameters — prohibited.
+
+**Data state:** LPPH live for 6/8 countries (USA, DEU, FRA, GBR, JPN, CHE; 1990–2025). CHN/IND have no OECD LPPH series.
+
+**What is executable today:** nothing beyond context. `GDP_GROWTH` is contextual_deferred; ULC growth likewise (DEC-018: domestic ULC growth alone is not a competitiveness score).
+
+**Owner decision required (added to ratification package):** choose a calibration basis for productivity level scoring — (a) OECD-wide or wider external distribution percentile, (b) pooled multi-decade tracked-8 history percentile, or (c) keep level deferred and score only own-history momentum. Option (a) is methodologically cleanest; it requires importing a broader productivity universe.
+
+**Force status unchanged:** `productivity_output_growth` remains context-only on force-aggregation-v0.5.

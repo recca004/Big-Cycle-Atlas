@@ -148,7 +148,13 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         description="Growth of output and productivity of the economy.",
         live_indicator_codes=("GDP_GROWTH", "LABOUR_PRODUCTIVITY_PER_HOUR"),
         candidate_indicator_codes=("RND_EXPENDITURE_GDP",),
-        coverage_notes="GDP growth (level of output growth) plus labour productivity per hour. R&D expenditure is an innovation input candidate, not a direct productivity measure.",
+        coverage_notes=(
+            "GDP growth + OECD labour productivity per hour (6/8 countries; "
+            "CHN/IND uncovered). Sprint 6.14 (DEC-042): level scoring stays "
+            "deferred — LPPH level requires an owner-approved external "
+            "calibration distribution; tracked-8 min-max is rejected by "
+            "normalization spec. Context inputs only."
+        ),
     ),
     ForceDefinition(
         code="cost_competitiveness",

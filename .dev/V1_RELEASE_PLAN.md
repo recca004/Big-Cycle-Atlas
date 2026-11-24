@@ -1,13 +1,13 @@
 # Big Cycle Atlas — Road to v1.0
 
-Current programme state: **Mission 1 in progress** (2026-03).
+Current programme state: **Mission 2 substantially delivered** (2026-11-25). Mission 1 largely complete; Mission 3 = Astro/UX completion.
 
 ## The six missions
 
 | # | Mission | Gate | Status |
 |---|---------|------|--------|
-| 1 | Complete the 17-force economic engine | 17/17 research modules; max defensible executable forces; momentum for productivity; uncertainty contract; dependency map | **IN PROGRESS** |
-| 2 | Big Cycle engine + Research Lab | Experimental composite engine; `/research` live; transition rules researched; experimental isolation | Pending |
+| 1 | Complete the 17-force economic engine | 17/17 research modules; max defensible executable forces; momentum for productivity; uncertainty contract; dependency map | **MOSTLY COMPLETE** — 9 scored + 1 dim-only + 7 context/profile modules; dependency map reproducible; uncertainty endpoint live |
+| 2 | Big Cycle engine + Research Lab | Experimental composite engine; `/research` live; transition rules researched; experimental isolation | **MOSTLY COMPLETE** — registry + 4 composite models + phase/stage classifier + /research UI live, all experimental-gated; historical diagnostics partially covered |
 | 3 | Complete Astro + Liquid Glass app | Workspace completion (drag/resize/lock), all widgets on real data, component showcase | Pending |
 | 4 | Historical validation + forecasting | Release-date discipline, as-of queries, backtest-safety evidence, gated forecast architecture | Pending |
 | 5 | Market research + final integration | External review, positioning, integration polish | Pending |

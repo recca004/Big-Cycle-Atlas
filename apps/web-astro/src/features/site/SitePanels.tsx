@@ -474,7 +474,7 @@ export function ProgressPanel() {
         <div className="glass metric-card">
           <p className="label-md text-tertiary">Executable forces</p>
           <p className="metric-value">{EXECUTABLE_COUNT}<span className="metric-denom">/{TOTAL_FORCES}</span></p>
-          <p className="body-sm">5 ratified + 1 provisional (DEC-040).</p>
+          <p className="body-sm">6 ratified forces (DEC-040 ratified).</p>
         </div>
         <div className="glass metric-card">
           <p className="label-md text-tertiary">Coverage — {iso3}</p>

@@ -110,8 +110,8 @@ export const FORCE_PROGRESS: ForceProgress[] = [
     code: "indebtedness",
     name: "Indebtedness",
     ...DONE,
-    ratification: "provisional",
-    note: "DEC-040 CONDITION_MINUS_PENALTY — provisional pending owner ratification.",
+    ratification: "ratified",
+    note: "DEC-040 CONDITION_MINUS_PENALTY — ratified with documented limitations.",
   },
   {
     code: "military_strength",

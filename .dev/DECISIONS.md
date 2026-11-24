@@ -5100,8 +5100,10 @@ promote a sixth executable force if a defensible level is found.
 
 Date: 2026-11-27
 Sprint: 6.13
-Status: IMPLEMENTED — force-aggregation-v0.4. Recorded for owner ratification;
-reversible by reverting `indebtedness.level_mode` to `deferred`.
+Status: RATIFIED 2026-11-24 (owner) — force-aggregation-v0.4 retained with all
+documented limitations (low-end compression, DSR-led composition, min-n gate,
+gov-debt context-only). Reversible by reverting `indebtedness.level_mode`
+to `deferred`.
 
 ### Part 1 — Semantic target
 

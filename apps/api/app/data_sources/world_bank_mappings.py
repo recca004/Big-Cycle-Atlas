@@ -149,6 +149,60 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
         ),
     ),
     WorldBankMapping(
+        indicator_code="POPULATION",
+        external_code="SP.POP.TOTL",
+        external_name="Population, total",
+        external_unit="count (persons)",
+        transform_notes=(
+            "Total mid-year population (de facto). Normalization denominator / "
+            "context input — never rescaled."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="RND_EXPENDITURE_GDP",
+        external_code="GB.XPD.RSDV.GD.ZS",
+        external_name="Research and development expenditure (% of GDP)",
+        external_unit="% of GDP",
+        transform_notes=(
+            "Gross domestic expenditure on R&D as % of GDP (UNESCO UIS "
+            "underlying). Published with multi-year lag; missing years are "
+            "gaps, not zeros."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="SECONDARY_ENROLLMENT",
+        external_code="SE.SEC.ENRR",
+        external_name="School enrollment, secondary (% gross)",
+        external_unit="% gross enrollment ratio",
+        transform_notes=(
+            "Gross enrollment ratio: total secondary enrollment regardless of "
+            "age as % of the official secondary-school-age population. Can "
+            "exceed 100. UNESCO UIS underlying; missing years are gaps."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="TERTIARY_ENROLLMENT",
+        external_code="SE.TER.ENRR",
+        external_name="School enrollment, tertiary (% gross)",
+        external_unit="% gross enrollment ratio",
+        transform_notes=(
+            "Gross enrollment ratio: total tertiary enrollment as % of the "
+            "5-year age group following secondary school. Can exceed 100. "
+            "UNESCO UIS underlying; missing years are gaps."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="UNEMPLOYMENT_RATE",
+        external_code="SL.UEM.TOTL.ZS",
+        external_name="Unemployment, total (% of total labor force) (modeled ILO estimate)",
+        external_unit="% of labor force",
+        transform_notes=(
+            "ILO modeled estimate, annual. National-definition series exist "
+            "but are not cross-country comparable — the ILO modelled series "
+            "is used deliberately."
+        ),
+    ),
+    WorldBankMapping(
         indicator_code="POLITICAL_STABILITY_WGI_SCORE",
         external_code="GOV_WGI_PV_SC",
         external_name="Political Stability - Governance score (0-100)",

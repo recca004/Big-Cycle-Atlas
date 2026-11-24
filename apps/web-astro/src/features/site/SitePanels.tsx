@@ -12,6 +12,11 @@ import {
 import { formatDate } from "@/lib/format";
 import { EChart } from "@/lib/charts/EChart";
 import { indicatorLabel } from "@/features/widgets/indicatorMeta";
+import {
+  FORCE_PROGRESS,
+  EXECUTABLE_COUNT,
+  TOTAL_FORCES,
+} from "@/features/forces/forceProgress";
 import type { AsyncState } from "@/features/widgets/hooks";
 
 function ready<T>(s: AsyncState<T>): T | undefined {
@@ -64,7 +69,7 @@ function useForceScores(iso3: string | undefined) {
     if (!iso3) return;
     const c = new AbortController();
     setData(null);
-    fetchForceScores(iso3, { signal: c.signal })
+    fetchForceScores(iso3, undefined, { signal: c.signal })
       .then((r) => setData(r.forces))
       .catch(() => setError(true));
     return () => c.abort();
@@ -468,8 +473,8 @@ export function ProgressPanel() {
       <div className="metric-grid">
         <div className="glass metric-card">
           <p className="label-md text-tertiary">Executable forces</p>
-          <p className="metric-value">5<span className="metric-denom">/17</span></p>
-          <p className="body-sm">Approved identity-copy forces (Sprint 6.4).</p>
+          <p className="metric-value">{EXECUTABLE_COUNT}<span className="metric-denom">/{TOTAL_FORCES}</span></p>
+          <p className="body-sm">5 ratified + 1 provisional (DEC-040).</p>
         </div>
         <div className="glass metric-card">
           <p className="label-md text-tertiary">Coverage — {iso3}</p>
@@ -524,6 +529,65 @@ export function ProgressPanel() {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="glass">
+        <h2 className="headline-sm panel-title">Force research stages</h2>
+        <div className="table-wrap">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Force</th>
+                <th>Research</th>
+                <th>Data</th>
+                <th>Method proposed</th>
+                <th>Method approved</th>
+                <th>Implemented</th>
+                <th>Tests</th>
+                <th>API</th>
+                <th>Frontend</th>
+                <th>Ratification</th>
+              </tr>
+            </thead>
+            <tbody>
+              {FORCE_PROGRESS.map((f) => (
+                <tr key={f.code} title={f.note}>
+                  <td>{f.name}</td>
+                  {[
+                    f.researchCompleted,
+                    f.dataSourced,
+                    f.methodologyProposed,
+                    f.methodologyApproved,
+                    f.implemented,
+                    f.testsPassing,
+                    f.apiAvailable,
+                    f.frontendConnected,
+                  ].map((ok, i) => (
+                    <td key={i} className="num">
+                      {ok ? "✓" : "—"}
+                    </td>
+                  ))}
+                  <td>
+                    <span
+                      className={`status-pill ${
+                        f.ratification === "ratified"
+                          ? "status-available"
+                          : f.ratification === "provisional"
+                            ? "status-partial"
+                            : ""
+                      }`}
+                    >
+                      {f.ratification}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="section-note" style={{ padding: "0 var(--space-4) var(--space-3)" }}>
+          Derived from <code>src/features/forces/forceProgress.ts</code> — the
+          maintained research metadata, not hardcoded percentages.
+        </p>
       </div>
     </div>
   );

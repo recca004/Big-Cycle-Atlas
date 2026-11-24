@@ -133,10 +133,12 @@ export function fetchIndicators(opts?: FetchOptions): Promise<Indicator[]> {
 
 export function fetchForceScores(
   iso3: string,
+  period?: string,
   opts?: FetchOptions,
 ): Promise<ForceScoresResponse> {
+  const query = period ? `?period=${encodeURIComponent(period)}` : "";
   return request<ForceScoresResponse>(
-    `/api/countries/${encodeURIComponent(iso3)}/force-scores`,
+    `/api/countries/${encodeURIComponent(iso3)}/force-scores${query}`,
     opts,
   );
 }

@@ -22,7 +22,7 @@ function useForceScores(iso3: string | undefined) {
     if (!iso3) return;
     const controller = new AbortController();
     setState({ kind: "loading" });
-    fetchForceScores(iso3, { signal: controller.signal })
+    fetchForceScores(iso3, undefined, { signal: controller.signal })
       .then((data) => {
         if (!controller.signal.aborted) setState({ kind: "ready", data });
       })

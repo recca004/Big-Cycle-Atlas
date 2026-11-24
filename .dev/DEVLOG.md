@@ -2575,3 +2575,12 @@ Both dev servers had died around the context break — backend restarted on 8000
 - GET /api/countries/{iso3}/force-scores (+ optional ?period=YYYY-Qn): derived, non-persisted, all 17 forces, nulls never zeros. New schemas/force_scores.py + 5 contract tests.
 - Sprint 6.13 / DEC-040 / force-aggregation-v0.4: Indebtedness = 6th executable force via CONDITION_MINUS_PENALTY (level = clamp(DSR + (gap − 50), 0, 100); all numeric components required or defers). First composed aggregation mode.
 - pytest: **670 passed** (was 660).
+
+## 2026-11-24 — Atlas 2.0 continuation: route audit, tests, docs (feature/big-cycle-atlas-astro-v2)
+
+- DEC-040 validation report: `apps/api/scripts/DEC040_VALIDATION_REPORT.md` (8-country breakdown, quarterly history 2000-2025, crisis-period stats, penalty-strength variants). CHE 13.46 is entirely DSR-percentile driven (credit gap neutral).
+- Browser audit (Playwright) of all routes against live dev DB. Defects fixed: workspace crash (force period parsed as Date), preset widgets fetching wrong indicator (config defaults not merged), economy/trade pages using nonexistent indicator codes, 12 unstyled CSS classes, favicon 404, stale indebtedness copy/notes.
+- Design pass: per-theme background glows for glass depth, `--accent-contrast`, nav scroll fade, button/form/toggle/badge styles.
+- Frontend tests: Vitest 29 unit tests (registry, store, format, API client) + Playwright 29 e2e (all routes, live data, workspace persistence, themes, mobile). `fetchForceScores` gained `period` param.
+- Progress page now derives 17-force stage table from `forceProgress.ts` (no hardcoded counts); indebtedness shows "provisional" ratification.
+- Docs: WIDGET_REGISTRY (auto-generated inventory), ASTRO_MIGRATION, DESIGN_SYSTEM, COMPONENT_LIBRARY, WORKSPACE_ARCHITECTURE, API_CONTRACTS, TEST_REPORT, COMPONENT_SHOWCASE.

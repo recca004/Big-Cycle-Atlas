@@ -13,9 +13,9 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@big-cycle-atlas/shared": "*",
     "@astrojs/check": "^0.9.6",
     "@astrojs/react": "^7.1.9",
+    "@big-cycle-atlas/shared": "*",
     "echarts": "^6.1.0",
     "lucide-react": "^1.79.0",
     "react": "^19.1.0",
@@ -25,10 +25,12 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/vite": "^4.3.5",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "astro": "^7.4.13",
+    "jsdom": "^31.0.1",
     "tailwindcss": "^4.3.5",
     "typescript": "^5.8.3",
     "vitest": "^5.1.1"

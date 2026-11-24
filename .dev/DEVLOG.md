@@ -1,5 +1,103 @@
 # Devlog
 
+## 2026-09-10 — Sprint 6.12: Trade and Capital Flows Force Methodology Audit (DEFER_TRADE_CAPITAL_LEVEL)
+
+### Summary
+
+Sprint 6.12 audited whether the existing trade/capital-flow inputs
+support a defensible force-level LEVEL methodology. The audit found
+NO defensible level mapping. The force remains DEFERRED_MULTI /
+unscored. No implementation, no model-version bump.
+
+### Audit findings
+
+- **Trade intensity** (EXPORTS_GDP, IMPORTS_GDP, TRADE_OPENNESS_GDP):
+  measures INTENSITY not STRENGTH. CHE 147.16 (highest) is a small
+  re-export hub; USA 25.02 (lowest) is the world's largest economy.
+  Structurally confounded by size and geography. Confirms DEC-035.
+- **Trade balance** (TRADE_BALANCE): surplus is NOT universally
+  stronger (CHN surplus may reflect structural imbalance); deficit
+  is NOT universally weaker (USA deficit reflects reserve-currency
+  status). No official source defines an optimal balance.
+- **Current account** (CURRENT_ACCOUNT_GDP): same structural issues
+  as trade balance. Interpretation depends on reserve-currency
+  status, development stage, capital account counterpart, and
+  demographics.
+- **Composition**: no parameter-free formula exists. Every candidate
+  requires arbitrary weights, thresholds, or normalization.
+- **Relative/momentum**: DEFERRED (separate DEC needed).
+- **Coverage**: PARTIAL (capital flows, FDI, portfolio investment not
+  in data).
+
+### Verdict
+
+**DEFER_TRADE_CAPITAL_LEVEL.** No defensible Atlas 0-100 level
+mapping exists. All four live inputs remain SUPPORTING_CONTEXT. The
+derived TRADE_OPENNESS_GDP remains a descriptive ratio.
+
+### Changes
+
+- NO production code changed. NO force code changes. NO
+  normalization code changes. NO model-version bump.
+- Read-only research artifact: `scripts/_sprint_6_12_trade_capital_profile.py`
+- pytest 660 unchanged. DB unchanged (6814/27/22/10/1872).
+
+---
+
+## 2026-09-10 — Sprint 6.11: First Executable Derived Computation (DEC-038 FORMULA_APPROVED)
+
+### Summary
+
+Sprint 6.11 implemented the first real DerivedAlignedValue
+computation using the DEC-037 contract: TRADE_OPENNESS_GDP =
+EXPORTS_GDP + IMPORTS_GDP. The value is a descriptive trade-intensity
+ratio, NOT a level score, NOT a force score. DEC-035's
+DEFER_GLOBAL_OPENNESS_LEVEL verdict remains in force.
+
+### Implementation
+
+1. **Alignment refactor**: extracted shared `_select_observation_as_of`
+   primitive from `align_observation_as_of`. ONE authoritative
+   observation-selection algorithm. Added `_build_aligned_value` and
+   `_resolve_country_indicator` helpers. Added
+   `align_with_provenance_as_of` for the derived path. Public API of
+   `align_observation_as_of` unchanged.
+2. **Derived service**: new
+   `apps/api/app/services/derived_indicator_service.py` with
+   `derive_trade_openness_as_of`. Formula identity:
+   `formula_id = "trade_openness_gdp"`,
+   `formula_version = "trade-openness-gdp-v1"`.
+3. **Period compatibility**: formula-level rule — both components must
+   have the same `effective_period_end`. Mismatched source periods
+   (exports 2024 + imports 2023) produce `derived_value = None`.
+4. **Missingness**: if either component is missing, `derived_value =
+   None` (MISSING != ZERO). Real zero input (0.0) is valid.
+5. **Backtest safety**: `backtest_safe = False` (Milestone 9).
+6. **No normalization, no force promotion, no persistence**.
+
+### Tests
+
+23 focused tests in `apps/api/tests/test_derived_trade_openness.py`:
+exact arithmetic, values > 100, country isolation, same scoring
+snapshot, source-period mismatch, missing exports/imports, real
+zero, observation/source-series/data-source identities, distinct
+vintages, latest-vintage inherited, period-complete inherited, no
+future-period, backtest_safe False, no raw Observation created, no
+DB writes, existing alignment unchanged, formula identity/version,
+component indicator codes, effective_period_end preserved, same
+source period produces value.
+
+### Verification
+
+- Focused tests: 23 passed
+- Full pytest: **660 passed** (637 baseline + 23 new), 0 failures
+- DB unchanged: 6814/27/22/10/1872
+- No model-version bump (normalization-v0.8, force-aggregation-v0.3
+  unchanged; formula-version trade-openness-gdp-v1 is separate)
+- No commit/push
+
+---
+
 ## 2026-09-10 — Sprint 6.10: Derived Aligned Value Architecture (DESIGN_ONLY)
 
 ### Summary

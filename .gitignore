@@ -43,3 +43,5 @@ next-env.d.ts
 # Database
 *.sqlite3
 *.db
+# Local archives / stray dumps
+archive/

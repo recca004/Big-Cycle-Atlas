@@ -140,48 +140,34 @@ def _source_period_label(period_start: date, freshness_class: FreshnessClass) ->
     return f"{period_start.year}"
 
 
-async def align_observation_as_of(
+async def _select_observation_as_of(
     session: AsyncSession,
-    country_iso3: str,
-    indicator_code: str,
+    country: Country,
+    indicator: Indicator,
+    spec,
     scoring_period: ScoringPeriod,
-) -> AlignedValue | None:
-    """Latest latest-vintage observation whose period is COMPLETE by the snapshot.
+) -> Observation | None:
+    """Shared observation-selection primitive (Sprint 6.11, DEC-038).
 
-    Eligibility is period-completeness (Part 0): the observation's derived
-    effective_period_end must be at or before the scoring period's quarter
-    end — an annual 2020 observation first becomes eligible at the 2020-Q4
-    snapshot, a 2025-Q2 observation at the 2025-Q2 snapshot.
+    Selects the latest latest-vintage observation whose own economic period
+    is COMPLETE by the scoring snapshot's quarter-end date. ONE authoritative
+    selection algorithm — used by both the normal AlignedValue path and the
+    derived-component provenance path. No duplicate selection logic, no
+    second as-of algorithm.
 
-    Returns None when no eligible observation exists (e.g. scoring before the
-    first observation) — the caller produces NO signal, never a zero.
+    Returns the raw Observation ORM object (with id, source_series_id,
+    data_source_id, vintage_number, period_start, value) or None when no
+    eligible observation exists. The caller builds AlignedValue and/or
+    DerivedComponentProvenance from the result.
 
-    Country scoping (ISSUE-004) applies to the country lookup, the
-    latest-vintage subquery, AND the outer query — SourceSeries rows are
-    shared across countries.
+    Country scoping (ISSUE-004) applies at every layer — SourceSeries rows
+    are shared across countries.
     """
-    country = (
-        await session.execute(select(Country).where(Country.iso3 == country_iso3))
-    ).scalar_one_or_none()
-    if country is None:
-        raise AlignmentError(f"unknown country iso3: {country_iso3!r}")
-
-    indicator = (
-        await session.execute(select(Indicator).where(Indicator.code == indicator_code))
-    ).scalar_one_or_none()
-    if indicator is None:
-        raise AlignmentError(f"unknown indicator code: {indicator_code!r}")
-
-    spec = get_normalization_spec(indicator_code)
     as_of_dt = datetime.combine(
         quarter_end_date(scoring_period), time(23, 59, 59), tzinfo=timezone.utc
     )
-    # Period-complete eligibility (Part 0): a cheap necessary precondition
-    # (period_start <= as_of) plus the semantic effective-period-end bound.
     period_complete = _period_complete_condition(spec.freshness_class, scoring_period)
 
-    # Latest vintage per (source series, period) within the as-of window —
-    # scoped by country and indicator like every other layer.
     latest_vintage = (
         select(
             Observation.source_series_id,
@@ -213,7 +199,6 @@ async def align_observation_as_of(
                 Observation.period_start <= as_of_dt,
                 period_complete,
             )
-            # Most recent eligible period first; deterministic tie-breaks.
             .order_by(
                 Observation.period_start.desc(),
                 Observation.vintage_number.desc(),
@@ -223,14 +208,19 @@ async def align_observation_as_of(
         )
     ).scalar_one_or_none()
 
-    if observation is None:
-        return None
+    return observation
 
+
+def _build_aligned_value(
+    observation: Observation,
+    indicator_code: str,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    spec,
+) -> AlignedValue:
+    """Build an AlignedValue from a selected Observation (shared helper)."""
     source_date = observation.period_start.date()
-    # Age on the scoring clock, in integer quarters between the observation's
-    # own quarter and the scoring quarter (e.g. 2024 annual obs at 2025-Q2 = 5).
     age_quarters = _quarter_index(quarter_end_date(scoring_period)) - _quarter_index(source_date)
-
     return AlignedValue(
         indicator_code=indicator_code,
         country_iso3=country_iso3,
@@ -240,6 +230,109 @@ async def align_observation_as_of(
         age_periods=age_quarters,
         effective_period_end=effective_period_end(source_date, spec.freshness_class),
         vintage_number=observation.vintage_number,
+    )
+
+
+async def _resolve_country_indicator(
+    session: AsyncSession,
+    country_iso3: str,
+    indicator_code: str,
+):
+    """Resolve Country and Indicator ORM objects, raising AlignmentError."""
+    country = (
+        await session.execute(select(Country).where(Country.iso3 == country_iso3))
+    ).scalar_one_or_none()
+    if country is None:
+        raise AlignmentError(f"unknown country iso3: {country_iso3!r}")
+
+    indicator = (
+        await session.execute(select(Indicator).where(Indicator.code == indicator_code))
+    ).scalar_one_or_none()
+    if indicator is None:
+        raise AlignmentError(f"unknown indicator code: {indicator_code!r}")
+
+    return country, indicator
+
+
+async def align_observation_as_of(
+    session: AsyncSession,
+    country_iso3: str,
+    indicator_code: str,
+    scoring_period: ScoringPeriod,
+) -> AlignedValue | None:
+    """Latest latest-vintage observation whose period is COMPLETE by the snapshot.
+
+    Eligibility is period-completeness (Part 0): the observation's derived
+    effective_period_end must be at or before the scoring period's quarter
+    end — an annual 2020 observation first becomes eligible at the 2020-Q4
+    snapshot, a 2025-Q2 observation at the 2025-Q2 snapshot.
+
+    Returns None when no eligible observation exists (e.g. scoring before the
+    first observation) — the caller produces NO signal, never a zero.
+
+    Country scoping (ISSUE-004) applies to the country lookup, the
+    latest-vintage subquery, AND the outer query — SourceSeries rows are
+    shared across countries.
+    """
+    country, indicator = await _resolve_country_indicator(
+        session, country_iso3, indicator_code
+    )
+    spec = get_normalization_spec(indicator_code)
+
+    observation = await _select_observation_as_of(
+        session, country, indicator, spec, scoring_period
+    )
+    if observation is None:
+        return None
+
+    return _build_aligned_value(
+        observation, indicator_code, country_iso3, scoring_period, spec
+    )
+
+
+async def align_with_provenance_as_of(
+    session: AsyncSession,
+    country_iso3: str,
+    indicator_code: str,
+    scoring_period: ScoringPeriod,
+):
+    """Align and return both AlignedValue and source-identity provenance.
+
+    Sprint 6.11 (DEC-038): the derived aligned layer needs Observation.id,
+    source_series_id, and data_source_id — fields that AlignedValue does
+    not carry. This function uses the SAME _select_observation_as_of
+    primitive as align_observation_as_of (one authoritative selection
+    algorithm, no second as-of path) and returns the additional provenance
+    fields alongside the AlignedValue.
+
+    Returns None when no eligible observation exists (MISSING != ZERO).
+
+    Returns a tuple: (AlignedValue, observation_id, source_series_id,
+    data_source_id, release_date).
+    """
+    country, indicator = await _resolve_country_indicator(
+        session, country_iso3, indicator_code
+    )
+    spec = get_normalization_spec(indicator_code)
+
+    observation = await _select_observation_as_of(
+        session, country, indicator, spec, scoring_period
+    )
+    if observation is None:
+        return None
+
+    aligned = _build_aligned_value(
+        observation, indicator_code, country_iso3, scoring_period, spec
+    )
+    release_date = (
+        observation.release_date.date() if observation.release_date else None
+    )
+    return (
+        aligned,
+        observation.id,
+        observation.source_series_id,
+        observation.data_source_id,
+        release_date,
     )
 
 

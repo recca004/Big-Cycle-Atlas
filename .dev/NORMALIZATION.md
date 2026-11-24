@@ -2813,12 +2813,113 @@ pytest 637 passed (620 baseline + 17 new). DB unchanged
 - Partial-input / optional-component formulas — deferred.
 - Derived-value persistence — deferred.
 - Release-date-safe derivation — deferred until Milestone 9.
-- Enriching AlignedValue with source-identity fields — deferred.
+- Enriching AlignedValue with source-identity fields — deferred
+  (the DerivedComponentProvenance wrapper + align_with_provenance_as_of
+  pattern is sufficient for now).
+
+## Sprint 6.11 implementation status (2026-09-10) — FIRST EXECUTABLE DERIVED COMPUTATION (DEC-038, FORMULA_APPROVED)
+
+Sprint 6.11 implemented the first real DerivedAlignedValue
+computation using the DEC-037 contract:
+
+    TRADE_OPENNESS_GDP = EXPORTS_GDP + IMPORTS_GDP
+
+The value is a descriptive **trade-intensity ratio** (exports +
+imports as % of GDP). It is NOT an Atlas strength score, NOT a
+Global Openness level, NOT a Trade and capital flows force score.
+DEC-035's DEFER_GLOBAL_OPENNESS_LEVEL verdict remains in force.
+
+### Alignment refactor (one selection path)
+
+The alignment service was refactored to extract a shared
+`_select_observation_as_of` primitive — ONE authoritative
+observation-selection algorithm. Three internal helpers added:
+- `_select_observation_as_of` — shared observation selection
+- `_build_aligned_value` — builds AlignedValue from a selected Observation
+- `_resolve_country_indicator` — resolves Country and Indicator ORM objects
+
+One new public function:
+- `align_with_provenance_as_of` — returns (AlignedValue, observation_id,
+  source_series_id, data_source_id, release_date) using the SAME
+  selection primitive
+
+The public behavior of `align_observation_as_of` is UNCHANGED. No
+second as-of algorithm exists.
+
+### Formula identity
+
+- `derived_indicator_code = "TRADE_OPENNESS_GDP"`
+- `formula_id = "trade_openness_gdp"`
+- `formula_version = "trade-openness-gdp-v1"` (SEPARATE from
+  normalization-v0.8 and force-aggregation-v0.3)
+
+### Component contract
+
+Required components (both must be present):
+- `EXPORTS_GDP` (WB NE.EXP.GNFS.ZS)
+- `IMPORTS_GDP` (WB NE.IMP.GNFS.ZS)
+
+Formula: `derived_value = exports.raw_value + imports.raw_value`
+
+### Period compatibility (formula-level rule)
+
+Both components must have the same `effective_period_end`. Mismatched
+source periods (exports 2024 + imports 2023) produce
+`derived_value = None`. Never silently matched, interpolated,
+forward-filled, or zero-filled.
+
+### Missingness
+
+If either component is missing: `derived_value = None` (MISSING !=
+ZERO). Real zero input (0.0) is valid.
+
+### Backtest safety
+
+`backtest_safe = False` (Milestone 9). No formula upgrades unsafe
+inputs.
+
+### Normalization status
+
+NO 0-100 mapping is invented. The derived value is a raw descriptive
+ratio. Values above 100 are valid and unclamped (CHE 147.16).
+
+### Force role
+
+NO force is promoted. Global Openness and Trade and capital flows
+remain unscored.
+
+### Tests
+
+23 focused tests in `apps/api/tests/test_derived_trade_openness.py`.
+Full pytest: **660 passed** (637 baseline + 23 new). DB unchanged
+(6814/27/22/10/1872). No model-version bump.
+
+## Sprint 6.12 audit status (2026-09-10) — TRADE AND CAPITAL FLOWS FORCE METHODOLOGY (DEC-039, DEFER_TRADE_CAPITAL_LEVEL)
+
+Sprint 6.12 audited whether the existing trade/capital-flow inputs
+support a defensible force-level LEVEL methodology. The audit found
+NO defensible level mapping. The force remains DEFERRED_MULTI /
+unscored.
+
+### Audit findings
+
+- Trade intensity measures INTENSITY not STRENGTH (confirms DEC-035)
+- Trade balance has no universal monotonic strength interpretation
+- Current account has no universal monotonic strength interpretation
+- No composition formula is parameter-free
+- Relative and momentum dimensions DEFERRED (separate DEC needed)
+- Coverage would stay PARTIAL (capital flows not in data)
+
+### Verdict
+
+**DEFER_TRADE_CAPITAL_LEVEL.** All four live inputs remain
+SUPPORTING_CONTEXT. The derived TRADE_OPENNESS_GDP remains a
+descriptive ratio. No implementation, no model-version bump.
+pytest 660 unchanged. DB unchanged.
 
 ### Next
 
-Sprint 6.11 — owner to choose. Candidates: Gini normalization audit,
-first executable derived indicator (requires approved formula +
-normalization family + force role), structural/size-adjusted trade
-model, force confidence methodology, Big Cycle phase/stage,
-release-date discipline.
+Sprint 6.13 — owner to choose. Candidates: Gini normalization audit,
+trade/capital relative score, trade/capital momentum,
+structural/size-adjusted trade model, force confidence methodology,
+Big Cycle phase/stage, release-date discipline.

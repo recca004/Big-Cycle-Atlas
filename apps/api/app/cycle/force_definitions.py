@@ -194,7 +194,9 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
             "input only — no monotonic 'higher debt = weaker' curve is approved; "
             "debt sustainability depends on interest cost, currency, maturity, "
             "fiscal capacity, monetary sovereignty, and growth (CONTEXTUAL_DEFERRED "
-            "in the normalization registry). No Indebtedness force score exists."
+            "in the normalization registry). Sprint 6.13 (DEC-040, provisional) "
+            "added a score: CONDITION_MINUS_PENALTY composition, level = "
+            "clamp(DSR + (credit_gap - 50), 0, 100), force-aggregation-v0.4."
         ),
     ),
     ForceDefinition(

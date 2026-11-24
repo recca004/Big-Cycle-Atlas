@@ -17,7 +17,8 @@ body {
   margin: 0;
   min-height: 100dvh;
   background:
-    radial-gradient(1200px 600px at 85% -10%, rgb(77 143 209 / 0.08), transparent 60%),
+    radial-gradient(1200px 600px at 85% -10%, var(--bg-glow-1), transparent 60%),
+    radial-gradient(900px 700px at -10% 110%, var(--bg-glow-2), transparent 55%),
     var(--bg-app);
   transition: background-color var(--duration-normal) var(--ease-out),
     color var(--duration-normal) var(--ease-out);

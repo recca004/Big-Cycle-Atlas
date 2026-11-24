@@ -171,7 +171,14 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
           {def ? (
             <def.component
               instanceId={instance.id}
-              config={instance.config}
+              config={{
+                ...Object.fromEntries(
+                  def.configFields
+                    .filter((f) => f.default !== undefined)
+                    .map((f) => [f.key, f.default]),
+                ),
+                ...instance.config,
+              }}
               editMode={editMode}
             />
           ) : (

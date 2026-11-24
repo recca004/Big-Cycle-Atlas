@@ -8,6 +8,9 @@
 
   /* Surfaces — deep navy / charcoal */
   --bg-app: #0a0f1c;
+  --bg-glow-1: rgb(77 143 209 / 0.10);
+  --bg-glow-2: rgb(79 191 143 / 0.05);
+  --accent-contrast: #ffffff;
   --bg-raised: #101828;
   --bg-sunken: #070b14;
   --surface-1: rgb(255 255 255 / 0.04);
@@ -59,7 +62,10 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  --bg-app: #f3f4f7;
+  --bg-app: #eef0f5;
+  --bg-glow-1: rgb(47 111 179 / 0.16);
+  --bg-glow-2: rgb(217 164 65 / 0.10);
+  --accent-contrast: #ffffff;
   --bg-raised: #ffffff;
   --bg-sunken: #e8eaef;
   --surface-1: rgb(15 23 42 / 0.035);

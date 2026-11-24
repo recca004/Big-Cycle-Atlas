@@ -8,7 +8,7 @@ import {
   WidgetUnavailable,
 } from "./common";
 import { useForceCoverage } from "./hooks";
-import { formatDate } from "@/lib/format";
+
 
 function useForceScores(iso3: string | undefined) {
   const [state, setState] = useState<
@@ -101,7 +101,7 @@ export function ForceScoreWidget({ config }: WidgetProps) {
       </div>
       <p className="body-sm" style={{ fontSize: "var(--text-xs)", marginTop: "var(--space-3)" }}>
         {force.coverage_status.toUpperCase()} coverage
-        {force.period ? ` · ${formatDate(force.period)}` : ""}
+        {force.period ? ` · ${force.period}` : ""}
         {force.model_version ? ` · ${force.model_version}` : ""}
       </p>
       {force.limitations.length > 0 && (

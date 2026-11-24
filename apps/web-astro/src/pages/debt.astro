@@ -8,14 +8,15 @@ import { DomainForces } from "@/features/site/SitePanels";
     <p class="label-md text-tertiary">Debt &amp; capital</p>
     <h1 class="headline-lg">Debt</h1>
     <p class="body-sm">
-      Indebtedness and capital-flow forces. Indebtedness is researched but
-      composition is not yet approved — it reports coverage, not a score.
+      Indebtedness and capital-flow forces. Indebtedness is executable via
+      CONDITION_MINUS_PENALTY (DEC-040, provisional — owner ratification
+      pending).
     </p>
   </header>
   <DomainForces
     client:load
     forceCodes={["indebtedness", "trade_capital_flows", "internal_conflict"]}
-    indicators={["DEBT_SERVICE_RATIO", "CREDIT_TO_GDP_GAP", "GOV_DEBT_TO_GDP"]}
+    indicators={["DEBT_SERVICE_RATIO", "CREDIT_TO_GDP_GAP", "GOVERNMENT_DEBT_GDP"]}
   />
 </BaseLayout>
 

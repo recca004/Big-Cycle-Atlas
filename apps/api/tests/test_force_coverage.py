@@ -213,7 +213,8 @@ async def test_completely_missing_force_stays_missing(client):
     await _persist(_che_full_dtos())
     coverage = await _coverage("CHE")
     # no live or candidate catalog inputs defined for these forces
-    assert coverage["leadership_capabilities"].status == "missing"
+    # leadership now has a live input (GE WGI, DEC-041) but no data in fixture
+    assert coverage["leadership_capabilities"].status == "defined_not_sourced"
     assert coverage["geography"].status == "missing"
     # military_strength now has live inputs (M5.4) but no data in this fixture
     assert coverage["military_strength"].status == "defined_not_sourced"

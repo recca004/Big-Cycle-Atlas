@@ -73,14 +73,14 @@ def test_reverse_mapping_lookup():
     assert mapping is not None
     assert mapping.indicator_code == "GDP_GROWTH"
     assert mapping.source_key == "world_bank"
-    assert get_world_bank_mapping_by_external_code("SP.POP.TOTL") is None
+    assert get_world_bank_mapping_by_external_code("XX.NOT.MAPPED") is None
 
 
 def test_unknown_external_series_raises_mapping_error():
     payload = [{"page": 1, "pages": 1, "per_page": "20000", "total": 1},
                WB_RECORDS["NY.GDP.MKTP.KD.ZG"]]
     with pytest.raises(SeriesMappingError):
-        _parse(payload, series="SP.POP.TOTL")
+        _parse(payload, series="XX.NOT.MAPPED")
 
 
 # --- Persistence (sprint items 4–9) ----------------------------------------

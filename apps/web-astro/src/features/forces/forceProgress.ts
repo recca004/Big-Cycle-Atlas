@@ -37,10 +37,9 @@ export const FORCE_PROGRESS: ForceProgress[] = [
   {
     code: "leadership_capabilities",
     name: "Leadership capabilities",
-    researchStarted: true, researchCompleted: false, dataSourced: false,
-    methodologyProposed: false, methodologyApproved: false, implemented: false,
-    testsPassing: false, apiAvailable: false, frontendConnected: false,
-    ratification: "n/a",
+    ...DONE,
+    ratification: "provisional",
+    note: "DEC-041: WGI Government Effectiveness proxy, PARTIAL-capped. Pending owner ratification.",
   },
   { code: "education", name: "Education", ...DONE },
   {

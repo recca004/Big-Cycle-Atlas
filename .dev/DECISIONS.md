@@ -5170,3 +5170,47 @@ proxy, Education, Wealth-gap (IDENTITY_SINGLE) + Indebtedness
 (CONDITION_MINUS_PENALTY). 11/17 deferred. Exposed read-only at
 GET /api/countries/{iso3}/force-scores (non-persisted, derived at
 request time).
+
+## DEC-041 — Leadership capabilities: WGI Government Effectiveness proxy (seventh executable force)
+
+Date: 2026-11-24
+Sprint: 6.21
+Status: IMPLEMENTED — force-aggregation-v0.5, normalization-v0.9. Recorded for
+owner ratification; reversible by reverting the leadership aggregation spec
+to `level_mode=deferred`.
+
+### Part 1 — Semantic target
+
+"Capabilities of the country's leadership and how effectively it governs."
+Narrowed to the measurable core: **institutional state capacity** — quality
+of public services, civil service, policy formulation and implementation.
+Individual leaders are never rated (approval boundary).
+
+### Part 2 — Data
+
+- Indicator: GOVERNMENT_EFFECTIVENESS_WGI_SCORE (new, catalog #28)
+- Source: World Bank WGI `GOV_WGI_GE_SC` (2025 revision, absolute 0–100
+  score; same dataset family as the approved RL/CC/PV WGI scores)
+- Coverage: all 8 tracked countries, 1996–2024 (216 obs ingested)
+- REGULATORY_QUALITY (GOV_WGI_RQ_SC) verified available — held as a
+  candidate component, not ingested this sprint.
+
+### Part 3 — Method
+
+- Normalization: DIRECT_0_100 (identical family to approved WGI scores;
+  candidate momentum/relative families present but NOT enabled — GE is not
+  added to direct_momentum/relative_approved sets; level dimension only).
+- Force aggregation: IDENTITY_SINGLE, PROXY_CONDITION → level_score copies
+  the indicator level_score. relative/momentum/confidence DEFERRED.
+- Ceiling: coverage_ceiling=PARTIAL (one WGI dimension ≠ the whole
+  leadership-capabilities concept). Live result USA 2026-Q3: 76.7.
+
+### Part 4 — Limitations
+
+- Perception-based composite; ~2-year publication lag; biennial gaps
+  1997/1999/2001 inherit WGI structure.
+- State capacity ≠ leadership judgment; overlap with rule_of_law/
+  corruption WGI dimensions acknowledged (distinct WB aggregates but
+  correlated family) — flagged for composition-stage deduplication.
+- Score is level-only; no relative or momentum dimension until the
+  approved-dimension sets are extended by a future DEC.

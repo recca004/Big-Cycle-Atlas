@@ -942,7 +942,7 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
     # a level-only family with no relative/momentum path. All v0.7 WGI +
     # DSR + credit-gap + Education configuration unchanged.
-    version_id="normalization-v0.8",
+    version_id="normalization-v0.9",
     normalization_method="sprint-6.7-wid-wealth-complement-0-100",
     reference_universe_id="tracked_8",
     momentum_windows={
@@ -1018,6 +1018,7 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         "RULE_OF_LAW_WGI_SCORE",
         "CONTROL_OF_CORRUPTION_WGI_SCORE",
         "POLITICAL_STABILITY_WGI_SCORE",
+        "GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
         # BIS (2)
         "CREDIT_TO_GDP_GAP",
         "DEBT_SERVICE_RATIO",
@@ -1282,6 +1283,23 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "Feeds the PARTIAL-capped internal-conflict force (DEC-009); "
                 "the ceiling acts at the force layer only — this indicator "
                 "spec is a normal DIRECT_0_100 entry. " + _WGI_NOTE
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.direct_0_100,
+            relative_family=NormalizationFamily.cross_sectional_relative,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            relative_comparable=True,
+            notes=(
+                "Sprint 6.21 (DEC-041): scoring proxy for leadership "
+                "capabilities (PARTIAL-capped at the force layer). Candidate "
+                "families present but NOT in the approved momentum/relative "
+                "indicator sets — level dimension only. " + _WGI_NOTE
             ),
         ),
         # -- BIS ---------------------------------------------------------------

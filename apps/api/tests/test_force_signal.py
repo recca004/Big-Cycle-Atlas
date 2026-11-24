@@ -352,7 +352,7 @@ def test_versions_correct():
         component_signals={"RULE_OF_LAW_WGI_SCORE": signal},
         coverage_status=ForceCoverageStatus.available,
     )
-    assert fs.force_model_version == "force-aggregation-v0.4"
+    assert fs.force_model_version == "force-aggregation-v0.5"
     assert fs.normalization_model_version == "normalization-v0.8"
 
 

@@ -7,7 +7,7 @@ async def test_list_indicators(client):
     assert response.status_code == 200
     body = response.json()
     assert isinstance(body, list)
-    assert len(body) == 27
+    assert len(body) == 28
     codes = {indicator["code"] for indicator in body}
     assert "GDP_GROWTH" in codes
     assert "CREDIT_TO_GDP_GAP" in codes
@@ -39,10 +39,8 @@ async def test_list_indicators_filter_by_frequency(client):
     response = await client.get("/api/indicators/", params={"frequency": "monthly"})
     assert response.status_code == 200
     body = response.json()
-    # INFLATION_CPI is annual since Milestone 5.3 (verified WB series FP.CPI.TOTL.ZG)
-    assert {indicator["code"] for indicator in body} == {
-        "UNEMPLOYMENT_RATE",
-    }
+    # All indicators are annual (UNEMPLOYMENT corrected to annual ILO series)
+    assert body == []
 
 
 @pytest.mark.asyncio

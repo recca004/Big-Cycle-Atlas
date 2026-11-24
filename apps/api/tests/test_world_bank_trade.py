@@ -40,6 +40,12 @@ EXPECTED_WB_CODES = {
     "INFLATION_CPI": "FP.CPI.TOTL.ZG",
     "MILITARY_EXPENDITURE_USD": "MS.MIL.XPND.CD",
     "MILITARY_EXPENDITURE_GDP": "MS.MIL.XPND.GD.ZS",
+    "GOVERNMENT_EFFECTIVENESS_WGI_SCORE": "GOV_WGI_GE_SC",
+    "POPULATION": "SP.POP.TOTL",
+    "RND_EXPENDITURE_GDP": "GB.XPD.RSDV.GD.ZS",
+    "SECONDARY_ENROLLMENT": "SE.SEC.ENRR",
+    "TERTIARY_ENROLLMENT": "SE.TER.ENRR",
+    "UNEMPLOYMENT_RATE": "SL.UEM.TOTL.ZS",
 }
 
 TRADE_DTOS_SPEC = [
@@ -93,7 +99,7 @@ async def coverage_by_code(iso3: str) -> dict:
 
 
 async def test_world_bank_mappings_verified_codes(client):
-    assert len(WORLD_BANK_MAPPINGS) == 15  # 3 GDP + 5 trade/investment + 3 WGI + Gini + CPI + 2 military
+    assert len(WORLD_BANK_MAPPINGS) == 21  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 5 new (pop/rnd/enroll/unemp)
     by_indicator = {m.indicator_code: m for m in WORLD_BANK_MAPPINGS}
     for indicator_code, external_code in EXPECTED_WB_CODES.items():
         mapping = by_indicator.get(indicator_code)
@@ -144,7 +150,7 @@ async def test_seed_idempotent_no_duplicate_series(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 22
+        assert total == 28
         dup = (
             await session.execute(
                 select(func.count())

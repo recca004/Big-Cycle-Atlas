@@ -63,7 +63,16 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="leadership_capabilities",
         name="Leadership capabilities",
         description="Capabilities of the country's leadership and how effectively it governs.",
-        coverage_notes="No catalog indicator exists; requires a qualitative or expert-assessment source.",
+        live_indicator_codes=("GOVERNMENT_EFFECTIVENESS_WGI_SCORE",),
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "WGI Government Effectiveness (2025 revision, 0-100) is the "
+            "institutional proxy: quality of public services, civil service, "
+            "policy formulation and implementation. It measures state "
+            "capacity, not individual leaders — no subjective leader "
+            "ratings. Capped PARTIAL: one governance dimension is not the "
+            "whole leadership-capabilities concept (Sprint 6.21, DEC-041)."
+        ),
     ),
     ForceDefinition(
         code="education",

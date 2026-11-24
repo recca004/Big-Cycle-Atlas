@@ -359,16 +359,30 @@ _IDENTITY = ForceDimensionMode.identity_copy
 # constructing the dictionary (a dict comprehension would silently overwrite
 # duplicates).
 _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
-    # 1. Leadership capabilities — no live indicators
-    ForceAggregationSpec(
-        force_code="leadership_capabilities",
-        components=(),
-        level_mode=_DEFERRED,
-        relative_mode=_DEFERRED,
-        momentum_mode=_DEFERRED,
-        confidence_mode=_DEFERRED,
-        notes="No live indicators; requires qualitative/expert source.",
-    ),
+        # 1. Leadership capabilities — IDENTITY_SINGLE (PROXY_CONDITION),
+        # PARTIAL ceiling. Sprint 6.21 (DEC-041): WGI Government
+        # Effectiveness promoted to PROXY_CONDITION — institutional state
+        # capacity as the measurable core of "how effectively it governs".
+        # relative/momentum/confidence stay DEFERRED (level only).
+        ForceAggregationSpec(
+            force_code="leadership_capabilities",
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
+            ),
+            level_mode=_IDENTITY,
+            relative_mode=_DEFERRED,
+            momentum_mode=_DEFERRED,
+            confidence_mode=_DEFERRED,
+            notes=(
+                "Sprint 6.21 (DEC-041): identity copies the WGI GE "
+                "level_score. Institutional proxy — measures state capacity, "
+                "never individual leaders. PARTIAL ceiling: one WGI "
+                "dimension is not the whole leadership-capabilities concept."
+            ),
+        ),
         # 2. Education — IDENTITY_SINGLE (PROXY_CONDITION), PARTIAL ceiling
         # Sprint 6.4 (DEC-032): TERTIARY_ATTAINMENT_25_34 promoted to
         # PROXY_CONDITION. level_mode = identity_copy promotes Education to
@@ -723,4 +737,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.4"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v0.5"

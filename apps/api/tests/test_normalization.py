@@ -19,7 +19,7 @@ def test_registry_has_no_duplicate_codes():
     codes = list(nd.NORMALIZATION_REGISTRY)
     assert len(codes) == len(set(codes))
     # 22 live SourceSeries = 22 registry entries, one per live indicator.
-    assert len(codes) == 22
+    assert len(codes) == 23
 
 
 def test_every_live_force_input_has_a_normalization_spec():
@@ -182,6 +182,7 @@ def test_proxy_ceiling_does_not_modify_indicator_normalization():
     }
     assert set(ceiling_forces) == {
         "education",
+        "leadership_capabilities",
         "military_strength",
         "wealth_opportunity_values_gaps",
         "internal_conflict",

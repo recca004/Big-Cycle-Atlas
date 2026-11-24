@@ -203,6 +203,20 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
         ),
     ),
     WorldBankMapping(
+        indicator_code="GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
+        external_code="GOV_WGI_GE_SC",
+        external_name="Government Effectiveness - Governance score (0-100)",
+        external_unit="score 0-100",
+        transform_notes=(
+            "WGI 2025-revision absolute governance score (0-100) for "
+            "Government Effectiveness — quality of public services, civil "
+            "service, policy formulation and implementation, credibility of "
+            "the government's commitment to policies. Perception-based "
+            "composite with measurement uncertainty — a source indicator, "
+            "not an Atlas force score."
+        ),
+    ),
+    WorldBankMapping(
         indicator_code="POLITICAL_STABILITY_WGI_SCORE",
         external_code="GOV_WGI_PV_SC",
         external_name="Political Stability - Governance score (0-100)",

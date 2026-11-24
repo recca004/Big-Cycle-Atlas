@@ -152,3 +152,67 @@ export function fetchIndicatorRevisions(
     opts,
   );
 }
+
+/* ---------- Research API (experimental — Mission 2) ---------- */
+
+import type {
+  MethodInfo,
+  CompositeModelInfo,
+  CompositeResult,
+  CycleHistoryResponse,
+  ResearchProgress,
+  ForceHistoryResponse,
+} from "@/types/research";
+
+export function fetchResearchMethods(
+  opts?: FetchOptions,
+): Promise<MethodInfo[]> {
+  return request<MethodInfo[]>("/api/research/methods", opts);
+}
+
+export function fetchCompositeModels(
+  opts?: FetchOptions,
+): Promise<CompositeModelInfo[]> {
+  return request<CompositeModelInfo[]>("/api/research/models", opts);
+}
+
+export function fetchCountryCycle(
+  iso3: string,
+  model: string,
+  opts?: FetchOptions,
+): Promise<CompositeResult> {
+  return request<CompositeResult>(
+    `/api/research/countries/${encodeURIComponent(iso3)}/cycle?model=${encodeURIComponent(model)}`,
+    opts,
+  );
+}
+
+export function fetchCycleHistory(
+  iso3: string,
+  model: string,
+  startYear = 2000,
+  opts?: FetchOptions,
+): Promise<CycleHistoryResponse> {
+  return request<CycleHistoryResponse>(
+    `/api/research/countries/${encodeURIComponent(iso3)}/cycle/history?model=${encodeURIComponent(model)}&start_year=${startYear}`,
+    opts,
+  );
+}
+
+export function fetchResearchProgress(
+  opts?: FetchOptions,
+): Promise<ResearchProgress> {
+  return request<ResearchProgress>("/api/research/progress", opts);
+}
+
+export function fetchForceHistory(
+  iso3: string,
+  forceCode: string,
+  startYear = 1996,
+  opts?: FetchOptions,
+): Promise<ForceHistoryResponse> {
+  return request<ForceHistoryResponse>(
+    `/api/countries/${encodeURIComponent(iso3)}/forces/${encodeURIComponent(forceCode)}/history?start_year=${startYear}`,
+    opts,
+  );
+}

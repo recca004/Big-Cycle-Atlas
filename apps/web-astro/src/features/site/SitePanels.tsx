@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchForceScores, fetchCountryObservations } from "@/lib/api/client";
+import { fetchForceScores, fetchCountryObservations, fetchResearchProgress } from "@/lib/api/client";
+import type { ResearchProgress } from "@/types/research";
 import type { ForceScore, CountryObservation } from "@/types/api";
 import {
   useLiveCountries,
@@ -530,8 +531,9 @@ export function ProgressPanel() {
           </table>
         </div>
       </div>
+      <AuthoritativeStatus />
       <div className="glass">
-        <h2 className="headline-sm panel-title">Force research stages</h2>
+        <h2 className="headline-sm panel-title">Force research stages (manual tracking)</h2>
         <div className="table-wrap">
           <table className="data-table">
             <thead>
@@ -651,6 +653,68 @@ export function SettingsPanel() {
             Clear saved workspaces
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+
+/** Authoritative engine status — derived from the backend methodology
+ *  registry via /api/research/progress (Mission 2 §22). Replaces manual
+ *  booleans for the executable-status view; the manual table below remains
+ *  for process-stage tracking. */
+function AuthoritativeStatus() {
+  const [state, setState] = useState<
+    { kind: "loading" | "ready" | "error"; data?: ResearchProgress; error?: string }
+  >({ kind: "loading" });
+  useEffect(() => {
+    const c = new AbortController();
+    fetchResearchProgress({ signal: c.signal })
+      .then((data) => setState({ kind: "ready", data }))
+      .catch((e) => setState({ kind: "error", error: String(e) }));
+    return () => c.abort();
+  }, []);
+  if (state.kind !== "ready" || !state.data) {
+    return (
+      <div className="glass">
+        <h2 className="headline-sm panel-title">Engine status (authoritative)</h2>
+        <p className="body-sm">
+          {state.kind === "error" ? `Unavailable: ${state.error}` : "Loading…"}
+        </p>
+      </div>
+    );
+  }
+  const labels: Record<string, string> = {
+    approved_level: "Approved level", partial: "Partial proxy",
+    dimension_only: "Dimension only", context_only: "Context module",
+    deferred: "Deferred",
+  };
+  return (
+    <div className="glass">
+      <h2 className="headline-sm panel-title">
+        Engine status — authoritative ({state.data.as_of_period})
+      </h2>
+      <p className="body-sm">
+        {Object.entries(state.data.counts)
+          .map(([k, v]) => `${labels[k] ?? k}: ${v}`)
+          .join(" · ")}
+      </p>
+      <div className="table-wrap">
+        <table className="data-table">
+          <thead>
+            <tr><th>Force</th><th>Status</th><th>Dimensions</th><th>Ceiling</th></tr>
+          </thead>
+          <tbody>
+            {state.data.forces.map((f) => (
+              <tr key={f.force_code}>
+                <td>{f.force_name}</td>
+                <td>{labels[f.implementation_status] ?? f.implementation_status}</td>
+                <td>{f.dimensions.join(", ") || "—"}</td>
+                <td>{f.coverage_ceiling ?? "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

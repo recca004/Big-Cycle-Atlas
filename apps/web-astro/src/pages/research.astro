@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ResearchLab } from "@/features/research/ResearchLab";
+---
+
+<BaseLayout title="Research Lab">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Experimental engine</p>
+    <h1 class="headline-lg">Research Lab</h1>
+    <p class="body-sm">
+      Experimental composite models, cycle classifications and force-method
+      inspection — computed in Python through the research API. Nothing on
+      this page is an approved production score; every result is labelled
+      experimental and retrospective.
+    </p>
+  </header>
+  <ResearchLab client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+  .research-controls { display: flex; gap: var(--space-4); align-items: center; padding: var(--space-4); flex-wrap: wrap; }
+  .research-grid { display: grid; grid-template-columns: minmax(200px, 1fr) 2fr; gap: var(--space-5); padding: var(--space-4); }
+  .weight-list { list-style: none; padding: 0; margin: var(--space-2) 0; columns: 2; }
+  .panel-title { margin-bottom: var(--space-3); }
+  @media (max-width: 720px) { .research-grid { grid-template-columns: 1fr; } .weight-list { columns: 1; } }
+</style>

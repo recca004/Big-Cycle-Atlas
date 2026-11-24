@@ -456,6 +456,11 @@ class MomentumWindowResult:
     requested_anchor_period: str  # scoring-clock label, e.g. "2020-Q2"
     anchor_source_period: Optional[str] = None  # actual aligned source, e.g. "2019"
     change: Optional[float] = None
+    # Sprint 6.14 (DEC-042 Option C): units of `change`. "points" = signed
+    # raw provider-scale difference (WGI convention); "percent" = signed
+    # percentage change in the raw indicator value (LPPH convention). Kept
+    # as provenance so the two momentum units are never silently mixed.
+    change_unit: str = "points"
 
     def __post_init__(self) -> None:
         if self.window_years <= 0:
@@ -853,6 +858,13 @@ class ModelVersionConfig:
     reference_percentile_configs: dict[str, ReferencePercentileConfig] = field(
         default_factory=dict
     )
+    # Sprint 6.14 (DEC-042 Option C) — EXECUTION GATE: percent-change
+    # OWN_HISTORY momentum is enabled per indicator by membership in this
+    # set; a registry momentum_family alone never auto-enables it.
+    # Currently exactly one member: LABOUR_PRODUCTIVITY_PER_HOUR.
+    pct_momentum_approved_indicators: frozenset[str] = field(
+        default_factory=frozenset
+    )
     # Sprint 6.4 (DEC-032) — EXPLICIT DIMENSION APPROVAL SETS for the
     # DIRECT_0_100 path. A registry level/relative/momentum family
     # declaration alone NEVER auto-enables a dimension — an indicator must
@@ -985,20 +997,28 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
     # a level-only family with no relative/momentum path. All v0.7 WGI +
     # DSR + credit-gap + Education configuration unchanged.
-    version_id="normalization-v1.0",
-    normalization_method="sprint-6.14-lpph-oecd-reference-percentile",
+    version_id="normalization-v1.1",
+    normalization_method="sprint-6.14-lpph-oecd-ref-pct-momentum",
     reference_universe_id="tracked_8",
     momentum_windows={
+        # DEC-042 Option C: 3y/5y/10y windows on annual LPPH; primary = 5y
+        # (consistent with the WGI convention). 10y is a research window —
+        # it never becomes the headline value.
+        "LABOUR_PRODUCTIVITY_PER_HOUR": (3, 5, 10),
         "RULE_OF_LAW_WGI_SCORE": (3, 5),
         "CONTROL_OF_CORRUPTION_WGI_SCORE": (3, 5),
         "POLITICAL_STABILITY_WGI_SCORE": (3, 5),
     },
     momentum_primary_window_years={
+        "LABOUR_PRODUCTIVITY_PER_HOUR": 5,
         "RULE_OF_LAW_WGI_SCORE": 5,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 5,
         "POLITICAL_STABILITY_WGI_SCORE": 5,
     },
     momentum_anchor_tolerance_periods={
+        # Annual LPPH: at most 1 source year older than the requested anchor
+        # year (same convention as the annual WGI gate).
+        "LABOUR_PRODUCTIVITY_PER_HOUR": 1,
         "RULE_OF_LAW_WGI_SCORE": 1,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 1,
         "POLITICAL_STABILITY_WGI_SCORE": 1,
@@ -1031,6 +1051,10 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
             minimum_sample_n=20,
         ),
     },
+    pct_momentum_approved_indicators=frozenset({
+        # DEC-042 Option C — owner approved for implementation (V1 Mission 1).
+        "LABOUR_PRODUCTIVITY_PER_HOUR",
+    }),
     # Sprint 6.4 (DEC-032): EXPLICIT dimension approval for the DIRECT_0_100
     # path. Both sets are exactly the WGI x3 — the only indicators approved
     # for direct momentum or relative scoring. Education
@@ -1619,6 +1643,29 @@ def validate_normalization_registry() -> None:
             raise ValueError(
                 f"{indicator}: unknown reference universe "
                 f"{config.universe_code!r}"
+            )
+    # Percent-change momentum gate (Sprint 6.14): the approved set must be
+    # consistent with the registry — indicator exists, momentum family
+    # OWN_HISTORY, windows/primary/tolerance all configured.
+    for indicator in CURRENT_MODEL_VERSION.pct_momentum_approved_indicators:
+        spec = NORMALIZATION_REGISTRY.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"pct-momentum approved unknown indicator: {indicator}"
+            )
+        if spec.momentum_family is not NormalizationFamily.own_history:
+            raise ValueError(
+                f"{indicator}: pct-momentum approved but registry momentum "
+                f"family is {spec.momentum_family.value}"
+            )
+        if (
+            indicator not in CURRENT_MODEL_VERSION.momentum_windows
+            or indicator not in CURRENT_MODEL_VERSION.momentum_primary_window_years
+            or indicator not in CURRENT_MODEL_VERSION.momentum_anchor_tolerance_periods
+        ):
+            raise ValueError(
+                f"{indicator}: pct-momentum approved but windows/primary/"
+                f"tolerance are not configured in the model version"
             )
     # Sprint 6.4: explicit dimension approval sets must be consistent with
     # the registry. A registry family declaration alone NEVER enables a

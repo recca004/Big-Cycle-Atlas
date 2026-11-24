@@ -205,3 +205,56 @@ async def test_registry_family_alone_never_enables(client):
     await _persist_reference(TOY_25, year=2024)
     with pytest.raises(NormalizationNotImplementedError):
         await _normalize("USA", model_config=stripped)
+
+
+# --- 5. Option C: percent-change own-history momentum (DEC-042) -------------------
+
+
+async def _persist_lpph_history(iso3: str, values: dict[int, float]) -> None:
+    await _persist([_lpph_dto(iso3, year, v) for year, v in values.items()])
+
+
+async def test_pct_momentum_primary_window(client):
+    # Current 2024 = 110; 5y anchor 2020 = 100 -> primary momentum +10.0%.
+    await _persist_lpph_history("USA", {2020: 100.0, 2022: 104.0, 2015: 90.0, 2024: 110.0})
+    await _persist_reference(TOY_25, year=2024)
+    signal = await _normalize("USA")
+    assert signal.momentum == pytest.approx(10.0)
+    assert signal.momentum_window_years == 5
+    units = {w.window_years: w.change_unit for w in signal.momentum_windows}
+    assert set(units) == {3, 5, 10}
+    assert set(units.values()) == {"percent"}
+    # 3y window: 2024 vs 2021... anchor 2022=104 -> (110-104)/104 = +5.77%
+    w3 = next(w for w in signal.momentum_windows if w.window_years == 3)
+    assert w3.change == pytest.approx(100 * 6 / 104, rel=1e-6)
+
+
+async def test_pct_momentum_missing_anchor_is_none_not_zero(client):
+    # Only current obs — no 5y anchor -> momentum None, window provenance kept.
+    await _persist_lpph_history("USA", {2024: 110.0})
+    await _persist_reference(TOY_25, year=2024)
+    signal = await _normalize("USA")
+    assert signal.momentum is None
+    w5 = next(w for w in signal.momentum_windows if w.window_years == 5)
+    assert w5.change is None
+
+
+async def test_pct_momentum_uses_raw_not_percentile(client):
+    # Momentum must be computed from the raw USD-PPP values, never from the
+    # level percentile — DEC-042: a percentile move is not productivity growth.
+    await _persist_lpph_history("USA", {2020: 100.0, 2024: 50.0})
+    await _persist_reference(TOY_25, year=2024)
+    signal = await _normalize("USA")
+    assert signal.momentum == pytest.approx(-50.0)
+
+
+async def test_pct_momentum_gate(client):
+    import dataclasses
+    stripped = dataclasses.replace(
+        CURRENT_MODEL_VERSION, pct_momentum_approved_indicators=frozenset()
+    )
+    await _persist_lpph_history("USA", {2020: 100.0, 2024: 110.0})
+    await _persist_reference(TOY_25, year=2024)
+    signal = await _normalize("USA", model_config=stripped)
+    assert signal.level_score is not None  # level unaffected
+    assert signal.momentum is None

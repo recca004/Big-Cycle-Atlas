@@ -253,6 +253,58 @@ def one_sided_vulnerability_level(
     )
 
 
+async def _pct_momentum_window_result(
+    session: AsyncSession,
+    country_iso3: str,
+    indicator_code: str,
+    scoring_period: ScoringPeriod,
+    window_years: int,
+    anchor_tolerance_periods: int,
+    current_raw: float,
+) -> MomentumWindowResult:
+    """Percent-change own-history momentum (DEC-042 Option C): LPPH only.
+
+    Same anchor mechanics as the WGI helper (align at the shifted scoring
+    period, same eligibility/vintage/isolation rules, versioned tolerance),
+    but the change is the SIGNED PERCENTAGE change
+    100 * (current - anchor) / anchor — percentage, not provider-scale
+    points, because LPPH raw values are USD-PPP levels, not a 0-100 score.
+    change_unit="percent" carries that provenance. A zero/negative anchor
+    makes the percentage undefined -> change None, never a fabricated value.
+    """
+    anchor_period = shift_scoring_period_years(scoring_period, window_years)
+    anchor = await align_observation_as_of(
+        session, country_iso3, indicator_code, anchor_period
+    )
+    if anchor is None:
+        return MomentumWindowResult(
+            window_years=window_years,
+            requested_anchor_period=anchor_period.label,
+            anchor_source_period=None,
+            change=None,
+            change_unit="percent",
+        )
+    years_older = anchor_period.year - anchor.effective_period_end.year
+    if years_older > anchor_tolerance_periods:
+        return MomentumWindowResult(
+            window_years=window_years,
+            requested_anchor_period=anchor_period.label,
+            anchor_source_period=anchor.source_period,
+            change=None,
+            change_unit="percent",
+        )
+    change: float | None = None
+    if anchor.raw_value != 0.0:
+        change = 100.0 * (current_raw - anchor.raw_value) / abs(anchor.raw_value)
+    return MomentumWindowResult(
+        window_years=window_years,
+        requested_anchor_period=anchor_period.label,
+        anchor_source_period=anchor.source_period,
+        change=change,
+        change_unit="percent",
+    )
+
+
 async def normalize_indicator_as_of(
     session: AsyncSession,
     country_iso3: str,
@@ -384,6 +436,47 @@ async def _normalize_reference_percentile_as_of(
 
     level_score = midrank_percentile(aligned.raw_value, distribution)
 
+    # Momentum (DEC-042 Option C): percent-change own-history, gated by the
+    # pct_momentum_approved_indicators set — registry family alone never
+    # enables it. Distinct from the level: a rising percentile is NOT
+    # productivity growth, and productivity growth is NOT a level position.
+    momentum: float | None = None
+    momentum_window_years: int | None = None
+    window_results: tuple = ()
+    if (
+        spec.momentum_family is NormalizationFamily.own_history
+        and indicator_code in model_config.pct_momentum_approved_indicators
+    ):
+        windows = model_config.momentum_windows.get(indicator_code, spec.momentum_windows)
+        primary_window = model_config.momentum_primary_window_years.get(indicator_code)
+        tolerance = model_config.momentum_anchor_tolerance_periods.get(indicator_code)
+        if not windows or primary_window is None or tolerance is None:
+            raise NormalizationNotImplementedError(
+                f"{indicator_code}: approved for pct momentum but "
+                f"windows/primary/tolerance are not configured in model "
+                f"version {model_config.version_id!r}"
+            )
+        window_results = tuple(
+            [
+                await _pct_momentum_window_result(
+                    session,
+                    country_iso3,
+                    indicator_code,
+                    scoring_period,
+                    window_years,
+                    tolerance,
+                    aligned.raw_value,
+                )
+                for window_years in windows
+            ]
+        )
+        primary_result = next(
+            (r for r in window_results if r.window_years == primary_window), None
+        )
+        if primary_result is not None and primary_result.change is not None:
+            momentum = primary_result.change
+            momentum_window_years = primary_window
+
     return NormalizedSignal(
         indicator_code=indicator_code,
         country_iso3=country_iso3,
@@ -395,7 +488,9 @@ async def _normalize_reference_percentile_as_of(
         level_score=level_score,
         relative_score=None,  # percentile IS the relative position; the
         # dedicated relative dimension stays unapproved (DEC-042)
-        momentum=None,  # Option C momentum: separate dimension, deferred
+        momentum=momentum,
+        momentum_window_years=momentum_window_years,
+        momentum_windows=window_results,
         confidence=None,
         reference_universe_id=config.universe_code,
         backtest_safe=model_config.backtest_safe,

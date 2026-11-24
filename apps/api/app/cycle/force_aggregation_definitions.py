@@ -146,6 +146,11 @@ INDICATORS_WITH_APPROVED_MOMENTUM: frozenset[str] = frozenset(
         "RULE_OF_LAW_WGI_SCORE",
         "CONTROL_OF_CORRUPTION_WGI_SCORE",
         "POLITICAL_STABILITY_WGI_SCORE",
+        # DEC-042 Option C (V1 Mission 1, owner-approved): LPPH percent-change
+        # own-history momentum — the force's momentum is the indicator's
+        # signed % change, NOT a 0-100 score and NOT comparable to WGI-point
+        # momentum.
+        "LABOUR_PRODUCTIVITY_PER_HOUR",
     }
 )
 
@@ -489,14 +494,13 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             ),
             level_mode=_IDENTITY,
             relative_mode=_DEFERRED,
-            momentum_mode=_DEFERRED,
+            momentum_mode=_IDENTITY,
             confidence_mode=_DEFERRED,
             notes=(
-                "Sprint 6.14 (DEC-042 Option A): identity copies the OECD "
-                "reference-percentile level_score. Single proxy — OECD "
-                "relative productivity position only; absolute level and "
-                "own-history momentum (Option C) remain separate deferred "
-                "dimensions."
+                "Sprint 6.14 (DEC-042): level = OECD reference percentile "
+                "(Option A); momentum = own-history % change, primary 5y "
+                "window (Option C). Distinct dimensions — a percentile move "
+                "is not productivity growth."
             ),
         ),
         # 9. Cost competitiveness — 2 SUPPORTING_CONTEXT
@@ -748,4 +752,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.6"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v0.7"

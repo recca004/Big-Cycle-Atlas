@@ -554,8 +554,8 @@ async def test_backtest_safe_false_and_model_version_v0_5(client):
     await _persist_cross_section(2024, values)
     signal = await _normalize("CHE", SNAPSHOT)
     assert signal.backtest_safe is False
-    assert signal.model_version == "normalization-v1.0"
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.0"
+    assert signal.model_version == "normalization-v1.1"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.1"
 
 
 async def test_relative_scoring_never_writes_or_mutates_the_db(client):

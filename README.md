@@ -13,17 +13,22 @@ No live or simulated data is presented as real. The project is in early developm
 
 ## Status
 
-Milestone 1 (Foundation) is complete: FastAPI backend, Next.js frontend, PostgreSQL
-schema, and the initial 8-country set. See `.dev/PROJECT_STATUS.md` for details.
+Milestone 5 (indicator normalization + first executable force layer) is complete;
+Sprint 6.12 done. Live dev state: 6,814 observations, 27 indicators, 22 source
+series, 10 data sources, 1,872 indicator diagnostics, 8 countries, 660 backend
+tests passing, `normalization-v0.8` / `force-aggregation-v0.3`. 5/17 forces have
+executable scores (all computed in-memory; no force-score API yet). See
+`.dev/PROJECT_STATUS.md` for details.
 
 Initial countries: United States (USA), China (CHN), Switzerland (CHE), Germany
 (DEU), France (FRA), United Kingdom (GBR), Japan (JPN), India (IND).
 
 ## Tech stack
 
-- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, Apache ECharts (later)
-- **Backend:** Python, FastAPI, SQLAlchemy, Pydantic
-- **Database:** PostgreSQL (Docker Compose)
+- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS v4 — an Astro
+  migration is in progress under `apps/web-astro` (see `feature/big-cycle-atlas-astro-v2`)
+- **Backend:** Python, FastAPI, SQLAlchemy 2.0 (async), psycopg 3, Pydantic
+- **Database:** PostgreSQL (any reachable instance; docker-compose provided)
 - **Tooling:** uv, npm workspaces, pytest, Ruff
 
 ## Requirements
@@ -31,11 +36,14 @@ Initial countries: United States (USA), China (CHN), Switzerland (CHE), Germany
 - Node.js 20+
 - Python 3.11+
 - [uv](https://docs.astral.sh/uv/)
-- Docker Desktop (for PostgreSQL) — or any reachable PostgreSQL instance
+- PostgreSQL 14+ — via Docker Desktop (`docker compose up -d`) or an existing
+  local/network instance
 
 ## Local setup
 
 ### 1. Database
+
+Option A — Docker Compose:
 
 ```bash
 docker compose up -d
@@ -43,6 +51,16 @@ docker compose up -d
 
 This starts PostgreSQL 16 on `localhost:5432` with user/password `postgres`/`postgres`
 and database `bigcycleatlas`.
+
+Option B — an existing PostgreSQL instance (what the primary dev machine uses):
+point `DATABASE_URL` in `apps/api/.env` at it. Example (host PostgreSQL 18):
+
+```
+DATABASE_URL=postgresql+psycopg://<user>:<password>@localhost:5432/<database>
+```
+
+Set it once — `.env` must not contain multiple `DATABASE_URL` lines (the last
+one silently wins).
 
 ### 2. Backend (apps/api)
 
@@ -72,8 +90,11 @@ npm run dev
 
 Opens on http://localhost:3000.
 
-- `/` — global dashboard placeholder ("Where are we in the Big Cycle?")
-- `/countries` — country list, fetched live from the API
+- `/` — global dashboard with tracked-country cards
+- `/countries` — country list with data coverage, fetched live from the API
+- `/country/{iso3}` — per-country data: economic, trade, governance, inequality,
+  military, debt & credit, and productivity sections
+- `/country/{iso3}/forces` — 17-force coverage statuses (scores not yet exposed)
 
 Set `NEXT_PUBLIC_API_URL` in `apps/web/.env.local` if the API is not on
 http://localhost:8000 (see `.env.example`).

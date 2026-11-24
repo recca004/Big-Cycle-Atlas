@@ -34,3 +34,33 @@ class ForceScoresResponse(BaseModel):
     normalization_version: str
     force_aggregation_version: str
     forces: list[ForceScoreRead]
+
+
+class ForceHistoryPoint(BaseModel):
+    """One scoring period in a force's history."""
+
+    period: str
+    execution_status: str
+    level_score: Optional[float] = None
+    relative_score: Optional[float] = None
+    momentum_score: Optional[float] = None
+    coverage_status: str
+    missing_components: list[str]
+
+
+class ForceHistoryResponse(BaseModel):
+    """Retrospective force history — computed from latest vintages.
+
+    This is RETROSPECTIVE descriptive analysis, not a release-date-safe
+    backtest (backtest_safe=False): each point uses the latest stored
+    vintage, so revisions that arrived later are visible in earlier
+    periods' inputs.
+    """
+
+    country: str
+    force_code: str
+    force_name: str
+    retrospective: bool = True
+    backtest_safe: bool = False
+    model_version: str
+    points: list[ForceHistoryPoint]

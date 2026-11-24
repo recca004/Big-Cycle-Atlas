@@ -7,12 +7,13 @@ from typing import Optional, List
 
 from app.core.config import get_settings
 from app.cycle.force_definitions import FORCE_DEFINITIONS
-from app.cycle.normalization_definitions import ScoringPeriod
+from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION, ScoringPeriod
 from app.db.session import get_session
 from app.models import DataSource, Indicator
 from app.schemas import CountryRead
 from app.schemas import Observation as ObservationSchema
 from app.schemas.force_coverage import ForceCoverageResponse, ForceCoverageRead, ForceInputRead
+from app.schemas.force_scores import ForceHistoryPoint, ForceHistoryResponse
 from app.schemas.force_scores import ForceScoreRead, ForceScoresResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services import country_service, force_coverage_service, force_signal_service, observation_service
@@ -283,4 +284,63 @@ async def get_country_force_scores(
         else "",
         force_aggregation_version=signals[0].force_model_version if signals else "",
         forces=forces,
+    )
+
+
+@router.get("/{iso3}/forces/{force_code}/history", response_model=ForceHistoryResponse)
+async def get_country_force_history(
+    iso3: str,
+    force_code: str,
+    start_year: int = Query(1990, ge=1960, le=2200),
+    end_year: Optional[int] = Query(None, ge=1960, le=2200),
+    session: AsyncSession = Depends(get_session),
+):
+    """Retrospective force history at annual (Q4) scoring snapshots.
+
+    RETROSPECTIVE — each point uses latest stored vintages; not a
+    release-date-safe backtest (backtest_safe=False). Missing inputs at a
+    period produce nulls, never zeros.
+    """
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+    if force_code not in _FORCE_NAMES:
+        raise HTTPException(
+            status_code=404, detail=f"Unknown force code '{force_code}'"
+        )
+    if end_year is None:
+        end_year = _latest_completed_scoring_period().year
+    if end_year < start_year:
+        raise HTTPException(status_code=422, detail="end_year < start_year")
+
+    latest = _latest_completed_scoring_period()
+    points: list[ForceHistoryPoint] = []
+    for year in range(start_year, end_year + 1):
+        scoring_period = ScoringPeriod(year, 4)
+        if (scoring_period.year, scoring_period.quarter) > (latest.year, latest.quarter):
+            break  # never score a future snapshot
+        signals = await force_signal_service.build_force_signals_as_of(
+            session, country.iso3, scoring_period
+        )
+        s = next(f for f in signals if f.force_code == force_code)
+        points.append(
+            ForceHistoryPoint(
+                period=s.scoring_period,
+                execution_status="scored" if s.level_score is not None else "deferred",
+                level_score=s.level_score,
+                relative_score=s.relative_score,
+                momentum_score=s.momentum,
+                coverage_status=s.coverage_status.value,
+                missing_components=list(s.missing_components),
+            )
+        )
+    return ForceHistoryResponse(
+        country=country.iso3,
+        force_code=force_code,
+        force_name=_FORCE_NAMES[force_code],
+        model_version=CURRENT_MODEL_VERSION.version_id,
+        points=points,
     )

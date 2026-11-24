@@ -68,3 +68,37 @@ async def test_force_scores_invalid_period_422(client):
 async def test_force_scores_unknown_country_404(client):
     response = await client.get("/api/countries/ZZZ/force-scores")
     assert response.status_code == 404
+
+
+async def test_force_history_endpoint_shape(client):
+    response = await client.get(
+        "/api/countries/USA/forces/productivity_output_growth/history",
+        params={"start_year": 2018, "end_year": 2020},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["retrospective"] is True
+    assert body["backtest_safe"] is False
+    assert body["force_code"] == "productivity_output_growth"
+    assert len(body["points"]) == 3
+    for point in body["points"]:
+        assert point["period"].endswith("-Q4")
+        assert point["coverage_status"] in {
+            "available", "partial", "defined_not_sourced", "no_data"
+        }
+
+
+async def test_force_history_unknown_force_404(client):
+    response = await client.get(
+        "/api/countries/USA/forces/not_a_force/history",
+        params={"start_year": 2020, "end_year": 2020},
+    )
+    assert response.status_code == 404
+
+
+async def test_force_history_rejects_reversed_range(client):
+    response = await client.get(
+        "/api/countries/USA/forces/education/history",
+        params={"start_year": 2020, "end_year": 2018},
+    )
+    assert response.status_code == 422

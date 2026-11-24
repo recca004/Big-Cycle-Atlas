@@ -203,6 +203,24 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
         ),
     ),
     WorldBankMapping(
+        indicator_code="REER_INDEX",
+        external_code="PX.REX.REER",
+        external_name="Real effective exchange rate index (2010 = 100)",
+        external_unit="index",
+        transform_notes=(
+            "WB convention: rising index = real APPRECIATION = declining "
+            "price competitiveness (opposite-sign intuition vs a "
+            "depreciation-positive read). Annual; narrow-based index."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="BROADBAND_PER_100",
+        external_code="IT.NET.BBND.P2",
+        external_name="Fixed broadband subscriptions (per 100 people)",
+        external_unit="per 100 people",
+        transform_notes="ITU via WDI, annual; coverage proxy only.",
+    ),
+    WorldBankMapping(
         indicator_code="FDI_NET_INFLOWS_GDP",
         external_code="BX.KLT.DINV.WD.GD.ZS",
         external_name="Foreign direct investment, net inflows (% of GDP)",

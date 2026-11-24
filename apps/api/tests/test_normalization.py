@@ -19,7 +19,7 @@ def test_registry_has_no_duplicate_codes():
     codes = list(nd.NORMALIZATION_REGISTRY)
     assert len(codes) == len(set(codes))
     # 22 live SourceSeries = 22 registry entries, one per live indicator.
-    assert len(codes) == 25
+    assert len(codes) == 27
 
 
 def test_every_live_force_input_has_a_normalization_spec():
@@ -188,6 +188,7 @@ def test_proxy_ceiling_does_not_modify_indicator_normalization():
         "wealth_opportunity_values_gaps",
         "internal_conflict",
         "character_determination",  # V1 Mission 1: LFP participation proxy
+        "cost_competitiveness",  # Mission 2: REER momentum dimension
     }
     # The capped forces' input indicators are ordinary specs: NormalizationSpec
     # has no ceiling/clamping field, and their families are standard entries.

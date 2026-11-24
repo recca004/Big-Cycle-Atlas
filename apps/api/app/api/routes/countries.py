@@ -236,7 +236,12 @@ async def get_country_force_scores(
         ForceScoreRead(
             force_code=s.force_code,
             force_name=_FORCE_NAMES.get(s.force_code, s.force_code),
-            execution_status="scored" if s.level_score is not None else "deferred",
+            execution_status=(
+                "scored" if s.level_score is not None
+                else "dimension_only"
+                if (s.relative_score is not None or s.momentum is not None)
+                else "deferred"
+            ),
             level_score=s.level_score,
             relative_score=s.relative_score,
             momentum_score=s.momentum,
@@ -334,7 +339,12 @@ async def get_country_force_history(
         points.append(
             ForceHistoryPoint(
                 period=s.scoring_period,
-                execution_status="scored" if s.level_score is not None else "deferred",
+                execution_status=(
+                    "scored" if s.level_score is not None
+                    else "dimension_only"
+                    if (s.relative_score is not None or s.momentum is not None)
+                    else "deferred"
+                ),
                 level_score=s.level_score,
                 relative_score=s.relative_score,
                 momentum_score=s.momentum,

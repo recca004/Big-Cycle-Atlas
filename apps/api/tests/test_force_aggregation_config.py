@@ -229,6 +229,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
         "rule_of_law", "corruption", "internal_conflict",
         "productivity_output_growth",  # DEC-042 Option C
         "character_determination",  # V1 Mission 1: LFP pct momentum
+        "cost_competitiveness",  # Mission 2: REER pct momentum dimension
     }
 
 
@@ -238,7 +239,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
 def test_confidence_mode_always_deferred():
     for force_code, spec in FORCE_AGGREGATION_CONFIGS.items():
         assert spec.confidence_mode is ForceDimensionMode.deferred, (
-            f"{force_code}: confidence must be deferred in force-aggregation-v0.9"
+            f"{force_code}: confidence must be deferred in force-aggregation-v1.0"
         )
 
 
@@ -274,12 +275,12 @@ def test_no_force_persistence_or_api():
 
 
 def test_force_aggregation_version():
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.9"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v1.0"
 
 
 def test_normalization_version_unchanged():
     from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.3"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.4"
 
 
 # --- Validation raises loudly ------------------------------------------------
@@ -435,6 +436,10 @@ def test_relative_identity_on_unapproved_indicator_raises():
             force_code="cost_competitiveness",
             components=(
                 ForceIndicatorComponentSpec(
+                    indicator_code="REER_INDEX",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
                     indicator_code="UNIT_LABOUR_COST_GROWTH",
                     role=ForceIndicatorRole.core_condition,
                 ),
@@ -535,6 +540,10 @@ def test_relative_identity_on_unsupported_indicator_raises():
             force_code="infrastructure_investment",
             components=(
                 ForceIndicatorComponentSpec(
+                    indicator_code="BROADBAND_PER_100",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
                     indicator_code="GROSS_CAPITAL_FORMATION_GDP",
                     role=ForceIndicatorRole.core_condition,
                 ),
@@ -554,6 +563,10 @@ def test_momentum_identity_on_unsupported_indicator_raises():
         ForceAggregationSpec(
             force_code="infrastructure_investment",
             components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="BROADBAND_PER_100",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
                 ForceIndicatorComponentSpec(
                     indicator_code="GROSS_CAPITAL_FORMATION_GDP",
                     role=ForceIndicatorRole.core_condition,

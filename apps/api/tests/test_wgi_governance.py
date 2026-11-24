@@ -122,7 +122,7 @@ async def test_wgi_source_series_seeded_idempotently(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 30
+        assert total == 32
         wgi_series = (
             await session.execute(
                 select(SourceSeries.external_code)
@@ -138,7 +138,7 @@ async def test_wgi_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        assert total == 30
+        assert total == 32
         dup = (
             await session.execute(
                 select(func.count())

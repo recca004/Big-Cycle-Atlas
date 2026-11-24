@@ -25,6 +25,7 @@ from app.research.methodology_registry import (
     methods_for_force,
 )
 from app.research import service as research_service
+from app.research.geography import geography_profile
 from app.services import country_service
 
 router = APIRouter(prefix=f"{get_settings().api_prefix}/research", tags=["research"])
@@ -191,6 +192,14 @@ async def country_cycle_history(
         "warnings": list(result.warnings),
         "backtest_safe": False,
     }
+
+
+@router.get("/countries/{iso3}/geography")
+async def country_geography(iso3: str):
+    profile = geography_profile(iso3.upper())
+    if profile is None:
+        raise HTTPException(404, f"no geography profile for {iso3!r}")
+    return profile
 
 
 @router.get("/progress")

@@ -133,7 +133,7 @@ async def test_military_source_series_seeded_idempotently(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 30
+        assert total == 32
         wb_series = (
             await session.execute(
                 select(SourceSeries.external_code)
@@ -150,7 +150,7 @@ async def test_military_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        assert total == 30
+        assert total == 32
         dup = (
             await session.execute(
                 select(func.count())
@@ -233,11 +233,11 @@ async def test_military_strength_never_available_even_with_complete_data(client)
 
 async def test_coverage_ceiling_set_only_on_proxy_forces(client):
     for code in ("rule_of_law", "corruption",
-                 "cost_competitiveness", "indebtedness", "trade_capital_flows",
+                 "indebtedness", "trade_capital_flows",
                  "infrastructure_investment"):
         force = force_definition_by_code(code)
         assert force.coverage_ceiling is None, code
-    for code in ("wealth_opportunity_values_gaps", "internal_conflict", "military_strength", "productivity_output_growth"):
+    for code in ("wealth_opportunity_values_gaps", "internal_conflict", "military_strength", "productivity_output_growth", "cost_competitiveness"):
         force = force_definition_by_code(code)
         assert force.coverage_ceiling == "partial", code
 

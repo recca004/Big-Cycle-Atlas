@@ -174,8 +174,9 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
     ForceDefinition(
         code="cost_competitiveness",
         name="Cost competitiveness",
+        coverage_ceiling=ForceCoverageStatus.partial,
         description="Relative cost position of the country's producers versus competitors.",
-        live_indicator_codes=("UNIT_LABOUR_COST_GROWTH", "INFLATION_CPI"),
+        live_indicator_codes=("REER_INDEX", "UNIT_LABOUR_COST_GROWTH", "INFLATION_CPI"),
         coverage_notes=(
             "ULC growth is relative-cost meaningful; CPI inflation is a domestic "
             "price-pressure input. Relative international competitiveness "
@@ -208,11 +209,11 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="infrastructure_investment",
         name="Infrastructure and investment",
         description="Level and quality of infrastructure and fixed investment.",
-        live_indicator_codes=("GROSS_CAPITAL_FORMATION_GDP",),
+        live_indicator_codes=("GROSS_CAPITAL_FORMATION_GDP", "BROADBAND_PER_100"),
         coverage_notes=(
-            "World Bank gross capital formation live (2000–2025, all 8 countries). "
-            "It measures investment effort, not infrastructure quality — quality "
-            "indices come later."
+            "World Bank gross capital formation live (2000–2025, all 8 countries) "
+            "+ fixed broadband per 100 (Mission 2). Investment effort + digital "
+            "coverage context — NOT infrastructure quality."
         ),
     ),
     ForceDefinition(

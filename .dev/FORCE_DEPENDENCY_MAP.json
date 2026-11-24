@@ -1,8 +1,8 @@
 {
   "generated_for": "big-cycle-atlas",
   "model_versions": {
-    "normalization": "normalization-v1.3",
-    "force_aggregation": "force-aggregation-v0.9"
+    "normalization": "normalization-v1.4",
+    "force_aggregation": "force-aggregation-v1.0"
   },
   "forces": [
     {
@@ -141,14 +141,21 @@
     {
       "force": "cost_competitiveness",
       "live_inputs": [
+        "REER_INDEX",
         "UNIT_LABOUR_COST_GROWTH",
         "INFLATION_CPI"
       ],
-      "ceiling": null,
+      "ceiling": "partial",
       "level_mode": "deferred",
       "relative_mode": "deferred",
-      "momentum_mode": "deferred",
+      "momentum_mode": "identity_copy",
       "components": [
+        {
+          "indicator": "REER_INDEX",
+          "role": "proxy_condition",
+          "level_family": "contextual_deferred",
+          "executable": true
+        },
         {
           "indicator": "UNIT_LABOUR_COST_GROWTH",
           "role": "supporting_context",
@@ -212,7 +219,8 @@
     {
       "force": "infrastructure_investment",
       "live_inputs": [
-        "GROSS_CAPITAL_FORMATION_GDP"
+        "GROSS_CAPITAL_FORMATION_GDP",
+        "BROADBAND_PER_100"
       ],
       "ceiling": null,
       "level_mode": "deferred",
@@ -221,6 +229,12 @@
       "components": [
         {
           "indicator": "GROSS_CAPITAL_FORMATION_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "BROADBAND_PER_100",
           "role": "supporting_context",
           "level_family": "contextual_deferred",
           "executable": false

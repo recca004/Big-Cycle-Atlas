@@ -352,7 +352,7 @@ def test_versions_correct():
         component_signals={"RULE_OF_LAW_WGI_SCORE": signal},
         coverage_status=ForceCoverageStatus.available,
     )
-    assert fs.force_model_version == "force-aggregation-v0.9"
+    assert fs.force_model_version == "force-aggregation-v1.0"
     assert fs.normalization_model_version == "normalization-v0.8"
 
 
@@ -779,7 +779,7 @@ def test_normalization_version_mismatch_raises():
         raw_value=1.0,
         source_period="2025-Q1",
         method=NormalizationFamily.one_sided_vulnerability,
-        model_version="normalization-v1.399",  # mismatch
+        model_version="normalization-v1.499",  # mismatch
         level_score=50.0,
         relative_score=None,
         momentum=None,

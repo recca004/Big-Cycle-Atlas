@@ -354,6 +354,18 @@ async def normalize_indicator_as_of(
                 session, spec, country_iso3, scoring_period,
                 model_config, freshness_policy,
             )
+        if (
+            spec.momentum_family is NormalizationFamily.own_history
+            and spec.indicator_code
+            in model_config.pct_momentum_approved_indicators
+        ):
+            # Mission 2 (delegated): momentum-only dimension for
+            # context-level indicators (e.g. REER) — a signed % change, not
+            # a level.
+            return await _normalize_pct_momentum_only_as_of(
+                session, spec, country_iso3, scoring_period,
+                model_config, freshness_policy,
+            )
     if spec.level_family is NormalizationFamily.reference_percentile:
         return await _normalize_reference_percentile_as_of(
             session, spec, country_iso3, scoring_period, model_config, freshness_policy
@@ -365,6 +377,74 @@ async def normalize_indicator_as_of(
         "ONE_SIDED_VULNERABILITY for CREDIT_TO_GDP_GAP only, "
         "COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 only, "
         "REFERENCE_PERCENTILE for LABOUR_PRODUCTIVITY_PER_HOUR only)"
+    )
+
+
+async def _normalize_pct_momentum_only_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+) -> NormalizedSignal | None:
+    """Momentum-only dimension (Mission 2, delegated): a context-level
+    indicator (e.g. REER) publishes a signed own-history % change with NO
+    level score. Direction is provider-convention dependent and documented
+    per indicator — the raw % change is returned, never re-scored 0-100.
+    """
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+    aligned = await align_observation_as_of(
+        session, country_iso3, spec.indicator_code, scoring_period
+    )
+    if aligned is None:
+        return None
+    freshness = evaluate_freshness(
+        own_period_age(aligned.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        return None
+    windows = model_config.momentum_windows.get(
+        spec.indicator_code, spec.momentum_windows
+    )
+    primary = model_config.momentum_primary_window_years.get(spec.indicator_code)
+    tolerance = model_config.momentum_anchor_tolerance_periods.get(
+        spec.indicator_code
+    )
+    if not windows or primary is None or tolerance is None:
+        raise NormalizationNotImplementedError(
+            f"{spec.indicator_code}: pct-momentum approved but windows/"
+            "primary/tolerance not configured"
+        )
+    window_results = tuple(
+        [
+            await _pct_momentum_window_result(
+                session, country_iso3, spec.indicator_code, scoring_period,
+                w, tolerance, aligned.raw_value,
+            )
+            for w in windows
+        ]
+    )
+    primary_result = next(
+        (r for r in window_results if r.window_years == primary), None
+    )
+    return NormalizedSignal(
+        indicator_code=spec.indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=aligned.raw_value,
+        source_period=aligned.source_period,
+        method=NormalizationFamily.own_history,
+        model_version=model_config.version_id,
+        level_score=None,
+        relative_score=None,
+        momentum=(primary_result.change if primary_result else None),
+        confidence=None,
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
+        momentum_window_years=primary,
+        momentum_windows=window_results,
     )
 
 

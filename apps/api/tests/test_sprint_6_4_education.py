@@ -511,5 +511,5 @@ async def test_versions_on_signals(client):
     for s in signals:
         assert s.force_model_version == FORCE_AGGREGATION_VERSION
         assert s.normalization_model_version == CURRENT_MODEL_VERSION.version_id
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.9"
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.3"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v1.0"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.4"

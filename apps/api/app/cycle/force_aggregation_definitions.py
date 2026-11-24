@@ -160,6 +160,9 @@ INDICATORS_WITH_APPROVED_MOMENTUM: frozenset[str] = frozenset(
         "LABOUR_PRODUCTIVITY_PER_HOUR",
         # V1 Mission 1 (delegated): LFP percent-change own-history momentum.
         "LABOUR_FORCE_PARTICIPATION_RATE",
+        # V1 Mission 2 (delegated): REER pct momentum — signed index change,
+        # never a competitiveness score.
+        "REER_INDEX",
     }
 )
 
@@ -520,6 +523,10 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             force_code="cost_competitiveness",
             components=(
                 ForceIndicatorComponentSpec(
+                    indicator_code="REER_INDEX",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
+                ForceIndicatorComponentSpec(
                     indicator_code="UNIT_LABOUR_COST_GROWTH",
                     role=ForceIndicatorRole.supporting_context,
                 ),
@@ -530,9 +537,13 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             ),
             level_mode=_DEFERRED,
             relative_mode=_DEFERRED,
-            momentum_mode=_DEFERRED,
+            momentum_mode=_IDENTITY,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred; 2 components.",
+            notes=(
+                "Mission 2 (delegated): REER % momentum only — signed change "
+                "of the index (rising = real appreciation = declining price "
+                "competitiveness), NEVER a competitiveness score."
+            ),
         ),
         # 10. Trade and capital flows — 4 SUPPORTING_CONTEXT
         ForceAggregationSpec(
@@ -571,6 +582,10 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             components=(
                 ForceIndicatorComponentSpec(
                     indicator_code="GROSS_CAPITAL_FORMATION_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="BROADBAND_PER_100",
                     role=ForceIndicatorRole.supporting_context,
                 ),
             ),
@@ -773,4 +788,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.9"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v1.0"

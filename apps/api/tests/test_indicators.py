@@ -7,7 +7,7 @@ async def test_list_indicators(client):
     assert response.status_code == 200
     body = response.json()
     assert isinstance(body, list)
-    assert len(body) == 30
+    assert len(body) == 32
     codes = {indicator["code"] for indicator in body}
     assert "GDP_GROWTH" in codes
     assert "CREDIT_TO_GDP_GAP" in codes

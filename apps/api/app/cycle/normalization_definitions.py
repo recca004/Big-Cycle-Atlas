@@ -1005,8 +1005,8 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
     # a level-only family with no relative/momentum path. All v0.7 WGI +
     # DSR + credit-gap + Education configuration unchanged.
-    version_id="normalization-v1.3",
-    normalization_method="v1-mission1-lfp-wdi-percentile",
+    version_id="normalization-v1.4",
+    normalization_method="v1-mission2-reer-momentum",
     reference_universe_id="tracked_8",
     momentum_windows={
         # DEC-042 Option C: 3y/5y/10y windows on annual LPPH; primary = 5y
@@ -1015,6 +1015,7 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
         "LABOUR_PRODUCTIVITY_PER_HOUR": (3, 5, 10),
         # V1 Mission 1 (delegated): annual LFP momentum, same convention.
         "LABOUR_FORCE_PARTICIPATION_RATE": (3, 5),
+        "REER_INDEX": (3, 5),
         "RULE_OF_LAW_WGI_SCORE": (3, 5),
         "CONTROL_OF_CORRUPTION_WGI_SCORE": (3, 5),
         "POLITICAL_STABILITY_WGI_SCORE": (3, 5),
@@ -1022,6 +1023,7 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     momentum_primary_window_years={
         "LABOUR_PRODUCTIVITY_PER_HOUR": 5,
         "LABOUR_FORCE_PARTICIPATION_RATE": 5,
+        "REER_INDEX": 5,
         "RULE_OF_LAW_WGI_SCORE": 5,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 5,
         "POLITICAL_STABILITY_WGI_SCORE": 5,
@@ -1031,6 +1033,7 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
         # year (same convention as the annual WGI gate).
         "LABOUR_PRODUCTIVITY_PER_HOUR": 1,
         "LABOUR_FORCE_PARTICIPATION_RATE": 1,
+        "REER_INDEX": 1,
         "RULE_OF_LAW_WGI_SCORE": 1,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 1,
         "POLITICAL_STABILITY_WGI_SCORE": 1,
@@ -1074,6 +1077,8 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
         "LABOUR_PRODUCTIVITY_PER_HOUR",
         # V1 Mission 1 (delegated): same annual pct-change convention.
         "LABOUR_FORCE_PARTICIPATION_RATE",
+        # Mission 2 (delegated): REER momentum-only dimension.
+        "REER_INDEX",
     }),
     relative_share_approved_indicators=frozenset({
         # Delegated working-model approval (V1 Mission 1): share of
@@ -1114,6 +1119,8 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         "TRADE_BALANCE",
         "CURRENT_ACCOUNT_GDP",
         "FDI_NET_INFLOWS_GDP",
+        "REER_INDEX",
+        "BROADBAND_PER_100",
         "GROSS_CAPITAL_FORMATION_GDP",
         "GINI_INDEX",
         "INFLATION_CPI",
@@ -1197,6 +1204,37 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
             notes=(
                 "Deliberately unassigned. Nominal; would need PPP and likely "
                 "log transform before any use."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="REER_INDEX",
+            direction=IndicatorStrengthDirection.negative,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "Mission 2 (delegated): momentum-only dimension. WB "
+                "convention: rising REER = real appreciation = declining "
+                "price competitiveness — reported as a signed % change of "
+                "the index, NEVER a competitiveness score. Depreciation is "
+                "not automatically positive."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="BROADBAND_PER_100",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=None,
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "Mission 2: digital-infrastructure coverage context for "
+                "infrastructure_investment — subscriptions per 100, NOT "
+                "quality/speed."
             ),
         ),
         NormalizationSpec(

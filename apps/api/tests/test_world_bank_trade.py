@@ -48,6 +48,8 @@ EXPECTED_WB_CODES = {
     "UNEMPLOYMENT_RATE": "SL.UEM.TOTL.ZS",
     "LABOUR_FORCE_PARTICIPATION_RATE": "SL.TLF.CACT.ZS",
     "FDI_NET_INFLOWS_GDP": "BX.KLT.DINV.WD.GD.ZS",
+    "REER_INDEX": "PX.REX.REER",
+    "BROADBAND_PER_100": "IT.NET.BBND.P2",
 }
 
 TRADE_DTOS_SPEC = [
@@ -102,7 +104,7 @@ async def coverage_by_code(iso3: str) -> dict:
 
 
 async def test_world_bank_mappings_verified_codes(client):
-    assert len(WORLD_BANK_MAPPINGS) == 23  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 6 new (pop/rnd/enroll/unemp/lfp)
+    assert len(WORLD_BANK_MAPPINGS) == 25  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 6 new (pop/rnd/enroll/unemp/lfp)
     by_indicator = {m.indicator_code: m for m in WORLD_BANK_MAPPINGS}
     for indicator_code, external_code in EXPECTED_WB_CODES.items():
         mapping = by_indicator.get(indicator_code)
@@ -153,7 +155,7 @@ async def test_seed_idempotent_no_duplicate_series(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 30
+        assert total == 32
         dup = (
             await session.execute(
                 select(func.count())
@@ -222,13 +224,17 @@ async def test_trade_force_partial_when_one_input_lacks_data(client):
 
 async def test_infrastructure_force_available_with_gcf(client):
     await _persist(
-        [_dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5)]
+        [
+            _dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5),
+            _dto("CHE", "BROADBAND_PER_100", "IT.NET.BBND.P2", 42.0),
+        ]
     )
     coverage = await coverage_by_code("CHE")
     infra = coverage["infrastructure_investment"]
     assert infra.status == "available"
     assert [i.indicator_code for i in infra.live_inputs] == [
-        "GROSS_CAPITAL_FORMATION_GDP"
+        "GROSS_CAPITAL_FORMATION_GDP",
+        "BROADBAND_PER_100",
     ]
 
 
@@ -251,6 +257,7 @@ async def test_global_openness_stays_missing_with_trade_data(client):
         for indicator, external, value in TRADE_DTOS_SPEC
     ]
     dtos.append(_dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5))
+    dtos.append(_dto("CHE", "BROADBAND_PER_100", "IT.NET.BBND.P2", 42.0))
     await _persist(dtos)
     coverage = await coverage_by_code("CHE")
 
@@ -288,6 +295,7 @@ async def test_api_trade_and_infrastructure_available_no_scores(client):
         for indicator, external, value in TRADE_DTOS_SPEC
     ]
     dtos.append(_dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5))
+    dtos.append(_dto("CHE", "BROADBAND_PER_100", "IT.NET.BBND.P2", 42.0))
     await _persist(dtos)
 
     response = await client.get("/api/countries/CHE/force-coverage")

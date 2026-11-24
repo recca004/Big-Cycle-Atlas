@@ -138,7 +138,7 @@ async def main() -> int:
                         help="WGI base indicator code "
                              f"(one of {', '.join(WGI_BASE_INDICATORS)})")
     parser.add_argument("--all-indicators", action="store_true",
-                        help="Import all 3 WGI base indicators")
+                        help="Import all 4 WGI base indicators")
     parser.add_argument("--kind", default=None,
                         choices=[kind.value for kind in IndicatorDiagnosticKind],
                         help="Diagnostic kind to import")

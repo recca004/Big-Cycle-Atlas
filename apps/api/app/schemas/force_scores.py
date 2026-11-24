@@ -64,3 +64,24 @@ class ForceHistoryResponse(BaseModel):
     backtest_safe: bool = False
     model_version: str
     points: list[ForceHistoryPoint]
+
+
+class UncertaintyIndicatorRead(BaseModel):
+    """Published provider uncertainty for one indicator at a source period.
+
+    Only REAL provider-published diagnostics are returned — never invented
+    confidence percentages. Missing kinds stay null.
+    """
+
+    indicator_code: str
+    source_period: str
+    ci_lower_bound: Optional[float] = None
+    ci_upper_bound: Optional[float] = None
+    source_count: Optional[float] = None
+
+
+class CountryUncertaintyResponse(BaseModel):
+    """All available published uncertainty diagnostics for a country."""
+
+    country: str
+    indicators: list[UncertaintyIndicatorRead]

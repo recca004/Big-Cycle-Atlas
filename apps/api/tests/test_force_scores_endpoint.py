@@ -102,3 +102,20 @@ async def test_force_history_rejects_reversed_range(client):
         params={"start_year": 2020, "end_year": 2018},
     )
     assert response.status_code == 422
+
+
+async def test_uncertainty_endpoint_returns_published_bounds(client):
+    response = await client.get("/api/countries/USA/uncertainty")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["country"] == "USA"
+    for item in body["indicators"]:
+        assert item["indicator_code"].endswith("_WGI_SCORE")
+        if item["ci_lower_bound"] is not None:
+            assert item["ci_lower_bound"] <= item["ci_upper_bound"]
+        if item["source_count"] is not None:
+            assert item["source_count"] > 0
+
+
+async def test_uncertainty_unknown_country_404(client):
+    assert (await client.get("/api/countries/ZZZ/uncertainty")).status_code == 404

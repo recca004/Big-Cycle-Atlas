@@ -198,9 +198,9 @@ def _normalize(iso3: str, indicator: str, scoring_period: ScoringPeriod):
 # --- Registry: exact 9 specs ------------------------------------------------------
 
 
-def test_exact_nine_diagnostic_specs():
+def test_exact_twelve_diagnostic_specs():
     validate_wgi_diagnostic_specs()
-    assert len(WGI_DIAGNOSTIC_SPECS) == 9  # 3 WGI dimensions x LB/UB/SR only
+    assert len(WGI_DIAGNOSTIC_SPECS) == 12  # 3 WGI dimensions x LB/UB/SR only
     assert all(s.provider_source_code == "3" for s in WGI_DIAGNOSTIC_SPECS)
     assert not any(s.provider_series_code.endswith(".SE") for s in WGI_DIAGNOSTIC_SPECS)
 

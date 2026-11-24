@@ -13,7 +13,12 @@ from app.models import DataSource, Indicator
 from app.schemas import CountryRead
 from app.schemas import Observation as ObservationSchema
 from app.schemas.force_coverage import ForceCoverageResponse, ForceCoverageRead, ForceInputRead
-from app.schemas.force_scores import ForceHistoryPoint, ForceHistoryResponse
+from app.schemas.force_scores import (
+    CountryUncertaintyResponse,
+    ForceHistoryPoint,
+    ForceHistoryResponse,
+    UncertaintyIndicatorRead,
+)
 from app.schemas.force_scores import ForceScoreRead, ForceScoresResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services import country_service, force_coverage_service, force_signal_service, observation_service
@@ -343,4 +348,108 @@ async def get_country_force_history(
         force_name=_FORCE_NAMES[force_code],
         model_version=CURRENT_MODEL_VERSION.version_id,
         points=points,
+    )
+
+
+@router.get("/{iso3}/uncertainty", response_model=CountryUncertaintyResponse)
+async def get_country_uncertainty(
+    iso3: str,
+    session: AsyncSession = Depends(get_session),
+):
+    """Published provider uncertainty diagnostics (DEC-022/023 contract).
+
+    Returns each indicator's LATEST available period's published bounds and
+    source counts. Only provider-published values are returned — no
+    computed confidence percentage exists anywhere in this contract.
+    """
+    from sqlalchemy import func as sa_func, select as sa_select
+
+    from app.models.indicator import Indicator
+    from app.models.indicator_diagnostic import (
+        IndicatorDiagnostic,
+        IndicatorDiagnosticKind,
+    )
+
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+
+    # Latest period per (indicator, kind), then the latest vintage at it.
+    latest_period = (
+        sa_select(
+            IndicatorDiagnostic.indicator_id,
+            IndicatorDiagnostic.diagnostic_kind,
+            sa_func.max(IndicatorDiagnostic.period_start).label("max_period"),
+        )
+        .where(IndicatorDiagnostic.country_id == country.id)
+        .group_by(
+            IndicatorDiagnostic.indicator_id, IndicatorDiagnostic.diagnostic_kind
+        )
+        .subquery()
+    )
+    latest_vintage = (
+        sa_select(
+            IndicatorDiagnostic.indicator_id,
+            IndicatorDiagnostic.diagnostic_kind,
+            IndicatorDiagnostic.period_start,
+            sa_func.max(IndicatorDiagnostic.vintage_number).label("max_v"),
+        )
+        .join(
+            latest_period,
+            (IndicatorDiagnostic.indicator_id == latest_period.c.indicator_id)
+            & (
+                IndicatorDiagnostic.diagnostic_kind
+                == latest_period.c.diagnostic_kind
+            )
+            & (IndicatorDiagnostic.period_start == latest_period.c.max_period),
+        )
+        .where(IndicatorDiagnostic.country_id == country.id)
+        .group_by(
+            IndicatorDiagnostic.indicator_id,
+            IndicatorDiagnostic.diagnostic_kind,
+            IndicatorDiagnostic.period_start,
+        )
+        .subquery()
+    )
+    rows = (
+        await session.execute(
+            sa_select(
+                Indicator.code,
+                IndicatorDiagnostic.diagnostic_kind,
+                IndicatorDiagnostic.period_start,
+                IndicatorDiagnostic.value,
+            )
+            .join(
+                latest_vintage,
+                (IndicatorDiagnostic.indicator_id == latest_vintage.c.indicator_id)
+                & (
+                    IndicatorDiagnostic.diagnostic_kind
+                    == latest_vintage.c.diagnostic_kind
+                )
+                & (IndicatorDiagnostic.period_start == latest_vintage.c.period_start)
+                & (
+                    IndicatorDiagnostic.vintage_number == latest_vintage.c.max_v
+                ),
+            )
+            .join(Indicator, Indicator.id == IndicatorDiagnostic.indicator_id)
+            .where(IndicatorDiagnostic.country_id == country.id)
+        )
+    ).all()
+
+    by_indicator: dict[str, dict] = {}
+    for code, kind, period_start, value in rows:
+        entry = by_indicator.setdefault(
+            code, {"source_period": period_start.date().isoformat()}
+        )
+        entry[kind if isinstance(kind, str) else kind.value] = value
+
+    return CountryUncertaintyResponse(
+        country=country.iso3,
+        indicators=[
+            UncertaintyIndicatorRead(indicator_code=code, **entry)
+            for code, entry in sorted(by_indicator.items())
+        ],
     )

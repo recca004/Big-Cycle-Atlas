@@ -5242,3 +5242,8 @@ Individual leaders are never rated (approval boundary).
 ## DEC-042 Option C — RATIFIED FOR IMPLEMENTATION (V1 Mission 1)
 
 Own-history productivity momentum implemented as a separate dimension: signed percentage change in LPPH (USD PPP/hour) over 3y/5y/10y windows, primary 5y, anchor tolerance 1 annual period, gated by `pct_momentum_approved_indicators`. `change_unit="percent"` provenance distinguishes it from WGI-point momentum. A percentile move is not productivity growth — the dimensions stay separate. normalization-v1.1 / force-aggregation-v0.7. Delegated working-model approval under Mission 1 authority.
+
+## Delegated working-model approvals — V1 Mission 1
+
+- **MILITARY_EXPENDITURE_USD RELATIVE_SHARE dimension** (delegated, documented working model): relative_score = country's share of the tracked-8 military-expenditure total at the same period (complete-universe rule, all 8 usable or no share). INPUT measure of resources absorbed — SIPRI explicitly does not measure capability. Level stays deferred; PARTIAL ceiling kept. New `DIMENSION_ONLY` aggregation mode; relative identity_copy no longer requires level identity (the INDICATORS_WITH_APPROVED_* gates remain the guard). normalization-v1.2 / force-aggregation-v0.8. Live: USA share 55.4.
+- **FORCE_DEPENDENCY_MAP.json** generated from live registries (no shared live indicators across forces).

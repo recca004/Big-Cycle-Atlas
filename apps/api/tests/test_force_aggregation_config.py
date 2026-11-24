@@ -51,6 +51,7 @@ def test_aggregation_mode_values():
         "identity_single",
         "condition_minus_penalty",
         "deferred_multi",
+        "dimension_only",
     }
 
 
@@ -211,7 +212,8 @@ def test_relative_identity_only_on_approved_wgi_forces():
         if spec.relative_mode is ForceDimensionMode.identity_copy
     }
     assert relative_identity_forces == {
-        "rule_of_law", "corruption", "internal_conflict"
+        "rule_of_law", "corruption", "internal_conflict",
+        "military_strength",  # V1 Mission 1: dimension-only relative_share
     }
 
 
@@ -235,7 +237,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
 def test_confidence_mode_always_deferred():
     for force_code, spec in FORCE_AGGREGATION_CONFIGS.items():
         assert spec.confidence_mode is ForceDimensionMode.deferred, (
-            f"{force_code}: confidence must be deferred in force-aggregation-v0.7"
+            f"{force_code}: confidence must be deferred in force-aggregation-v0.8"
         )
 
 
@@ -271,12 +273,12 @@ def test_no_force_persistence_or_api():
 
 
 def test_force_aggregation_version():
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.7"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.8"
 
 
 def test_normalization_version_unchanged():
     from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.1"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.2"
 
 
 # --- Validation raises loudly ------------------------------------------------
@@ -421,16 +423,23 @@ def test_confidence_not_deferred_raises():
         )
 
 
-def test_relative_identity_without_level_identity_raises():
+def test_relative_identity_on_unapproved_indicator_raises():
     import pytest
-    with pytest.raises(ValueError, match="relative identity_copy requires level"):
+    # V1 Mission 1: dimension-only modules may copy relative without a level,
+    # but the INDICATORS_WITH_APPROVED_RELATIVE gate still guards the copy —
+    # an unapproved indicator must fail loudly.
+    with pytest.raises(ValueError, match="not approved"):
         from app.cycle.force_aggregation_definitions import ForceAggregationSpec
         ForceAggregationSpec(
-            force_code="rule_of_law",
+            force_code="cost_competitiveness",
             components=(
                 ForceIndicatorComponentSpec(
-                    indicator_code="RULE_OF_LAW_WGI_SCORE",
+                    indicator_code="UNIT_LABOUR_COST_GROWTH",
                     role=ForceIndicatorRole.core_condition,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="INFLATION_CPI",
+                    role=ForceIndicatorRole.supporting_context,
                 ),
             ),
             level_mode=ForceDimensionMode.deferred,

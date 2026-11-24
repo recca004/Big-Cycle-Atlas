@@ -865,6 +865,14 @@ class ModelVersionConfig:
     pct_momentum_approved_indicators: frozenset[str] = field(
         default_factory=frozenset
     )
+    # V1 Mission 1 (delegated working-model approval) — RELATIVE_SHARE
+    # dimension gate: share of the tracked_8 universe total at the same
+    # period (e.g. "country's share of tracked-8 military expenditure").
+    # Registry relative_family alone never auto-enables it. Currently
+    # exactly one member: MILITARY_EXPENDITURE_USD.
+    relative_share_approved_indicators: frozenset[str] = field(
+        default_factory=frozenset
+    )
     # Sprint 6.4 (DEC-032) — EXPLICIT DIMENSION APPROVAL SETS for the
     # DIRECT_0_100 path. A registry level/relative/momentum family
     # declaration alone NEVER auto-enables a dimension — an indicator must
@@ -997,8 +1005,8 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
     # a level-only family with no relative/momentum path. All v0.7 WGI +
     # DSR + credit-gap + Education configuration unchanged.
-    version_id="normalization-v1.1",
-    normalization_method="sprint-6.14-lpph-oecd-ref-pct-momentum",
+    version_id="normalization-v1.2",
+    normalization_method="v1-mission1-milshare-relative-dimension",
     reference_universe_id="tracked_8",
     momentum_windows={
         # DEC-042 Option C: 3y/5y/10y windows on annual LPPH; primary = 5y
@@ -1054,6 +1062,12 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     pct_momentum_approved_indicators=frozenset({
         # DEC-042 Option C — owner approved for implementation (V1 Mission 1).
         "LABOUR_PRODUCTIVITY_PER_HOUR",
+    }),
+    relative_share_approved_indicators=frozenset({
+        # Delegated working-model approval (V1 Mission 1): share of
+        # tracked_8 military expenditure = relative defence resources.
+        # INPUT measure only — never a capability score (SIPRI caveat).
+        "MILITARY_EXPENDITURE_USD",
     }),
     # Sprint 6.4 (DEC-032): EXPLICIT dimension approval for the DIRECT_0_100
     # path. Both sets are exactly the WGI x3 — the only indicators approved
@@ -1666,6 +1680,19 @@ def validate_normalization_registry() -> None:
             raise ValueError(
                 f"{indicator}: pct-momentum approved but windows/primary/"
                 f"tolerance are not configured in the model version"
+            )
+    # Relative-share dimension gate (V1 Mission 1): approved indicator must
+    # exist and declare relative_family RELATIVE_SHARE.
+    for indicator in CURRENT_MODEL_VERSION.relative_share_approved_indicators:
+        spec = NORMALIZATION_REGISTRY.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"relative-share approved unknown indicator: {indicator}"
+            )
+        if spec.relative_family is not NormalizationFamily.relative_share:
+            raise ValueError(
+                f"{indicator}: relative-share approved but registry "
+                f"relative family is {spec.relative_family.value if spec.relative_family else None}"
             )
     # Sprint 6.4: explicit dimension approval sets must be consistent with
     # the registry. A registry family declaration alone NEVER enables a

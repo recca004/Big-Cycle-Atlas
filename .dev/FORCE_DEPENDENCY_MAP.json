@@ -1,0 +1,350 @@
+{
+  "generated_for": "v1-mission-1",
+  "model_versions": {
+    "normalization": "normalization-v1.1"
+  },
+  "forces": [
+    {
+      "force": "leadership_capabilities",
+      "live_inputs": [
+        "GOVERNMENT_EFFECTIVENESS_WGI_SCORE"
+      ],
+      "candidates": [],
+      "ceiling": "partial",
+      "level_mode": "identity_copy",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
+          "role": "proxy_condition",
+          "level_family": "direct_0_100",
+          "executable": true
+        }
+      ]
+    },
+    {
+      "force": "education",
+      "live_inputs": [
+        "TERTIARY_ATTAINMENT_25_34"
+      ],
+      "candidates": [
+        "TERTIARY_ENROLLMENT",
+        "SECONDARY_ENROLLMENT"
+      ],
+      "ceiling": "partial",
+      "level_mode": "identity_copy",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "TERTIARY_ATTAINMENT_25_34",
+          "role": "proxy_condition",
+          "level_family": "direct_0_100",
+          "executable": true
+        }
+      ]
+    },
+    {
+      "force": "character_determination",
+      "live_inputs": [],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": []
+    },
+    {
+      "force": "rule_of_law",
+      "live_inputs": [
+        "RULE_OF_LAW_WGI_SCORE"
+      ],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "identity_copy",
+      "momentum_mode": "identity_copy",
+      "components": [
+        {
+          "indicator": "RULE_OF_LAW_WGI_SCORE",
+          "role": "core_condition",
+          "level_family": "direct_0_100",
+          "executable": true
+        }
+      ]
+    },
+    {
+      "force": "corruption",
+      "live_inputs": [
+        "CONTROL_OF_CORRUPTION_WGI_SCORE"
+      ],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "identity_copy",
+      "momentum_mode": "identity_copy",
+      "components": [
+        {
+          "indicator": "CONTROL_OF_CORRUPTION_WGI_SCORE",
+          "role": "core_condition",
+          "level_family": "direct_0_100",
+          "executable": true
+        }
+      ]
+    },
+    {
+      "force": "resource_allocation_efficiency",
+      "live_inputs": [],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": []
+    },
+    {
+      "force": "global_openness",
+      "live_inputs": [],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": []
+    },
+    {
+      "force": "productivity_output_growth",
+      "live_inputs": [
+        "GDP_GROWTH",
+        "LABOUR_PRODUCTIVITY_PER_HOUR"
+      ],
+      "candidates": [
+        "RND_EXPENDITURE_GDP"
+      ],
+      "ceiling": "partial",
+      "level_mode": "identity_copy",
+      "momentum_mode": "identity_copy",
+      "components": [
+        {
+          "indicator": "LABOUR_PRODUCTIVITY_PER_HOUR",
+          "role": "proxy_condition",
+          "level_family": "reference_percentile",
+          "executable": true
+        },
+        {
+          "indicator": "GDP_GROWTH",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
+    },
+    {
+      "force": "cost_competitiveness",
+      "live_inputs": [
+        "UNIT_LABOUR_COST_GROWTH",
+        "INFLATION_CPI"
+      ],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "UNIT_LABOUR_COST_GROWTH",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "INFLATION_CPI",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
+    },
+    {
+      "force": "trade_capital_flows",
+      "live_inputs": [
+        "EXPORTS_GDP",
+        "IMPORTS_GDP",
+        "TRADE_BALANCE",
+        "CURRENT_ACCOUNT_GDP"
+      ],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "EXPORTS_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "IMPORTS_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "TRADE_BALANCE",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "CURRENT_ACCOUNT_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
+    },
+    {
+      "force": "infrastructure_investment",
+      "live_inputs": [
+        "GROSS_CAPITAL_FORMATION_GDP"
+      ],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "GROSS_CAPITAL_FORMATION_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
+    },
+    {
+      "force": "indebtedness",
+      "live_inputs": [
+        "CREDIT_TO_GDP_GAP",
+        "DEBT_SERVICE_RATIO",
+        "GOVERNMENT_DEBT_GDP"
+      ],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "condition_minus_penalty",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "DEBT_SERVICE_RATIO",
+          "role": "core_condition",
+          "level_family": "own_history",
+          "executable": true
+        },
+        {
+          "indicator": "CREDIT_TO_GDP_GAP",
+          "role": "vulnerability_penalty",
+          "level_family": "one_sided_vulnerability",
+          "executable": true
+        },
+        {
+          "indicator": "GOVERNMENT_DEBT_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
+    },
+    {
+      "force": "military_strength",
+      "live_inputs": [
+        "MILITARY_EXPENDITURE_USD",
+        "MILITARY_EXPENDITURE_GDP"
+      ],
+      "candidates": [],
+      "ceiling": "partial",
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "MILITARY_EXPENDITURE_USD",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "MILITARY_EXPENDITURE_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
+    },
+    {
+      "force": "wealth_opportunity_values_gaps",
+      "live_inputs": [
+        "GINI_INDEX",
+        "WEALTH_SHARE_TOP_10"
+      ],
+      "candidates": [],
+      "ceiling": "partial",
+      "level_mode": "identity_copy",
+      "momentum_mode": "deferred",
+      "components": [
+        {
+          "indicator": "GINI_INDEX",
+          "role": "supporting_context",
+          "level_family": "monotonic_negative",
+          "executable": false
+        },
+        {
+          "indicator": "WEALTH_SHARE_TOP_10",
+          "role": "proxy_condition",
+          "level_family": "complement_0_100",
+          "executable": true
+        }
+      ]
+    },
+    {
+      "force": "internal_conflict",
+      "live_inputs": [
+        "POLITICAL_STABILITY_WGI_SCORE"
+      ],
+      "candidates": [],
+      "ceiling": "partial",
+      "level_mode": "identity_copy",
+      "momentum_mode": "identity_copy",
+      "components": [
+        {
+          "indicator": "POLITICAL_STABILITY_WGI_SCORE",
+          "role": "proxy_condition",
+          "level_family": "direct_0_100",
+          "executable": true
+        }
+      ]
+    },
+    {
+      "force": "geography",
+      "live_inputs": [],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": []
+    },
+    {
+      "force": "acts_of_nature",
+      "live_inputs": [],
+      "candidates": [],
+      "ceiling": null,
+      "level_mode": "deferred",
+      "momentum_mode": "deferred",
+      "components": []
+    }
+  ],
+  "shared_indicators": {},
+  "reference_universes": {
+    "oecd_lpph_v1": {
+      "indicator": "LABOUR_PRODUCTIVITY_PER_HOUR",
+      "members": 38
+    }
+  },
+  "overlap_notes": [
+    "WGI governance cluster (RL/CC/GE/PS) share provider methodology \u2014 correlated perception composites; leadership overlaps rule_of_law/corruption conceptually (DEC-041 caveat).",
+    "PRODUCTIVITY force uses LPPH percentile; GDP_GROWTH context also feeds no other force.",
+    "GROSS_CAPITAL_FORMATION_GDP is context for infrastructure AND resource_allocation \u2014 double-counting risk flagged for composite work.",
+    "GOVERNMENT_DEBT_GDP context overlaps indebtedness concept with resource allocation."
+  ]
+}

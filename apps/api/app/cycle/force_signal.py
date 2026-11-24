@@ -265,6 +265,24 @@ def aggregate_force_from_signals(
             coverage_ceiling=coverage_ceiling,
         )
 
+    if mode is ForceAggregationMode.dimension_only:
+        # Type-C module: no approved level, but relative/momentum may copy.
+        # Same copy machinery as identity_single — the builder only copies
+        # dimensions whose mode is identity_copy, and level_mode is deferred
+        # so level stays None by construction.
+        return _build_identity_single(
+            force_spec=force_spec,
+            country_iso3=country_iso3,
+            scoring_period=scoring_period,
+            component_signals=component_signals,
+            present_signals=present_signals,
+            missing=missing,
+            deferred=deferred,
+            coverage_status=coverage_status,
+            coverage_ceiling=coverage_ceiling,
+            aggregation_method=ForceAggregationMode.dimension_only,
+        )
+
     if mode is ForceAggregationMode.condition_minus_penalty:
         return _build_condition_minus_penalty(
             force_spec=force_spec,
@@ -387,6 +405,7 @@ def _build_identity_single(
     deferred: list[str],
     coverage_status: ForceCoverageStatus,
     coverage_ceiling: Optional[ForceCoverageStatus],
+    aggregation_method: ForceAggregationMode = ForceAggregationMode.identity_single,
 ) -> ForceSignal:
     """Build an IDENTITY_SINGLE ForceSignal.
 
@@ -427,7 +446,7 @@ def _build_identity_single(
                 else missing
             ),
             deferred_components=tuple(deferred),
-            aggregation_method=ForceAggregationMode.identity_single,
+            aggregation_method=aggregation_method,
             scoring_component_indicator=eligible_comp.indicator_code,
             normalization_model_version=_resolve_normalization_version(
                 present_signals
@@ -468,7 +487,7 @@ def _build_identity_single(
         component_signals=tuple(present_signals),
         missing_components=tuple(missing),
         deferred_components=tuple(deferred),
-        aggregation_method=ForceAggregationMode.identity_single,
+        aggregation_method=aggregation_method,
         scoring_component_indicator=eligible_comp.indicator_code,
         reference_universe_id=reference_universe_id,
         reference_universe_expected_n=reference_universe_expected_n,

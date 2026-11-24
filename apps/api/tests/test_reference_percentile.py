@@ -258,3 +258,63 @@ async def test_pct_momentum_gate(client):
     signal = await _normalize("USA", model_config=stripped)
     assert signal.level_score is not None  # level unaffected
     assert signal.momentum is None
+
+
+# --- 6. RELATIVE_SHARE dimension: MILITARY_EXPENDITURE_USD (V1 Mission 1) ---------
+
+
+MIL_USD = "MILITARY_EXPENDITURE_USD"
+MIL_CODE = "MS.MIL.XPND.CD"
+TRACKED_8 = ("USA", "CHN", "CHE", "DEU", "FRA", "GBR", "JPN", "IND")
+
+
+def _mil_dto(iso3: str, year: int, value: float) -> ObservationDTO:
+    return ObservationDTO(
+        country_iso3=iso3,
+        indicator_code=MIL_USD,
+        external_series_code=MIL_CODE,
+        period=year,
+        value=value,
+        unit="current US$",
+        source_key="world_bank",
+        observation_date=date(year, 1, 1),
+        release_date=None,
+        retrieved_at=RETRIEVED_AT,
+        raw_payload={"test": True},
+    )
+
+
+async def _persist_mil_cross_section(year: int, values: dict[str, float]) -> None:
+    await _persist([_mil_dto(iso3, year, v) for iso3, v in values.items()])
+
+
+MIL_8 = {"USA": 900.0, "CHN": 300.0, "IND": 80.0, "GBR": 70.0,
+         "FRA": 60.0, "DEU": 60.0, "JPN": 50.0, "CHE": 10.0}
+
+
+async def test_relative_share_is_share_of_universe_total(client):
+    await _persist_mil_cross_section(2024, MIL_8)
+    signal = await _normalize("USA", indicator=MIL_USD)
+    assert signal is not None
+    assert signal.method is NormalizationFamily.relative_share
+    # 900 / 1530 * 100
+    assert signal.relative_score == pytest.approx(100.0 * 900.0 / 1530.0)
+    assert signal.level_score is None  # dimension-only: no defensible level
+    assert signal.reference_universe_usable_n == 8
+
+
+async def test_relative_share_incomplete_universe_no_score(client):
+    # 7/8 members -> complete-universe rule: no share for anyone.
+    missing = {k: v for k, v in MIL_8.items() if k != "CHE"}
+    await _persist_mil_cross_section(2024, missing)
+    assert await _normalize("USA", indicator=MIL_USD) is None
+
+
+async def test_relative_share_gate(client):
+    import dataclasses
+    stripped = dataclasses.replace(
+        CURRENT_MODEL_VERSION, relative_share_approved_indicators=frozenset()
+    )
+    await _persist_mil_cross_section(2024, MIL_8)
+    with pytest.raises(NormalizationNotImplementedError):
+        await _normalize("USA", indicator=MIL_USD, model_config=stripped)

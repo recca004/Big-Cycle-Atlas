@@ -344,6 +344,16 @@ async def normalize_indicator_as_of(
         return await _normalize_complement_0_100_as_of(
             session, spec, country_iso3, scoring_period, model_config, freshness_policy
         )
+    if spec.level_family is NormalizationFamily.contextual_deferred:
+        if (
+            spec.relative_family is NormalizationFamily.relative_share
+            and spec.indicator_code
+            in model_config.relative_share_approved_indicators
+        ):
+            return await _normalize_relative_share_only_as_of(
+                session, spec, country_iso3, scoring_period,
+                model_config, freshness_policy,
+            )
     if spec.level_family is NormalizationFamily.reference_percentile:
         return await _normalize_reference_percentile_as_of(
             session, spec, country_iso3, scoring_period, model_config, freshness_policy
@@ -355,6 +365,85 @@ async def normalize_indicator_as_of(
         "ONE_SIDED_VULNERABILITY for CREDIT_TO_GDP_GAP only, "
         "COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 only, "
         "REFERENCE_PERCENTILE for LABOUR_PRODUCTIVITY_PER_HOUR only)"
+    )
+
+
+async def _normalize_relative_share_only_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+) -> NormalizedSignal | None:
+    """RELATIVE_SHARE dimension (V1 Mission 1, delegated working model):
+    MILITARY_EXPENDITURE_USD only.
+
+    relative_score = 100 * country_value / sum(tracked_8 values) at the
+    same period — the country's share of the tracked-8 total, i.e.
+    relative defence RESOURCES among the eight tracked economies. INPUT
+    measure only (SIPRI caveat): expenditure is resources absorbed, never
+    capability. level_score stays None — no level method is defensible.
+
+    Complete-universe rule (same as DEC-017): if any tracked-8 member has
+    no usable observation the whole cross-section is unscored — a partial
+    total would misrepresent every member's share.
+    """
+    indicator_code = spec.indicator_code
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+    universe = REFERENCE_UNIVERSES["tracked_8"]
+
+    aligned_own = await align_observation_as_of(
+        session, country_iso3, indicator_code, scoring_period
+    )
+    if aligned_own is None:
+        return None
+    freshness = evaluate_freshness(
+        own_period_age(aligned_own.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        return None
+
+    usable: dict[str, AlignedValue] = {}
+    for iso3 in universe.members:
+        aligned = await align_observation_as_of(
+            session, iso3, indicator_code, scoring_period
+        )
+        if aligned is None:
+            continue
+        member_fresh = evaluate_freshness(
+            own_period_age(aligned.age_periods, spec.freshness_class), policy
+        )
+        if not member_fresh.is_usable:
+            continue
+        usable[iso3] = aligned
+
+    if len(usable) != len(universe.members):
+        # Partial cross-section: no member receives a share.
+        return None
+    total = sum(a.raw_value for a in usable.values())
+    if total <= 0:
+        return None
+    relative_score = 100.0 * aligned_own.raw_value / total
+
+    return NormalizedSignal(
+        indicator_code=indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=aligned_own.raw_value,
+        source_period=aligned_own.source_period,
+        method=NormalizationFamily.relative_share,
+        model_version=model_config.version_id,
+        level_score=None,  # no defensible level (dimension-only module)
+        relative_score=relative_score,
+        momentum=None,
+        confidence=None,
+        reference_universe_id=universe.id,
+        reference_universe_expected_n=len(universe.members),
+        reference_universe_usable_n=len(usable),
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
     )
 
 

@@ -111,6 +111,9 @@ class ForceAggregationMode(str, Enum):
     """
 
     identity_single = "identity_single"
+    # V1 Mission 1: level deferred but relative/momentum identity_copy — a
+    # type-C module publishing a dimension without an approved level.
+    dimension_only = "dimension_only"
     condition_minus_penalty = "condition_minus_penalty"
     deferred_multi = "deferred_multi"
 
@@ -138,6 +141,10 @@ INDICATORS_WITH_APPROVED_RELATIVE: frozenset[str] = frozenset(
         "RULE_OF_LAW_WGI_SCORE",
         "CONTROL_OF_CORRUPTION_WGI_SCORE",
         "POLITICAL_STABILITY_WGI_SCORE",
+        # V1 Mission 1 (delegated): MILITARY_EXPENDITURE_USD relative_share —
+        # share of tracked-8 defence expenditure (INPUT measure, SIPRI
+        # caveat — never a capability score).
+        "MILITARY_EXPENDITURE_USD",
     }
 )
 
@@ -293,22 +300,11 @@ class ForceAggregationSpec:
 
         # relative/momentum identity_copy requires level identity_copy too
         # (you can't copy a relative/momentum that doesn't exist).
-        if (
-            self.relative_mode is ForceDimensionMode.identity_copy
-            and self.level_mode is not ForceDimensionMode.identity_copy
-        ):
-            raise ValueError(
-                f"{self.force_code}: relative identity_copy requires level "
-                f"identity_copy"
-            )
-        if (
-            self.momentum_mode is ForceDimensionMode.identity_copy
-            and self.level_mode is not ForceDimensionMode.identity_copy
-        ):
-            raise ValueError(
-                f"{self.force_code}: momentum identity_copy requires level "
-                f"identity_copy"
-            )
+        # V1 Mission 1: relative/momentum identity_copy NO LONGER requires
+        # level identity_copy — dimension-only modules (type C) may publish a
+        # relative/momentum dimension while the level stays deferred. The
+        # INDICATORS_WITH_APPROVED_* gate below remains the real guard: only
+        # indicators with an approved dimension methodology can be copied.
 
         # Part 0.6: dimension approval guard — relative/momentum identity_copy
         # must refer to an indicator whose CURRENT approved NormalizedSignal
@@ -346,6 +342,11 @@ def aggregation_mode(spec: ForceAggregationSpec) -> ForceAggregationMode:
         return ForceAggregationMode.identity_single
     if spec.level_mode is ForceDimensionMode.condition_minus_penalty:
         return ForceAggregationMode.condition_minus_penalty
+    if (
+        spec.relative_mode is ForceDimensionMode.identity_copy
+        or spec.momentum_mode is ForceDimensionMode.identity_copy
+    ):
+        return ForceAggregationMode.dimension_only
     return ForceAggregationMode.deferred_multi
 
 
@@ -602,7 +603,7 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             components=(
                 ForceIndicatorComponentSpec(
                     indicator_code="MILITARY_EXPENDITURE_USD",
-                    role=ForceIndicatorRole.supporting_context,
+                    role=ForceIndicatorRole.proxy_condition,
                 ),
                 ForceIndicatorComponentSpec(
                     indicator_code="MILITARY_EXPENDITURE_GDP",
@@ -610,10 +611,15 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
                 ),
             ),
             level_mode=_DEFERRED,
-            relative_mode=_DEFERRED,
+            relative_mode=_IDENTITY,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred; coverage capped PARTIAL.",
+            notes=(
+                "V1 Mission 1 (delegated working model): relative dimension "
+                "= share of tracked-8 defence expenditure (RELATIVE_SHARE). "
+                "Dimension-only — SIPRI expenditure is an INPUT measure of "
+                "resources absorbed, never capability; level stays deferred."
+            ),
         ),
         # 14. Wealth / opportunity / values gaps — IDENTITY_SINGLE
         # (PROXY_CONDITION), PARTIAL ceiling
@@ -752,4 +758,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.7"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v0.8"

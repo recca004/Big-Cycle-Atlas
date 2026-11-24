@@ -828,7 +828,7 @@ async def test_ingestion_creates_no_observation_or_series_rows(client):
     assert await _count(IndicatorDiagnostic) == 3
     assert await _count(Observation) == obs_before  # no Observation rows created
     assert await _count(SourceSeries) == series_before  # no SourceSeries rows created
-    assert await _count(Indicator) == indicators_before == 28  # catalog unchanged
+    assert await _count(Indicator) == indicators_before == 29  # catalog unchanged
 
 
 @pytest.mark.asyncio
@@ -879,4 +879,4 @@ async def test_wgi_dsr_credit_gap_outputs_unchanged_confidence_none(client):
 def test_model_version_stays_v0_6():
     # Sprint 5.15 imports raw auxiliary input data ONLY — no normalized
     # output changed, so no version bump.
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.2"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.3"

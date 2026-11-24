@@ -1005,20 +1005,23 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
     # a level-only family with no relative/momentum path. All v0.7 WGI +
     # DSR + credit-gap + Education configuration unchanged.
-    version_id="normalization-v1.2",
-    normalization_method="v1-mission1-milshare-relative-dimension",
+    version_id="normalization-v1.3",
+    normalization_method="v1-mission1-lfp-wdi-percentile",
     reference_universe_id="tracked_8",
     momentum_windows={
         # DEC-042 Option C: 3y/5y/10y windows on annual LPPH; primary = 5y
         # (consistent with the WGI convention). 10y is a research window —
         # it never becomes the headline value.
         "LABOUR_PRODUCTIVITY_PER_HOUR": (3, 5, 10),
+        # V1 Mission 1 (delegated): annual LFP momentum, same convention.
+        "LABOUR_FORCE_PARTICIPATION_RATE": (3, 5),
         "RULE_OF_LAW_WGI_SCORE": (3, 5),
         "CONTROL_OF_CORRUPTION_WGI_SCORE": (3, 5),
         "POLITICAL_STABILITY_WGI_SCORE": (3, 5),
     },
     momentum_primary_window_years={
         "LABOUR_PRODUCTIVITY_PER_HOUR": 5,
+        "LABOUR_FORCE_PARTICIPATION_RATE": 5,
         "RULE_OF_LAW_WGI_SCORE": 5,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 5,
         "POLITICAL_STABILITY_WGI_SCORE": 5,
@@ -1027,6 +1030,7 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
         # Annual LPPH: at most 1 source year older than the requested anchor
         # year (same convention as the annual WGI gate).
         "LABOUR_PRODUCTIVITY_PER_HOUR": 1,
+        "LABOUR_FORCE_PARTICIPATION_RATE": 1,
         "RULE_OF_LAW_WGI_SCORE": 1,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 1,
         "POLITICAL_STABILITY_WGI_SCORE": 1,
@@ -1058,10 +1062,18 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
             universe_code="oecd_lpph_v1",
             minimum_sample_n=20,
         ),
+        # V1 Mission 1 (delegated): WDI universe is ~200 economies; require
+        # at least 100 reporting members for a usable distribution.
+        "LABOUR_FORCE_PARTICIPATION_RATE": ReferencePercentileConfig(
+            universe_code="wdi_lfp_v1",
+            minimum_sample_n=100,
+        ),
     },
     pct_momentum_approved_indicators=frozenset({
         # DEC-042 Option C — owner approved for implementation (V1 Mission 1).
         "LABOUR_PRODUCTIVITY_PER_HOUR",
+        # V1 Mission 1 (delegated): same annual pct-change convention.
+        "LABOUR_FORCE_PARTICIPATION_RATE",
     }),
     relative_share_approved_indicators=frozenset({
         # Delegated working-model approval (V1 Mission 1): share of
@@ -1116,6 +1128,9 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         # OECD (2)
         "LABOUR_PRODUCTIVITY_PER_HOUR",
         "UNIT_LABOUR_COST_GROWTH",
+        # WB (LFP lives under world_bank but is listed with OECD neighbours
+        # because it shares the REFERENCE_PERCENTILE family)
+        "LABOUR_FORCE_PARTICIPATION_RATE",
         # IMF (1)
         "GOVERNMENT_DEBT_GDP",
         # OECD education (1)
@@ -1261,6 +1276,25 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "norms. Level RECLASSIFIED to CONTEXTUAL_DEFERRED; future "
                 "design candidate: deviation from the country's own "
                 "investment norm."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.reference_percentile,
+            relative_family=NormalizationFamily.cross_sectional_relative,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "V1 Mission 1 (delegated working model): level = mid-rank "
+                "percentile within the WDI country universe wdi_lfp_v1 "
+                "(ILO modeled participation, ages 15+). Interpretation is "
+                "NARROW: relative economic participation, not 'character' "
+                "or 'determination'. Higher participation is not "
+                "universally positive (income effects, informal labour) — "
+                "documented limitation."
             ),
         ),
         NormalizationSpec(

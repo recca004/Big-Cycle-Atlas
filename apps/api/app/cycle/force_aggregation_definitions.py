@@ -158,6 +158,8 @@ INDICATORS_WITH_APPROVED_MOMENTUM: frozenset[str] = frozenset(
         # signed % change, NOT a 0-100 score and NOT comparable to WGI-point
         # momentum.
         "LABOUR_PRODUCTIVITY_PER_HOUR",
+        # V1 Mission 1 (delegated): LFP percent-change own-history momentum.
+        "LABOUR_FORCE_PARTICIPATION_RATE",
     }
 )
 
@@ -418,12 +420,21 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
         # 3. Character / determination — no live indicators
         ForceAggregationSpec(
             force_code="character_determination",
-            components=(),
-            level_mode=_DEFERRED,
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
+            ),
+            level_mode=_IDENTITY,
             relative_mode=_DEFERRED,
-            momentum_mode=_DEFERRED,
+            momentum_mode=_IDENTITY,
             confidence_mode=_DEFERRED,
-            notes="No live indicators; requires qualitative assessment.",
+            notes=(
+                "PARTIAL: level = LFP percentile vs WDI universe "
+                "(wdi_lfp_v1). Narrow economic-participation proxy - not a "
+                "measure of character/determination."
+            ),
         ),
         # 4. Rule of law — IDENTITY_SINGLE (CORE_CONDITION)
         ForceAggregationSpec(
@@ -758,4 +769,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.8"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v0.9"

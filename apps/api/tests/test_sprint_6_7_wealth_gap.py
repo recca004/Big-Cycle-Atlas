@@ -231,11 +231,11 @@ async def test_wealth_method_is_complement_0_100(client):
 
 @pytest.mark.asyncio
 async def test_wealth_model_version_v0_8(client):
-    """The model_version is normalization-v1.2."""
+    """The model_version is normalization-v1.3."""
     await _persist([_wealth_dto("CHE", 2024, 0.65)])
     signal = await _normalize("CHE", "WEALTH_SHARE_TOP_10", ScoringPeriod(2025, 2))
     assert signal is not None
-    assert signal.model_version == "normalization-v1.2"
+    assert signal.model_version == "normalization-v1.3"
 
 
 # --- Part B: Missing/stale behavior ------------------------------------------
@@ -487,7 +487,7 @@ def test_wealth_gap_force_no_raw_observation_in_arithmetic():
         raw_value=0.65,
         source_period="2024",
         method=NormalizationFamily.complement_0_100,
-        model_version="normalization-v1.2",
+        model_version="normalization-v1.3",
         level_score=35.0,
     )
     fs = aggregate_force_from_signals(
@@ -600,8 +600,8 @@ async def test_versions_on_signals(client):
     for s in signals:
         assert s.force_model_version == FORCE_AGGREGATION_VERSION
         assert s.normalization_model_version == CURRENT_MODEL_VERSION.version_id
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.8"
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.2"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.9"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.3"
 
 
 @pytest.mark.asyncio

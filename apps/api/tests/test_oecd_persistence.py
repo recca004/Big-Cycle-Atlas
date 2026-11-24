@@ -68,7 +68,7 @@ async def test_approved_oecd_indicators_seeded(client):
         codes = dict(
             (await session.execute(select(Indicator.code, Indicator.id))).all()
         )
-        assert len(codes) == 28
+        assert len(codes) == 29
         prod = (await session.execute(
             select(Indicator).where(Indicator.code == "LABOUR_PRODUCTIVITY_PER_HOUR")
         )).scalar_one()
@@ -102,7 +102,7 @@ async def test_oecd_source_series_seeded_idempotently(client):
         total = (await session.execute(
             select(func.count()).select_from(SourceSeries)
         )).scalar_one()
-        assert total == 28  # 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
+        assert total == 29  # 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
 
     # re-running the seed updates, never duplicates
     await seed(DEFAULT_DATA_FILE)
@@ -118,7 +118,7 @@ async def test_oecd_source_series_seeded_idempotently(client):
         total = (await session.execute(
             select(func.count()).select_from(SourceSeries)
         )).scalar_one()
-        assert total == 28
+        assert total == 29
 
 
 # --- Parts 4–5: annual + quarterly persistence --------------------------------

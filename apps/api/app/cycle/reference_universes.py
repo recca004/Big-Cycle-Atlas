@@ -55,8 +55,31 @@ OECD_LPPH_V1 = ReferenceUniverse(
     ),
 )
 
+# V1 Mission 1 (delegated working model): the full WDI country universe for
+# labour force participation. Membership is NOT hardcoded — it is the set of
+# real WB economies (country catalog, region != aggregate) that reported
+# data at the ingest vintage; the stored rows ARE the frozen membership for
+# this universe version (re-ingestion writes new vintages, never members).
+# expected_member_iso3 stays empty: membership is defined by the ingested
+# rows, and the minimum-sample gate protects thin periods.
+WDI_LFP_V1 = ReferenceUniverse(
+    universe_code="wdi_lfp_v1",
+    indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
+    source_key="world_bank",
+    external_code="SL.TLF.CACT.ZS",
+    expected_member_iso3=frozenset(),
+    description=(
+        "All WDI economies (aggregates excluded), labour force "
+        "participation rate ages 15+ (ILO modeled). World reference "
+        "distribution for the economic-participation proxy of "
+        "character_determination — a participation measure, never a "
+        "judgment of national character."
+    ),
+)
+
 REFERENCE_UNIVERSES: dict[str, ReferenceUniverse] = {
     OECD_LPPH_V1.universe_code: OECD_LPPH_V1,
+    WDI_LFP_V1.universe_code: WDI_LFP_V1,
 }
 
 

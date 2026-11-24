@@ -95,7 +95,19 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="character_determination",
         name="Character / determination",
         description="Resourcefulness and determination of the population.",
-        coverage_notes="No catalog indicator exists; requires qualitative assessment.",
+        coverage_ceiling=ForceCoverageStatus.partial,
+        live_indicator_codes=("LABOUR_FORCE_PARTICIPATION_RATE",),
+        coverage_notes=(
+            "PARTIAL proxy (V1 Mission 1, delegated working model): the "
+            "executable component measures RELATIVE ECONOMIC PARTICIPATION "
+            "— labour force participation rate (ILO modeled, ages 15+) "
+            "scored as a WDI-universe percentile. This is a narrow, labeled "
+            "proxy for economic participation only; it is NOT a measurement "
+            "of national character or determination. Resourcefulness, "
+            "entrepreneurship and innovation dimensions remain unmeasured. "
+            "PARTIAL ceiling enforced; higher participation is not "
+            "universally positive (documented limitation)."
+        ),
     ),
     ForceDefinition(
         code="rule_of_law",

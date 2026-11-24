@@ -221,7 +221,7 @@ def test_exactly_three_diagnostic_kinds():
 
 def test_wgi_spec_registry_structure():
     validate_wgi_diagnostic_specs()  # raises on any violation
-    assert len(WGI_DIAGNOSTIC_SPECS) == 9  # 3 indicators x 3 kinds
+    assert len(WGI_DIAGNOSTIC_SPECS) == 12  # 4 indicators x 3 kinds
     assert len(get_wgi_diagnostic_specs(RL)) == 3
     for spec in WGI_DIAGNOSTIC_SPECS:
         assert spec.source_key == "world_bank"
@@ -242,7 +242,7 @@ async def test_new_diagnostic_inserts_vintage_1_on_base_canonical_indicator(clie
 
     # Part 4 of the sprint: the BASE canonical indicator is REUSED — no new
     # indicator rows ("25 -> 34" pollution is structurally impossible here).
-    assert after == before == 28
+    assert after == before == 29
     async with session_module._sessionmaker() as session:
         rows = (await session.execute(select(IndicatorDiagnostic))).scalars().all()
         assert len(rows) == 1
@@ -516,7 +516,7 @@ async def test_diagnostics_never_become_observations_or_series(client):
 
     assert await _count(Observation) == obs_before  # no Observation rows created
     assert await _count(SourceSeries) == series_before  # no diagnostic SourceSeries
-    assert await _count(Indicator) == indicators_before == 28
+    assert await _count(Indicator) == indicators_before == 29
 
 
 async def test_api_catalog_and_indicator_count_unchanged(client):
@@ -528,7 +528,7 @@ async def test_api_catalog_and_indicator_count_unchanged(client):
     assert (await client.get("/api/indicators/")).json() == indicators_before
     assert (await client.get("/api/countries")).json() == countries_before
     # The catalog still reports exactly the 25 canonical indicators.
-    assert len(indicators_before) == 28
+    assert len(indicators_before) == 29
 
 
 async def test_force_coverage_unchanged(client):
@@ -586,7 +586,7 @@ async def test_wgi_dsr_credit_gap_outputs_unchanged_and_confidence_none(client):
 
 def test_model_version_unchanged_and_no_force_fields():
     # Sprint 5.14 changes raw auxiliary-data capability ONLY.
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.2"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.3"
     signal_fields = set(get_type_hints(NormalizedSignal))
     for forbidden in ("force_score", "weight", "phase", "stage", "measurement_uncertainty"):
         assert forbidden not in signal_fields

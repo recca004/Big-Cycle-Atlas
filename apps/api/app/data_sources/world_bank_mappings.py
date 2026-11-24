@@ -203,6 +203,17 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
         ),
     ),
     WorldBankMapping(
+        indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
+        external_code="SL.TLF.CACT.ZS",
+        external_name="Labor force participation rate, total (% of total population ages 15+) (modeled ILO estimate)",
+        external_unit="percent",
+        transform_notes=(
+            "ILO modeled estimate, annual — the modeled series is used "
+            "deliberately for cross-country comparability (national-definition "
+            "series are not comparable)."
+        ),
+    ),
+    WorldBankMapping(
         indicator_code="GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
         external_code="GOV_WGI_GE_SC",
         external_name="Government Effectiveness - Governance score (0-100)",

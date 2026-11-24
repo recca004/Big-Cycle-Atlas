@@ -228,6 +228,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
     assert momentum_identity_forces == {
         "rule_of_law", "corruption", "internal_conflict",
         "productivity_output_growth",  # DEC-042 Option C
+        "character_determination",  # V1 Mission 1: LFP pct momentum
     }
 
 
@@ -237,7 +238,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
 def test_confidence_mode_always_deferred():
     for force_code, spec in FORCE_AGGREGATION_CONFIGS.items():
         assert spec.confidence_mode is ForceDimensionMode.deferred, (
-            f"{force_code}: confidence must be deferred in force-aggregation-v0.8"
+            f"{force_code}: confidence must be deferred in force-aggregation-v0.9"
         )
 
 
@@ -273,12 +274,12 @@ def test_no_force_persistence_or_api():
 
 
 def test_force_aggregation_version():
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.8"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.9"
 
 
 def test_normalization_version_unchanged():
     from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.2"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.3"
 
 
 # --- Validation raises loudly ------------------------------------------------

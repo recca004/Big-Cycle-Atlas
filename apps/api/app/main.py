@@ -9,6 +9,7 @@ if sys.platform == "win32":
 
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
+from app.api.routes import research
 from app.api.routes import countries, health
 from app.api.routes.data import router as data_router
 from app.api.routes.indicators import router as indicators_router
@@ -30,8 +31,9 @@ def create_app() -> FastAPI:
     app.include_router(countries.router)
     app.include_router(data_router)
     app.include_router(indicators_router)
+    app.include_router(research.router)
 
-    print(f"Included routers: health, countries, data, indicators")
+    print(f"Included routers: health, countries, data, indicators, research")
 
     @app.get("/")
     async def root():

@@ -184,6 +184,7 @@ def test_proxy_ceiling_does_not_modify_indicator_normalization():
         "education",
         "leadership_capabilities",
         "military_strength",
+        "productivity_output_growth",
         "wealth_opportunity_values_gaps",
         "internal_conflict",
     }

@@ -6,6 +6,7 @@ from app.models.observation import Observation
 from app.models.indicator_revision import IndicatorRevision
 from app.models.ingestion_run import IngestionRun, IngestionRunStatus
 from app.models.indicator_diagnostic import IndicatorDiagnostic, IndicatorDiagnosticKind
+from app.models.reference_observation import ReferenceObservation
 
 __all__ = [
     "Country",
@@ -20,4 +21,5 @@ __all__ = [
     "IngestionRunStatus",
     "IndicatorDiagnostic",
     "IndicatorDiagnosticKind",
+    "ReferenceObservation",
 ]

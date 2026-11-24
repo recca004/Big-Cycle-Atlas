@@ -161,7 +161,7 @@ async def test_che_coverage_full(client):
     await _persist(_che_full_dtos())
     coverage = await _coverage("CHE")
 
-    assert coverage["productivity_output_growth"].status == "available"
+    assert coverage["productivity_output_growth"].status == "partial"  # PARTIAL ceiling (DEC-042 proxy)
     assert coverage["cost_competitiveness"].status == "available"
     # Indebtedness: 2 of 3 live inputs have data (GOVERNMENT_DEBT_GDP has no
     # observation in this fixture) → partial, not available.
@@ -233,7 +233,7 @@ async def test_api_returns_all_17_forces(client):
     assert [f["code"] for f in data["forces"]] == EXPECTED_17
 
     by_code = {f["code"]: f for f in data["forces"]}
-    assert by_code["productivity_output_growth"]["status"] == "available"
+    assert by_code["productivity_output_growth"]["status"] == "partial"  # PARTIAL ceiling (DEC-042 proxy)
     assert by_code["cost_competitiveness"]["status"] == "available"
     assert by_code["indebtedness"]["status"] == "partial"
     assert by_code["education"]["status"] == "defined_not_sourced"

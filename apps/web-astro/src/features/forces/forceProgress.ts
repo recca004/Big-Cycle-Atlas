@@ -38,8 +38,7 @@ export const FORCE_PROGRESS: ForceProgress[] = [
     code: "leadership_capabilities",
     name: "Leadership capabilities",
     ...DONE,
-    ratification: "provisional",
-    note: "DEC-041: WGI Government Effectiveness proxy, PARTIAL-capped. Pending owner ratification.",
+    note: "DEC-041 ratified: WGI Government Effectiveness proxy, PARTIAL-capped.",
   },
   { code: "education", name: "Education", ...DONE },
   {
@@ -72,11 +71,8 @@ export const FORCE_PROGRESS: ForceProgress[] = [
   {
     code: "productivity_output_growth",
     name: "Productivity / output growth",
-    researchStarted: true, researchCompleted: true, dataSourced: true,
-    methodologyProposed: false, methodologyApproved: false, implemented: false,
-    testsPassing: false, apiAvailable: false, frontendConnected: true,
-    ratification: "pending",
-    note: "DEC-042: level scoring deferred — needs owner-approved calibration distribution (LPPH live for 6/8 countries).",
+    ...DONE,
+    note: "DEC-042 Option A implemented: OECD reference percentile (oecd_lpph_v1), PARTIAL-capped. CHN/IND unavailable (non-OECD).",
   },
   {
     code: "cost_competitiveness",

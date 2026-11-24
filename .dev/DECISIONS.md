@@ -5171,7 +5171,7 @@ proxy, Education, Wealth-gap (IDENTITY_SINGLE) + Indebtedness
 GET /api/countries/{iso3}/force-scores (non-persisted, derived at
 request time).
 
-## DEC-041 — Leadership capabilities: WGI Government Effectiveness proxy (seventh executable force)
+## DEC-041 — RATIFIED — Leadership capabilities: WGI Government Effectiveness proxy (seventh executable force)
 
 Date: 2026-11-24
 Sprint: 6.21
@@ -5232,3 +5232,9 @@ Individual leaders are never rated (approval boundary).
 **Owner decision required (added to ratification package):** choose a calibration basis for productivity level scoring — (a) OECD-wide or wider external distribution percentile, (b) pooled multi-decade tracked-8 history percentile, or (c) keep level deferred and score only own-history momentum. Option (a) is methodologically cleanest; it requires importing a broader productivity universe.
 
 **Force status unchanged:** `productivity_output_growth` remains context-only on force-aggregation-v0.5.
+
+## Ratification log — 2026-03 session
+
+- **DEC-040: RATIFIED.** Indebtedness composition (CONDITION_MINUS_PENALTY, v0.4 formula preserved) is an approved versioned Atlas model assumption, with all documented limitations retained. It is not a comprehensive debt-sustainability measure nor a validated crisis predictor.
+- **DEC-041: RATIFIED.** WGI Government Effectiveness approved as a PARTIAL proxy for leadership_capabilities. Institutional government effectiveness does not capture the entire leadership concept. Overlap with rule_of_law/corruption must be reviewed before any national composite uses all three.
+- **DEC-042: IMPLEMENTED (Option A, owner-approved direction).** LPPH level = mid-rank percentile within versioned OECD reference universe `oecd_lpph_v1` (38 expected members, period-specific calibration, minimum_sample_n=20, frozen membership per version — membership changes require a new universe code). OECD relative-position score only; never a global percentile. CHN/IND non-members → unavailable, not fabricated. normalization-v1.0 / force-aggregation-v0.5→v0.6. Option C (own-history momentum) remains a separate deferred dimension pending the same momentum machinery as other forces.

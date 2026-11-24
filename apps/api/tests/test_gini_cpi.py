@@ -218,7 +218,7 @@ async def test_wealth_gap_force_partial_never_available_with_gini(client):
 
 async def test_proxy_ceiling_does_not_cap_undefined_forces(client):
     # the ceiling is opt-in per force; existing forces keep the default None
-    for code in ("rule_of_law", "corruption", "productivity_output_growth", "indebtedness"):
+    for code in ("rule_of_law", "corruption", "indebtedness"):
         force = force_definition_by_code(code)
         assert force.coverage_ceiling is None
     # only the explicitly proxy-only forces carry the ceiling

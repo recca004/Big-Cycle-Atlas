@@ -148,12 +148,15 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         description="Growth of output and productivity of the economy.",
         live_indicator_codes=("GDP_GROWTH", "LABOUR_PRODUCTIVITY_PER_HOUR"),
         candidate_indicator_codes=("RND_EXPENDITURE_GDP",),
+        coverage_ceiling=ForceCoverageStatus.partial,
         coverage_notes=(
-            "GDP growth + OECD labour productivity per hour (6/8 countries; "
-            "CHN/IND uncovered). Sprint 6.14 (DEC-042): level scoring stays "
-            "deferred — LPPH level requires an owner-approved external "
-            "calibration distribution; tracked-8 min-max is rejected by "
-            "normalization spec. Context inputs only."
+            "OECD labour productivity per hour (6/8 countries — CHN/IND are "
+            "not OECD members and cannot receive an OECD-calibrated score). "
+            "Sprint 6.14 (DEC-042 Option A — owner approved): level = "
+            "mid-rank percentile within the versioned OECD universe "
+            "oecd_lpph_v1, period-specific. Capped PARTIAL: OECD relative "
+            "productivity position only — not the whole "
+            "productivity/output-growth force, not a global percentile."
         ),
     ),
     ForceDefinition(

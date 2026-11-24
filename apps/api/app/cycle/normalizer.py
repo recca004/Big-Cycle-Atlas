@@ -100,6 +100,7 @@ period, not by historical release date (Milestone 9 owns that). Computed on
 demand; nothing is persisted.
 """
 from collections.abc import Sequence
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.cycle.freshness import (
@@ -124,7 +125,9 @@ from app.cycle.normalization_definitions import (
     ScoringPeriod,
     get_normalization_spec,
 )
+from app.cycle.reference_universes import midrank_percentile
 from app.cycle.relative import build_relative_cross_section
+from app.models.reference_observation import ReferenceObservation
 from app.services.alignment_service import (
     align_observation_as_of,
     own_history_as_of,
@@ -289,12 +292,115 @@ async def normalize_indicator_as_of(
         return await _normalize_complement_0_100_as_of(
             session, spec, country_iso3, scoring_period, model_config, freshness_policy
         )
+    if spec.level_family is NormalizationFamily.reference_percentile:
+        return await _normalize_reference_percentile_as_of(
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy
+        )
     raise NormalizationNotImplementedError(
         f"{indicator_code}: level family {spec.level_family.value} is not "
         "implemented (executable: DIRECT_0_100 for the WGI x3 + "
         "TERTIARY_ATTAINMENT_25_34, OWN_HISTORY for DEBT_SERVICE_RATIO only, "
         "ONE_SIDED_VULNERABILITY for CREDIT_TO_GDP_GAP only, "
-        "COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 only)"
+        "COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 only, "
+        "REFERENCE_PERCENTILE for LABOUR_PRODUCTIVITY_PER_HOUR only)"
+    )
+
+
+async def _normalize_reference_percentile_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+) -> NormalizedSignal | None:
+    """REFERENCE_PERCENTILE level (DEC-042 Option A, Sprint 6.14): LPPH only.
+
+    Registry REFERENCE_PERCENTILE alone never enables an indicator — an
+    explicit reference_percentile_configs entry in the model version is
+    required, and v1.0 carries exactly one: LABOUR_PRODUCTIVITY_PER_HOUR.
+
+    The score is the country's mid-rank percentile within the named,
+    versioned reference universe's SAME-PERIOD distribution (period-specific
+    calibration; frozen membership — a new member set = a new universe code,
+    never silent drift). The distribution comes from the dedicated
+    reference_observations table, never from tracked-country observations.
+
+    Min-sample gate: fewer than config.minimum_sample_n reporting members at
+    the period -> NO signal (a thin distribution is unusable, never scored
+    as-if-complete). A tracked country absent from the reference population
+    (CHN/IND are not OECD members) also produces no level via this path —
+    its own observation still aligns, but if no reference row exists for it
+    it is still ranked against the same distribution; the tracked value is
+    ranked within, not required to be a member. CHN/IND simply have no own
+    observation, so they return None upstream.
+    """
+    indicator_code = spec.indicator_code
+    config = model_config.reference_percentile_configs.get(indicator_code)
+    if config is None:
+        raise NormalizationNotImplementedError(
+            f"{indicator_code}: registry REFERENCE_PERCENTILE level family, "
+            f"but no reference-percentile config exists in model version "
+            f"{model_config.version_id!r} — not auto-enabled"
+        )
+
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+    aligned = await align_observation_as_of(session, country_iso3, indicator_code, scoring_period)
+    if aligned is None:
+        return None
+
+    freshness = evaluate_freshness(
+        own_period_age(aligned.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        return None
+
+    # Period-specific calibration: the distribution is the universe members'
+    # observations at exactly the same period as the country's aligned
+    # observation (no interpolation, no carry-forward).
+    period_year = int(aligned.source_period[:4])
+    dist_rows = (
+        await session.execute(
+            select(
+                ReferenceObservation.country_iso3,
+                ReferenceObservation.value,
+            )
+            .where(
+                ReferenceObservation.universe_code == config.universe_code,
+                ReferenceObservation.indicator_code == indicator_code,
+                func.extract("year", ReferenceObservation.period_start) == period_year,
+            )
+            .order_by(ReferenceObservation.country_iso3, ReferenceObservation.vintage_number.desc())
+        )
+    ).all()
+    # Latest vintage per member (rows arrive ordered iso3, vintage desc).
+    latest: dict[str, float] = {}
+    for iso3, value in dist_rows:
+        latest.setdefault(iso3, value)
+    distribution = list(latest.values())
+    if len(distribution) < config.minimum_sample_n:
+        # Thin distribution -> unusable for calibration, no signal.
+        return None
+
+    level_score = midrank_percentile(aligned.raw_value, distribution)
+
+    return NormalizedSignal(
+        indicator_code=indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=aligned.raw_value,
+        source_period=aligned.source_period,
+        method=NormalizationFamily.reference_percentile,
+        model_version=model_config.version_id,
+        level_score=level_score,
+        relative_score=None,  # percentile IS the relative position; the
+        # dedicated relative dimension stays unapproved (DEC-042)
+        momentum=None,  # Option C momentum: separate dimension, deferred
+        confidence=None,
+        reference_universe_id=config.universe_code,
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
     )
 
 

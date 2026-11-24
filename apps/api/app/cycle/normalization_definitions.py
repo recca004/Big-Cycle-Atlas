@@ -22,6 +22,7 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
+from app.cycle.reference_universes import get_reference_universe
 from app.cycle.force_definitions import (
     FORCE_DEFINITIONS,
     ForceCoverageStatus,
@@ -166,6 +167,11 @@ class NormalizationFamily(str, Enum):
     # excess-credit thresholds but NO negative-side penalty threshold.
     one_sided_vulnerability = "one_sided_vulnerability"
     own_history = "own_history"
+    # Added by Sprint 6.14 (DEC-042 Option A): the score is the country's
+    # mid-rank percentile within a named, versioned external reference
+    # universe at the SAME period (period-specific calibration, frozen
+    # membership). Enabled per indicator via model-config entries only.
+    reference_percentile = "reference_percentile"
     cross_sectional_relative = "cross_sectional_relative"
     relative_share = "relative_share"
     contextual_deferred = "contextual_deferred"
@@ -575,6 +581,34 @@ class OneSidedVulnerabilityConfig:
             )
 
 
+# --- Reference-percentile level (Sprint 6.14: DEC-042 Option A) -----------------
+
+
+@dataclass(frozen=True)
+class ReferencePercentileConfig:
+    """Versioned MODEL PARAMETERS for one indicator's REFERENCE_PERCENTILE
+    level (DEC-042, Sprint 6.14).
+
+    The score is the mid-rank percentile of the country's observation within
+    the named external reference universe's distribution AT THE SAME
+    PERIOD. Period-specific calibration: each scoring period ranks against
+    that period's own distribution, so a country's score can move because
+    the reference population moved — that is intended (it IS a relative-
+    position measure), while frozen universe membership prevents membership
+    changes from fabricating history. minimum_sample_n gates thin periods:
+    below it, NO score is produced.
+    """
+
+    universe_code: str
+    minimum_sample_n: int  # Atlas MODEL PARAMETER, not provider truth
+
+    def __post_init__(self) -> None:
+        if self.minimum_sample_n <= 0:
+            raise ValueError(
+                f"minimum_sample_n must be positive, got {self.minimum_sample_n}"
+            )
+
+
 @dataclass(frozen=True)
 class OneSidedVulnerabilityResult:
     """Provenance for a ONE_SIDED_VULNERABILITY level (DEC-021, Sprint 5.12).
@@ -810,6 +844,15 @@ class ModelVersionConfig:
     one_sided_vulnerability_configs: dict[str, OneSidedVulnerabilityConfig] = field(
         default_factory=dict
     )
+    # Sprint 6.14 (DEC-042) — MODEL PARAMETERS: REFERENCE_PERCENTILE level is
+    # enabled per indicator by an explicit entry here; a registry
+    # REFERENCE_PERCENTILE level_family alone never auto-enables it.
+    # Currently exactly one entry: LABOUR_PRODUCTIVITY_PER_HOUR (OECD
+    # reference universe oecd_lpph_v1, period-specific mid-rank percentile,
+    # min 20 reporting members).
+    reference_percentile_configs: dict[str, ReferencePercentileConfig] = field(
+        default_factory=dict
+    )
     # Sprint 6.4 (DEC-032) — EXPLICIT DIMENSION APPROVAL SETS for the
     # DIRECT_0_100 path. A registry level/relative/momentum family
     # declaration alone NEVER auto-enables a dimension — an indicator must
@@ -942,8 +985,8 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
     # a level-only family with no relative/momentum path. All v0.7 WGI +
     # DSR + credit-gap + Education configuration unchanged.
-    version_id="normalization-v0.9",
-    normalization_method="sprint-6.7-wid-wealth-complement-0-100",
+    version_id="normalization-v1.0",
+    normalization_method="sprint-6.14-lpph-oecd-reference-percentile",
     reference_universe_id="tracked_8",
     momentum_windows={
         "RULE_OF_LAW_WGI_SCORE": (3, 5),
@@ -976,6 +1019,16 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
             saturation_value=10.0,
             no_excess_score=50.0,
             saturated_score=0.0,
+        ),
+    },
+    reference_percentile_configs={
+        # Sprint 6.14 (DEC-042 Option A — owner approved): OECD reference
+        # percentile for labour productivity. 20 reporting members ~ a
+        # majority of the 38-member universe — an Atlas versioned MODEL
+        # PARAMETER, not an OECD threshold.
+        "LABOUR_PRODUCTIVITY_PER_HOUR": ReferencePercentileConfig(
+            universe_code="oecd_lpph_v1",
+            minimum_sample_n=20,
         ),
     },
     # Sprint 6.4 (DEC-032): EXPLICIT dimension approval for the DIRECT_0_100
@@ -1360,7 +1413,7 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
         NormalizationSpec(
             indicator_code="LABOUR_PRODUCTIVITY_PER_HOUR",
             direction=IndicatorStrengthDirection.positive,
-            level_family=NormalizationFamily.monotonic_positive,
+            level_family=NormalizationFamily.reference_percentile,
             relative_family=NormalizationFamily.cross_sectional_relative,
             momentum_family=NormalizationFamily.own_history,
             momentum_windows=(3, 5),
@@ -1372,12 +1425,13 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "comparison). Level AND own-history growth stay separable: "
                 "high level + weak growth != low level + fast improvement. "
                 "Sprint 5.9 audit (DEC-018): direction (higher PPP/hour = "
-                "stronger structural productivity) approved, but NO "
-                "absolute 0-100 mapping without an external calibration "
-                "distribution — tracked_8 min-max is explicitly rejected "
-                "(CHN/IND not covered by OECD; pooled tracked_8 range 33.5-"
-                "90.5 is not a global distribution). Level curve deferred "
-                "pending an expanded calibration universe decision."
+                "stronger structural productivity) approved; tracked_8 "
+                "min-max rejected. Sprint 6.14 (DEC-042 Option A — owner "
+                "approved): level = mid-rank percentile within the versioned "
+                "OECD reference universe oecd_lpph_v1 at the same period. "
+                "This is an OECD relative-position score, NEVER a global "
+                "percentile; CHN/IND are not OECD members and receive "
+                "unavailable, not a fabricated score."
             ),
         ),
         NormalizationSpec(
@@ -1545,6 +1599,26 @@ def validate_normalization_registry() -> None:
             raise ValueError(
                 f"{indicator}: one-sided vulnerability level config but "
                 f"registry level family is {spec.level_family.value}"
+            )
+    # Reference-percentile configs (Sprint 6.14 gate): an entry for an
+    # indicator whose registry level family is not REFERENCE_PERCENTILE is a
+    # configuration mistake — fail loudly; the named universe must exist.
+    for indicator, config in CURRENT_MODEL_VERSION.reference_percentile_configs.items():
+        spec = NORMALIZATION_REGISTRY.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"reference-percentile config for an unknown indicator: "
+                f"{indicator}"
+            )
+        if spec.level_family is not NormalizationFamily.reference_percentile:
+            raise ValueError(
+                f"{indicator}: reference-percentile config but registry "
+                f"level family is {spec.level_family.value}"
+            )
+        if get_reference_universe(config.universe_code) is None:
+            raise ValueError(
+                f"{indicator}: unknown reference universe "
+                f"{config.universe_code!r}"
             )
     # Sprint 6.4: explicit dimension approval sets must be consistent with
     # the registry. A registry family declaration alone NEVER enables a

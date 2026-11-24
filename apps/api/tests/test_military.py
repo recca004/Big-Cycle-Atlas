@@ -232,12 +232,12 @@ async def test_military_strength_never_available_even_with_complete_data(client)
 
 
 async def test_coverage_ceiling_set_only_on_proxy_forces(client):
-    for code in ("rule_of_law", "corruption", "productivity_output_growth",
+    for code in ("rule_of_law", "corruption",
                  "cost_competitiveness", "indebtedness", "trade_capital_flows",
                  "infrastructure_investment"):
         force = force_definition_by_code(code)
         assert force.coverage_ceiling is None, code
-    for code in ("wealth_opportunity_values_gaps", "internal_conflict", "military_strength"):
+    for code in ("wealth_opportunity_values_gaps", "internal_conflict", "military_strength", "productivity_output_growth"):
         force = force_definition_by_code(code)
         assert force.coverage_ceiling == "partial", code
 

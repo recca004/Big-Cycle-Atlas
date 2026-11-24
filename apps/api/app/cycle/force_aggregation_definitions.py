@@ -469,28 +469,35 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             confidence_mode=_DEFERRED,
             notes="No live indicators; trade data is candidate context only.",
         ),
-        # 8. Productivity / output growth — 2 SUPPORTING_CONTEXT
-        # Sprint 6.14 (DEC-042): PROXY_CONDITION promotion EVALUATED AND
-        # REJECTED — NormalizationSpec explicitly defers LPPH level pending an
-        # external calibration distribution (tracked_8 min-max rejected;
-        # CHN/IND uncovered). Blocked on owner calibration decision.
+        # 8. Productivity / output growth — IDENTITY_SINGLE (PROXY_CONDITION),
+        # PARTIAL ceiling. Sprint 6.14 (DEC-042 Option A — OWNER APPROVED):
+        # OECD LPPH promoted to PROXY_CONDITION; level = mid-rank percentile
+        # within the versioned OECD universe oecd_lpph_v1 (period-specific).
+        # GDP growth stays SUPPORTING_CONTEXT. CHN/IND are not OECD members —
+        # no reference distribution applies, they defer honestly.
         ForceAggregationSpec(
             force_code="productivity_output_growth",
             components=(
                 ForceIndicatorComponentSpec(
+                    indicator_code="LABOUR_PRODUCTIVITY_PER_HOUR",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
+                ForceIndicatorComponentSpec(
                     indicator_code="GDP_GROWTH",
                     role=ForceIndicatorRole.supporting_context,
                 ),
-                ForceIndicatorComponentSpec(
-                    indicator_code="LABOUR_PRODUCTIVITY_PER_HOUR",
-                    role=ForceIndicatorRole.supporting_context,
-                ),
             ),
-            level_mode=_DEFERRED,
+            level_mode=_IDENTITY,
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred (DEC-042: calibration-universe decision required); 2 components.",
+            notes=(
+                "Sprint 6.14 (DEC-042 Option A): identity copies the OECD "
+                "reference-percentile level_score. Single proxy — OECD "
+                "relative productivity position only; absolute level and "
+                "own-history momentum (Option C) remain separate deferred "
+                "dimensions."
+            ),
         ),
         # 9. Cost competitiveness — 2 SUPPORTING_CONTEXT
         ForceAggregationSpec(
@@ -741,4 +748,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.5"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v0.6"

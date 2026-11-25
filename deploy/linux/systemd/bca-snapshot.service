@@ -1,0 +1,11 @@
+[Unit]
+Description=Big Cycle Atlas macro data snapshot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=bca
+WorkingDirectory=/opt/big-cycle-atlas/apps/api
+ExecStart=/opt/big-cycle-atlas/apps/api/.venv/bin/python scripts/collect_snapshot.py
+EnvironmentFile=-/opt/big-cycle-atlas/apps/api/.env

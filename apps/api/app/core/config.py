@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     api_prefix: str = "/api"
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/bigcycleatlas"
     cors_origins: list[str] = ["http://localhost:3000"]
+    # Directory of the built Astro frontend. When set and existing, the API
+    # serves it at "/" (native production mode — no separate web server).
+    web_dist: str | None = "../web-astro/dist"
 
 
 @lru_cache

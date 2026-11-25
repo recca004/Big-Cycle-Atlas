@@ -14,9 +14,13 @@ import type {
   IndicatorUncertaintyHistory,
 } from "@/types/api";
 
+// Dev default: API on :8000 (web dev server on :3000, CORS-enabled).
+// Production default: same-origin — the built app is served by the API
+// itself, so relative "/api/..." paths are correct. PUBLIC_API_URL
+// overrides both (e.g. split deployments or a private-network API host).
 export const API_URL: string =
   (import.meta.env.PUBLIC_API_URL as string | undefined) ??
-  "http://localhost:8000";
+  (import.meta.env.PROD ? "" : "http://localhost:8000");
 
 const DEFAULT_TIMEOUT_MS = 15_000;
 const MAX_RETRIES = 1; // one retry for network-level failures only

@@ -38,7 +38,7 @@ Initial countries: United States (USA), China (CHN), Switzerland (CHE), Germany
 - [uv](https://docs.astral.sh/uv/)
 - PostgreSQL 14+ — via Docker (`docker compose -f docker-compose.dev.yml up -d`)
   or an existing local/network instance
-- For the full container deployment: Docker Desktop / Docker Engine + Compose v2
+- Optional: Docker Desktop / Compose v2 for the containerised alternative
 
 ## Local setup
 
@@ -100,27 +100,36 @@ npm run check                          # astro check (0 errors)
 npm run build                          # production build
 ```
 
-## Production deployment (Docker Compose)
+## Deployment — native first
 
-```bash
-cp .env.example .env          # set POSTGRES_PASSWORD
-docker compose up -d --build  # web on http://localhost:8080
-```
+The supported deployment is **native, no containers**. Windows launchers live
+at the repo root (`Setup.bat`, `Start.bat`, `Start-Prod.bat`, `Stop.bat`,
+`Update.bat`, `Backup.bat`, `Restore.bat`, `Test.bat`, `Status.bat`).
 
-- Single exposed port (`WEB_PORT`, default 8080), bound to loopback by
-  default. For LAN exposure set `BIND_ADDR=0.0.0.0` and put your own
-  authenticated reverse proxy in front — the app has no built-in auth.
-- The API container runs `alembic upgrade head` + idempotent seed on start.
-- Scheduled collection: `docker compose --profile scheduled up -d` adds a
-  collector that runs a daily macro snapshot (06:00 Europe/Zurich) and an
-  incremental market update.
+- `Start.bat` (dev): checks deps, PostgreSQL connectivity and config, starts
+  the API (:8000) and Astro dev server (:3000), waits for health, opens the
+  browser, and refuses duplicate instances. `Stop.bat` stops only the
+  processes BCA started.
+- `Start-Prod.bat` (prod): a single `serve.py` process on 127.0.0.1:8000
+  serves the API **and** the built frontend (`apps/web-astro/dist`) — no dev
+  server, no extra web server.
+- Scheduled collection via Windows Task Scheduler:
+  `scripts/ops/install-schedule.ps1` (dry-run unless `-Approve`).
+
+Linux (Debian/Ubuntu, e.g. Proxmox VM): native systemd deployment —
+`deploy/linux/install.sh`, units under `deploy/linux/systemd/`, optional
+nginx proxy sample. Full instructions in `docs/DEPLOYMENT.md`.
+
+Docker remains as an **optional** alternative: `docker-compose.yml`
+(`--profile scheduled` for the collector), `docker-compose.dev.yml` for a
+postgres-only dev database. Nothing requires it.
 
 ## Backup & restore
 
 ```powershell
-scripts\ops\backup.ps1            # pg_dump -Fc into .\backups\
-scripts\ops\restore.ps1 <file>    # restore (refuses to run against dev DB)
-scripts\ops\verify-restore.ps1    # restore into scratch DB + count check
+Backup.bat                    # pg_dump -Fc into .\backups\
+Restore.bat                   # pick a dump, type RESTORE to confirm overwrite
+scripts\ops\verify-restore.ps1 -TargetUrl <dsn>   # scratch-DB count check
 ```
 
 `pg_dump` must be on PATH or `PG_BIN` set (e.g.

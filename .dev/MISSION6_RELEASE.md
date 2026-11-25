@@ -5,9 +5,8 @@ Date: 2025 (release candidate cut). Branch `feature/big-cycle-atlas-astro-v2`, P
 ## Verdict
 
 **v1.0.0-rc.1 — release candidate accepted** for local/single-operator use.
-All automated gates pass. One documented limitation: the Docker Compose
-production deployment could not be runtime-verified on the dev host (see
-below) — it ships as statically reviewed configuration.
+Primary deployment is **native** (Windows launchers + Linux systemd);
+Docker is an optional, unverified alternative. All automated gates pass.
 
 ## Regression results
 
@@ -51,11 +50,10 @@ below) — it ships as statically reviewed configuration.
 
 ### Open / deferred
 
-- **P2** — Docker deployment **not runtime-verified**: Docker Desktop's
-  Linux engine failed to start on the dev host during this session (WSL
-  backend unresponsive across ~30min). Compose stack, Dockerfiles, entrypoint
-  and nginx config are statically reviewed only. Run
-  `docker compose up -d --build` on a healthy engine before relying on it.
+- **P3** — Docker (optional path only) **not runtime-verified**: Docker
+  Desktop's Linux engine never started on the dev host. Compose stack,
+  Dockerfiles, entrypoint and nginx config are statically reviewed only.
+  Native deployment is the supported path and is verified.
 - **P3** — No authentication or rate limiting (documented; web port is
   loopback-bound by default, postgres is internal-only).
 - **P3** — WID.world ingestion requires a manual 882MB bulk ZIP (opt-in
@@ -71,10 +69,14 @@ below) — it ships as statically reviewed configuration.
   defaults, StrategyLab and Portfolio currency.
 - **Historical-validation workspace widget** — previously panel-only.
 - **Dev-only component showcase** page.
-- **Deployment** — prod `docker-compose.yml` (postgres internal, api w/
-  migrate+seed entrypoint, nginx-served static web with `/api` proxy,
-  optional `--profile scheduled` collector at 06:00 Europe/Zurich);
-  `docker-compose.dev.yml` keeps the postgres-only dev setup.
+- **Native deployment (primary)** — `serve.py`: one uvicorn process serves
+  API + built Astro frontend same-origin on 127.0.0.1:8000. Windows
+  launchers: Setup/Start/Start-Prod/Stop/Update/Backup/Restore/Test/Status
+  .bat with dep/PG/config checks, health waits, duplicate-instance guard,
+  pid-tracked stop (never kills unrelated processes), confirm-gated restore.
+  Linux: `deploy/linux/` install.sh + hardened systemd unit + timers +
+  nginx sample; docs in `docs/DEPLOYMENT.md`. Docker compose kept as an
+  optional alternative.
 - **Ops scripts** — `scripts/ops/` backup/restore/verify (ps1+sh), setup,
   dev, test; `apps/api/.env.example`; backups gitignored.
 - **CI** — `.github/workflows/ci.yml`: backend pytest + frontend
@@ -85,10 +87,30 @@ below) — it ships as statically reviewed configuration.
 Screenshots in `.dev/release-screenshots/` (dashboard, country, workspace).
 Backup verified: 1.5MB `pg_dump -Fc` → scratch DB, identical row counts.
 
+## Release acceptance (native criteria)
+
+| Criterion | Status |
+|---|---|
+| Native Windows installation verified | ✅ scripts exercised on this host |
+| Native Windows startup verified | ✅ start.ps1 prod + dev, health-gated |
+| Native production frontend verified | ✅ serve.py serves dist/ + /api on :8000 |
+| Existing PostgreSQL connectivity verified | ✅ bigcycleatlas_dev, data preserved |
+| Fresh isolated database installation tested | ✅ bca_fresh_test: alembic head + seed |
+| Database migrations tested | ✅ upgrade head on empty schema |
+| Backup and restore tested | ✅ pg_dump -Fc round-trip, counts match |
+| Native data collection tested | ✅ collect_snapshot run (Mission 5) |
+| Windows launchers tested | ✅ start/status/stop/dup-guard verified |
+| Linux deployment instructions completed | ✅ docs written; **not run on Linux** |
+| Private-network security documented | ✅ loopback default + proxy guidance |
+| Full regression suites passing | ✅ 798 + 43 + 44 |
+
+**OS coverage actually tested: Windows 11 only.** Linux/Proxmox instructions
+are written but unverified — not claimed as tested.
+
 ## Known limitations (v1.0)
 
 - Single-user, no auth — local or behind your own authenticated proxy.
-- Docker deployment unverified on a live engine (above).
+- Docker path unverified (optional only).
 - Force model: `normalization-v0.8` / `force-aggregation-v0.3` — documented
   methodology, not a validated forecast.
 - Legacy lint debt in `apps/api/scripts/` diagnostics (~455 ruff findings).

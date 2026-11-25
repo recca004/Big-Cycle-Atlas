@@ -1,7 +1,9 @@
 import sys
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 if sys.platform == "win32":
     # psycopg async requires a selector-based event loop; uvicorn would default to Proactor
@@ -38,9 +40,20 @@ def create_app() -> FastAPI:
     app.include_router(portfolios.router)
     app.include_router(search.router)
 
-    @app.get("/")
-    async def root():
-        return {"name": settings.app_name, "version": settings.app_version}
+    web_dist = (
+        (Path(__file__).resolve().parents[1] / settings.web_dist).resolve()
+        if settings.web_dist
+        else None
+    )
+    if web_dist is not None and web_dist.is_dir():
+        # Native production mode: serve the Astro build same-origin so the
+        # whole app runs on a single port behind uvicorn.
+        app.mount("/", StaticFiles(directory=str(web_dist), html=True), name="web")
+    else:
+
+        @app.get("/")
+        async def root():
+            return {"name": settings.app_name, "version": settings.app_version}
 
     return app
 

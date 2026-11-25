@@ -59,9 +59,13 @@ one recoverable historical-vintage source worth a future import.
 - Repeatable command (manual or any scheduler — no paid service):
 
   ```
-  python scripts/collect_snapshot.py                  # all 5 providers
+  python scripts/collect_snapshot.py                  # all live providers
   python scripts/collect_snapshot.py --source world_bank
+  python scripts/collect_snapshot.py --wid-zip path/to/wid.zip  # adds WID
   ```
+
+  WID is skipped unless `--wid-zip` is passed — it is a bulk-file provider
+  (~882 MB archive), not a live API; `scripts/ingest_wid.py` refreshes it.
 
 - API: `GET /api/research/countries/{iso3}/availability` reports
   `with_release_evidence`, `with_retrieval_evidence`, `first_observed_at`,

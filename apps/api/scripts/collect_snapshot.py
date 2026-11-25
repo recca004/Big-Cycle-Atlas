@@ -48,7 +48,8 @@ PROVIDERS = {
     "bis": (BISAdapter, BIS_MAPPINGS),
     "oecd": (OECDAdapter, OECD_MAPPINGS),
     "imf_weo": (ImfWeoAdapter, IMF_WEO_MAPPINGS),
-    "wid": (WidAdapter, WID_MAPPINGS),
+    # WID is a file-based provider: it needs the ~882MB bulk archive, not a live
+    # call. Include it via --wid-zip, or refresh it with scripts/ingest_wid.py.
 }
 
 
@@ -87,18 +88,32 @@ async def _ingest_one(adapter, country: str, external_code: str) -> str:
 
 async def main() -> int:
     parser = argparse.ArgumentParser(description="Prospective evidence snapshot")
-    parser.add_argument("--source", choices=list(PROVIDERS), default=None)
+    parser.add_argument(
+        "--source", choices=list(PROVIDERS) + ["wid"], default=None
+    )
     parser.add_argument("--country", default=None, help="ISO3 code")
+    parser.add_argument(
+        "--wid-zip", type=Path, default=None,
+        help="Pre-downloaded WID bulk archive (enables the wid provider)",
+    )
     args = parser.parse_args()
 
     countries = await _countries(args.country)
-    providers = {args.source: PROVIDERS[args.source]} if args.source else PROVIDERS
+    providers = dict(PROVIDERS)
+    if args.wid_zip:
+        providers["wid"] = (WidAdapter, WID_MAPPINGS)
+    if args.source == "wid" and not args.wid_zip:
+        print("wid: skipped (bulk-file provider; pass --wid-zip or use ingest_wid.py)")
+        return 0
+    if args.source:
+        providers = {args.source: providers[args.source]}
 
     summary: dict[str, int] = {}
     for source_key, (adapter_cls, mappings) in providers.items():
         codes = [m.external_code for m in mappings]
         print(f"{source_key}: {len(codes)} series x {len(countries)} countries")
-        async with adapter_cls() as adapter:
+        adapter = adapter_cls(zip_path=args.wid_zip) if source_key == "wid" else adapter_cls()
+        async with adapter:
             for code in codes:
                 for country in countries:
                     status = await _ingest_one(adapter, country, code)

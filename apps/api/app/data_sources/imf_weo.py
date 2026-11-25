@@ -323,11 +323,14 @@ class ImfWeoAdapter(BaseDataSourceAdapter):
                 "IMF structure has no attributes section — cannot locate "
                 "LATEST_ACTUAL_ANNUAL_DATA"
             )
-        data_attrs = attrs_def.get("dataAttributes")
+        # The SDMX-JSON payload has placed the attribute definition list
+        # under both "dataAttributes" and "dimensionGroup" at different
+        # times — accept either key, still strict if neither exists.
+        data_attrs = attrs_def.get("dataAttributes") or attrs_def.get("dimensionGroup")
         if not isinstance(data_attrs, list):
             raise DataSourceParseError(
-                "IMF structure has no dataAttributes list — cannot locate "
-                "LATEST_ACTUAL_ANNUAL_DATA"
+                "IMF structure has no attribute-definition list — cannot "
+                "locate LATEST_ACTUAL_ANNUAL_DATA"
             )
 
         # Find the position of LATEST_ACTUAL_ANNUAL_DATA in the data

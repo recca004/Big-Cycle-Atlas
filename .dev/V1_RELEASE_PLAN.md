@@ -64,7 +64,7 @@ Current programme state: **Mission 5 in progress** (2026-11-25). Missions 1–4 
 
 ## Remaining (Mission 5)
 
-- [ ] collect_snapshot.py live run completing (in progress — prospective vintage capture across all providers)
+- [x] collect_snapshot.py live run complete — 4 live providers swept (world_bank/bis/oecd/imf_weo); hundreds of NEW + REVISED vintages captured incl. IMF WEO re-vintage (200 revised obs); WID skipped (bulk-file provider, --wid-zip opt-in). Live run also exposed + fixed an IMF SDMX-JSON schema drift (attributes.dimensionGroup).
 - [ ] Regime/macro-signal strategies stay gated pending release-date evidence (§31)
 - [ ] Performance + accessibility audit of new pages
 - [ ] Final regression totals + PR update + §55 report

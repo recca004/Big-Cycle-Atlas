@@ -86,6 +86,31 @@ def _method_info(m) -> MethodInfo:
     )
 
 
+@router.get("/versions")
+async def research_versions():
+    """Authoritative engine versions — the single source the UI must read
+    instead of hardcoding model metadata (drift regression: the workspace
+    displayed normalization-v0.8 / force-aggregation-v0.3 while the engine
+    had moved on)."""
+    from app.core.config import get_settings
+    from app.cycle.force_aggregation_definitions import (
+        FORCE_AGGREGATION_VERSION,
+    )
+
+    settings = get_settings()
+
+    return {
+        "normalization_version": CURRENT_MODEL_VERSION.version_id,
+        "force_aggregation_version": FORCE_AGGREGATION_VERSION,
+        "app_version": settings.app_version,
+        "composite_models": [
+            {"model_id": m.model_id, "version": m.version}
+            for m in COMPOSITE_MODELS.values()
+        ],
+        "backtest_safe": False,
+    }
+
+
 @router.get("/methods", response_model=list[MethodInfo])
 async def list_methods(state: Optional[str] = Query(None)):
     methods = list(METHODOLOGY_REGISTRY.values())

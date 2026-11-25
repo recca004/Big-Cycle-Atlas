@@ -7,12 +7,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   fetchObservatoryOverview,
   fetchObservatoryRefreshStatus,
+  fetchObservatoryTransition,
   postObservatoryRefresh,
 } from "@/lib/api/client";
 import type {
   ObservatoryOverview,
   RefreshJob,
+  TransitionMonitor,
 } from "@/types/observatory";
+import { ForcesOverview } from "./ForcesOverview";
 import { ObservatoryClock } from "./ObservatoryClock";
 import {
   CountryFocusPanel,
@@ -31,6 +34,9 @@ export function ObservatoryApp() {
   const [selectedIso3, setSelectedIso3] = useState<string | null>(null);
   const [histIndex, setHistIndex] = useState<number | null>(null);
   const [job, setJob] = useState<RefreshJob | null>(null);
+  const [incumbent, setIncumbent] = useState("USA");
+  const [challenger, setChallenger] = useState("CHN");
+  const [monitor, setMonitor] = useState<TransitionMonitor | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -45,6 +51,7 @@ export function ObservatoryApp() {
             (c) => c.iso3 === d.power_summary.highest_domestic_condition_iso3,
           ) ?? d.countries.find((c) => c.classified) ?? null;
         if (top) setSelectedIso3(top.iso3);
+        setMonitor(d.transition_monitor);
       })
       .catch((e) => {
         if (alive)
@@ -54,6 +61,28 @@ export function ObservatoryApp() {
       alive = false;
     };
   }, []);
+
+  // Refetch the monitor when the study pair changes (default USA/CHN —
+  // the overview payload already contains it, no extra round-trip).
+  useEffect(() => {
+    if (!data) return;
+    if (
+      incumbent === data.transition_monitor.incumbent_iso3 &&
+      challenger === data.transition_monitor.challenger_iso3
+    ) {
+      setMonitor(data.transition_monitor);
+      return;
+    }
+    let alive = true;
+    fetchObservatoryTransition({ incumbent, challenger })
+      .then((m) => {
+        if (alive) setMonitor(m);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [incumbent, challenger, data]);
 
   const triggerRefresh = useCallback(async () => {
     setJob((j) => (j ? { ...j, status: "running", running: true } : j));
@@ -116,7 +145,7 @@ export function ObservatoryApp() {
       </div>
     );
 
-  const incumbent = data.countries.find(
+  const incumbentCountry = data.countries.find(
     (c) => c.iso3 === data.transition_monitor.incumbent_iso3,
   );
 
@@ -125,7 +154,7 @@ export function ObservatoryApp() {
       <div className="obs-grid">
         <div className="obs-col-left">
           <CountryFocusPanel
-            country={selected ?? incumbent ?? null}
+            country={selected ?? incumbentCountry ?? null}
             powerNote={data.power_summary.separation_note}
           />
           <div className="obs-country-picker">
@@ -153,17 +182,59 @@ export function ObservatoryApp() {
             selectedIso3={selectedIso3}
             onSelect={setSelectedIso3}
             playbackPeriod={playbackPeriod}
-          />
-          <HistoricalPlayback
-            periods={periods}
-            index={activeIndex}
-            latestIndex={latestIndex}
-            onIndex={(i) => setHistIndex(i)}
+            playbackControls={
+              <HistoricalPlayback
+                periods={periods}
+                index={activeIndex}
+                latestIndex={latestIndex}
+                onIndex={(i) => setHistIndex(i)}
+                compact
+              />
+            }
+            periodLabel={
+              playbackPeriod
+                ? `${playbackPeriod} — historical`
+                : `${periods[latestIndex] ?? "—"} (latest)`
+            }
           />
         </div>
 
         <div className="obs-col-right">
-          <PowerTransitionMonitor data={data.transition_monitor} />
+          {monitor && (
+            <>
+              <div className="obs-pair-select">
+                <label className="obs-muted">
+                  Incumbent
+                  <select
+                    className="glass-button"
+                    value={incumbent}
+                    onChange={(e) => setIncumbent(e.target.value)}
+                  >
+                    {data.countries.map((c) => (
+                      <option key={c.iso3} value={c.iso3} disabled={c.iso3 === challenger}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="obs-muted">
+                  Challenger
+                  <select
+                    className="glass-button"
+                    value={challenger}
+                    onChange={(e) => setChallenger(e.target.value)}
+                  >
+                    {data.countries.map((c) => (
+                      <option key={c.iso3} value={c.iso3} disabled={c.iso3 === incumbent}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <PowerTransitionMonitor data={monitor} />
+            </>
+          )}
           <DataFreshnessIndicator
             freshness={data.freshness}
             job={job}
@@ -221,16 +292,13 @@ export function ObservatoryApp() {
 
         <DailyChangesPanel data={data.daily_changes} />
 
-        <section className="obs-panel glass" aria-label="Research surface">
-          <h2 className="obs-panel-title">The seventeen forces</h2>
-          <p className="body-sm">
-            {data.countries[0]?.force_summary.scored_count ?? "—"} forces carry
-            published numerical levels, alongside dimension-only and context
-            profiles. The forces are the primary research surface of the
-            observatory.
-          </p>
+        <section className="obs-panel glass" aria-label="The seventeen forces">
+          <h2 className="obs-panel-title">
+            The seventeen forces{selected ? ` — ${selected.name}` : ""}
+          </h2>
+          <ForcesOverview iso3={selectedIso3} />
           <p className="obs-links">
-            <a href="/forces">Study the 17 forces →</a>
+            <a href="/forces">All forces →</a>
             <a href="/compare">Compare powers →</a>
             <a href="/cycle">Cycle explorer →</a>
             <a href="/methodology">Methodology →</a>

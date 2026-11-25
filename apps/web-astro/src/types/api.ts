@@ -108,7 +108,7 @@ export interface HealthStatus {
 export interface ForceScore {
   force_code: string;
   force_name: string;
-  execution_status: "scored" | "deferred";
+  execution_status: "scored" | "dimension_only" | "deferred" | "context";
   level_score: number | null;
   relative_score: number | null;
   momentum_score: number | null;
@@ -119,6 +119,7 @@ export interface ForceScore {
   limitations: string[];
   reasons: string[];
   backtest_safe: boolean;
+  comparison_semantics?: "comparable" | "own_history" | "not_scored";
 }
 
 export interface ForceScoresResponse {

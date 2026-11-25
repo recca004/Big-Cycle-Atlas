@@ -1,14 +1,16 @@
 import type { WidgetProps } from "@/features/workspace/widgetRegistry";
 import {
+  useAsyncState,
   useDataSources,
   useHealth,
   useIngestionRuns,
   useLiveCountries,
   useMultiCountryObservations,
 } from "./hooks";
+import { fetchResearchProgress, fetchResearchVersions } from "@/lib/api/client";
 import { resolveAsync, WidgetLoading, WidgetError } from "./common";
 import { formatDate } from "@/lib/format";
-import { FORCES, INITIAL_COUNTRIES } from "@big-cycle-atlas/shared";
+import { INITIAL_COUNTRIES } from "@big-cycle-atlas/shared";
 
 /** API liveness. */
 export function ApiStatusWidget(_props: WidgetProps) {
@@ -104,82 +106,83 @@ export function IngestionStatusWidget(_props: WidgetProps) {
   );
 }
 
-/** Current model versions — static per normalization_definitions.py. */
+/** Engine versions — live from GET /api/research/versions. Never hardcoded
+ *  (drift regression: this widget used to display stale v0.8/v0.3 strings). */
 export function ModelVersionWidget(_props: WidgetProps) {
-  return (
+  const state = useAsyncState((s) => fetchResearchVersions({ signal: s }), []);
+  return resolveAsync(state, (v) => (
     <div className="metric-widget">
       <p className="label-md text-tertiary">Normalization</p>
       <p className="metric-value" style={{ fontSize: "var(--text-lg)" }}>
-        normalization-v0.8
+        {v.normalization_version}
       </p>
       <p className="label-md text-tertiary" style={{ marginTop: "var(--space-3)" }}>
         Force aggregation
       </p>
       <p className="metric-value" style={{ fontSize: "var(--text-lg)" }}>
-        force-aggregation-v0.3
+        {v.force_aggregation_version}
       </p>
       <p className="body-sm" style={{ fontSize: "var(--text-xs)", marginTop: "var(--space-2)" }}>
-        backtest_safe: false — research scoring only, not backtest validated.
+        app v{v.app_version} · backtest_safe: false — research scoring only,
+        not backtest validated.
       </p>
     </div>
-  );
+  ));
 }
 
-/** Research completion across the 17 forces (metadata, not live scores). */
+/** Research completion across the 17 forces — live engine metadata from
+ *  GET /api/research/progress. Never hardcodes the classification counts:
+ *  engine-level implementation (level published / dimension-only / context
+ *  profile / deferred) is distinct from country-level data availability. */
+const CLASS_LABELS: Record<string, string> = {
+  level_published: "published level",
+  dimension_only: "dimension-only",
+  context_profile: "context profile",
+  deferred: "deferred",
+};
+
 export function ResearchProgressWidget(_props: WidgetProps) {
-  // 5/17 executable — mirrors force_aggregation_definitions.py. This widget
-  // reads from a static manifest kept in sync with the backend; it never
-  // claims a score exists that the engine cannot produce.
-  const executable = [
-    "rule_of_law",
-    "corruption",
-    "internal_conflict",
-    "education",
-    "wealth_opportunity_values_gaps",
-  ];
-  const sourced = new Set([
-    ...executable,
-    "productivity_output_growth",
-    "cost_competitiveness",
-    "trade_capital_flows",
-    "infrastructure_investment",
-    "indebtedness",
-    "military_strength",
-  ]);
-  const nameOf = (code: string) =>
-    code
-      .replaceAll("_", " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-  return (
+  const state = useAsyncState(
+    (s) => fetchResearchProgress({ signal: s }),
+    [],
+  );
+  return resolveAsync(state, (progress) => (
     <div className="widget-fill widget-scroll">
       <p className="body-sm" style={{ marginBottom: "var(--space-3)" }}>
-        <strong>{executable.length}/17</strong> forces have executable scoring ·{" "}
-        {sourced.size}/17 have live data inputs
+        <strong>{progress.counts.level_published ?? 0}</strong> published levels ·{" "}
+        <strong>{progress.counts.dimension_only ?? 0}</strong> dimension-only ·{" "}
+        <strong>{progress.counts.context_profile ?? 0}</strong> context profiles ·{" "}
+        <strong>{progress.counts.deferred ?? 0}</strong> deferred
+        <span className="body-sm" style={{ display: "block", color: "var(--text-tertiary)", marginTop: "2px" }}>
+          engine-level implementation as of {progress.as_of_period} —
+          country availability may differ
+        </span>
       </p>
       <table className="data-table">
         <tbody>
-          {FORCES.map((code) => {
-            const isExec = executable.includes(code);
-            const hasData = sourced.has(code);
-            return (
-              <tr key={code}>
-                <td>{nameOf(code)}</td>
-                <td>
-                  <span
-                    className={`status-pill status-${
-                      isExec ? "good" : hasData ? "warn" : "neutral"
-                    }`}
-                  >
-                    {isExec ? "executable" : hasData ? "deferred" : "not sourced"}
-                  </span>
-                </td>
-              </tr>
-            );
-          })}
+          {progress.forces.map((f) => (
+            <tr key={f.force_code}>
+              <td>{f.force_name}</td>
+              <td>
+                <span
+                  className={`status-pill status-${
+                    f.primary_classification === "level_published"
+                      ? "good"
+                      : f.primary_classification === "deferred"
+                        ? "warn"
+                        : "neutral"
+                  }`}
+                >
+                  {CLASS_LABELS[f.primary_classification] ??
+                    f.primary_classification}
+                </span>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
-  );
+  ));
 }
 
 /** Coverage matrix — countries × a few key indicators, latest year. */

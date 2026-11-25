@@ -11,7 +11,7 @@ const { iso3 } = Astro.params;
 const country = INITIAL_COUNTRIES.find((c) => c.iso3 === iso3);
 ---
 
-<BaseLayout title={`${country?.name ?? iso3} · Forces`}>
+<BaseLayout title={`${country?.name ?? iso3} · Forces`} fullWidth>
   <header class="page-header">
     <p class="label-md text-tertiary">
       <a href={`/country/${iso3}`} class="back-link">← {country?.name ?? iso3}</a>

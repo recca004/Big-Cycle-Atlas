@@ -61,29 +61,44 @@ async def _countries(only: str | None) -> list[str]:
         return [r[0] for r in rows.all()]
 
 
-async def _ingest_one(adapter, country: str, external_code: str) -> str:
-    session = get_sessionmaker()()
-    try:
-        outcome = await run_ingestion(
-            session, adapter,
-            country_iso3=country, external_series_code=external_code,
-        )
-        await session.commit()
-        if outcome.error:
-            return f"FAIL:{outcome.error.split(':')[0]}"
-        p = outcome.persistence
-        if p is None:
-            return "FAIL"
-        if p.revised:
-            return f"REVISED({p.revised})"
-        if p.inserted:
-            return f"NEW({p.inserted})"
-        return "same"
-    except Exception as exc:  # identity errors must not abort the snapshot
-        await session.rollback()
-        return f"ERROR:{type(exc).__name__}"
-    finally:
-        await session.close()
+async def _ingest_one(
+    adapter, country: str, external_code: str, max_429_retries: int = 1
+) -> str:
+    """Ingest a single series for a single country.
+
+    HTTP 429 (provider rate limiting) gets ONE bounded retry after a long
+    backoff — never a retry storm. Previous valid observations are never
+    touched by a failed run (immutable vintages), and the failed run is
+    still recorded honestly as failed."""
+    for attempt in range(max_429_retries + 1):
+        session = get_sessionmaker()()
+        try:
+            outcome = await run_ingestion(
+                session, adapter,
+                country_iso3=country, external_series_code=external_code,
+            )
+            await session.commit()
+            if outcome.error:
+                if "429" in outcome.error and attempt < max_429_retries:
+                    # OECD publishes a ~60 queries/hour ceiling; back off
+                    # well past the rolling window edge, once.
+                    await asyncio.sleep(65)
+                    continue
+                return f"FAIL:{outcome.error.split(':')[0]}"
+            p = outcome.persistence
+            if p is None:
+                return "FAIL"
+            if p.revised:
+                return f"REVISED({p.revised})"
+            if p.inserted:
+                return f"NEW({p.inserted})"
+            return "same"
+        except Exception as exc:  # identity errors must not abort the snapshot
+            await session.rollback()
+            return f"ERROR:{type(exc).__name__}"
+        finally:
+            await session.close()
+    return "FAIL"
 
 
 async def main() -> int:
@@ -114,6 +129,8 @@ async def main() -> int:
         print(f"{source_key}: {len(codes)} series x {len(countries)} countries")
         adapter = adapter_cls(zip_path=args.wid_zip) if source_key == "wid" else adapter_cls()
         async with adapter:
+            # Throttle providers with published rate ceilings (OECD ~60qph).
+            throttle = 1.5 if source_key == "oecd" else 0.0
             for code in codes:
                 for country in countries:
                     status = await _ingest_one(adapter, country, code)
@@ -122,6 +139,8 @@ async def main() -> int:
                     )
                     if not status.startswith("same"):
                         print(f"  {country} {code}: {status}")
+                    if throttle:
+                        await asyncio.sleep(throttle)
     print("\nSnapshot complete:", summary)
     # Snapshot is still a success if every run was merely 'same'.
     failures = sum(v for k, v in summary.items() if k in {"FAIL", "ERROR"})

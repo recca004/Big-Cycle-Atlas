@@ -91,6 +91,21 @@ export function CycleDial({
     );
   }, [animate, placed.length]);
 
+  // Selection emphasis — restrained GSAP pulse on the selected marker
+  // (the camera never moves; the dial coordinates stay stable).
+  useEffect(() => {
+    if (!animate || !svgRef.current || !selectedIso3) return;
+    const el = svgRef.current.querySelector<SVGGElement>(
+      `[data-marker="${selectedIso3}"] circle.clock-marker`,
+    );
+    if (!el) return;
+    gsap.fromTo(
+      el,
+      { scale: 0.6, transformOrigin: "center" },
+      { scale: 1, duration: 0.45, ease: "back.out(2.2)" },
+    );
+  }, [selectedIso3, animate]);
+
   const hovered = countries.find((c) => c.iso3 === hover);
 
   return (
@@ -197,7 +212,7 @@ export function CycleDial({
         return (
           <g
             key={c.iso3}
-            data-marker
+            data-marker={c.iso3}
             className="clock-marker-g"
             role="button"
             tabIndex={0}

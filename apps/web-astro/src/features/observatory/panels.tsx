@@ -19,6 +19,17 @@ const fmtUsd = (v: number) =>
       ? `$${(v / 1e9).toFixed(0)}B`
       : `$${(v / 1e6).toFixed(0)}M`;
 
+/** Unit-aware measurement formatting — trillions/billions for USD,
+ *  percentage points for rates/ratios, per-capita grouping otherwise. */
+export function fmtMeasure(v: number, unit: string): string {
+  if (/^usd/i.test(unit)) return fmtUsd(v);
+  if (/%/.test(unit))
+    return `${v.toLocaleString("en-CH", { maximumFractionDigits: 1 })}%`;
+  if (/score/i.test(unit))
+    return v.toLocaleString("en-CH", { maximumFractionDigits: 1 });
+  return v.toLocaleString("en-CH", { maximumFractionDigits: 0 });
+}
+
 /* ---------- CountryFocusPanel (left column) ---------- */
 
 export function CountryFocusPanel({
@@ -188,49 +199,68 @@ export function PowerTransitionMonitor({ data }: { data: TransitionMonitor }) {
           </span>
         </div>
       </div>
-      <table className="obs-measure">
-        <thead>
-          <tr>
-            <th>Measurement</th>
-            <th className="num">Gap</th>
-            <th className="num">Ratio</th>
-          </tr>
-        </thead>
-        <tbody>
-          {top.map((m) => (
-            <tr key={m.key}>
-              <td>{m.label}</td>
-              <td className="num">
-                {m.absolute_gap !== null ? m.absolute_gap.toFixed(1) : "—"}
-              </td>
-              <td className="num">
-                {m.challenger_to_incumbent_ratio !== null
-                  ? m.challenger_to_incumbent_ratio.toFixed(2)
-                  : "—"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {(data.areas_of_convergence.length > 0 ||
-        data.areas_of_divergence.length > 0) && (
-        <div className="obs-conv">
-          {data.areas_of_convergence.slice(0, 3).map((a) => (
-            <p key={a.key} className="obs-conv-item conv">
-              ▲ {a.label}
-              {a.challenger_to_incumbent_ratio !== null &&
-                ` — challenger at ${(a.challenger_to_incumbent_ratio * 100).toFixed(0)}% of incumbent`}
-            </p>
-          ))}
-          {data.areas_of_divergence.slice(0, 3).map((a) => (
-            <p key={a.key} className="obs-conv-item div">
-              ▼ {a.label}
-              {a.challenger_to_incumbent_ratio !== null &&
-                ` — challenger at ${(a.challenger_to_incumbent_ratio * 100).toFixed(0)}% of incumbent`}
-            </p>
-          ))}
-        </div>
-      )}
+      <div className="obs-measure-list">
+        {top.map((m) => {
+          const iv = m.incumbent_value;
+          const cv = m.challenger_value;
+          const both = iv !== null && cv !== null;
+          const max = both ? Math.max(Math.abs(iv!), Math.abs(cv!), 1e-9) : 1;
+          const rel = m.relationship ?? "insufficient_data";
+          return (
+            <div key={m.key} className="obs-mrow" data-rel={rel}>
+              <div className="obs-mrow-head">
+                <span className="obs-mrow-label">{m.label}</span>
+                <span className="obs-mrow-period obs-muted">
+                  {m.period ?? ""}
+                  {m.source ? ` · ${m.source}` : ""}
+                </span>
+              </div>
+              {both && (
+                <div className="obs-mbars" role="img" aria-label={`${m.label}: ${data.incumbent_iso3} ${fmtMeasure(iv!, m.unit)}, ${data.challenger_iso3} ${fmtMeasure(cv!, m.unit)}`}>
+                  <div className="obs-mbar">
+                    <span
+                      className="obs-mbar-fill inc"
+                      style={{ width: `${(Math.abs(iv!) / max) * 100}%` }}
+                    />
+                    <span className="obs-mbar-val">
+                      {data.incumbent_iso3} {fmtMeasure(iv!, m.unit)}
+                    </span>
+                  </div>
+                  <div className="obs-mbar">
+                    <span
+                      className="obs-mbar-fill chal"
+                      style={{ width: `${(Math.abs(cv!) / max) * 100}%` }}
+                    />
+                    <span className="obs-mbar-val">
+                      {data.challenger_iso3} {fmtMeasure(cv!, m.unit)}
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div className="obs-mrow-foot">
+                {m.challenger_to_incumbent_ratio !== null && (
+                  <span className="obs-muted">
+                    challenger at {(m.challenger_to_incumbent_ratio * 100).toFixed(0)}% of incumbent
+                  </span>
+                )}
+                {rel !== "insufficient_data" && rel !== "stable" && m.trend_note ? (
+                  <span className={`obs-trend ${rel}`}>
+                    {rel === "convergence" ? "narrowing" : "widening"} — {m.trend_note}
+                  </span>
+                ) : rel === "stable" ? (
+                  <span className="obs-trend stable">stable over recent history</span>
+                ) : (
+                  <span className="obs-trend unknown">direction unknown</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <p className="obs-note">
+        Relative size and direction are descriptive measurements — higher debt,
+        trade intensity or spending is not inherently positive or negative.
+      </p>
       {(data.historical_evidence.incumbent_transitions?.length ?? 0) > 0 && (
         <p className="obs-muted">
           Historical record: {data.incumbent_iso3} saw{" "}
@@ -349,6 +379,19 @@ export function DataFreshnessIndicator({
 /* ---------- DailyChangesPanel ---------- */
 
 export function DailyChangesPanel({ data }: { data: DailyChanges }) {
+  // Compact one-line state when nothing changed — no large empty card.
+  if (data.changes.length === 0)
+    return (
+      <section className="obs-panel glass obs-changes-compact" aria-label="What has changed">
+        <h2 className="obs-panel-title">What has changed?</h2>
+        <p className="obs-muted">
+          {data.summary_message}
+          {data.previous_snapshot_zurich
+            ? ` · compared with ${data.previous_snapshot_zurich}`
+            : ""}
+        </p>
+      </section>
+    );
   return (
     <section className="obs-panel glass" aria-label="What has changed">
       <h2 className="obs-panel-title">What has changed?</h2>
@@ -399,11 +442,14 @@ export function HistoricalPlayback({
   index,
   onIndex,
   latestIndex,
+  compact = false,
 }: {
   periods: string[];
   index: number;
   onIndex: (i: number | null) => void;
   latestIndex: number;
+  /** Controls-only rendering for the unified glass control bar. */
+  compact?: boolean;
 }) {
   const [playing, setPlaying] = useState(false);
   const [speedMs, setSpeedMs] = useState(700);
@@ -431,9 +477,8 @@ export function HistoricalPlayback({
     onIndex(index + 1);
   };
 
-  return (
-    <div className="obs-playback" role="group" aria-label="Historical playback">
-      <div className="obs-playback-row">
+  const controls = (
+    <>
         <button
           type="button"
           className="glass-button"
@@ -499,7 +544,14 @@ export function HistoricalPlayback({
         >
           Latest
         </button>
-      </div>
+    </>
+  );
+
+  if (compact) return controls;
+
+  return (
+    <div className="obs-playback" role="group" aria-label="Historical playback">
+      <div className="obs-playback-row">{controls}</div>
       <p className="obs-playback-period" role="status">
         Observation period: <strong>{periods[index] ?? "—"}</strong>
         {index === latestIndex

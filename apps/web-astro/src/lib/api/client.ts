@@ -252,6 +252,22 @@ export function postObservatoryRefresh(
   );
 }
 
+export function fetchObservatoryTransition(
+  opts?: FetchOptions & { model?: string; incumbent?: string; challenger?: string },
+): Promise<import("@/types/observatory").TransitionMonitor> {
+  const {
+    model = "model_b_domain",
+    incumbent = "USA",
+    challenger = "CHN",
+    ...rest
+  } = opts ?? {};
+  const q = new URLSearchParams({ model, incumbent, challenger });
+  return request<import("@/types/observatory").TransitionMonitor>(
+    `/api/observatory/transition?${q}`,
+    { timeoutMs: 90_000, ...rest },
+  );
+}
+
 export function fetchObservatoryRefreshStatus(
   opts?: FetchOptions,
 ): Promise<import("@/types/observatory").RefreshJob> {
@@ -309,6 +325,20 @@ export function fetchModelDiagnostics(
   return request<ModelDiagnosticsManifest>(
     "/api/research/diagnostics", opts,
   );
+}
+
+export interface ResearchVersions {
+  normalization_version: string;
+  force_aggregation_version: string;
+  app_version: string;
+  composite_models: { model_id: string; version: string }[];
+  backtest_safe: boolean;
+}
+
+export function fetchResearchVersions(
+  opts?: FetchOptions,
+): Promise<ResearchVersions> {
+  return request<ResearchVersions>("/api/research/versions", opts);
 }
 
 export function fetchResearchProgress(

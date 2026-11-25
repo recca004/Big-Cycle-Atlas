@@ -8,6 +8,10 @@ from typing import Optional, List
 from app.core.config import get_settings
 from app.cycle.execution_modes import ExecutionMode, parse_execution_spec
 from app.cycle.force_definitions import FORCE_DEFINITIONS
+from app.cycle.force_aggregation_definitions import (
+    FORCE_AGGREGATION_CONFIGS,
+    ForceIndicatorRole,
+)
 from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION, ScoringPeriod
 from app.db.session import get_session
 from app.models import DataSource, Indicator
@@ -205,6 +209,31 @@ async def get_country_force_coverage(
 _FORCE_NAMES = {d.code: d.name for d in FORCE_DEFINITIONS}
 
 
+
+
+def _comparison_semantics(force_code: str, level_score) -> str:
+    """Cross-country comparison eligibility for a force level.
+
+    Levels built from OWN_HISTORY-normalized components position a country
+    against its own past — the spread between two countries is NOT a
+    meaningful international difference (indebtedness regression: USA 97.7
+    vs CHN 0.5 was displayed as if comparable)."""
+    if level_score is None:
+        return "not_scored"
+    spec = FORCE_AGGREGATION_CONFIGS.get(force_code)
+    if spec is None:
+        return "not_scored"
+    own_hist = set(CURRENT_MODEL_VERSION.own_history_level_configs)
+    scoring_components = [
+        c.indicator_code
+        for c in spec.components
+        if c.role
+        in (ForceIndicatorRole.core_condition, ForceIndicatorRole.proxy_condition)
+    ]
+    if any(ic in own_hist for ic in scoring_components):
+        return "own_history"
+    return "comparable"
+
 @router.get("/{iso3}/force-scores", response_model=ForceScoresResponse)
 async def get_country_force_scores(
     iso3: str,
@@ -286,6 +315,9 @@ async def get_country_force_scores(
                 ),
             ],
             backtest_safe=s.backtest_safe,
+            comparison_semantics=_comparison_semantics(
+                s.force_code, s.level_score
+            ),
         )
         for s in signals
     ]

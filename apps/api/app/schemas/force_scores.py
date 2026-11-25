@@ -27,6 +27,12 @@ class ForceScoreRead(BaseModel):
     limitations: list[str]
     reasons: list[str]
     backtest_safe: bool
+    # Cross-country comparison semantics: "comparable" when the level is a
+    # shared-metric condition; "own_history" when the level positions the
+    # country against its OWN past (spread across countries is meaningless);
+    # "not_scored" when no numeric level exists at all.
+    comparison_semantics: str = "not_scored"
+
 
 
 class ForceScoresResponse(BaseModel):

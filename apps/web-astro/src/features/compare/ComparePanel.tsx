@@ -80,7 +80,15 @@ function ForcesCompare({ iso3s }: { iso3s: string[] }) {
                 (c) => state.data[c]?.find((x) => x.force_code === fa.force_code) ?? null,
               );
               const nums = vals.map((v) => v?.level_score).filter((v): v is number => v != null);
-              const spread = nums.length >= 2 ? Math.max(...nums) - Math.min(...nums) : null;
+              // Own-history levels position each country against its own past —
+              // a cross-country spread is not a meaningful international difference.
+              const ownHistory = vals.some(
+                (v) => v?.comparison_semantics === "own_history",
+              );
+              const spread =
+                !ownHistory && nums.length >= 2
+                  ? Math.max(...nums) - Math.min(...nums)
+                  : null;
               const coverageWarn = vals.some(
                 (v) => v && v.coverage_status !== "available",
               );
@@ -102,7 +110,17 @@ function ForcesCompare({ iso3s }: { iso3s: string[] }) {
                           : "—"}
                     </td>
                   ))}
-                  <td className="num">{spread != null ? spread.toFixed(1) : "—"}</td>
+                  <td className="num">
+                    {ownHistory ? (
+                      <span className="text-tertiary" title="Own-history condition — positions each country against its own past. Not internationally comparable.">
+                        n/a · own-history
+                      </span>
+                    ) : spread != null ? (
+                      spread.toFixed(1)
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                 </tr>
               );
             })}
@@ -113,8 +131,10 @@ function ForcesCompare({ iso3s }: { iso3s: string[] }) {
         <button type="button" className="glass-button" onClick={exportCsv}>Export CSV</button>
         <p className="section-note">
           Approved force levels only; “deferred” forces have no executable
-          score. Own-history metrics (e.g. debt-service ratio) are not
-          cross-country sustainability scores.
+          score. Rows marked “n/a · own-history” (e.g. indebtedness) position
+          each country against its own past — no cross-country difference is
+          computed for them. Compare raw debt indicators (e.g. government
+          debt % of GDP in the indicators tab) for international levels.
         </p>
       </div>
     </div>

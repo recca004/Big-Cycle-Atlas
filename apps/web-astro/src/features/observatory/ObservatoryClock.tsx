@@ -16,7 +16,6 @@ import {
 import type { ObservatoryCountry } from "@/types/observatory";
 import { CycleDial, type DialCountry } from "./CycleDial";
 import type { BigCycleScene } from "./scene";
-import { STAGE_HOURS } from "./stages";
 
 interface Props {
   countries: ObservatoryCountry[];
@@ -24,6 +23,10 @@ interface Props {
   onSelect: (iso3: string) => void;
   /** Period shown when playing back history; null = latest. */
   playbackPeriod: string | null;
+  /** Historical playback controls rendered inside the unified bar. */
+  playbackControls?: React.ReactNode;
+  /** Current observation period label for the unified bar. */
+  periodLabel?: string;
 }
 
 const REDUCED_MOTION =
@@ -36,6 +39,8 @@ export function ObservatoryClock({
   selectedIso3,
   onSelect,
   playbackPeriod,
+  playbackControls,
+  periodLabel,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<BigCycleScene | null>(null);
@@ -103,13 +108,9 @@ export function ObservatoryClock({
     return () => obs.disconnect();
   }, []);
 
-  // Camera nudge toward the selected country's stage hour.
-  useEffect(() => {
-    if (!selectedIso3 || !sceneRef.current) return;
-    const c = countries.find((x) => x.iso3 === selectedIso3);
-    const hour = c?.stage ? STAGE_HOURS[c.stage as keyof typeof STAGE_HOURS] : null;
-    if (hour != null) sceneRef.current.focusHour(hour);
-  }, [selectedIso3, countries]);
+  // Country selection must NOT move the camera — the globe and orbital
+  // rings stay centred inside the fixed dial. Marker emphasis lives in
+  // the SVG dial layer (halo + scale), not in scene translation.
 
   // Dial data — historical playback swaps each country's stage/score to
   // the selected period's actual classification (no interpolation).
@@ -159,7 +160,7 @@ export function ObservatoryClock({
           </div>
         )}
       </div>
-      <div className="obs-clock-controls">
+      <div className="obs-controlbar">
         <button
           type="button"
           className="glass-button"
@@ -202,6 +203,17 @@ export function ObservatoryClock({
         >
           Reset view
         </button>
+        {playbackControls && (
+          <>
+            <span className="sep" aria-hidden="true" />
+            {playbackControls}
+          </>
+        )}
+        {periodLabel && (
+          <span className="obs-period-label" role="status">
+            Observation period: <strong>{periodLabel}</strong>
+          </span>
+        )}
       </div>
       <p className="clock-honesty">
         Experimental classification — position on the dial is a model output,

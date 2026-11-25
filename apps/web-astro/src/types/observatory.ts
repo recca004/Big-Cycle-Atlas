@@ -98,7 +98,11 @@ export interface TransitionMeasurement {
   challenger_value: number | null;
   challenger_to_incumbent_ratio: number | null;
   absolute_gap: number | null;
-  direction: string;
+  direction?: string;
+  relationship?: "convergence" | "divergence" | "stable" | "insufficient_data";
+  trend_note?: string | null;
+  period?: string | null;
+  source?: string | null;
 }
 
 export interface ForecastHorizon {

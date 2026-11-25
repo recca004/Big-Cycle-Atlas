@@ -12,15 +12,20 @@ interface Props {
 const { title, description, fullWidth } = Astro.props;
 const path = Astro.url.pathname;
 
+// Focused Atlas mode — the 17 forces and the Big Cycle are primary.
 const NAV = [
   { href: "/", label: "Observatory" },
   { href: "/forces", label: "Forces" },
   { href: "/countries", label: "Countries" },
   { href: "/compare", label: "Compare" },
   { href: "/cycle", label: "Cycle" },
-  { href: "/research", label: "Research" },
-  { href: "/forecast", label: "Forecast" },
   { href: "/workspace", label: "Workspace" },
+];
+
+// Advanced research tooling — implemented, one click away.
+const RESEARCH_NAV = [
+  { href: "/research", label: "Research lab" },
+  { href: "/forecast", label: "Forecast readiness" },
 ];
 
 // Financial research — implemented but hidden from default chrome.
@@ -68,6 +73,7 @@ const isActive = (href: string) =>
               theme = p.theme;
               transparency = p.reducedTransparency ? "reduced" : null;
               motion = p.reducedMotion ? "reduced" : null;
+              if (p.fullResearch) el.dataset.fullResearch = "true";
             }
           }
           if (theme !== "light" && theme !== "dark" && theme !== "system") {
@@ -112,6 +118,35 @@ const isActive = (href: string) =>
             </a>
           ))
         }
+        {
+          // Inlined when Full Research mode is active (data-full-research).
+          RESEARCH_NAV.map((item) => (
+            <a
+              href={item.href}
+              class:list={["nav-link", "nav-full-only", { "nav-link-active": isActive(item.href) }]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <details class="nav-disclosure">
+          <summary>Research</summary>
+          <div class="nav-disclosure-menu glass-strong">
+            {
+              RESEARCH_NAV.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["nav-link", { "nav-link-active": isActive(item.href) }]}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+            <a href="/settings" class="nav-link nav-research-toggle">
+              Full research mode →
+            </a>
+          </div>
+        </details>
         <details class="nav-disclosure">
           <summary>Finance</summary>
           <div class="nav-disclosure-menu glass-strong">

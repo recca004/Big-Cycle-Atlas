@@ -119,3 +119,36 @@ class TestObservatoryRoutes:
             "/api/observatory/transition", params={"model": "bogus"}
         )
         assert r.status_code == 422
+
+
+# --- v1.1 refinement regressions ---------------------------------------------
+
+def test_comparison_semantics_own_history_vs_comparable():
+    """Regression: Compare displayed USA 97.7 vs CHN 0.5 as a 97.2 cross-country
+    difference — but indebtedness is an OWN-HISTORY stress position; the
+    spread is meaningless. Levels built from own-history components must be
+    marked non-comparable across countries."""
+    from app.api.routes.countries import _comparison_semantics
+
+    assert _comparison_semantics("indebtedness", 50.0) == "own_history"
+    assert _comparison_semantics("rule_of_law", 50.0) == "comparable"
+    assert _comparison_semantics("education", 50.0) == "comparable"
+    assert _comparison_semantics("military_strength", None) == "not_scored"
+    assert _comparison_semantics("nonexistent_force", 1.0) == "not_scored"
+
+
+def test_versions_endpoint_is_live_not_hardcoded():
+    """Regression: the workspace displayed normalization-v0.8 /
+    force-aggregation-v0.3 while the engine had moved on. The versions
+    endpoint must reflect the CURRENT registry constants."""
+    import asyncio
+
+    from app.api.routes.research import research_versions
+    from app.cycle.force_aggregation_definitions import FORCE_AGGREGATION_VERSION
+    from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION
+
+    payload = asyncio.run(research_versions())
+    assert payload["normalization_version"] == CURRENT_MODEL_VERSION.version_id
+    assert payload["force_aggregation_version"] == FORCE_AGGREGATION_VERSION
+    assert payload["normalization_version"] != "normalization-v0.8"
+    assert payload["force_aggregation_version"] != "force-aggregation-v0.3"

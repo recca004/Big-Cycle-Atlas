@@ -505,6 +505,18 @@ export function SettingsPanel() {
             {prefs.reducedTransparency ? "On" : "Off"}
           </button>
         </div>
+        <div className="settings-row">
+          <span>Full research mode</span>
+          <button
+            type="button"
+            className={`glass-button ${prefs.fullResearch ? "btn-active" : ""}`}
+            onClick={() => update({ fullResearch: !prefs.fullResearch })}
+            aria-pressed={prefs.fullResearch}
+            title="Show Research Lab and Forecast in the primary navigation"
+          >
+            {prefs.fullResearch ? "On" : "Off"}
+          </button>
+        </div>
       </div>
 
       <div className="glass settings-section">

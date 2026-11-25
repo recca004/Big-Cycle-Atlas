@@ -52,7 +52,7 @@ export function ForcesOverview({ iso3 }: { iso3: string | null }) {
             key={f.force_code}
             role="listitem"
             className="force-row"
-            href={`/country/${iso3}/forces#${f.force_code}`}
+            href={`/forces?force=${f.force_code}&country=${iso3}`}
           >
             <span className="force-num">{String(i + 1).padStart(2, "0")}</span>
             <span className="force-name">{f.force_name}</span>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { ForcesOverview } from "@/features/site/SitePanels";
+import { ForcesExplorer } from "@/features/forces/ForcesExplorer";
 ---
 
 <BaseLayout title="Forces" fullWidth>
@@ -8,11 +8,12 @@ import { ForcesOverview } from "@/features/site/SitePanels";
     <p class="label-md text-tertiary">The 17 Big Cycle forces</p>
     <h1 class="headline-lg">Forces</h1>
     <p class="body-sm">
-      Force scores are derived, never invented — a force with no approved
-      aggregation shows as "deferred" with null scores, not zero.
+      Force measurements are derived, never invented. Published levels,
+      independent dimensions and context profiles are distinct implementation
+      types — an unavailable country score is not a deferred force.
     </p>
   </header>
-  <ForcesOverview client:load />
+  <ForcesExplorer client:only="react" />
 </BaseLayout>
 
 <style>

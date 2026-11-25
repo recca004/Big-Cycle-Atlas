@@ -659,3 +659,25 @@
 
 /* Workspace library group wrapper */
 .ws-library-group { margin-bottom: var(--space-4); }
+
+/* Status badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full, 999px);
+  font-size: var(--text-xs, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.12));
+  color: var(--text-secondary, #a8b3c7);
+}
+.badge-warn {
+  color: var(--warn, #eab308);
+  border-color: color-mix(in srgb, var(--warn, #eab308) 45%, transparent);
+  background: color-mix(in srgb, var(--warn, #eab308) 10%, transparent);
+}
+.badge-info {
+  color: var(--chart-1, #4d8fd1);
+  border-color: color-mix(in srgb, var(--chart-1, #4d8fd1) 45%, transparent);
+}

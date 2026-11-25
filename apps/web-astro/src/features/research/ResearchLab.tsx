@@ -57,10 +57,9 @@ const STATE_LABEL: Record<string, string> = {
   deferred: "Deferred",
 };
 const STATUS_LABEL: Record<string, string> = {
-  approved_level: "Approved level",
-  partial: "Partial proxy",
+  level_published: "Level published",
   dimension_only: "Dimension only",
-  context_only: "Context module",
+  context_profile: "Context profile",
   deferred: "Deferred",
 };
 
@@ -308,16 +307,17 @@ export function ResearchLab() {
             <div className="table-wrap">
               <table className="data-table">
                 <thead>
-                  <tr><th>Force</th><th>Status</th><th>Dimensions</th>
-                      <th>Ceiling</th></tr>
+                  <tr><th>Force</th><th>Primary class</th><th>Approval</th>
+                      <th>Dimensions</th><th>Ceiling</th></tr>
                 </thead>
                 <tbody>
                   {progress.data.forces.map((f) => (
                     <tr key={f.force_code}>
                       <td>{f.force_name}</td>
-                      <td>{STATUS_LABEL[f.implementation_status] ??
-                            f.implementation_status}</td>
-                      <td>{f.dimensions.join(", ") || "—"}</td>
+                      <td>{STATUS_LABEL[f.primary_classification] ??
+                            f.primary_classification}</td>
+                      <td>{f.approval_state === "none" ? "—" : f.approval_state}</td>
+                      <td>{f.published_dimensions.join(", ") || "—"}</td>
                       <td>{f.coverage_ceiling ?? "—"}</td>
                     </tr>
                   ))}

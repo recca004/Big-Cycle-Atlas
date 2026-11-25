@@ -204,12 +204,37 @@ async def test_research_progress_matches_registry(client):
     assert r.status_code == 200
     body = r.json()
     assert len(body["forces"]) == 17
-    # counts must equal force list length
+    assert body["total_forces"] == 17
+    # mutually-exclusive primary counts MUST sum to exactly 17
     assert sum(body["counts"].values()) == 17
+    assert body["counts_sum_to_total"] is True
+    assert set(body["counts"]) == {
+        "level_published", "dimension_only", "context_profile", "deferred",
+    }
+    # every force gets exactly one primary class from the closed enum
+    primaries = {f["primary_classification"] for f in body["forces"]}
+    assert primaries <= set(body["counts"])
+    per_class = {}
+    for f in body["forces"]:
+        per_class[f["primary_classification"]] = (
+            per_class.get(f["primary_classification"], 0) + 1
+        )
+    assert per_class == {k: v for k, v in body["counts"].items() if v}
     # no scored-level force may lack an approved method
     for f in body["forces"]:
-        if f["implementation_status"] in ("approved_level", "partial"):
+        if f["primary_classification"] == "level_published":
             assert f["methods"], f["force_code"]
+            assert f["approval_state"] in ("approved", "partial")
+    # specific expectations — updated Mission 3 baseline
+    by_code = {f["force_code"]: f for f in body["forces"]}
+    assert by_code["cost_competitiveness"]["primary_classification"] \
+        == "dimension_only"
+    assert "momentum" in by_code["cost_competitiveness"]["published_dimensions"]
+    assert by_code["military_strength"]["primary_classification"] \
+        == "dimension_only"
+    assert by_code["geography"]["primary_classification"] == "context_profile"
+    for deferred in ("acts_of_nature",):
+        assert by_code[deferred]["primary_classification"] == "deferred"
 
 
 async def test_research_cycle_unknown_model_rejected(client):

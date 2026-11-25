@@ -73,16 +73,22 @@ export interface CycleHistoryResponse {
   backtest_safe: boolean;
 }
 
+export type PrimaryClassification =
+  | "level_published"
+  | "dimension_only"
+  | "context_profile"
+  | "deferred";
+
 export interface ForceMethodProgress {
   force_code: string;
   force_name: string;
-  implementation_status:
-    | "approved_level"
-    | "partial"
-    | "dimension_only"
-    | "context_only"
-    | "deferred";
-  dimensions: string[];
+  /** Mutually-exclusive primary implementation type (Mission 3 §3). */
+  primary_classification: PrimaryClassification;
+  /** Independent attributes — may overlap across forces. */
+  approval_state: "approved" | "partial" | "none";
+  published_dimensions: string[];
+  has_context_profile: boolean;
+  experimental_methods: string[];
   methods: string[];
   coverage_ceiling: string | null;
   live_inputs: string[];
@@ -90,7 +96,9 @@ export interface ForceMethodProgress {
 
 export interface ResearchProgress {
   as_of_period: string;
-  counts: Record<string, number>;
+  total_forces: number;
+  counts: Record<PrimaryClassification, number>;
+  counts_sum_to_total: boolean;
   forces: ForceMethodProgress[];
 }
 

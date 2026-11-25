@@ -225,9 +225,24 @@ _ENTRIES: tuple[MethodDescriptor, ...] = (
         force_code="cost_competitiveness", formula_id="contextual_deferred",
         version="v1", state=MethodologyState.context_only,
         dimension="level", inputs=("UNIT_LABOUR_COST_GROWTH",),
-        interpretation="ULC growth context; REER not yet imported",
+        interpretation="ULC/CPI growth as cost-competitiveness context; level method undecided (DEC-018 open)",
         approval_decision=None,
-        limitations=("No REER series yet — level method undecided (DEC-018 open)",),
+        limitations=("Level method undecided — appreciation is not automatically improvement",),
+    ),
+    MethodDescriptor(
+        method_id="prod.cost_competitiveness.reer_momentum_v1",
+        force_code="cost_competitiveness", formula_id="own_history_signed_change",
+        version="v1", state=MethodologyState.approved_production,
+        dimension="momentum", inputs=("REER_INDEX",),
+        interpretation=("Signed 5y change in the real effective exchange rate index — "
+                        "appreciation/depreciation trajectory, NOT a strength score"),
+        reference_universe=None, units="index_pct_change",
+        parameters={"windows": (3, 5, 10), "primary": 5},
+        approval_decision="Delegated working-model approval (V1 Mission 2, REER import)",
+        limitations=(
+            "Direction convention: rising REER = real appreciation — not automatically weakening",
+            "Momentum dimension only; no level method approved",
+        ),
     ),
     MethodDescriptor(
         method_id="ctx.trade.wdi_context_v1",

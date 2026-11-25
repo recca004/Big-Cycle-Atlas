@@ -685,9 +685,10 @@ function AuthoritativeStatus() {
     );
   }
   const labels: Record<string, string> = {
-    approved_level: "Approved level", partial: "Partial proxy",
-    dimension_only: "Dimension only", context_only: "Context module",
+    level_published: "Level published",
+    dimension_only: "Dimension only", context_profile: "Context profile",
     deferred: "Deferred",
+    approved: "approved", partial: "partial ceiling",
   };
   return (
     <div className="glass">
@@ -698,18 +699,22 @@ function AuthoritativeStatus() {
         {Object.entries(state.data.counts)
           .map(([k, v]) => `${labels[k] ?? k}: ${v}`)
           .join(" · ")}
+        {state.data.counts_sum_to_total
+          ? ` · total ${state.data.total_forces}`
+          : " · ⚠ counts do not sum to 17"}
       </p>
       <div className="table-wrap">
         <table className="data-table">
           <thead>
-            <tr><th>Force</th><th>Status</th><th>Dimensions</th><th>Ceiling</th></tr>
+            <tr><th>Force</th><th>Primary class</th><th>Approval</th><th>Dimensions</th><th>Ceiling</th></tr>
           </thead>
           <tbody>
             {state.data.forces.map((f) => (
               <tr key={f.force_code}>
                 <td>{f.force_name}</td>
-                <td>{labels[f.implementation_status] ?? f.implementation_status}</td>
-                <td>{f.dimensions.join(", ") || "—"}</td>
+                <td>{labels[f.primary_classification] ?? f.primary_classification}</td>
+                <td>{labels[f.approval_state] ?? f.approval_state}</td>
+                <td>{f.published_dimensions.join(", ") || "—"}</td>
                 <td>{f.coverage_ceiling ?? "—"}</td>
               </tr>
             ))}

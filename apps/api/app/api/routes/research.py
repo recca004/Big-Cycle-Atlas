@@ -202,34 +202,66 @@ async def country_geography(iso3: str):
     return profile
 
 
+# Mutually-exclusive primary implementation classes (Mission 3 §3).
+# Every canonical force is assigned exactly one; counts MUST sum to 17.
+PRIMARY_CLASSES = (
+    "level_published",   # approved level method publishes a force level
+    "dimension_only",    # approved non-level dimensions publish; no level
+    "context_profile",   # functional context data; no published dimensions
+    "deferred",          # research module registered; nothing functional yet
+)
+
+
+def _primary_classification(fd, methods, approved) -> str:
+    if any(m.dimension == "level" for m in approved):
+        return "level_published"
+    if approved:
+        return "dimension_only"
+    if fd.live_indicator_codes or (
+        fd.code == "geography" and methods
+    ):
+        return "context_profile"
+    return "deferred"
+
+
 @router.get("/progress")
 async def research_progress(session: AsyncSession = Depends(get_session)):
-    """Authoritative per-force implementation status (§22): derived from the
-    methodology registry + aggregation configs — not manual metadata."""
+    """Authoritative per-force implementation status (§22 + Mission 3 §3).
+
+    `primary_classification` is mutually exclusive and its counts always sum
+    to 17. Secondary attributes (approval_state, published_dimensions,
+    has_context_profile) may overlap across forces and are labelled as
+    independent attributes."""
     latest = _latest_completed_scoring_period()
     forces = []
-    counts: dict[str, int] = {}
+    counts: dict[str, int] = {c: 0 for c in PRIMARY_CLASSES}
     for fd in FORCE_DEFINITIONS:
         methods = methods_for_force(fd.code)
         approved = [m for m in methods
                     if m.state is MethodologyState.approved_production]
-        has_level = any(m.dimension == "level" for m in approved)
-        dims = sorted({m.dimension for m in approved})
-        if has_level:
-            status = ("partial" if fd.coverage_ceiling and
-                      fd.coverage_ceiling.value == "partial" else "approved_level")
-        elif approved:
-            status = "dimension_only"
-        elif methods:
-            status = "context_only"
-        else:
-            status = "deferred"
-        counts[status] = counts.get(status, 0) + 1
+        primary = _primary_classification(fd, methods, approved)
+        counts[primary] += 1
+        has_level = primary == "level_published"
+        approval_state = (
+            "partial" if (has_level and fd.coverage_ceiling
+                          and fd.coverage_ceiling.value == "partial")
+            else "approved" if has_level else "none"
+        )
         forces.append({
             "force_code": fd.code,
             "force_name": fd.name,
-            "implementation_status": status,
-            "dimensions": dims,
+            # primary implementation type — mutually exclusive
+            "primary_classification": primary,
+            # independent attributes (may overlap)
+            "approval_state": approval_state,
+            "published_dimensions": sorted({m.dimension for m in approved}),
+            "has_context_profile": primary == "context_profile"
+                or any(m.state is MethodologyState.context_only
+                       for m in methods),
+            "experimental_methods": [
+                m.method_id for m in methods
+                if m.state is MethodologyState.experimental
+            ],
             "methods": [m.method_id for m in methods],
             "coverage_ceiling": (fd.coverage_ceiling.value
                                  if fd.coverage_ceiling else None),
@@ -237,6 +269,8 @@ async def research_progress(session: AsyncSession = Depends(get_session)):
         })
     return {
         "as_of_period": f"{latest.year}-Q{latest.quarter}",
+        "total_forces": len(FORCE_DEFINITIONS),
         "counts": counts,
+        "counts_sum_to_total": sum(counts.values()) == len(FORCE_DEFINITIONS),
         "forces": forces,
     }

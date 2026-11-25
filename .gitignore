@@ -45,3 +45,5 @@ next-env.d.ts
 *.db
 # Local archives / stray dumps
 archive/
+backups/
+*.dump

@@ -145,6 +145,18 @@ async def post_transaction(
     ).scalar_one_or_none()
     if existing is not None:
         return existing, False
+
+    # Serialize mutations per portfolio: without the row lock two
+    # concurrent buys could both pass the cash check and overspend.
+    locked = (
+        await session.execute(
+            select(PaperPortfolio)
+            .where(PaperPortfolio.id == p.id)
+            .with_for_update()
+        )
+    ).scalar_one()
+    p = locked
+
     if p.archived:
         raise PortfolioError("portfolio is archived")
     if kind not in ("buy", "sell", "deposit"):

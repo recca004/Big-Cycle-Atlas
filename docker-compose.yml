@@ -1,20 +1,73 @@
+# Big Cycle Atlas — production compose.
+# One external port (web, default 8080). PostgreSQL is internal-only.
+# Usage: cp .env.example .env, set POSTGRES_PASSWORD, then
+#   docker compose up -d --build
 services:
   postgres:
     image: postgres:16
-    container_name: big-cycle-atlas-postgres
+    container_name: bca-postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-bca}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: ${POSTGRES_DB:-bigcycleatlas}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-bigcycleatlas}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 10
+    restart: unless-stopped
+    # No published port — reachable only on the internal network.
+
+  api:
+    build:
+      context: ./apps/api
+    container_name: bca-api
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-bca}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-bigcycleatlas}
+      CORS_ORIGINS: '["http://localhost:${WEB_PORT:-8080}"]'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "/app/.venv/bin/python -c \"import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=5)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web-astro/Dockerfile
+    container_name: bca-web
+    # Loopback-only by default (single-user local deployment).
+    # For a private-network deployment behind your own reverse proxy with
+    # authentication, set BIND_ADDR=0.0.0.0 and terminate auth upstream.
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${WEB_PORT:-8080}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # Scheduled collection runs the same image as the API. Default: daily
+  # macro snapshot at 06:00 Europe/Zurich + market update. Off by default;
+  # enable with `docker compose --profile scheduled up -d`.
+  collector:
+    build:
+      context: ./apps/api
+    container_name: bca-collector
+    profiles: ["scheduled"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-bca}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-bigcycleatlas}
+      TZ: Europe/Zurich
+    depends_on:
+      api:
+        condition: service_healthy
+    entrypoint: ["/app/.venv/bin/python", "scripts/collect_daemon.py"]
+    restart: unless-stopped
 
 volumes:
   postgres_data:

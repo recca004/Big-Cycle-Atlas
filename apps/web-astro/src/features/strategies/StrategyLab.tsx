@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as echarts from "echarts";
+import type { EChartsOption } from "echarts";
 import { fetchStrategies, postSimulate } from "@/lib/api/client";
 import type {
   SimulateRequest,
@@ -51,7 +51,7 @@ const PRESETS: { label: string; patch: Partial<SimulateRequest> }[] = [
 function equityChart(
   path: { date: string; value: number }[],
   name: string,
-): echarts.EChartsOption {
+): EChartsOption {
   return {
     ...baseChartOption(),
     xAxis: { type: "time" },

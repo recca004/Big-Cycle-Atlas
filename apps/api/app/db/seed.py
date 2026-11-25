@@ -10,6 +10,7 @@ Reads the canonical country list from packages/shared/data/initial-countries.jso
 
 import asyncio
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
@@ -38,8 +39,14 @@ from app.models import (
 )
 
 
-DEFAULT_DATA_FILE = (
-    Path(__file__).resolve().parents[4] / "packages" / "shared" / "data" / "initial-countries.json"
+DEFAULT_DATA_FILE = Path(
+    os.environ.get(
+        "BCA_SEED_FILE",
+        str(
+            Path(__file__).resolve().parents[4]
+            / "packages" / "shared" / "data" / "initial-countries.json"
+        ),
+    )
 )
 
 

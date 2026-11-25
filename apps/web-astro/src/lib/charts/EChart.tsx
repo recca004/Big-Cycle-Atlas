@@ -1,8 +1,24 @@
 import { useEffect, useRef } from "react";
-import * as echarts from "echarts";
+// Tree-shaken echarts — the app only renders line/bar/scatter charts with
+// grid/tooltip/legend. Keeps ~700KB of unused charts out of the bundle.
+import * as echarts from "echarts/core";
+import { LineChart, BarChart, ScatterChart } from "echarts/charts";
+import {
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+} from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
+import type { EChartsOption } from "echarts";
+
+echarts.use([
+  LineChart, BarChart, ScatterChart,
+  GridComponent, TooltipComponent, LegendComponent,
+  CanvasRenderer,
+]);
 
 interface EChartProps {
-  option: echarts.EChartsOption;
+  option: EChartsOption;
   className?: string;
   style?: React.CSSProperties;
   ariaLabel?: string;
@@ -49,7 +65,7 @@ const cssVar = (name: string, fallback: string) =>
     : fallback;
 
 /** Shared chart option base themed from CSS tokens. */
-export function baseChartOption(): echarts.EChartsOption {
+export function baseChartOption(): EChartsOption {
   return {
     animation: !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
     grid: { left: 8, right: 12, top: 28, bottom: 24, containLabel: true },

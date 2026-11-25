@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import * as echarts from "echarts";
+import type { EChartsOption } from "echarts";
 import {
   fetchCorrelations,
   fetchFxConvert,
@@ -48,7 +48,7 @@ const REGIME_BADGE: Record<string, string> = {
 function lineChart(
   points: { date: string; value: number }[],
   name: string,
-): echarts.EChartsOption {
+): EChartsOption {
   return {
     ...baseChartOption(),
     xAxis: {

@@ -538,3 +538,27 @@ export function removeWatchlistEntry(
     ...opts, method: "DELETE",
   });
 }
+
+export interface SearchHit {
+  kind: "country" | "indicator" | "instrument";
+  key: string;
+  label: string;
+  detail?: string | null;
+}
+
+export interface SearchResponse {
+  query: string;
+  countries: SearchHit[];
+  indicators: SearchHit[];
+  instruments: SearchHit[];
+}
+
+export function searchEntities(
+  q: string,
+  opts?: FetchOptions,
+): Promise<SearchResponse> {
+  return request(
+    `/api/search/?q=${encodeURIComponent(q)}&limit=8`,
+    opts,
+  );
+}

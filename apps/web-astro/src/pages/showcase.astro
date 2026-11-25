@@ -1,0 +1,116 @@
+---
+/** Development component showcase (Mission 6 §8).
+ *  Renders only in the dev server; production builds show a notice.
+ *  All values here are demonstration fixtures, not economic data. */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ShowcaseCharts } from "@/features/site/ShowcaseCharts";
+
+const enabled = import.meta.env.DEV;
+---
+
+<BaseLayout title="Component showcase">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Development</p>
+    <h1 class="headline-lg">Component showcase</h1>
+    <p class="body-sm">
+      Design-system reference. All values are demonstration fixtures — not
+      economic data.
+    </p>
+  </header>
+  {enabled ? (
+    <div class="section-stack">
+      <section class="glass settings-section">
+        <h2 class="headline-sm panel-title">Design tokens</h2>
+        <div class="token-row">
+          <span class="token-chip" style="background: var(--accent)">accent</span>
+          <span class="token-chip" style="background: var(--surface-solid)">surface</span>
+          <span class="token-chip glass">glass</span>
+          <span class="token-chip" style="background: var(--chart-1, #6aa9ff)">chart-1</span>
+          <span class="token-chip" style="background: var(--chart-2, #4fbf8f)">chart-2</span>
+          <span class="token-chip" style="background: var(--chart-4, #d16a6a)">chart-4</span>
+        </div>
+        <p class="body-sm">
+          headline-lg · headline-sm · body-sm · label-md — text-primary /
+          text-secondary / text-tertiary
+        </p>
+      </section>
+
+      <section class="glass settings-section">
+        <h2 class="headline-sm panel-title">Glass + buttons</h2>
+        <div class="token-row">
+          <button class="glass-button" type="button">Default</button>
+          <button class="glass-button btn-active" type="button">Active</button>
+          <button class="glass-button widget-btn-danger" type="button">Danger</button>
+          <span class="badge badge-ok">badge-ok</span>
+          <span class="badge badge-warn">badge-warn</span>
+          <span class="badge badge-err">badge-err</span>
+          <span class="badge badge-muted">badge-muted</span>
+          <span class="badge badge-warn">EXPERIMENTAL</span>
+        </div>
+      </section>
+
+      <section class="glass settings-section">
+        <h2 class="headline-sm panel-title">Forms</h2>
+        <div class="token-row">
+          <input class="search-input" placeholder="search-input" aria-label="demo input" />
+          <select class="config-select" aria-label="demo select">
+            <option>config-select</option>
+          </select>
+          <input class="config-select" type="number" value="100000" aria-label="demo number" />
+          <input class="config-select" type="date" aria-label="demo date" />
+          <label class="body-sm"><input type="checkbox" /> checkbox</label>
+        </div>
+      </section>
+
+      <section class="glass settings-section">
+        <h2 class="headline-sm panel-title">Tables</h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Entity</th><th>Value</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fixture A</td><td>1,234.56</td><td><span class="badge badge-ok">ok</span></td></tr>
+              <tr><td>Fixture B</td><td>—</td><td><span class="badge badge-muted">missing</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="glass settings-section">
+        <h2 class="headline-sm panel-title">Charts</h2>
+        <ShowcaseCharts client:only="react" />
+      </section>
+
+      <section class="glass settings-section">
+        <h2 class="headline-sm panel-title">States</h2>
+        <div class="token-row">
+          <span class="body-sm">Loading…</span>
+          <span class="body-sm">Empty: no observations for this selection.</span>
+          <span class="body-sm" style="color: var(--chart-4, #d16a6a)">Error: request failed.</span>
+          <span class="body-sm" style="color: var(--text-tertiary)">Unavailable: evidence-gated.</span>
+        </div>
+      </section>
+    </div>
+  ) : (
+    <p class="body-sm">
+      The component showcase is a development-only route and is not
+      available in this build.
+    </p>
+  )}
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .token-row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: var(--space-3); margin-bottom: var(--space-3);
+  }
+  .token-chip {
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-md);
+    color: var(--text-primary); font-size: var(--text-sm);
+    border: 1px solid var(--border-subtle);
+  }
+</style>

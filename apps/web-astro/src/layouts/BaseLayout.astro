@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { GlobalSearch } from "@/features/site/GlobalSearch";
 
 interface Props {
   title: string;
@@ -43,18 +44,39 @@ const isActive = (href: string) =>
     <meta name="description" content={description ?? "Big Cycle Atlas — country-level macro cycle research"} />
     <title>{title} · Big Cycle Atlas</title>
     <script is:inline>
-      // Resolve theme before first paint: stored preference, else system.
+      // Resolve theme before first paint: versioned prefs blob, legacy
+      // standalone keys, else system.
       (() => {
         try {
-          const stored = localStorage.getItem("bca:theme");
-          const system = matchMedia("(prefers-color-scheme: light)").matches
-            ? "light"
-            : "dark";
-          const theme = stored === "light" || stored === "dark" ? stored : system;
-          document.documentElement.dataset.theme = theme;
-          const transparency = localStorage.getItem("bca:transparency");
-          if (transparency === "reduced")
-            document.documentElement.dataset.transparency = "reduced";
+          const el = document.documentElement;
+          let theme = null, transparency = null, motion = null;
+          const raw = localStorage.getItem("bca:prefs:v1");
+          if (raw) {
+            const p = JSON.parse(raw);
+            if (p?.version === 1) {
+              theme = p.theme;
+              transparency = p.reducedTransparency ? "reduced" : null;
+              motion = p.reducedMotion ? "reduced" : null;
+            }
+          }
+          if (theme !== "light" && theme !== "dark" && theme !== "system") {
+            const stored = localStorage.getItem("bca:theme");
+            theme = stored === "light" || stored === "dark" ? stored : null;
+          }
+          if (transparency === null)
+            transparency =
+              localStorage.getItem("bca:transparency") === "reduced"
+                ? "reduced"
+                : null;
+          const resolved =
+            theme === "light" || theme === "dark"
+              ? theme
+              : matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+          el.dataset.theme = resolved;
+          if (transparency === "reduced") el.dataset.transparency = "reduced";
+          if (motion === "reduced") el.dataset.motion = "reduced";
         } catch {
           /* localStorage unavailable — default theme stays */
         }
@@ -78,6 +100,7 @@ const isActive = (href: string) =>
         }
       </nav>
       <div class="header-actions">
+        <GlobalSearch client:load />
         <button
           id="theme-toggle"
           class="glass-button"
@@ -118,6 +141,12 @@ const isActive = (href: string) =>
           document.documentElement.dataset.theme = next;
           try {
             localStorage.setItem("bca:theme", next);
+            const raw = localStorage.getItem("bca:prefs:v1");
+            const p = raw ? JSON.parse(raw) : {};
+            localStorage.setItem(
+              "bca:prefs:v1",
+              JSON.stringify({ ...p, version: 1, theme: next }),
+            );
           } catch {}
           paint();
           setTimeout(

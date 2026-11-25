@@ -10,6 +10,7 @@ import { useAsyncState } from "@/features/widgets/hooks";
 import { resolveAsync } from "@/features/widgets/common";
 import { EChart, baseChartOption } from "@/lib/charts/EChart";
 import { formatPercent } from "@/lib/format";
+import { getPortfolioCurrency } from "@/lib/prefs";
 
 const CURRENCIES = ["CHF", "USD", "EUR", "GBP"];
 const REBALANCES = ["annual", "quarterly", "monthly", "none"];
@@ -191,7 +192,7 @@ export function StrategyLab() {
     start: "2000-01-01",
     end: new Date().toISOString().slice(0, 10),
     initial_capital: 100_000,
-    base_currency: "CHF",
+    base_currency: getPortfolioCurrency(),
     rebalance: "annual",
     cost_bps: 10,
     slippage_bps: 5,

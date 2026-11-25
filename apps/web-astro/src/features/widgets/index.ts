@@ -29,9 +29,11 @@ import {
   CoverageMatrixWidget,
 } from "./StatusWidgets";
 import { UnavailableWidget } from "./UnavailableWidget";
+import { HistoricalValidationWidget } from "./HistoricalValidationWidget";
 import { UncertaintyBandWidget } from "./UncertaintyBand";
 import { INDICATOR_META } from "./indicatorMeta";
 import { INITIAL_COUNTRIES, FORCES } from "@big-cycle-atlas/shared";
+import { getDefaultCountry } from "@/lib/prefs";
 
 const COUNTRY_OPTIONS = INITIAL_COUNTRIES.map((c) => ({
   value: c.iso3,
@@ -51,7 +53,7 @@ const countryField: ConfigField = {
   key: "country",
   label: "Country",
   type: "country",
-  default: "USA",
+  default: getDefaultCountry(),
   options: COUNTRY_OPTIONS,
 };
 
@@ -578,4 +580,20 @@ registerWidget({
   dataRequirement: "GET /api/countries/{iso3}/forces/{force}/history",
   configVersion: 1,
   component: ForceHistoryWidget,
+});
+
+/* Mission 6 §8 — historical validation widget */
+registerWidget({
+  typeId: "historical-validation",
+  displayName: "Historical validation",
+  description:
+    "Availability evidence per country: strict eligibility, provider publication and atlas retrieval evidence, missing evidence, latest period.",
+  category: "research",
+  defaultSize: { w: 5, h: 4 },
+  minSize: { w: 4, h: 3 },
+  configFields: [countryField, titleField],
+  dataRequirement:
+    "GET /api/research/countries/{iso3}/availability + /api/research/execution-modes",
+  configVersion: 1,
+  component: HistoricalValidationWidget,
 });

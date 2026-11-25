@@ -15,6 +15,7 @@ import type {
 import { useAsyncState } from "@/features/widgets/hooks";
 import { resolveAsync } from "@/features/widgets/common";
 import { formatPercent } from "@/lib/format";
+import { getPortfolioCurrency } from "@/lib/prefs";
 
 const CCY = ["CHF", "USD", "EUR", "GBP"];
 
@@ -296,7 +297,7 @@ export function PortfolioPanel() {
   );
   const [selected, setSelected] = useState<number | null>(null);
   const [name, setName] = useState("Paper portfolio");
-  const [ccy, setCcy] = useState("CHF");
+  const [ccy, setCcy] = useState(getPortfolioCurrency());
   const [capital, setCapital] = useState("100000");
   const [msg, setMsg] = useState<string | null>(null);
 

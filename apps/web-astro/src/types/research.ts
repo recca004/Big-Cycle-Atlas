@@ -113,6 +113,8 @@ export interface IndicatorAvailability {
   earliest_period: string | null;
   latest_period: string | null;
   with_release_evidence: number;
+  with_retrieval_evidence: number;
+  first_observed_at: string | null;
   max_vintage: number;
   strict_eligible: boolean;
 }

@@ -46,6 +46,16 @@ body {
   }
 }
 
+/* Explicit user choice (settings page) — same suppression as the media query. */
+:root[data-motion="reduced"] *,
+:root[data-motion="reduced"] *::before,
+:root[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
 /* High-contrast support: strengthen borders/text contrast. */
 @media (prefers-contrast: more) {
   :root {

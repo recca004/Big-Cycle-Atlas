@@ -1,15 +1,17 @@
 {
   "name": "big-cycle-atlas",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w apps/web",
-    "build": "npm run build -w apps/web",
-    "lint": "npm run lint -w apps/web",
-    "test": "npm run test -w apps/web"
+    "dev": "npm run dev -w apps/web-astro",
+    "build": "npm run build -w apps/web-astro",
+    "preview": "npm run preview -w apps/web-astro",
+    "check": "npm run check -w apps/web-astro",
+    "test": "npm run test -w apps/web-astro",
+    "test:e2e": "npm run test:e2e -w apps/web-astro"
   }
 }

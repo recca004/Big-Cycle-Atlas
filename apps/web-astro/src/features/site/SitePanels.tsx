@@ -10,6 +10,13 @@ import {
   useForceCoverage,
 } from "@/features/widgets/hooks";
 import { formatDate } from "@/lib/format";
+import { INITIAL_COUNTRIES } from "@big-cycle-atlas/shared";
+import {
+  loadPrefs,
+  savePrefs,
+  resetPrefs,
+  type Prefs,
+} from "@/lib/prefs";
 import { EChart } from "@/lib/charts/EChart";
 import { AddToWorkspace } from "@/features/workspace/AddToWorkspace";
 import { indicatorLabel } from "@/features/widgets/indicatorMeta";
@@ -453,22 +460,8 @@ export function ProgressPanel() {
 /* ---------- /settings ---------- */
 
 export function SettingsPanel() {
-  const [theme, setTheme] = useState<string>("dark");
-
-  useEffect(() => {
-    const current = document.documentElement.dataset.theme;
-    if (current && current !== theme) setTheme(current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    try {
-      localStorage.setItem("bca-theme", theme);
-    } catch {
-      /* private mode */
-    }
-  }, [theme]);
+  const [prefs, setPrefs] = useState<Prefs>(() => loadPrefs());
+  const update = (next: Partial<Prefs>) => setPrefs(savePrefs(next));
 
   return (
     <div className="section-stack">
@@ -477,22 +470,135 @@ export function SettingsPanel() {
         <div className="settings-row">
           <span>Theme</span>
           <span className="pill-row">
-            {(["dark", "light"] as const).map((t) => (
+            {(["system", "dark", "light"] as const).map((t) => (
               <button
                 key={t}
                 type="button"
-                className={`glass-button ${theme === t ? "btn-active" : ""}`}
-                onClick={() => setTheme(t)}
-                aria-pressed={theme === t}
+                className={`glass-button ${prefs.theme === t ? "btn-active" : ""}`}
+                onClick={() => update({ theme: t })}
+                aria-pressed={prefs.theme === t}
               >
                 {t.charAt(0).toUpperCase() + t.slice(1)}
               </button>
             ))}
           </span>
         </div>
+        <div className="settings-row">
+          <span>Reduced motion</span>
+          <button
+            type="button"
+            className={`glass-button ${prefs.reducedMotion ? "btn-active" : ""}`}
+            onClick={() => update({ reducedMotion: !prefs.reducedMotion })}
+            aria-pressed={prefs.reducedMotion}
+          >
+            {prefs.reducedMotion ? "On" : "Off"}
+          </button>
+        </div>
+        <div className="settings-row">
+          <span>Reduced transparency</span>
+          <button
+            type="button"
+            className={`glass-button ${prefs.reducedTransparency ? "btn-active" : ""}`}
+            onClick={() => update({ reducedTransparency: !prefs.reducedTransparency })}
+            aria-pressed={prefs.reducedTransparency}
+          >
+            {prefs.reducedTransparency ? "On" : "Off"}
+          </button>
+        </div>
       </div>
+
+      <div className="glass settings-section">
+        <h2 className="headline-sm panel-title">Defaults</h2>
+        <div className="settings-row">
+          <label htmlFor="pref-country">Default country</label>
+          <select
+            id="pref-country"
+            className="config-select"
+            value={prefs.defaultCountry}
+            onChange={(e) => update({ defaultCountry: e.target.value })}
+          >
+            {INITIAL_COUNTRIES.map((c) => (
+              <option key={c.iso3} value={c.iso3}>
+                {c.iso3} — {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="settings-row">
+          <label htmlFor="pref-range">Default date range</label>
+          <select
+            id="pref-range"
+            className="config-select"
+            value={prefs.defaultDateRange}
+            onChange={(e) =>
+              update({ defaultDateRange: e.target.value as Prefs["defaultDateRange"] })
+            }
+          >
+            <option value="5y">Last 5 years</option>
+            <option value="10y">Last 10 years</option>
+            <option value="25y">Since 2000</option>
+            <option value="max">All available</option>
+          </select>
+        </div>
+        <div className="settings-row">
+          <label htmlFor="pref-ws">Default workspace</label>
+          <select
+            id="pref-ws"
+            className="config-select"
+            value={prefs.defaultWorkspace ?? ""}
+            onChange={(e) => update({ defaultWorkspace: e.target.value || null })}
+          >
+            <option value="">Last used</option>
+            <WorkspaceOptions />
+          </select>
+        </div>
+        <div className="settings-row">
+          <label htmlFor="pref-ccy">Portfolio base currency</label>
+          <select
+            id="pref-ccy"
+            className="config-select"
+            value={prefs.portfolioCurrency}
+            onChange={(e) => update({ portfolioCurrency: e.target.value })}
+          >
+            {["CHF", "USD", "EUR", "GBP", "JPY", "CNY", "INR"].map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
+        <div className="settings-row">
+          <label htmlFor="pref-num">Number format</label>
+          <select
+            id="pref-num"
+            className="config-select"
+            value={prefs.numberFormat}
+            onChange={(e) =>
+              update({ numberFormat: e.target.value as Prefs["numberFormat"] })
+            }
+          >
+            <option value="en-US">1,234.56 (US)</option>
+            <option value="de-CH">1’234.56 (Swiss)</option>
+            <option value="en-GB">1,234.56 (UK)</option>
+          </select>
+        </div>
+      </div>
+
       <div className="glass settings-section">
         <h2 className="headline-sm panel-title">Local data</h2>
+        <div className="settings-row">
+          <span>Preferences</span>
+          <button
+            type="button"
+            className="glass-button"
+            onClick={() => {
+              if (confirm("Reset all local preferences to defaults?")) {
+                resetPrefs();
+                setPrefs(loadPrefs());
+              }
+            }}
+          >
+            Reset preferences
+          </button>
+        </div>
         <div className="settings-row">
           <span>Workspace layouts</span>
           <button
@@ -500,7 +606,7 @@ export function SettingsPanel() {
             className="glass-button widget-btn-danger"
             onClick={() => {
               if (confirm("Delete all saved workspaces and layouts?")) {
-                localStorage.removeItem("bca-workspaces");
+                localStorage.removeItem("bca:workspaces:v1");
                 location.reload();
               }
             }}
@@ -510,6 +616,30 @@ export function SettingsPanel() {
         </div>
       </div>
     </div>
+  );
+}
+
+/** Options for the default-workspace select, from the persisted store. */
+function WorkspaceOptions() {
+  const [names, setNames] = useState<string[]>([]);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("bca:workspaces:v1");
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      const order: string[] = parsed?.state?.order ?? [];
+      const ws = parsed?.state?.workspaces ?? {};
+      setNames(order.map((id) => ws[id]?.name ?? id));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  return (
+    <>
+      {names.map((n) => (
+        <option key={n} value={n}>{n}</option>
+      ))}
+    </>
   );
 }
 

@@ -12,6 +12,7 @@ import type {
 import { EChart } from "@/lib/charts/EChart";
 import { cycleHistoryOption } from "@/lib/charts/cycleChart";
 import { Badge, COUNTRIES, useFetch } from "@/lib/ui/shared";
+import { AddToWorkspace } from "@/features/workspace/AddToWorkspace";
 
 const START_YEARS = [1996, 2000, 2005, 2010, 2015];
 
@@ -127,6 +128,8 @@ export function CycleExplorer() {
           Experimental cycle history — {iso3}{" "}
           <Badge tone="warn">retrospective</Badge>
         </h2>
+        <AddToWorkspace typeId="cycle-history"
+          config={{ country: iso3, model, startYear }} />
         {history.kind === "loading" && <p className="body-sm">Loading…</p>}
         {history.kind === "error" && (
           <p className="body-sm">Unavailable: {history.error}</p>

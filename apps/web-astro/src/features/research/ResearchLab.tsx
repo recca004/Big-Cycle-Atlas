@@ -16,6 +16,7 @@ import type {
   ResearchProgress,
 } from "@/types/research";
 import { EChart, baseChartOption } from "@/lib/charts/EChart";
+import { AddToWorkspace } from "@/features/workspace/AddToWorkspace";
 import type { EChartsOption } from "echarts";
 
 const COUNTRIES = ["USA", "CHN", "JPN", "DEU", "FRA", "GBR", "CHE", "IND"];
@@ -224,6 +225,8 @@ export function ResearchLab() {
         <h2 className="headline-sm panel-title">
           Experimental cycle history — {iso3}
         </h2>
+        <AddToWorkspace typeId="cycle-history"
+          config={{ country: iso3, model, startYear: 2000 }} />
         {history.kind === "ready" && historyOption ? (
           <>
             <EChart option={historyOption} style={{ height: 320 }}
@@ -248,6 +251,8 @@ export function ResearchLab() {
       {/* Force history explorer */}
       <div className="glass">
         <h2 className="headline-sm panel-title">Force history explorer</h2>
+        <AddToWorkspace typeId="force-history"
+          config={{ country: iso3, force, startYear: 1996 }} />
         <label>
           Force{" "}
           <select className="config-select" value={force}

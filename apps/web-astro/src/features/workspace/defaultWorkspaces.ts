@@ -19,7 +19,7 @@ function w(
 ): { widget: WidgetInstance; item: StoredLayoutItem } {
   const id = uid();
   return {
-    widget: { id, type, config, collapsed: false },
+    widget: { id, type, config, collapsed: false, locked: false },
     item: { i: id, ...lg },
   };
 }
@@ -47,6 +47,7 @@ function build(
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     builtin: true,
+    filters: { country: null, countries: [], startYear: null, methodScope: "both" },
   };
 }
 

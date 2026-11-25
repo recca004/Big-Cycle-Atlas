@@ -77,6 +77,10 @@ export interface WorkspaceState {
   workspaces: Workspace[];
   activeWorkspaceId: string | null;
   editMode: boolean;
+  /** Layout-history stacks (not persisted). Entries snapshot the affected
+   *  workspace BEFORE a mutating action so undo restores exactly. */
+  _past: { workspaceId: string; snapshot: Workspace }[];
+  _future: { workspaceId: string; snapshot: Workspace }[];
 
   setActiveWorkspace: (id: string) => void;
   toggleEditMode: () => void;
@@ -93,7 +97,11 @@ export interface WorkspaceState {
     layouts: Partial<Record<GridBreakpoint, StoredLayoutItem[]>>,
   ) => void;
 
-  addWidget: (workspaceId: string, typeId: string) => void;
+  addWidget: (
+    workspaceId: string,
+    typeId: string,
+    config?: Record<string, unknown>,
+  ) => void;
   removeWidget: (workspaceId: string, instanceId: string) => void;
   duplicateWidget: (workspaceId: string, instanceId: string) => void;
   toggleCollapsed: (workspaceId: string, instanceId: string) => void;
@@ -108,6 +116,18 @@ export interface WorkspaceState {
     dx: number,
     dy: number,
   ) => void;
+  toggleLocked: (workspaceId: string, instanceId: string) => void;
+  setFilters: (
+    workspaceId: string,
+    filters: Partial<Workspace["filters"]>,
+  ) => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+  /** Record the pre-mutation snapshot — call inside every widget/layout
+   *  mutation. Cheap (reference copy); capped at 50. */
+  _record: (workspaceId: string) => void;
 
   exportWorkspace: (id: string) => string | null;
   importWorkspace: (json: string) => { ok: boolean; error?: string | undefined };
@@ -123,6 +143,9 @@ function freshWorkspace(name: string, builtin = false): Workspace {
     createdAt: now(),
     updatedAt: now(),
     builtin,
+    filters: {
+      country: null, countries: [], startYear: null, methodScope: "both",
+    },
   };
 }
 
@@ -142,6 +165,80 @@ export const useWorkspaceStore = create<WorkspaceState>()(
     (set, get) => ({
       ...initialState(),
       editMode: false,
+      _past: [],
+      _future: [],
+
+      _record: (workspaceId) =>
+        set((s) => {
+          const ws = s.workspaces.find((w) => w.id === workspaceId);
+          if (!ws) return s;
+          return {
+            _past: [...s._past.slice(-49),
+                    { workspaceId, snapshot: ws }],
+            _future: [],
+          };
+        }),
+
+      undo: () =>
+        set((s) => {
+          const last = s._past.at(-1);
+          if (!last) return s;
+          const current = s.workspaces.find(
+            (w) => w.id === last.workspaceId);
+          if (!current) return { _past: s._past.slice(0, -1) };
+          return {
+            workspaces: s.workspaces.map((w) =>
+              w.id === last.workspaceId
+                ? { ...last.snapshot, updatedAt: now() } : w),
+            _past: s._past.slice(0, -1),
+            _future: [...s._future,
+                      { workspaceId: last.workspaceId, snapshot: current }],
+          };
+        }),
+
+      redo: () =>
+        set((s) => {
+          const next = s._future.at(-1);
+          if (!next) return s;
+          const current = s.workspaces.find(
+            (w) => w.id === next.workspaceId);
+          if (!current) return { _future: s._future.slice(0, -1) };
+          return {
+            workspaces: s.workspaces.map((w) =>
+              w.id === next.workspaceId
+                ? { ...next.snapshot, updatedAt: now() } : w),
+            _future: s._future.slice(0, -1),
+            _past: [...s._past,
+                    { workspaceId: next.workspaceId, snapshot: current }],
+          };
+        }),
+
+      canUndo: () => get()._past.length > 0,
+      canRedo: () => get()._future.length > 0,
+
+      toggleLocked: (workspaceId, instanceId) => {
+        const ws = get().workspaces.find((w) => w.id === workspaceId);
+        const wdg = ws?.widgets.find((w) => w.id === instanceId);
+        if (!wdg) return;
+        get()._record(workspaceId);
+        set((s) => ({
+          workspaces: s.workspaces.map((w) =>
+            w.id !== workspaceId ? w : {
+              ...w, updatedAt: now(),
+              widgets: w.widgets.map((x) =>
+                x.id === instanceId ? { ...x, locked: !x.locked } : x),
+            }),
+        }));
+      },
+
+      setFilters: (workspaceId, filters) =>
+        set((s) => ({
+          workspaces: s.workspaces.map((w) =>
+            w.id !== workspaceId ? w : {
+              ...w, updatedAt: now(),
+              filters: { ...w.filters, ...filters },
+            }),
+        })),
 
       setActiveWorkspace: (id) =>
         set({ activeWorkspaceId: id, editMode: false }),
@@ -201,7 +298,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           };
         }),
 
-      resetWorkspace: (id) =>
+      resetWorkspace: (id) => {
+        get()._record(id);
         set((s) => {
           const idx = s.workspaces.findIndex((w) => w.id === id);
           if (idx === -1) return s;
@@ -216,9 +314,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           const workspaces = [...s.workspaces];
           workspaces[idx] = reset;
           return { workspaces };
-        }),
+        });
+      },
 
-      setLayouts: (workspaceId, layouts) =>
+      setLayouts: (workspaceId, layouts) => {
+        get()._record(workspaceId);
         set((s) => ({
           workspaces: s.workspaces.map((w) =>
             w.id === workspaceId
@@ -229,9 +329,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
                 }
               : w,
           ),
-        })),
+        }));
+      },
 
-      addWidget: (workspaceId, typeId) =>
+      addWidget: (workspaceId, typeId, config) => {
+        get()._record(workspaceId);
         set((s) => {
           const def = getWidget(typeId);
           if (!def) return s;
@@ -247,12 +349,21 @@ export const useWorkspaceStore = create<WorkspaceState>()(
               const instance: WidgetInstance = {
                 id,
                 type: typeId,
-                config: Object.fromEntries(
-                  def.configFields
-                    .filter((f) => f.default !== undefined)
-                    .map((f) => [f.key, f.default]),
-                ),
+                config: {
+                  ...Object.fromEntries(
+                    def.configFields
+                      .filter((f) => f.default !== undefined)
+                      .map((f) => [f.key, f.default]),
+                  ),
+                  // Add-to-Workspace passes the chart's live configuration;
+                  // only keys declared by the widget's schema are kept.
+                  ...Object.fromEntries(
+                    Object.entries(config ?? {}).filter(([k]) =>
+                      def.configFields.some((f) => f.key === k)),
+                  ),
+                },
                 collapsed: false,
+                locked: false,
               };
               const lg = [
                 ...w.layouts.lg,
@@ -275,9 +386,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
               };
             }),
           };
-        }),
+        });
+      },
 
-      removeWidget: (workspaceId, instanceId) =>
+      removeWidget: (workspaceId, instanceId) => {
+        get()._record(workspaceId);
         set((s) => ({
           workspaces: s.workspaces.map((w) => {
             if (w.id !== workspaceId) return w;
@@ -292,9 +405,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
               updatedAt: now(),
             };
           }),
-        })),
+        }));
+      },
 
-      duplicateWidget: (workspaceId, instanceId) =>
+      duplicateWidget: (workspaceId, instanceId) => {
+        get()._record(workspaceId);
         set((s) => ({
           workspaces: s.workspaces.map((w) => {
             if (w.id !== workspaceId) return w;
@@ -315,9 +430,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
               updatedAt: now(),
             };
           }),
-        })),
+        }));
+      },
 
-      toggleCollapsed: (workspaceId, instanceId) =>
+      toggleCollapsed: (workspaceId, instanceId) => {
+        get()._record(workspaceId);
         set((s) => ({
           workspaces: s.workspaces.map((w) =>
             w.id === workspaceId
@@ -332,9 +449,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
                 }
               : w,
           ),
-        })),
+        }));
+      },
 
-      updateWidgetConfig: (workspaceId, instanceId, config) =>
+      updateWidgetConfig: (workspaceId, instanceId, config) => {
+        get()._record(workspaceId);
         set((s) => ({
           workspaces: s.workspaces.map((w) =>
             w.id === workspaceId
@@ -349,9 +468,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
                 }
               : w,
           ),
-        })),
+        }));
+      },
 
-      moveWidgetKeyboard: (workspaceId, instanceId, dx, dy) =>
+      moveWidgetKeyboard: (workspaceId, instanceId, dx, dy) => {
+        get()._record(workspaceId);
         set((s) => ({
           workspaces: s.workspaces.map((w) => {
             if (w.id !== workspaceId) return w;
@@ -366,7 +487,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
             );
             return { ...w, layouts: deriveLayouts(w.widgets, lg), updatedAt: now() };
           }),
-        })),
+        }));
+      },
 
       exportWorkspace: (id) => {
         const ws = get().workspaces.find((w) => w.id === id);

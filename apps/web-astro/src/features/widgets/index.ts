@@ -2,6 +2,10 @@
  *  a workspace or the widget library. */
 
 import {
+  CycleHistoryWidget,
+  ForceHistoryWidget,
+} from "./ResearchWidgets";
+import {
   registerWidget,
   type WidgetDefinition,
   type ConfigField,
@@ -506,4 +510,53 @@ registerWidget({
   dataRequirement: "static metadata synced with force_aggregation_definitions.py",
   configVersion: 1,
   component: ResearchProgressWidget,
+});
+
+/* Mission 3 §11 — research widgets */
+
+const modelField: ConfigField = {
+  key: "model",
+  label: "Composite model",
+  type: "text",
+  default: "model_b_domain",
+};
+const startYearField: ConfigField = {
+  key: "startYear",
+  label: "Start year",
+  type: "number",
+  default: 2000,
+  min: 1996,
+  max: 2100,
+};
+
+registerWidget({
+  typeId: "cycle-history",
+  displayName: "Big Cycle history (experimental)",
+  description:
+    "Experimental composite conditions + stage markers from the research API. Retrospective; backtest_safe=false.",
+  category: "research",
+  defaultSize: { w: 8, h: 4 },
+  minSize: { w: 5, h: 3 },
+  configFields: [{ ...countryField }, modelField, startYearField, titleField],
+  dataRequirement: "GET /api/research/countries/{iso3}/cycle/history",
+  configVersion: 1,
+  component: CycleHistoryWidget,
+});
+registerWidget({
+  typeId: "force-history",
+  displayName: "Force history",
+  description:
+    "Historical force level / relative / momentum dimensions — retrospective latest-vintage view.",
+  category: "research",
+  defaultSize: { w: 6, h: 4 },
+  minSize: { w: 4, h: 3 },
+  configFields: [
+    { ...countryField },
+    { ...forceField },
+    { ...startYearField, default: 1996 },
+    titleField,
+  ],
+  dataRequirement: "GET /api/countries/{iso3}/forces/{force}/history",
+  configVersion: 1,
+  component: ForceHistoryWidget,
 });

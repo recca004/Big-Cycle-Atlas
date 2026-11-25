@@ -11,6 +11,8 @@ import {
   MoveDown,
   MoveLeft,
   MoveRight,
+  Lock,
+  Unlock,
 } from "lucide-react";
 import { getWidget } from "./widgetRegistry";
 import type { WidgetInstance } from "./types";
@@ -32,6 +34,7 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
   const toggleCollapsed = useWorkspaceStore((s) => s.toggleCollapsed);
   const updateWidgetConfig = useWorkspaceStore((s) => s.updateWidgetConfig);
   const moveWidgetKeyboard = useWorkspaceStore((s) => s.moveWidgetKeyboard);
+  const toggleLocked = useWorkspaceStore((s) => s.toggleLocked);
 
   const title =
     (instance.config.title as string) || def?.displayName || instance.type;
@@ -39,7 +42,7 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
   const body = (
     <>
       <header className="widget-header">
-        {editMode && (
+        {editMode && !instance.locked && (
           <span className="widget-drag-handle" title="Drag to move">
             <GripVertical size={14} aria-hidden="true" />
           </span>
@@ -50,6 +53,17 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
         <span className="widget-controls">
           {editMode && (
             <>
+              <button
+                type="button"
+                className={`widget-btn ${instance.locked ? "widget-btn-active" : ""}`}
+                title={instance.locked ? "Unlock widget" : "Lock widget"}
+                aria-label={`${instance.locked ? "Unlock" : "Lock"} ${title}`}
+                aria-pressed={instance.locked}
+                onClick={() => toggleLocked(workspaceId, instance.id)}
+              >
+                {instance.locked ? <Unlock size={14} /> : <Lock size={14} />}
+              </button>
+              {!instance.locked && (
               <span className="move-cluster" role="group" aria-label={`Move ${title} with keyboard controls`}>
                 <button
                   type="button"
@@ -88,6 +102,7 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
                   <MoveDown size={12} />
                 </button>
               </span>
+              )}
               {def && def.configFields.length > 0 && (
                 <button
                   type="button"

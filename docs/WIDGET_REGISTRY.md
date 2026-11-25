@@ -1,6 +1,6 @@
 # Widget Registry
 
-Generated from `src/features/widgets/index.ts` — 51 registered widget types.
+Generated from `src/features/widgets/index.ts` — 53 registered widget types.
 
 | ID | Name | Category | Default | Min | Data requirement |
 |---|---|---|---|---|---|
@@ -55,6 +55,8 @@ Generated from `src/features/widgets/index.ts` — 51 registered widget types.
 | `api-status` | API status | research | 3×2 | 2×2 | GET /health |
 | `model-version` | Model version | research | 3×3 | 2×2 | static metadata |
 | `research-progress` | Research completion | research | 5×5 | 4×3 | static metadata synced with force_aggregation_definitions.py |
+| `cycle-history` | Big Cycle history (experimental) | research | 8×4 | 5×3 | GET /api/research/countries/{iso3}/cycle/history |
+| `force-history` | Force history | research | 6×4 | 4×3 | GET /api/countries/{iso3}/forces/{force}/history |
 
 ## Config fields per widget
 
@@ -439,4 +441,22 @@ Active normalization and force-aggregation versions.
 
 Per-force implementation status across all 17 forces.
 
+- `title` (text)
+
+### `cycle-history` — Big Cycle history (experimental)
+
+Experimental composite conditions + stage markers from the research API. Retrospective; backtest_safe=false.
+
+- `country` (country) — default `"USA"`
+- `model` (text) — default `"model_b_domain"`
+- `startYear` (number) — default `2000`
+- `title` (text)
+
+### `force-history` — Force history
+
+Historical force level / relative / momentum dimensions — retrospective latest-vintage view.
+
+- `country` (country) — default `"USA"`
+- `force` (force) — default `"rule_of_law"`
+- `startYear` (number) — default `1996`
 - `title` (text)

@@ -11,6 +11,8 @@ import {
   Download,
   LayoutGrid,
   Pencil,
+  Undo2,
+  Redo2,
   Plus,
   RotateCcw,
   Upload,
@@ -59,6 +61,11 @@ export function WorkspaceApp() {
   const resetWorkspace = useWorkspaceStore((s) => s.resetWorkspace);
   const exportWorkspace = useWorkspaceStore((s) => s.exportWorkspace);
   const importWorkspace = useWorkspaceStore((s) => s.importWorkspace);
+  const undo = useWorkspaceStore((s) => s.undo);
+  const redo = useWorkspaceStore((s) => s.redo);
+  const setFilters = useWorkspaceStore((s) => s.setFilters);
+  const canUndo = useWorkspaceStore((s) => s._past.length > 0);
+  const canRedo = useWorkspaceStore((s) => s._future.length > 0);
 
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
@@ -153,6 +160,26 @@ export function WorkspaceApp() {
           >
             <Pencil size={14} aria-hidden="true" />
             <span className="btn-label">{editMode ? "Done" : "Edit"}</span>
+          </button>
+          <button
+            type="button"
+            className="glass-button"
+            onClick={undo}
+            disabled={!canUndo}
+            title="Undo layout change"
+            aria-label="Undo layout change"
+          >
+            <Undo2 size={14} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="glass-button"
+            onClick={redo}
+            disabled={!canRedo}
+            title="Redo layout change"
+            aria-label="Redo layout change"
+          >
+            <Redo2 size={14} aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -269,6 +296,44 @@ export function WorkspaceApp() {
         </div>
       )}
 
+      <div className="workspace-filters" role="group" aria-label="Workspace filters">
+        <label className="body-sm">
+          Country{" "}
+          <select
+            className="config-select"
+            value={ws.filters.country ?? ""}
+            onChange={(e) =>
+              setFilters(ws.id, { country: e.target.value || null })
+            }
+          >
+            <option value="">All</option>
+            {["USA","CHN","JPN","DEU","FRA","GBR","CHE","IND"].map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
+        </label>
+        <label className="body-sm">
+          From{" "}
+          <select
+            className="config-select"
+            value={ws.filters.startYear ?? ""}
+            onChange={(e) =>
+              setFilters(ws.id, {
+                startYear: e.target.value ? Number(e.target.value) : null,
+              })
+            }
+          >
+            <option value="">Default</option>
+            {[1996, 2000, 2005, 2010, 2015, 2020].map((y) => (
+              <option key={y}>{y}</option>
+            ))}
+          </select>
+        </label>
+        <span className="body-sm text-tertiary">
+          Widgets inherit these filters unless overridden in their settings.
+        </span>
+      </div>
+
       {libraryOpen && (
         <div className="glass ws-library">
           <div className="ws-library-head">
@@ -328,7 +393,8 @@ export function WorkspaceApp() {
             onLayoutChange={onLayoutChange}
           >
             {ws.widgets.map((instance) => (
-              <div key={instance.id} className="grid-cell">
+              <div key={instance.id} className="grid-cell"
+                   data-grid={instance.locked ? { static: true } : undefined}>
                 <WidgetFrame
                   workspaceId={ws.id}
                   instance={instance}

@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_session
 from app.core.config import get_settings
+from app.cycle.execution_modes import parse_execution_spec
 from app.cycle.force_definitions import FORCE_DEFINITIONS
 from app.cycle.normalization_definitions import ScoringPeriod
 from app.research.composite import COMPOSITE_MODELS
@@ -118,6 +119,15 @@ async def list_models():
 async def country_cycle(
     iso3: str,
     model: str = Query("model_b_domain"),
+    execution_mode: Optional[str] = Query(
+        None,
+        description=(
+            "Information-selection mode: retrospective_latest_vintage "
+            "(default), strict_as_of or research_assumption. "
+            "Strict/assumption require info_cutoff."
+        ),
+    ),
+    info_cutoff: Optional[date] = Query(None),
     session: AsyncSession = Depends(get_session),
 ):
     country = await country_service.get_country(session, iso3)
@@ -125,12 +135,21 @@ async def country_cycle(
         raise HTTPException(404, f"Country {iso3!r} not found")
     if model not in COMPOSITE_MODELS:
         raise HTTPException(422, f"unknown model {model!r}")
+    try:
+        execution = parse_execution_spec(execution_mode, info_cutoff)
+    except ValueError as exc:
+        raise HTTPException(422, detail=str(exc))
     period = _latest_completed_scoring_period()
     result = await research_service.composite_at(
-        session, country.iso3, period, model
+        session, country.iso3, period, model, execution=execution
     )
     return {
         "methodology_status": "experimental",
+        "execution_mode": result.execution_mode,
+        "info_cutoff": (
+            execution.info_cutoff.isoformat()
+            if execution.info_cutoff else None
+        ),
         "composite": {
             "model_id": result.model_id,
             "model_version": result.model_version,
@@ -144,7 +163,7 @@ async def country_cycle(
             "limitations": list(result.limitations),
         },
         "period": result.scoring_period,
-        "backtest_safe": False,
+        "backtest_safe": result.backtest_safe,
     }
 
 
@@ -154,6 +173,15 @@ async def country_cycle_history(
     model: str = Query("model_b_domain"),
     start_year: int = Query(2000, ge=1990, le=2200),
     end_year: Optional[int] = Query(None, ge=1990, le=2200),
+    execution_mode: Optional[str] = Query(
+        None,
+        description=(
+            "Information-selection mode: retrospective_latest_vintage "
+            "(default), strict_as_of or research_assumption. "
+            "Strict/assumption require info_cutoff."
+        ),
+    ),
+    info_cutoff: Optional[date] = Query(None),
     session: AsyncSession = Depends(get_session),
 ):
     country = await country_service.get_country(session, iso3)
@@ -161,6 +189,10 @@ async def country_cycle_history(
         raise HTTPException(404, f"Country {iso3!r} not found")
     if model not in COMPOSITE_MODELS:
         raise HTTPException(422, f"unknown model {model!r}")
+    try:
+        execution = parse_execution_spec(execution_mode, info_cutoff)
+    except ValueError as exc:
+        raise HTTPException(422, detail=str(exc))
     latest = _latest_completed_scoring_period()
     end_year = end_year or latest.year
     if end_year < start_year:
@@ -168,11 +200,17 @@ async def country_cycle_history(
     if (end_year - start_year) > 40:
         raise HTTPException(422, "range too large (max 40 years)")
     result = await research_service.cycle_history(
-        session, country.iso3, model, start_year, end_year, latest
+        session, country.iso3, model, start_year, end_year, latest,
+        execution=execution,
     )
     return {
         "methodology_status": "experimental",
         "retrospective": True,
+        "execution_mode": result.execution_mode,
+        "info_cutoff": (
+            execution.info_cutoff.isoformat()
+            if execution.info_cutoff else None
+        ),
         "model": model,
         "engine_version": result.model_version,
         "country_iso3": result.country_iso3,
@@ -190,7 +228,7 @@ async def country_cycle_history(
         ],
         "transitions": list(result.transitions),
         "warnings": list(result.warnings),
-        "backtest_safe": False,
+        "backtest_safe": result.backtest_safe,
     }
 
 

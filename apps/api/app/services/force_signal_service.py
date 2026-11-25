@@ -58,6 +58,7 @@ from app.cycle.force_aggregation_definitions import (
     ForceAggregationSpec,
     ForceIndicatorRole,
 )
+from app.cycle.execution_modes import ExecutionSpec
 from app.cycle.force_definitions import FORCE_DEFINITIONS, ForceCoverageStatus
 from app.cycle.force_signal import ForceSignal, aggregate_force_from_signals
 from app.cycle.normalization_definitions import NormalizedSignal, ScoringPeriod
@@ -70,6 +71,7 @@ async def build_force_signals_as_of(
     session: AsyncSession,
     country_iso3: str,
     scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
 ) -> tuple[ForceSignal, ...]:
     """Build exactly 17 ForceSignals for one country as of a scoring period.
 
@@ -126,6 +128,7 @@ async def build_force_signals_as_of(
                 country_iso3=country_iso3,
                 indicator_code=comp.indicator_code,
                 scoring_period=scoring_period,
+                execution=execution,
             )
             component_signals[comp.indicator_code] = signal
 

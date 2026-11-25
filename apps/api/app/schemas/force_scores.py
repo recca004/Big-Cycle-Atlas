@@ -62,6 +62,10 @@ class ForceHistoryResponse(BaseModel):
     force_name: str
     retrospective: bool = True
     backtest_safe: bool = False
+    # How inputs were selected (Mission 4 §23): retrospective latest-vintage
+    # by default; strict_as_of / research_assumption only on explicit request.
+    execution_mode: str = "retrospective_latest_vintage"
+    info_cutoff: Optional[str] = None
     model_version: str
     points: list[ForceHistoryPoint]
 

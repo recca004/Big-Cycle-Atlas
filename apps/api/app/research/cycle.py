@@ -86,6 +86,8 @@ class CycleResult:
     coverage_ratio: float
     warnings: tuple[str, ...] = ()
     backtest_safe: bool = False
+    # Which information-selection mode produced the inputs (§23).
+    execution_mode: str = "retrospective_latest_vintage"
 
 
 def _raw_stage(score: float, momentum: float, cfg: CycleModelConfig) -> Stage:

@@ -65,6 +65,9 @@ class CompositeResult:
     warnings: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
     backtest_safe: bool = False
+    # Which information-selection mode produced the inputs (§23).
+    # Retrospective latest-vintage unless a strict/assumption spec ran.
+    execution_mode: str = "retrospective_latest_vintage"
 
 
 def _partition(

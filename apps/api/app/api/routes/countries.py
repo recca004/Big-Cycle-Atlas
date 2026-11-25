@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 
 from app.core.config import get_settings
+from app.cycle.execution_modes import ExecutionMode, parse_execution_spec
 from app.cycle.force_definitions import FORCE_DEFINITIONS
 from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION, ScoringPeriod
 from app.db.session import get_session
@@ -305,14 +306,37 @@ async def get_country_force_history(
     force_code: str,
     start_year: int = Query(1990, ge=1960, le=2200),
     end_year: Optional[int] = Query(None, ge=1960, le=2200),
+    execution_mode: Optional[str] = Query(
+        None,
+        description=(
+            "Information-selection mode: current_latest, "
+            "retrospective_latest_vintage (default), strict_as_of or "
+            "research_assumption. Strict/assumption require info_cutoff."
+        ),
+    ),
+    info_cutoff: Optional[date] = Query(
+        None,
+        description=(
+            "Information cutoff for strict_as_of / research_assumption — "
+            "only information published at/before this date is eligible."
+        ),
+    ),
     session: AsyncSession = Depends(get_session),
 ):
     """Retrospective force history at annual (Q4) scoring snapshots.
 
-    RETROSPECTIVE — each point uses latest stored vintages; not a
-    release-date-safe backtest (backtest_safe=False). Missing inputs at a
-    period produce nulls, never zeros.
+    RETROSPECTIVE by default — each point uses latest stored vintages; not
+    a release-date-safe backtest (backtest_safe=False). With
+    execution_mode=strict_as_of + info_cutoff, only observations with
+    verified provider release evidence published at/before the cutoff are
+    eligible; periods without eligible inputs return nulls with the same
+    shape — strict NEVER falls back to latest-vintage data. Missing inputs
+    at a period produce nulls, never zeros.
     """
+    try:
+        execution = parse_execution_spec(execution_mode, info_cutoff)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
     country = await country_service.get_country(session, iso3)
     if country is None:
         raise HTTPException(
@@ -335,7 +359,7 @@ async def get_country_force_history(
         if (scoring_period.year, scoring_period.quarter) > (latest.year, latest.quarter):
             break  # never score a future snapshot
         signals = await force_signal_service.build_force_signals_as_of(
-            session, country.iso3, scoring_period
+            session, country.iso3, scoring_period, execution=execution
         )
         s = next(f for f in signals if f.force_code == force_code)
         points.append(
@@ -358,6 +382,12 @@ async def get_country_force_history(
         country=country.iso3,
         force_code=force_code,
         force_name=_FORCE_NAMES[force_code],
+        retrospective=execution.mode is not ExecutionMode.CURRENT_LATEST,
+        execution_mode=execution.mode.value,
+        info_cutoff=(
+            execution.info_cutoff.isoformat()
+            if execution.info_cutoff else None
+        ),
         model_version=CURRENT_MODEL_VERSION.version_id,
         points=points,
     )

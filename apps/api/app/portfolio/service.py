@@ -7,11 +7,11 @@ are blocked by a unique idempotency key.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from dataclasses import dataclass
+from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.market import fx as fx_service
@@ -86,7 +86,6 @@ def _replay(
     realised = Decimal(0)
     for t in txns:
         qty = Decimal(str(t.quantity))
-        px = Decimal(str(t.price))
         fee = Decimal(str(t.fee))
         base_value = Decimal(str(t.base_value))
         if t.kind == "deposit":
@@ -261,7 +260,7 @@ async def valuation(session: AsyncSession, p: PaperPortfolio) -> dict:
             mv_base = None
             px_base = None
         else:
-            px_date, px = px_row
+            _px_date, px = px_row
             px_dec = Decimal(str(px))
             if inst.currency == p.base_currency:
                 px_base = px_dec

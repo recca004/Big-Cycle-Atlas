@@ -201,6 +201,8 @@ if ($Source) { $collectArgs += @("--source", $Source) }
 if ($Country) { $collectArgs += @("--country", $Country.ToUpperInvariant()) }
 if ($WidZip) { $collectArgs += @("--wid-zip", (Resolve-Path $WidZip).Path) }
 $marketArgs = @("scripts\ingest_markets.py", "--start", (Get-Date).AddDays(-$MarketLookbackDays).ToString("yyyy-MM-dd"))
+$wgiArgs = @("scripts\ingest_wgi_diagnostics.py")
+if ($Country) { $wgiArgs += @("--country", $Country.ToUpperInvariant()) } else { $wgiArgs += "--all-countries" }
 $refreshArgs = @("scripts\refresh_observatory.py", "--all-models")
 if ($mode -in @("daily", "full", "macro-only")) {
   $refreshArgs += @("--collection-summary", $collectionSummaryPath)
@@ -214,12 +216,12 @@ if ($WidZip) { $widArgs += (Resolve-Path $WidZip).Path }
 
 $steps = switch ($mode) {
   "daily" {
-    @("Provider snapshot collection", "Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff")
+    @("Provider snapshot collection", "Governance uncertainty diagnostics", "Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff")
   }
   "full" {
-    @("Provider snapshot collection", "Reference universes (WB + OECD)", "Incremental market update ($MarketLookbackDays days)", "WID local archive if supplied", "Observatory recalculation and snapshot diff")
+    @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes (WB + OECD)", "Incremental market update ($MarketLookbackDays days)", "WID local archive if supplied", "Observatory recalculation and snapshot diff")
   }
-  "macro-only" { @("Provider snapshot collection", "Observatory recalculation and snapshot diff") }
+  "macro-only" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Observatory recalculation and snapshot diff") }
   "markets-only" { @("Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff") }
   "references-only" { @("Reference universes (WB + OECD)", "Observatory recalculation and snapshot diff") }
   "recalculate-only" { @("Observatory recalculation and snapshot diff") }
@@ -245,6 +247,9 @@ try {
   try {
     if ($mode -in @("daily", "full", "macro-only")) {
       Invoke-Step "Provider snapshot collection" $collectArgs @(2) | Out-Null
+      if (-not $Source -or $Source -eq "world_bank") {
+        Invoke-Step "Governance uncertainty diagnostics" $wgiArgs @(1, 2) | Out-Null
+      }
       if (-not $WidZip -and ($mode -eq "full" -or $Source -eq "wid")) {
         $script:SkippedSteps.Add("WID (no local ZIP supplied)") | Out-Null
         Write-Run "SKIP   WID bulk provider — pass -WidZip to enable it" "Yellow"
@@ -254,7 +259,7 @@ try {
       foreach ($ref in $referenceSteps) { Invoke-Step $ref.Name $ref.Args @(2) | Out-Null }
     }
     if (($mode -in @("daily", "full", "markets-only")) -and -not $SkipMarkets) {
-      Invoke-Step "Financial market update" $marketArgs @(2) | Out-Null
+      Invoke-Step "Financial market update" $marketArgs @(1, 2) | Out-Null
     }
     if ($mode -eq "full" -and $WidZip) {
       Invoke-Step "WID local archive import" $widArgs @(2) | Out-Null

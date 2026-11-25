@@ -110,7 +110,8 @@ Update.bat -Help              :: command reference
 Optional filters: `-Source world_bank|bis|oecd|imf_weo|wid`, `-Country USA`,
 `-MarketLookbackDays 30`, and `-WidZip <local archive>`. WID is never
 auto-downloaded by the unified updater; pass a locally downloaded ZIP to opt in.
-All eight tracked countries are covered by default, immutable observation
+All eight tracked countries are covered by default. Macro-capable modes also
+refresh the auxiliary WGI uncertainty diagnostics. Immutable observation
 vintages are preserved, and provider failures are reported as partial success
 (exit `2`) instead of aborting independent sources. Exit `0` means complete
 success; exit `1` means a fatal configuration/database/lock failure.

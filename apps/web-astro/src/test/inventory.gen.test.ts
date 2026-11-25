@@ -1,9 +1,11 @@
 import { it } from "vitest";
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 import "@/features/widgets";
 import { listWidgets } from "@/features/workspace/widgetRegistry";
 
-it("generates widget inventory", () => {
+const DOC = "../../docs/WIDGET_REGISTRY.md";
+
+it("widget registry doc matches the live registry (drift check)", () => {
   const defs = listWidgets();
   const lines = [
     "# Widget Registry",

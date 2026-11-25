@@ -1,0 +1,180 @@
+{
+  "aggregation": {
+    "configured_forces": 17
+  },
+  "forces": {
+    "counts_sum_to_total": true,
+    "list": [
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "leadership_capabilities",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level"
+        ]
+      },
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "education",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level"
+        ]
+      },
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "character_determination",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level",
+          "momentum"
+        ]
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "rule_of_law",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level"
+        ]
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "corruption",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level"
+        ]
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "resource_allocation_efficiency",
+        "primary_classification": "deferred",
+        "published_dimensions": []
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "global_openness",
+        "primary_classification": "deferred",
+        "published_dimensions": []
+      },
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "productivity_output_growth",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level",
+          "momentum"
+        ]
+      },
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "cost_competitiveness",
+        "primary_classification": "dimension_only",
+        "published_dimensions": [
+          "momentum"
+        ]
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "trade_capital_flows",
+        "primary_classification": "context_profile",
+        "published_dimensions": []
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "infrastructure_investment",
+        "primary_classification": "context_profile",
+        "published_dimensions": []
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "indebtedness",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level"
+        ]
+      },
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "military_strength",
+        "primary_classification": "dimension_only",
+        "published_dimensions": [
+          "relative"
+        ]
+      },
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "wealth_opportunity_values_gaps",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level"
+        ]
+      },
+      {
+        "coverage_ceiling": "partial",
+        "force_code": "internal_conflict",
+        "primary_classification": "level_published",
+        "published_dimensions": [
+          "level"
+        ]
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "geography",
+        "primary_classification": "context_profile",
+        "published_dimensions": []
+      },
+      {
+        "coverage_ceiling": null,
+        "force_code": "acts_of_nature",
+        "primary_classification": "deferred",
+        "published_dimensions": []
+      }
+    ],
+    "primary_counts": {
+      "context_profile": 3,
+      "deferred": 3,
+      "dimension_only": 2,
+      "level_published": 9
+    },
+    "total": 17
+  },
+  "generated_from": "live backend registries",
+  "methodology": {
+    "by_state": {
+      "approved_production": 13,
+      "context_only": 7
+    },
+    "method_ids": [
+      "ctx.acts_of_nature.v1",
+      "ctx.cost_competitiveness.ulc_context_v1",
+      "ctx.geography.structural_v1",
+      "ctx.infrastructure.gcf_v1",
+      "ctx.openness.structural_v1",
+      "ctx.resource_allocation.v1",
+      "ctx.trade.wdi_context_v1",
+      "prod.character.lfp_pct_momentum_v1",
+      "prod.character.lfp_wdi_percentile_v1",
+      "prod.corruption.wgi_identity_v1",
+      "prod.cost_competitiveness.reer_momentum_v1",
+      "prod.education.oecd_attainment_v1",
+      "prod.indebtedness.dsr_minus_creditgap_v1",
+      "prod.internal_conflict.wgi_ps_v1",
+      "prod.leadership.wgi_ge_v1",
+      "prod.military.tracked8_relative_share_v1",
+      "prod.productivity.oecd_percentile_v1",
+      "prod.productivity.own_history_pct_momentum_v1",
+      "prod.rule_of_law.wgi_identity_v1",
+      "prod.wealth_gaps.wid_complement_v1"
+    ],
+    "total_methods": 20
+  },
+  "model_versions": {
+    "force_aggregation": "force-aggregation-v1.0",
+    "normalization": "normalization-v1.4"
+  },
+  "normalization": {
+    "registered_indicators": 27
+  }
+}

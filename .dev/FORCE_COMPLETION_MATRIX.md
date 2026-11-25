@@ -1,4 +1,4 @@
-# Force completion matrix (2026-11-25, normalization-v1.3 / force-aggregation-v1.0)
+# Force completion matrix (2026-11-25, normalization-v1.4 / force-aggregation-v1.0)
 
 Primary classes are mutually exclusive and sum to 17: level_published 9 · dimension_only 2 · context_profile 3 · deferred 3 (see /api/research/progress).
 

@@ -356,6 +356,14 @@ export function DataFreshnessIndicator({
           <dd>{freshness.latest_calculation_zurich ?? "—"}</dd>
         </div>
         <div>
+          <dt>Last attempted update</dt>
+          <dd>{freshness.latest_update_attempt_zurich ?? "—"}</dd>
+        </div>
+        <div>
+          <dt>Last successful update</dt>
+          <dd>{freshness.latest_successful_update_zurich ?? "—"}</dd>
+        </div>
+        <div>
           <dt>Observation period</dt>
           <dd>{freshness.latest_observation_period ?? "—"}</dd>
         </div>

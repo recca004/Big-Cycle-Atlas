@@ -37,6 +37,7 @@ from app.research.forecast import (
     evaluate_readiness,
 )
 from app.services import force_signal_service
+from app.services.update_lock import update_lock, update_lock_status
 
 ZURICH_TZ = ZoneInfo("Europe/Zurich")
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -1513,6 +1514,8 @@ async def build_freshness_and_changes(
         coll_iso = saved_state.get("latest_collection_at") or to_utc_iso(
             latest_collection_dt
         )
+        attempt_iso = saved_state.get("latest_update_attempt_at")
+        successful_iso = saved_state.get("latest_successful_update_at")
         all_failures = saved_state.get("provider_failures") or provider_failures
     else:
         diff = diff_snapshots(prev_snap, curr_snap)
@@ -1528,6 +1531,8 @@ async def build_freshness_and_changes(
         )
         calc_iso = core["computed_at"]
         coll_iso = to_utc_iso(latest_collection_dt)
+        attempt_iso = None
+        successful_iso = None
         all_failures = provider_failures
 
     freshness = {
@@ -1540,6 +1545,10 @@ async def build_freshness_and_changes(
         }.get(status_code, "No new observations"),
         "latest_collection_at": coll_iso,
         "latest_collection_zurich": to_zurich_display(coll_iso),
+        "latest_update_attempt_at": attempt_iso,
+        "latest_update_attempt_zurich": to_zurich_display(attempt_iso),
+        "latest_successful_update_at": successful_iso,
+        "latest_successful_update_zurich": to_zurich_display(successful_iso),
         "latest_calculation_at": calc_iso,
         "latest_calculation_zurich": to_zurich_display(calc_iso),
         "latest_observation_period": latest_obs_period,
@@ -1570,7 +1579,7 @@ async def build_freshness_and_changes(
     return freshness, daily_changes
 
 
-async def run_daily_refresh_workflow(
+async def _run_daily_refresh_workflow_unlocked(
     session: AsyncSession,
     model_id: str = "model_b_domain",
     collect_providers: bool = False,
@@ -1588,6 +1597,13 @@ async def run_daily_refresh_workflow(
     latest_snap_file = obs_dir / "latest_snapshot.json"
     prev_snap_file = obs_dir / "previous_snapshot.json"
     state_file = obs_dir / "refresh_state.json"
+
+    prior_state: dict[str, Any] | None = None
+    if state_file.exists():
+        try:
+            prior_state = json.loads(state_file.read_text(encoding="utf-8"))
+        except Exception:
+            prior_state = None
 
     prior_snap: dict[str, Any] | None = None
     if latest_snap_file.exists():
@@ -1612,7 +1628,12 @@ async def run_daily_refresh_workflow(
         )
         attempted_series = int(collection_summary.get("attempted_series", 0))
         if collection_summary.get("started_at_dt"):
-            before_rev_time = collection_summary["started_at_dt"]
+            started_raw = collection_summary["started_at_dt"]
+            before_rev_time = (
+                datetime.fromisoformat(started_raw)
+                if isinstance(started_raw, str)
+                else started_raw
+            )
     elif collect_providers:
         summary = await collect_provider_observations(sources=sources)
         inserted = summary["inserted"]
@@ -1634,6 +1655,10 @@ async def run_daily_refresh_workflow(
             "status": "update_failed",
             "db_fingerprint": await db_fingerprint(session),
             "latest_collection_at": now_iso,
+            "latest_update_attempt_at": to_utc_iso(before_rev_time),
+            "latest_successful_update_at": (
+                (prior_state or {}).get("latest_successful_update_at")
+            ),
             "latest_calculation_at": (
                 prior_snap.get("calculated_at") if prior_snap else now_iso
             ),
@@ -1677,10 +1702,23 @@ async def run_daily_refresh_workflow(
         status_code = "no_new_observations"
 
     now_iso = to_utc_iso(datetime.now(timezone.utc))
+    attempted_collection = bool(collect_providers or collection_summary)
+    attempt_iso = (
+        to_utc_iso(before_rev_time)
+        if attempted_collection
+        else (prior_state or {}).get("latest_update_attempt_at")
+    )
+    successful_iso = (
+        now_iso
+        if status_code in {"updated", "no_new_observations"}
+        else (prior_state or {}).get("latest_successful_update_at")
+    )
     state = {
         "status": status_code,
         "db_fingerprint": core["db_fingerprint"],
-        "latest_collection_at": now_iso if (collect_providers or collection_summary) else None,
+        "latest_collection_at": now_iso if attempted_collection else None,
+        "latest_update_attempt_at": attempt_iso,
+        "latest_successful_update_at": successful_iso,
         "latest_calculation_at": now_iso,
         "new_observations_count": inserted,
         "revisions_count": revised,
@@ -1691,6 +1729,24 @@ async def run_daily_refresh_workflow(
     }
     state_file.write_text(json.dumps(state, indent=2), encoding="utf-8")
     return state
+
+
+async def run_daily_refresh_workflow(
+    session: AsyncSession,
+    model_id: str = "model_b_domain",
+    collect_providers: bool = False,
+    sources: list[str] | None = None,
+    collection_summary: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Run the refresh workflow under the shared cross-process update lock."""
+    async with update_lock("observatory-refresh"):
+        return await _run_daily_refresh_workflow_unlocked(
+            session,
+            model_id=model_id,
+            collect_providers=collect_providers,
+            sources=sources,
+            collection_summary=collection_summary,
+        )
 
 
 async def collect_provider_observations(
@@ -1814,6 +1870,13 @@ async def trigger_refresh_job(
     """Single-flight refresh control (§11). Returns (accepted, status_payload)."""
     if _REFRESH_LOCK.locked() or _REFRESH_JOB.get("running"):
         return False, get_refresh_job_status()
+    shared_lock = update_lock_status()
+    if shared_lock.get("locked"):
+        return False, {
+            **get_refresh_job_status(),
+            "status": "locked",
+            "update_lock": shared_lock,
+        }
 
     if not collect_providers:
         async with _REFRESH_LOCK:

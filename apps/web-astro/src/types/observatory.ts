@@ -212,6 +212,10 @@ export interface ObservatoryFreshness {
   status_label: string;
   latest_collection_at: string | null;
   latest_collection_zurich: string | null;
+  latest_update_attempt_at?: string | null;
+  latest_update_attempt_zurich?: string | null;
+  latest_successful_update_at?: string | null;
+  latest_successful_update_zurich?: string | null;
   latest_calculation_at: string | null;
   latest_calculation_zurich: string | null;
   latest_observation_period: string | null;

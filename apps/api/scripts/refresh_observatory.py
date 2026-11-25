@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import json
 import sys
 from pathlib import Path
 
@@ -45,7 +46,19 @@ async def main() -> int:
         default="model_b_domain",
         help="Experimental composite model id",
     )
+    parser.add_argument(
+        "--collection-summary",
+        type=Path,
+        default=None,
+        help="JSON summary produced by collect_snapshot.py --summary-json",
+    )
     args = parser.parse_args()
+
+    collection_summary = None
+    if args.collection_summary:
+        collection_summary = json.loads(
+            args.collection_summary.read_text(encoding="utf-8")
+        )
 
     sm = get_sessionmaker()
     async with sm() as session:
@@ -54,6 +67,7 @@ async def main() -> int:
             model_id=args.model,
             collect_providers=args.collect,
             sources=args.source,
+            collection_summary=collection_summary,
         )
 
     print(
@@ -64,7 +78,11 @@ async def main() -> int:
         f"changes={len(state['changes'])}"
     )
     print(state["summary_message"])
-    return 1 if state["status"] == "update_failed" else 0
+    if state["status"] == "update_failed":
+        return 1
+    if state["status"] == "partial_provider_failure":
+        return 2
+    return 0
 
 
 if __name__ == "__main__":

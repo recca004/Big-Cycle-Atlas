@@ -49,6 +49,8 @@ export interface CompositeResult {
   };
   period: string;
   backtest_safe: boolean;
+  execution_mode?: string;
+  info_cutoff?: string | null;
 }
 
 export interface CyclePoint {
@@ -63,6 +65,8 @@ export interface CyclePoint {
 export interface CycleHistoryResponse {
   methodology_status: string;
   retrospective: boolean;
+  execution_mode?: string;
+  info_cutoff?: string | null;
   model: string;
   engine_version: string;
   country_iso3: string;
@@ -71,6 +75,87 @@ export interface CycleHistoryResponse {
   transitions: Record<string, string>[];
   warnings: string[];
   backtest_safe: boolean;
+}
+
+export interface ExecutionModeInfo {
+  mode: string;
+  description: string;
+  requires_info_cutoff: boolean;
+  backtest_safe_by_construction: boolean;
+}
+
+export interface ExecutionModesResponse {
+  modes: ExecutionModeInfo[];
+  backtest_safe_rule: string;
+}
+
+export interface ProviderReleaseEvidence {
+  source_key: string;
+  provider: string;
+  has_release_dates: boolean;
+  has_revision_dates: boolean;
+  has_vintage_history: boolean;
+  publication_calendar: string | null;
+  historical_archive: string | null;
+  assumed_lag_days: number | null;
+  notes: string;
+}
+
+export interface ReleaseEvidenceResponse {
+  providers: ProviderReleaseEvidence[];
+  disclaimer: string;
+}
+
+export interface IndicatorAvailability {
+  indicator_code: string;
+  source_key: string;
+  observation_count: number;
+  earliest_period: string | null;
+  latest_period: string | null;
+  with_release_evidence: number;
+  max_vintage: number;
+  strict_eligible: boolean;
+}
+
+export interface AvailabilityResponse {
+  country: string;
+  indicators: IndicatorAvailability[];
+  note: string;
+}
+
+export interface ModelDiagnosticsManifest {
+  generated_at: string;
+  normalization_version: string;
+  execution_mode: string;
+  retrospective: boolean;
+  backtest_safe: boolean;
+  period_range: [string, string];
+  methodology_status: string;
+  models: Record<string, {
+    model_id: string;
+    model_version: string;
+    kind: string;
+    countries: Record<string, {
+      earliest_usable_period: string | null;
+      valid_periods: number;
+      unavailable_periods: number;
+      included_forces: string[];
+      missing_forces: string[];
+      mean_coverage: number | null;
+      score_mean: number | null;
+      score_volatility: number | null;
+      stage_transitions: number;
+      stages_seen: string[];
+      coverage_ratio_path: number;
+    }>;
+  }>;
+  countries_evaluated: string[];
+  model_disagreement?: Record<string, {
+    periods_compared: number;
+    mean_spread: number | null;
+    max_spread: number | null;
+  }>;
+  disclaimer: string;
 }
 
 export type PrimaryClassification =

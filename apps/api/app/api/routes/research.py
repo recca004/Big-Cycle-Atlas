@@ -17,7 +17,10 @@ from app.db.session import get_session
 from app.core.config import get_settings
 from app.cycle.execution_modes import parse_execution_spec
 from app.cycle.force_definitions import FORCE_DEFINITIONS
-from app.cycle.normalization_definitions import ScoringPeriod
+from app.cycle.normalization_definitions import (
+    CURRENT_MODEL_VERSION,
+    ScoringPeriod,
+)
 from app.research.composite import COMPOSITE_MODELS
 from app.research.cycle import CycleModelConfig
 from app.research.methodology_registry import (
@@ -211,6 +214,35 @@ async def country_cycle_history(
             execution.info_cutoff.isoformat()
             if execution.info_cutoff else None
         ),
+        # §24 reproducible run manifest — exact model/config/data identities
+        "run_manifest": {
+            "composite_model_id": model,
+            "composite_model_version": (
+                COMPOSITE_MODELS[model].version
+            ),
+            "classifier_id": result.model_id,
+            "classifier_version": result.model_version,
+            "normalization_version": (
+                CURRENT_MODEL_VERSION.version_id
+            ),
+            "execution_mode": result.execution_mode,
+            "info_cutoff": (
+                execution.info_cutoff.isoformat()
+                if execution.info_cutoff else None
+            ),
+            "evaluation_period": [
+                f"{start_year}-Q4", f"{end_year}-Q4",
+            ],
+            "as_of_latest_period": f"{latest.year}-Q{latest.quarter}",
+            "input_vintages": (
+                "latest stored" if not execution.is_strict
+                else "release-date eligible"
+            ),
+            "deterministic_rerun": (
+                "same code version + same stored vintages + same spec "
+                "reproduce this response"
+            ),
+        },
         "model": model,
         "engine_version": result.model_version,
         "country_iso3": result.country_iso3,
@@ -230,6 +262,226 @@ async def country_cycle_history(
         "warnings": list(result.warnings),
         "backtest_safe": result.backtest_safe,
     }
+
+
+@router.get("/execution-modes")
+async def list_execution_modes():
+    """Supported historical information-selection modes (Mission 4 §23)."""
+    from app.cycle.execution_modes import ExecutionMode
+
+    return {
+        "modes": [
+            {
+                "mode": ExecutionMode.CURRENT_LATEST.value,
+                "description": (
+                    "Latest-vintage, period-complete selection — the standard "
+                    "production path; NOT a backtest."
+                ),
+                "requires_info_cutoff": False,
+                "backtest_safe_by_construction": False,
+            },
+            {
+                "mode": ExecutionMode.RETROSPECTIVE_LATEST_VINTAGE.value,
+                "description": (
+                    "Same selection used for looking back. Explicitly not a "
+                    "strict as-of reconstruction — later revisions are visible."
+                ),
+                "requires_info_cutoff": False,
+                "backtest_safe_by_construction": False,
+            },
+            {
+                "mode": ExecutionMode.STRICT_AS_OF.value,
+                "description": (
+                    "Only observations with provider release evidence "
+                    "published at/before the info cutoff are eligible; rows "
+                    "without evidence are excluded, never silently included. "
+                    "No fallback to latest-vintage."
+                ),
+                "requires_info_cutoff": True,
+                "backtest_safe_by_construction": False,
+            },
+            {
+                "mode": ExecutionMode.RESEARCH_ASSUMPTION.value,
+                "description": (
+                    "Eligibility estimated via documented provider release "
+                    "lags (release_calendar.py) — research assumptions, not "
+                    "verified publication dates."
+                ),
+                "requires_info_cutoff": True,
+                "backtest_safe_by_construction": False,
+            },
+        ],
+        "backtest_safe_rule": (
+            "backtest_safe=True only when ALL required inputs, reference "
+            "data and model availability conditions satisfy strict rules — "
+            "the mode alone never confers safety."
+        ),
+    }
+
+
+@router.get("/release-evidence")
+async def provider_release_evidence():
+    """Provider-level release-date coverage matrix (Mission 4 §21).
+
+    Reports what publication-date evidence actually exists in the Atlas —
+    unknowns are recorded, never invented."""
+    from app.research.release_calendar import PROVIDER_RELEASE_METADATA
+
+    return {
+        "providers": [
+            {
+                "source_key": m.source_key,
+                "provider": m.provider,
+                "has_release_dates": m.has_release_dates,
+                "has_revision_dates": m.has_revision_dates,
+                "has_vintage_history": m.has_vintage_history,
+                "publication_calendar": m.publication_calendar,
+                "historical_archive": m.historical_archive,
+                "assumed_lag_days": m.assumed_lag_days,
+                "notes": m.notes,
+            }
+            for m in PROVIDER_RELEASE_METADATA.values()
+        ],
+        "disclaimer": (
+            "assumed_lag_days values are RESEARCH ASSUMPTIONS for the "
+            "research_assumption execution mode — not verified publication "
+            "dates."
+        ),
+    }
+
+
+@router.get("/countries/{iso3}/availability")
+async def country_data_availability(
+    iso3: str,
+    session: AsyncSession = Depends(get_session),
+):
+    """Historical data availability for a country (Mission 4 §29).
+
+    Per indicator: observation/vintage counts, period range, and how many
+    rows carry provider release evidence — the actual prerequisite for
+    strict as-of evaluation."""
+    from sqlalchemy import func, select
+
+    from app.models import DataSource, Indicator, Observation
+
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(404, f"Country {iso3!r} not found")
+
+    rows = (
+        await session.execute(
+            select(
+                Indicator.code,
+                DataSource.key,
+                func.count(Observation.id),
+                func.min(Observation.period_start),
+                func.max(Observation.period_start),
+                func.count(Observation.release_date),
+                func.max(Observation.vintage_number),
+            )
+            .join(Observation, Observation.indicator_id == Indicator.id)
+            .join(DataSource, DataSource.id == Observation.data_source_id)
+            .where(Observation.country_id == country.id)
+            .group_by(Indicator.code, DataSource.key)
+            .order_by(Indicator.code)
+        )
+    ).all()
+    return {
+        "country": country.iso3,
+        "indicators": [
+            {
+                "indicator_code": code,
+                "source_key": source,
+                "observation_count": n,
+                "earliest_period": (
+                    earliest.date().isoformat() if earliest else None
+                ),
+                "latest_period": (
+                    latest.date().isoformat() if latest else None
+                ),
+                "with_release_evidence": with_release,
+                "max_vintage": max_vintage,
+                "strict_eligible": with_release > 0,
+            }
+            for code, source, n, earliest, latest, with_release, max_vintage
+            in rows
+        ],
+        "note": (
+            "strict_eligible reflects stored provider release evidence — "
+            "ingestion timestamps are never used as publication proof."
+        ),
+    }
+
+
+@router.get("/reference-availability")
+async def reference_availability(session: AsyncSession = Depends(get_session)):
+    """Reference-population availability per universe (Mission 4 §29)."""
+    from sqlalchemy import func, select
+
+    from app.models.reference_observation import ReferenceObservation
+
+    rows = (
+        await session.execute(
+            select(
+                ReferenceObservation.universe_code,
+                ReferenceObservation.indicator_code,
+                func.count(ReferenceObservation.id),
+                func.min(ReferenceObservation.period_start),
+                func.max(ReferenceObservation.period_start),
+                func.count(func.distinct(ReferenceObservation.country_iso3)),
+            )
+            .group_by(
+                ReferenceObservation.universe_code,
+                ReferenceObservation.indicator_code,
+            )
+            .order_by(ReferenceObservation.universe_code)
+        )
+    ).all()
+    return {
+        "universes": [
+            {
+                "universe_code": u,
+                "indicator_code": ind,
+                "row_count": n,
+                "earliest_period": (
+                    earliest.date().isoformat() if earliest else None
+                ),
+                "latest_period": (
+                    latest.date().isoformat() if latest else None
+                ),
+                "country_count": cc,
+                "has_release_evidence": False,
+            }
+            for u, ind, n, earliest, latest, cc in rows
+        ],
+        "note": (
+            "Reference observations carry no provider release evidence — "
+            "strict as-of mode cannot use them (§22), which is reported, "
+            "not worked around."
+        ),
+    }
+
+
+@router.get("/diagnostics")
+async def model_diagnostics():
+    """Stored retrospective model-diagnostics manifest (Mission 4 §26/§29).
+
+    Serves the committed .dev/MODEL_DIAGNOSTICS.json produced by
+    scripts/generate_model_diagnostics.py — a reproducible run manifest,
+    never a live recalculation."""
+    import json
+    from pathlib import Path
+
+    manifest_path = (
+        Path(__file__).resolve().parents[5] / ".dev" / "MODEL_DIAGNOSTICS.json"
+    )
+    if not manifest_path.exists():
+        raise HTTPException(
+            404,
+            "diagnostics manifest not generated — run "
+            "scripts/generate_model_diagnostics.py",
+        )
+    return json.loads(manifest_path.read_text(encoding="utf-8"))
 
 
 @router.get("/countries/{iso3}/geography")

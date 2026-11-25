@@ -382,3 +382,107 @@ async def test_research_cycle_strict_requires_cutoff(client):
         "?model=model_b_domain&execution_mode=research_assumption"
     )
     assert r.status_code == 422
+
+
+# --- §29: historical validation API -------------------------------------------
+
+
+async def test_execution_modes_endpoint(client):
+    r = await client.get("/api/research/execution-modes")
+    assert r.status_code == 200
+    body = r.json()
+    modes = {m["mode"] for m in body["modes"]}
+    assert modes == {
+        "current_latest", "retrospective_latest_vintage",
+        "strict_as_of", "research_assumption",
+    }
+    strict = next(m for m in body["modes"] if m["mode"] == "strict_as_of")
+    assert strict["requires_info_cutoff"] is True
+    # honesty invariant: NO mode claims safety by construction
+    assert all(
+        m["backtest_safe_by_construction"] is False for m in body["modes"]
+    )
+
+
+async def test_release_evidence_endpoint(client):
+    r = await client.get("/api/research/release-evidence")
+    assert r.status_code == 200
+    body = r.json()
+    keys = {p["source_key"] for p in body["providers"]}
+    assert {"world_bank", "bis", "oecd", "imf_weo", "wid"} <= keys
+    # every provider honestly reports no release evidence today
+    assert all(p["has_release_dates"] is False for p in body["providers"])
+    assert "RESEARCH ASSUMPTIONS" in body["disclaimer"]
+
+
+async def test_country_availability_endpoint(client):
+    await _persist([
+        _dto(2020, 82.5,
+             release_date=datetime(2021, 7, 1, tzinfo=timezone.utc)),
+        _dto(2019, 80.0, release_date=None),
+    ])
+    r = await client.get("/api/research/countries/USA/availability")
+    assert r.status_code == 200
+    body = r.json()
+    rl = next(
+        i for i in body["indicators"] if i["indicator_code"] == RL
+    )
+    assert rl["observation_count"] == 2
+    assert rl["with_release_evidence"] == 1
+    assert rl["strict_eligible"] is True
+    assert rl["earliest_period"].startswith("2019")
+    assert rl["latest_period"].startswith("2020")
+
+
+async def test_availability_marks_no_evidence_ineligible(client):
+    await _persist([_dto(2020, 82.5, release_date=None)])
+    r = await client.get("/api/research/countries/USA/availability")
+    rl = next(
+        i for i in r.json()["indicators"] if i["indicator_code"] == RL
+    )
+    assert rl["with_release_evidence"] == 0
+    assert rl["strict_eligible"] is False
+
+
+async def test_reference_availability_endpoint(client):
+    r = await client.get("/api/research/reference-availability")
+    assert r.status_code == 200
+    body = r.json()
+    assert "universes" in body
+    # reference rows never carry release evidence — reported, not worked around
+    assert all(
+        u["has_release_evidence"] is False for u in body["universes"]
+    )
+
+
+async def test_cycle_history_run_manifest(client):
+    """§24: every historical execution returns a reproducible run manifest
+    identifying model, versions, execution mode, cutoff and period."""
+    r = await client.get(
+        "/api/research/countries/USA/cycle/history"
+        "?model=model_b_domain&start_year=2019&end_year=2020"
+    )
+    assert r.status_code == 200
+    m = r.json()["run_manifest"]
+    assert m["composite_model_id"] == "model_b_domain"
+    assert m["composite_model_version"]
+    assert m["classifier_id"] == "cycle_classifier_v1"
+    assert m["normalization_version"].startswith("normalization-")
+    assert m["execution_mode"] == "retrospective_latest_vintage"
+    assert m["evaluation_period"] == ["2019-Q4", "2020-Q4"]
+    assert m["input_vintages"] == "latest stored"
+
+
+async def test_diagnostics_manifest_endpoint(client):
+    """§26/§29: the stored retrospective diagnostics manifest is served
+    read-only — labelled retrospective, never backtest-safe."""
+    r = await client.get("/api/research/diagnostics")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["retrospective"] is True
+    assert body["backtest_safe"] is False
+    assert body["execution_mode"] == "retrospective_latest_vintage"
+    assert set(body["models"]) == {
+        "model_a_equal", "model_b_domain",
+        "model_c_overlap", "model_d_comparable",
+    }

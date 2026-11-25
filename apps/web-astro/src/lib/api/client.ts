@@ -173,6 +173,10 @@ import type {
   CycleHistoryResponse,
   ResearchProgress,
   ForceHistoryResponse,
+  ExecutionModesResponse,
+  ReleaseEvidenceResponse,
+  AvailabilityResponse,
+  ModelDiagnosticsManifest,
 } from "@/types/research";
 
 export function fetchResearchMethods(
@@ -190,11 +194,15 @@ export function fetchCompositeModels(
 export function fetchCountryCycle(
   iso3: string,
   model: string,
-  opts?: FetchOptions,
+  opts?: FetchOptions & { executionMode?: string; infoCutoff?: string },
 ): Promise<CompositeResult> {
+  const { executionMode, infoCutoff, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ model });
+  if (executionMode) q.set("execution_mode", executionMode);
+  if (infoCutoff) q.set("info_cutoff", infoCutoff);
   return request<CompositeResult>(
-    `/api/research/countries/${encodeURIComponent(iso3)}/cycle?model=${encodeURIComponent(model)}`,
-    opts,
+    `/api/research/countries/${encodeURIComponent(iso3)}/cycle?${q}`,
+    rest,
   );
 }
 
@@ -202,11 +210,49 @@ export function fetchCycleHistory(
   iso3: string,
   model: string,
   startYear = 2000,
-  opts?: FetchOptions,
+  opts?: FetchOptions & { executionMode?: string; infoCutoff?: string },
 ): Promise<CycleHistoryResponse> {
+  const { executionMode, infoCutoff, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ model, start_year: String(startYear) });
+  if (executionMode) q.set("execution_mode", executionMode);
+  if (infoCutoff) q.set("info_cutoff", infoCutoff);
   return request<CycleHistoryResponse>(
-    `/api/research/countries/${encodeURIComponent(iso3)}/cycle/history?model=${encodeURIComponent(model)}&start_year=${startYear}`,
+    `/api/research/countries/${encodeURIComponent(iso3)}/cycle/history?${q}`,
+    rest,
+  );
+}
+
+export function fetchExecutionModes(
+  opts?: FetchOptions,
+): Promise<ExecutionModesResponse> {
+  return request<ExecutionModesResponse>(
+    "/api/research/execution-modes", opts,
+  );
+}
+
+export function fetchReleaseEvidence(
+  opts?: FetchOptions,
+): Promise<ReleaseEvidenceResponse> {
+  return request<ReleaseEvidenceResponse>(
+    "/api/research/release-evidence", opts,
+  );
+}
+
+export function fetchCountryAvailability(
+  iso3: string,
+  opts?: FetchOptions,
+): Promise<AvailabilityResponse> {
+  return request<AvailabilityResponse>(
+    `/api/research/countries/${encodeURIComponent(iso3)}/availability`,
     opts,
+  );
+}
+
+export function fetchModelDiagnostics(
+  opts?: FetchOptions,
+): Promise<ModelDiagnosticsManifest> {
+  return request<ModelDiagnosticsManifest>(
+    "/api/research/diagnostics", opts,
   );
 }
 

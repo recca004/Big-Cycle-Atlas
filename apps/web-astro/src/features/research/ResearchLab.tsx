@@ -17,6 +17,7 @@ import type {
 } from "@/types/research";
 import { EChart, baseChartOption } from "@/lib/charts/EChart";
 import { AddToWorkspace } from "@/features/workspace/AddToWorkspace";
+import { HistoricalValidation } from "@/features/research/HistoricalValidation";
 import type { EChartsOption } from "echarts";
 
 const COUNTRIES = ["USA", "CHN", "JPN", "DEU", "FRA", "GBR", "CHE", "IND"];
@@ -271,6 +272,9 @@ export function ResearchLab() {
           </p>
         )}
       </div>
+
+      {/* Historical validation (Mission 4 §30) */}
+      <HistoricalValidation iso3={iso3} model={model} />
 
       {/* Methodology registry */}
       <div className="glass">

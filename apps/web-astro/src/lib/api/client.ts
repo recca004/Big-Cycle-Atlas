@@ -231,6 +231,36 @@ export function fetchCyclePositions(
   );
 }
 
+export function fetchObservatoryOverview(
+  opts?: FetchOptions & { model?: string },
+): Promise<import("@/types/observatory").ObservatoryOverview> {
+  const { model = "model_b_domain", ...rest } = opts ?? {};
+  // First call computes all country composites server-side (~20-30s).
+  return request<import("@/types/observatory").ObservatoryOverview>(
+    `/api/observatory/overview?model=${encodeURIComponent(model)}`,
+    { timeoutMs: 90_000, ...rest },
+  );
+}
+
+export function postObservatoryRefresh(
+  opts?: FetchOptions & { model?: string },
+): Promise<import("@/types/observatory").RefreshJob> {
+  const { model = "model_b_domain", ...rest } = opts ?? {};
+  return request<import("@/types/observatory").RefreshJob>(
+    "/api/observatory/refresh",
+    { method: "POST", body: { model }, timeoutMs: 30_000, ...rest },
+  );
+}
+
+export function fetchObservatoryRefreshStatus(
+  opts?: FetchOptions,
+): Promise<import("@/types/observatory").RefreshJob> {
+  return request<import("@/types/observatory").RefreshJob>(
+    "/api/observatory/refresh/status",
+    opts,
+  );
+}
+
 export function fetchCycleHistory(
   iso3: string,
   model: string,

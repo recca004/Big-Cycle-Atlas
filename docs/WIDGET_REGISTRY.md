@@ -1,6 +1,6 @@
 # Widget Registry
 
-Generated from `src/features/widgets/index.ts` — 54 registered widget types.
+Generated from `src/features/widgets/index.ts` — 55 registered widget types.
 
 | ID | Name | Category | Default | Min | Data requirement |
 |---|---|---|---|---|---|
@@ -58,6 +58,7 @@ Generated from `src/features/widgets/index.ts` — 54 registered widget types.
 | `cycle-history` | Big Cycle history (experimental) | research | 8×4 | 5×3 | GET /api/research/countries/{iso3}/cycle/history |
 | `force-history` | Force history | research | 6×4 | 4×3 | GET /api/countries/{iso3}/forces/{force}/history |
 | `historical-validation` | Historical validation | research | 5×4 | 4×3 | GET /api/research/countries/{iso3}/availability + /api/research/execution-modes |
+| `big-cycle-clock` | Big Cycle clock | research | 6×5 | 4×4 | GET /api/observatory/overview |
 
 ## Config fields per widget
 
@@ -466,6 +467,13 @@ Historical force level / relative / momentum dimensions — retrospective latest
 ### `historical-validation` — Historical validation
 
 Availability evidence per country: strict eligibility, provider publication and atlas retrieval evidence, missing evidence, latest period.
+
+- `country` (country) — default `"USA"`
+- `title` (text)
+
+### `big-cycle-clock` — Big Cycle clock
+
+Observatory dial — all eight powers placed by experimental cycle stage. Model output, not a prediction.
 
 - `country` (country) — default `"USA"`
 - `title` (text)

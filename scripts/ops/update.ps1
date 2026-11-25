@@ -17,6 +17,9 @@ if (-not $SkipMarkets) {
   & $py scripts\ingest_markets.py --start (Get-Date).AddDays(-45).ToString('yyyy-MM-dd')
   if ($LASTEXITCODE -ne 0) { Pop-Location; throw "Market update failed ($LASTEXITCODE)" }
 }
+Write-Host "== Observatory recalculation & daily snapshot diff ==" -ForegroundColor Cyan
+& $py scriptsefresh_observatory.py
+if ($LASTEXITCODE -ne 0) { Pop-Location; throw "Observatory refresh failed ($LASTEXITCODE)" }
 & $py scripts\print_db_counts.py
 Pop-Location
 Write-Host "Data update complete." -ForegroundColor Green

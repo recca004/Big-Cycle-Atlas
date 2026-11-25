@@ -17,8 +17,8 @@ $apiDir = Join-Path $repo "apps\api"
 $jobs = @(
   @{ Name = "BCA-MarketUpdate";  Time = "06:30"; Desc = "Incremental market data update (45d lookback)";
      Args = "scripts\ingest_markets.py --start $((Get-Date).AddDays(-45).ToString('yyyy-MM-dd'))" },
-  @{ Name = "BCA-Snapshot";     Time = "06:00"; Desc = "Macro data snapshot collector (revisions tracked)";
-     Args = "scripts\collect_snapshot.py" },
+  @{ Name = "BCA-Snapshot";     Time = "06:00"; Desc = "Macro data snapshot collector + Big Cycle Observatory refresh";
+     Args = "scriptsefresh_observatory.py --collect" },
   @{ Name = "BCA-Backup";       Time = "02:00"; Desc = "pg_dump -Fc backup into .\backups\";
      Script = "scripts\ops\backup.ps1" },
   @{ Name = "BCA-HealthCheck";  Time = "12:00"; Desc = "DB counts + coverage sanity log";

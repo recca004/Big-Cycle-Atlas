@@ -5,9 +5,11 @@ import { GlobalSearch } from "@/features/site/GlobalSearch";
 interface Props {
   title: string;
   description?: string;
+  /** Remove the reading-column max-width — observatory homepage. */
+  fullWidth?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, fullWidth } = Astro.props;
 const path = Astro.url.pathname;
 
 const NAV = [
@@ -155,7 +157,7 @@ const isActive = (href: string) =>
       </div>
     </header>
     <div class="nav-scroll-hint" aria-hidden="true"></div>
-    <main class="site-main">
+    <main class:list={["site-main", { "site-main-wide": fullWidth }]}>
       <slot />
     </main>
     <footer class="site-footer">
@@ -284,6 +286,10 @@ const isActive = (href: string) =>
         margin: 0 auto;
         padding: var(--space-8) var(--space-6) var(--space-16);
         width: 100%;
+      }
+      .site-main-wide {
+        max-width: 152rem;
+        padding-inline: var(--space-8);
       }
       .site-footer {
         max-width: var(--content-max);

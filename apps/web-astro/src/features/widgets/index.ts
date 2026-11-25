@@ -29,6 +29,7 @@ import {
   CoverageMatrixWidget,
 } from "./StatusWidgets";
 import { UnavailableWidget } from "./UnavailableWidget";
+import { BigCycleClockWidget } from "@/features/observatory/BigCycleClockWidget";
 import { HistoricalValidationWidget } from "./HistoricalValidationWidget";
 import { UncertaintyBandWidget } from "./UncertaintyBand";
 import { INDICATOR_META } from "./indicatorMeta";
@@ -596,4 +597,19 @@ registerWidget({
     "GET /api/research/countries/{iso3}/availability + /api/research/execution-modes",
   configVersion: 1,
   component: HistoricalValidationWidget,
+});
+
+/* Great Power Observatory — Big Cycle clock widget */
+registerWidget({
+  typeId: "big-cycle-clock",
+  displayName: "Big Cycle clock",
+  description:
+    "Observatory dial — all eight powers placed by experimental cycle stage. Model output, not a prediction.",
+  category: "research",
+  defaultSize: { w: 6, h: 5 },
+  minSize: { w: 4, h: 4 },
+  configFields: [{ ...countryField, label: "Focus country" }, titleField],
+  dataRequirement: "GET /api/observatory/overview",
+  configVersion: 1,
+  component: BigCycleClockWidget,
 });

@@ -13,7 +13,15 @@ if sys.platform == "win32":
 
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from app.api.routes import markets, portfolios, regimes, research, search, strategies
+from app.api.routes import (
+    markets,
+    observatory,
+    portfolios,
+    regimes,
+    research,
+    search,
+    strategies,
+)
 from app.api.routes import countries, health
 from app.api.routes.data import router as data_router
 from app.api.routes.indicators import router as indicators_router
@@ -38,6 +46,7 @@ def create_app() -> FastAPI:
     app.include_router(data_router)
     app.include_router(indicators_router)
     app.include_router(research.router)
+    app.include_router(observatory.router)
     app.include_router(markets.router)
     app.include_router(regimes.router)
     app.include_router(strategies.router)

@@ -3,28 +3,54 @@ import { fetchObservatorySeries } from "@/lib/api/client";
 import type { MeasureHistory } from "@/types/observatory";
 
 const MEASURES = [
-  ["GDP_CURRENT_USD", "Nominal GDP"],
-  ["GDP_PER_CAPITA", "GDP per capita"],
-  ["EXPORTS_GDP", "Exports share of GDP"],
-  ["MILITARY_EXPENDITURE_USD", "Military expenditure"],
-  ["MILITARY_EXPENDITURE_GDP", "Military expenditure / GDP"],
-  ["LABOUR_PRODUCTIVITY_PER_HOUR", "Labour productivity"],
-  ["TERTIARY_ENROLLMENT", "Tertiary enrollment"],
-  ["GOVERNMENT_DEBT_GDP", "Government debt / GDP"],
+  ["GDP_CURRENT_USD", "Nominal GDP", false],
+  ["GDP_CURRENT_USD", "Nominal GDP — global share", true],
+  ["GDP_PPP_CURRENT_INTL", "PPP GDP", false],
+  ["GDP_PPP_CURRENT_INTL", "PPP GDP — global share", true],
+  ["GDP_REAL_CONSTANT_USD", "Real GDP (2015 US$)", false],
+  ["GDP_REAL_CONSTANT_USD", "Real GDP — global share", true],
+  ["GDP_PER_CAPITA", "GDP per capita", false],
+  ["MERCHANDISE_EXPORTS_USD", "Goods exports", false],
+  ["MERCHANDISE_EXPORTS_USD", "Goods exports — global share", true],
+  ["MERCHANDISE_IMPORTS_USD", "Goods imports", false],
+  ["MERCHANDISE_IMPORTS_USD", "Goods imports — global share", true],
+  ["COMMERCIAL_SERVICE_EXPORTS_USD", "Service exports", false],
+  ["COMMERCIAL_SERVICE_EXPORTS_USD", "Service exports — global share", true],
+  ["COMMERCIAL_SERVICE_IMPORTS_USD", "Service imports", false],
+  ["COMMERCIAL_SERVICE_IMPORTS_USD", "Service imports — global share", true],
+  ["EXPORTS_GDP", "Exports share of GDP", false],
+  ["MILITARY_EXPENDITURE_USD", "Military expenditure", false],
+  ["MILITARY_EXPENDITURE_USD", "Military expenditure — global share", true],
+  ["MILITARY_EXPENDITURE_GDP", "Military expenditure / GDP", false],
+  ["RND_EXPENDITURE_GDP", "R&D expenditure / GDP", false],
+  ["PATENT_APPLICATIONS_RESIDENT", "Resident patents", false],
+  ["PATENT_APPLICATIONS_RESIDENT", "Resident patents — global share", true],
+  ["RESEARCHERS_PER_MILLION", "Researchers / million", false],
+  ["HIGH_TECHNOLOGY_EXPORTS_USD", "High-tech exports", false],
+  ["HIGH_TECHNOLOGY_EXPORTS_USD", "High-tech exports — global share", true],
+  ["LABOUR_PRODUCTIVITY_PER_HOUR", "Labour productivity", false],
+  ["TERTIARY_ENROLLMENT", "Tertiary enrollment", false],
+  ["STOCK_MARKET_CAP_GDP", "Listed market cap / GDP", false],
+  ["DOMESTIC_CREDIT_PRIVATE_GDP", "Private credit / GDP", false],
+  ["BROAD_MONEY_GDP", "Broad money / GDP", false],
+  ["GOVERNMENT_DEBT_GDP", "Government debt / GDP", false],
 ] as const;
 
 const COLORS = ["#b78b2c", "#203858", "#3d7a8a", "#7a4b8c", "#8c5a3d", "#52643a", "#8c3d4b", "#637083"];
 
 export function RelativePowerHistory({ rangeStart }: { rangeStart: number }) {
-  const [indicator, setIndicator] = useState<string>(MEASURES[0][0]);
+  const [selection, setSelection] = useState("0");
+  const selected = MEASURES[Number(selection)] ?? MEASURES[0];
+  const indicator = selected[0];
+  const worldShare = selected[2];
   const [payload, setPayload] = useState<MeasureHistory | null>(null);
 
   useEffect(() => {
     let alive = true;
-    fetchObservatorySeries({ indicator, startYear: rangeStart })
+    fetchObservatorySeries({ indicator, startYear: rangeStart, worldShare })
       .then((next) => alive && setPayload(next));
     return () => { alive = false; };
-  }, [indicator, rangeStart]);
+  }, [indicator, rangeStart, worldShare]);
 
   const chart = useMemo(() => {
     const countries = payload?.countries ?? [];
@@ -43,8 +69,8 @@ export function RelativePowerHistory({ rangeStart }: { rangeStart: number }) {
     <div className="measure-history">
       <label className="obs-measure-picker">
         <span className="obs-picker-kicker">Verified measure</span>
-        <select className="glass-button" value={indicator} onChange={(event) => setIndicator(event.target.value)}>
-          {MEASURES.map(([code, label]) => <option key={code} value={code}>{label}</option>)}
+        <select className="glass-button" value={selection} onChange={(event) => setSelection(event.target.value)}>
+          {MEASURES.map(([code, label, share], index) => <option key={`${code}:${share}`} value={index}>{label}</option>)}
         </select>
       </label>
       {chart ? (
@@ -68,7 +94,8 @@ export function RelativePowerHistory({ rangeStart }: { rangeStart: number }) {
         </svg>
       ) : <p className="obs-muted">No verified observations in this range.</p>}
       <p className="obs-muted">
-        Latest vintages only; {payload?.countries[0]?.unit ?? "source units"} · {payload?.countries[0]?.source ?? "source unavailable"}. Gaps are actual missing periods.
+        Latest vintages only; {payload?.countries[0]?.unit ?? "source units"} · {payload?.countries[0]?.source ?? "source unavailable"}
+        {payload?.world_share ? ` · denominator ${payload.denominator_entity}` : ""}. Gaps are actual missing periods.
       </p>
     </div>
   );

@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-11-25T20:57:36.438304Z",
-  "git_commit": "3ecd2c1e5aae0342081c517b4e508d4fbc7ef528",
+  "generated_at": "2026-11-25T21:52:40.386227Z",
+  "git_commit": "762919c7923b14a4ab18a8fcbf519a072239c929",
   "database": {
     "countries": 8,
-    "indicators": 33,
+    "indicators": 46,
     "data_sources": 10,
-    "source_series": 33,
-    "observations_all_vintages": 17170,
-    "reference_observations": 23928,
+    "source_series": 46,
+    "observations_all_vintages": 21178,
+    "reference_observations": 24377,
     "market_instruments": 35,
     "market_observations": 96090,
     "indicator_revisions": 2776,
     "indicator_diagnostics": 3855,
-    "ingestion_runs": 1479,
-    "distinct_observation_identities": 14394,
-    "latest_vintage_rows": 14394
+    "ingestion_runs": 1501,
+    "distinct_observation_identities": 18402,
+    "latest_vintage_rows": 18402
   },
   "latest_vintage_rule": "maximum vintage_number per country + source_series + period_start",
   "historical_execution_mode": "retrospective_latest_vintage; not a release-date-safe backtest",
@@ -96,94 +96,144 @@
   },
   "providers": [
     {
-      "provider": "world_bank",
-      "provider_name": "World Bank",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
-    },
-    {
       "provider": "fred",
       "provider_name": "Federal Reserve Economic Data (FRED)",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "planned",
+      "effective_status": "planned",
+      "country_indicator_series": 0,
+      "latest_retrieval": null,
+      "base_url": "",
+      "auth_type": "",
+      "update_frequency": "",
+      "rate_limit_notes": "",
+      "documentation_url": "",
+      "metadata": {}
     },
     {
       "provider": "eurostat",
       "provider_name": "Eurostat",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "planned",
+      "effective_status": "planned",
+      "country_indicator_series": 0,
+      "latest_retrieval": null,
+      "base_url": "",
+      "auth_type": "",
+      "update_frequency": "",
+      "rate_limit_notes": "",
+      "documentation_url": "",
+      "metadata": {}
     },
     {
       "provider": "ecb",
       "provider_name": "European Central Bank",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "planned",
+      "effective_status": "planned",
+      "country_indicator_series": 0,
+      "latest_retrieval": null,
+      "base_url": "",
+      "auth_type": "",
+      "update_frequency": "",
+      "rate_limit_notes": "",
+      "documentation_url": "",
+      "metadata": {}
     },
     {
       "provider": "snb",
       "provider_name": "Swiss National Bank",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "planned",
+      "effective_status": "planned",
+      "country_indicator_series": 0,
+      "latest_retrieval": null,
+      "base_url": "",
+      "auth_type": "",
+      "update_frequency": "",
+      "rate_limit_notes": "",
+      "documentation_url": "",
+      "metadata": {}
     },
     {
       "provider": "un_comtrade",
       "provider_name": "UN Comtrade",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "planned",
+      "effective_status": "planned",
+      "country_indicator_series": 0,
+      "latest_retrieval": null,
+      "base_url": "",
+      "auth_type": "",
+      "update_frequency": "",
+      "rate_limit_notes": "",
+      "documentation_url": "",
+      "metadata": {}
+    },
+    {
+      "provider": "world_bank",
+      "provider_name": "World Bank",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 309,
+      "latest_retrieval": "2026-11-25",
+      "base_url": "https://api.worldbank.org/v2",
+      "auth_type": "",
+      "update_frequency": "daily",
+      "rate_limit_notes": "Public API; bounded retries and failure isolation handled by the unified updater.",
+      "documentation_url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581",
+      "metadata": {}
     },
     {
       "provider": "bis",
       "provider_name": "Bank for International Settlements",
-      "status": "testing",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 16,
+      "latest_retrieval": "2026-11-25",
+      "base_url": "https://stats.bis.org/api/v2",
+      "auth_type": "",
+      "update_frequency": "daily",
+      "rate_limit_notes": "Public SDMX API; bounded retries and failure isolation handled by the unified updater.",
+      "documentation_url": "https://stats.bis.org/",
+      "metadata": {}
     },
     {
       "provider": "oecd",
       "provider_name": "OECD",
-      "status": "testing",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 20,
+      "latest_retrieval": "2026-11-25",
+      "base_url": "https://sdmx.oecd.org/public/rest",
+      "auth_type": "",
+      "update_frequency": "daily",
+      "rate_limit_notes": "OECD request budget and one bounded 429 retry are enforced by collection code.",
+      "documentation_url": "https://sdmx.oecd.org/",
+      "metadata": {}
     },
     {
       "provider": "imf",
       "provider_name": "International Monetary Fund",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 8,
+      "latest_retrieval": "2026-11-25",
+      "base_url": "https://api.imf.org",
+      "auth_type": "",
+      "update_frequency": "semi-annual",
+      "rate_limit_notes": "WEO provider updates are less frequent; failures remain isolated.",
+      "documentation_url": "https://www.imf.org/external/datamapper/api/help",
+      "metadata": {}
     },
     {
       "provider": "wid",
       "provider_name": "World Inequality Database (WID)",
-      "status": "planned",
-      "base_url": null,
-      "update_frequency": null,
-      "rate_limit_notes": null,
-      "documentation_url": null
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 8,
+      "latest_retrieval": "2026-09-09",
+      "base_url": "",
+      "auth_type": "",
+      "update_frequency": "manual bulk file",
+      "rate_limit_notes": "Optional local bulk archive only; never auto-downloaded by the unified updater.",
+      "documentation_url": "https://wid.world/",
+      "metadata": {}
     }
   ],
   "currency_roles": {
@@ -221,21 +271,709 @@
     }
   },
   "power_indicators": [
-    "GDP_CURRENT_USD",
-    "GDP_PER_CAPITA",
-    "GDP_GROWTH",
-    "MILITARY_EXPENDITURE_USD",
-    "MILITARY_EXPENDITURE_GDP",
-    "EXPORTS_GDP",
-    "IMPORTS_GDP",
+    "BROAD_MONEY_GDP",
+    "COMMERCIAL_SERVICE_EXPORTS_USD",
+    "COMMERCIAL_SERVICE_IMPORTS_USD",
     "CURRENT_ACCOUNT_GDP",
-    "RND_EXPENDITURE_GDP",
-    "LABOUR_PRODUCTIVITY_PER_HOUR",
+    "DOMESTIC_CREDIT_PRIVATE_GDP",
+    "EXPORTS_GDP",
+    "GDP_CURRENT_USD",
+    "GDP_GROWTH",
+    "GDP_PER_CAPITA",
+    "GDP_PPP_CURRENT_INTL",
+    "GDP_REAL_CONSTANT_USD",
     "GOVERNMENT_DEBT_GDP",
+    "HIGH_TECHNOLOGY_EXPORTS_USD",
+    "IMPORTS_GDP",
+    "LABOUR_PRODUCTIVITY_PER_HOUR",
+    "MERCHANDISE_EXPORTS_USD",
+    "MERCHANDISE_IMPORTS_USD",
+    "MILITARY_EXPENDITURE_GDP",
+    "MILITARY_EXPENDITURE_USD",
+    "PATENT_APPLICATIONS_NONRESIDENT",
+    "PATENT_APPLICATIONS_RESIDENT",
     "POPULATION",
     "REER_INDEX",
+    "RESEARCHERS_PER_MILLION",
+    "RND_EXPENDITURE_GDP",
     "RULE_OF_LAW_WGI_SCORE",
+    "STOCK_MARKET_CAP_GDP",
     "TERTIARY_ATTAINMENT_25_34"
+  ],
+  "force_semantics": [
+    {
+      "model_id": "model_a_equal",
+      "force_code": "character_determination",
+      "configured_candidate": true,
+      "semantics": "reference_relative",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "human_capital",
+      "overlap_groups": [
+        "education+character_determination"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "corruption",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "education",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "human_capital",
+      "overlap_groups": [
+        "education+character_determination"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "indebtedness",
+      "configured_candidate": true,
+      "semantics": "own_history_condition",
+      "semantically_eligible": false,
+      "semantic_reason": "semantics=own_history_condition not composable into a 0-100 level (own-history condition / share / structural \u2014 different measurement meaning, not just a different scale)",
+      "domain": "financial_conditions",
+      "overlap_groups": [
+        "indebtedness+trade_capital_flows"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "internal_conflict",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "leadership_capabilities",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "productivity_output_growth",
+      "configured_candidate": true,
+      "semantics": "reference_relative",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "productive_capacity",
+      "overlap_groups": [
+        "productivity_output_growth+resource_allocation_efficiency"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "rule_of_law",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_a_equal",
+      "force_code": "wealth_opportunity_values_gaps",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "financial_conditions",
+      "overlap_groups": []
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "character_determination",
+      "configured_candidate": true,
+      "semantics": "reference_relative",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "human_capital",
+      "overlap_groups": [
+        "education+character_determination"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "corruption",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "education",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "human_capital",
+      "overlap_groups": [
+        "education+character_determination"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "indebtedness",
+      "configured_candidate": true,
+      "semantics": "own_history_condition",
+      "semantically_eligible": false,
+      "semantic_reason": "semantics=own_history_condition not composable into a 0-100 level (own-history condition / share / structural \u2014 different measurement meaning, not just a different scale)",
+      "domain": "financial_conditions",
+      "overlap_groups": [
+        "indebtedness+trade_capital_flows"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "internal_conflict",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "leadership_capabilities",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "productivity_output_growth",
+      "configured_candidate": true,
+      "semantics": "reference_relative",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "productive_capacity",
+      "overlap_groups": [
+        "productivity_output_growth+resource_allocation_efficiency"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "rule_of_law",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_b_domain",
+      "force_code": "wealth_opportunity_values_gaps",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "financial_conditions",
+      "overlap_groups": []
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "character_determination",
+      "configured_candidate": true,
+      "semantics": "reference_relative",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "human_capital",
+      "overlap_groups": [
+        "education+character_determination"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "corruption",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "education",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "human_capital",
+      "overlap_groups": [
+        "education+character_determination"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "indebtedness",
+      "configured_candidate": true,
+      "semantics": "own_history_condition",
+      "semantically_eligible": false,
+      "semantic_reason": "semantics=own_history_condition not composable into a 0-100 level (own-history condition / share / structural \u2014 different measurement meaning, not just a different scale)",
+      "domain": "financial_conditions",
+      "overlap_groups": [
+        "indebtedness+trade_capital_flows"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "internal_conflict",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "leadership_capabilities",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "productivity_output_growth",
+      "configured_candidate": true,
+      "semantics": "reference_relative",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "productive_capacity",
+      "overlap_groups": [
+        "productivity_output_growth+resource_allocation_efficiency"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "rule_of_law",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_c_overlap",
+      "force_code": "wealth_opportunity_values_gaps",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "financial_conditions",
+      "overlap_groups": []
+    },
+    {
+      "model_id": "model_d_comparable",
+      "force_code": "character_determination",
+      "configured_candidate": true,
+      "semantics": "reference_relative",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "human_capital",
+      "overlap_groups": [
+        "education+character_determination"
+      ]
+    },
+    {
+      "model_id": "model_d_comparable",
+      "force_code": "corruption",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_d_comparable",
+      "force_code": "indebtedness",
+      "configured_candidate": true,
+      "semantics": "own_history_condition",
+      "semantically_eligible": false,
+      "semantic_reason": "semantics=own_history_condition not composable into a 0-100 level (own-history condition / share / structural \u2014 different measurement meaning, not just a different scale)",
+      "domain": "financial_conditions",
+      "overlap_groups": [
+        "indebtedness+trade_capital_flows"
+      ]
+    },
+    {
+      "model_id": "model_d_comparable",
+      "force_code": "internal_conflict",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_d_comparable",
+      "force_code": "leadership_capabilities",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_d_comparable",
+      "force_code": "rule_of_law",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "institutional",
+      "overlap_groups": [
+        "rule_of_law+corruption+internal_conflict+leadership_capabilities"
+      ]
+    },
+    {
+      "model_id": "model_d_comparable",
+      "force_code": "wealth_opportunity_values_gaps",
+      "configured_candidate": true,
+      "semantics": "absolute_bounded",
+      "semantically_eligible": true,
+      "semantic_reason": "compatible",
+      "domain": "financial_conditions",
+      "overlap_groups": []
+    }
+  ],
+  "model_equivalence": {
+    "model_a_equal__model_b_domain": {
+      "left_model": "model_a_equal",
+      "right_model": "model_b_domain",
+      "comparisons": 368,
+      "exact_score_matches": 124,
+      "near_score_matches": 124,
+      "exact_stage_matches": 207,
+      "max_abs_score_difference": 12.94803613214286,
+      "exact_score_share": 0.33695652173913043,
+      "near_score_share": 0.33695652173913043,
+      "exact_stage_share": 0.5625,
+      "exact_equivalent_under_current_data": false,
+      "equivalent_under_current_data": false,
+      "independent_evidence": true
+    },
+    "model_a_equal__model_c_overlap": {
+      "left_model": "model_a_equal",
+      "right_model": "model_c_overlap",
+      "comparisons": 368,
+      "exact_score_matches": 124,
+      "near_score_matches": 124,
+      "exact_stage_matches": 207,
+      "max_abs_score_difference": 12.94803613214286,
+      "exact_score_share": 0.33695652173913043,
+      "near_score_share": 0.33695652173913043,
+      "exact_stage_share": 0.5625,
+      "exact_equivalent_under_current_data": false,
+      "equivalent_under_current_data": false,
+      "independent_evidence": true
+    },
+    "model_a_equal__model_d_comparable": {
+      "left_model": "model_a_equal",
+      "right_model": "model_d_comparable",
+      "comparisons": 368,
+      "exact_score_matches": 165,
+      "near_score_matches": 165,
+      "exact_stage_matches": 289,
+      "max_abs_score_difference": 7.596069292608362,
+      "exact_score_share": 0.4483695652173913,
+      "near_score_share": 0.4483695652173913,
+      "exact_stage_share": 0.7853260869565217,
+      "exact_equivalent_under_current_data": false,
+      "equivalent_under_current_data": false,
+      "independent_evidence": true
+    },
+    "model_b_domain__model_c_overlap": {
+      "left_model": "model_b_domain",
+      "right_model": "model_c_overlap",
+      "comparisons": 368,
+      "exact_score_matches": 261,
+      "near_score_matches": 368,
+      "exact_stage_matches": 368,
+      "max_abs_score_difference": 1.4210854715202004e-14,
+      "exact_score_share": 0.7092391304347826,
+      "near_score_share": 1.0,
+      "exact_stage_share": 1.0,
+      "exact_equivalent_under_current_data": false,
+      "equivalent_under_current_data": true,
+      "independent_evidence": false
+    },
+    "model_b_domain__model_d_comparable": {
+      "left_model": "model_b_domain",
+      "right_model": "model_d_comparable",
+      "comparisons": 368,
+      "exact_score_matches": 124,
+      "near_score_matches": 124,
+      "exact_stage_matches": 174,
+      "max_abs_score_difference": 19.487436863202973,
+      "exact_score_share": 0.33695652173913043,
+      "near_score_share": 0.33695652173913043,
+      "exact_stage_share": 0.47282608695652173,
+      "exact_equivalent_under_current_data": false,
+      "equivalent_under_current_data": false,
+      "independent_evidence": true
+    },
+    "model_c_overlap__model_d_comparable": {
+      "left_model": "model_c_overlap",
+      "right_model": "model_d_comparable",
+      "comparisons": 368,
+      "exact_score_matches": 124,
+      "near_score_matches": 124,
+      "exact_stage_matches": 174,
+      "max_abs_score_difference": 19.487436863202973,
+      "exact_score_share": 0.33695652173913043,
+      "near_score_share": 0.33695652173913043,
+      "exact_stage_share": 0.47282608695652173,
+      "exact_equivalent_under_current_data": false,
+      "equivalent_under_current_data": false,
+      "independent_evidence": true
+    }
+  },
+  "global_denominator_series": {
+    "NY.GDP.MKTP.CD": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "GDP_CURRENT_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "NY.GDP.MKTP.PP.CD": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "GDP_PPP_CURRENT_INTL",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "NY.GDP.MKTP.KD": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "GDP_REAL_CONSTANT_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "TX.VAL.MRCH.CD.WT": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "MERCHANDISE_EXPORTS_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "TM.VAL.MRCH.CD.WT": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "MERCHANDISE_IMPORTS_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "TX.VAL.SERV.CD.WT": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "COMMERCIAL_SERVICE_EXPORTS_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "TM.VAL.SERV.CD.WT": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "COMMERCIAL_SERVICE_IMPORTS_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "MS.MIL.XPND.CD": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "MILITARY_EXPENDITURE_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "IP.PAT.RESD": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "PATENT_APPLICATIONS_RESIDENT",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "IP.PAT.NRES": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "PATENT_APPLICATIONS_NONRESIDENT",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "TX.VAL.TECH.CD": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "HIGH_TECHNOLOGY_EXPORTS_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    }
+  },
+  "currency_research_entities": {
+    "USD": {
+      "entity": "USD",
+      "scope": "currency",
+      "issuer_area": "United States",
+      "country_iso3": "USA"
+    },
+    "EUR": {
+      "entity": "EUR",
+      "scope": "currency_area",
+      "issuer_area": "Euro area",
+      "country_iso3": ""
+    },
+    "CNY": {
+      "entity": "CNY",
+      "scope": "currency",
+      "issuer_area": "China",
+      "country_iso3": "CHN"
+    },
+    "JPY": {
+      "entity": "JPY",
+      "scope": "currency",
+      "issuer_area": "Japan",
+      "country_iso3": "JPN"
+    },
+    "GBP": {
+      "entity": "GBP",
+      "scope": "currency",
+      "issuer_area": "United Kingdom",
+      "country_iso3": "GBR"
+    },
+    "CHF": {
+      "entity": "CHF",
+      "scope": "currency",
+      "issuer_area": "Switzerland",
+      "country_iso3": "CHE"
+    },
+    "INR": {
+      "entity": "INR",
+      "scope": "currency",
+      "issuer_area": "India",
+      "country_iso3": "IND"
+    },
+    "DEM": {
+      "entity": "DEM",
+      "scope": "historical_currency",
+      "issuer_area": "Germany",
+      "country_iso3": "DEU"
+    },
+    "FRF": {
+      "entity": "FRF",
+      "scope": "historical_currency",
+      "issuer_area": "France",
+      "country_iso3": "FRA"
+    }
+  },
+  "historical_boundaries": [
+    {
+      "country": "DEU",
+      "statistical_entity": "Germany (current boundaries)",
+      "applies_from": "1991-01-01",
+      "applies_to": "present",
+      "interpretation": "Post-reunification Germany; directly comparable to current DEU identity.",
+      "source_methodology": "Atlas boundary registry v1; provider-specific definitions still apply."
+    },
+    {
+      "country": "DEU",
+      "statistical_entity": "Federal Republic of Germany / provider Germany series",
+      "applies_from": "series_start",
+      "applies_to": "1990-12-31",
+      "interpretation": "Pre-1991 observations must be treated as provider-labelled Germany/Federal Republic history, not silently joined to a combined East+West territory.",
+      "source_methodology": "World Bank/OECD/IMF provider conventions; unresolved territorial scope flagged."
+    },
+    {
+      "country": "CHN",
+      "statistical_entity": "China, mainland statistical coverage",
+      "applies_from": "series_start",
+      "applies_to": "present",
+      "interpretation": "Provider definitions may exclude Hong Kong, Macao and Taiwan unless explicitly stated.",
+      "source_methodology": "Atlas boundary registry v1; provider notes govern each series."
+    }
+  ],
+  "generated_exports": [
+    "actual_force_inclusion.csv",
+    "composite_results.csv",
+    "country_indicator_history.csv",
+    "currency_influence.csv",
+    "cycle_history.csv",
+    "cycle_transitions.csv",
+    "data_quality_findings.csv",
+    "database_inventory.json",
+    "financial_influence.csv",
+    "force_history.csv",
+    "force_measurements.csv",
+    "force_methodology.json",
+    "forecast_readiness.json",
+    "global_power_shares.csv",
+    "historical_boundary_metadata.csv",
+    "historical_period_comparison.csv",
+    "indicator_coverage.csv",
+    "model_comparison.csv",
+    "model_effective_weights.csv",
+    "model_equivalence_report.json",
+    "model_force_semantics.csv",
+    "power_measure_history.csv",
+    "power_measure_registry.json",
+    "power_measures.csv",
+    "productivity_comparison.csv",
+    "provider_status.csv",
+    "research_manifest.json",
+    "stage_disagreement.csv",
+    "strict_historical_availability.json"
   ],
   "limitations": [
     "Retrospective history uses latest available vintages, not only information published at each historical date.",

@@ -213,7 +213,9 @@ if ($mode -in @("daily", "full", "macro-only", "historical")) {
 }
 $referenceSteps = @(
   @{ Name = "World Bank labour participation reference"; Args = @("scripts\ingest_wb_reference.py", "wdi_lfp_v1", [string]$HistoricalStartYear) },
-  @{ Name = "OECD labour productivity reference"; Args = @("scripts\ingest_oecd_reference.py", "--universe", "oecd_lpph_v1", "--start-year", [string]$HistoricalStartYear) }
+  @{ Name = "OECD labour productivity reference"; Args = @("scripts\ingest_oecd_reference.py", "--universe", "oecd_lpph_v1", "--start-year", [string]$HistoricalStartYear) },
+  @{ Name = "World Bank international power expansion"; Args = @("scripts\ingest_wb_power_expansion.py", "--start", [string]$HistoricalStartYear) },
+  @{ Name = "World Bank global power denominators"; Args = @("scripts\ingest_wb_global_denominators.py", "--start", [string]$HistoricalStartYear) }
 )
 $widArgs = @("scripts\ingest_wid.py", "--all-countries", "--all-mapped", "--zip-path")
 if ($WidZip) { $widArgs += (Resolve-Path $WidZip).Path }
@@ -223,12 +225,12 @@ $steps = switch ($mode) {
     @("Provider snapshot collection", "Governance uncertainty diagnostics", "Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff")
   }
   "full" {
-    @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes (WB + OECD)", "Incremental market update ($MarketLookbackDays days)", "WID local archive if supplied", "Observatory recalculation and snapshot diff")
+    @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes and international power expansion", "Incremental market update ($MarketLookbackDays days)", "WID local archive if supplied", "Observatory recalculation and snapshot diff")
   }
   "macro-only" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Observatory recalculation and snapshot diff") }
   "markets-only" { @("Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff") }
-  "references-only" { @("Reference universes (WB + OECD)", "Observatory recalculation and snapshot diff") }
-  "historical" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes from $HistoricalStartYear (WB + OECD)", "Observatory recalculation and snapshot diff") }
+  "references-only" { @("Reference universes and international power expansion", "Observatory recalculation and snapshot diff") }
+  "historical" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes from $HistoricalStartYear and international power expansion", "Observatory recalculation and snapshot diff") }
   "recalculate-only" { @("Observatory recalculation and snapshot diff") }
 }
 if ($SkipMarkets) { $steps = $steps | Where-Object { $_ -notmatch "market" }; $steps += "Market update skipped" }

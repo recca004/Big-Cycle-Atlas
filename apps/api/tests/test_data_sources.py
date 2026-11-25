@@ -46,7 +46,7 @@ async def test_get_source_by_key(client):
     body = response.json()
     assert body["key"] == "world_bank"
     assert body["name"] == "World Bank"
-    assert body["status"] == "planned"
+    assert body["status"] == "active"
 
 
 @pytest.mark.asyncio

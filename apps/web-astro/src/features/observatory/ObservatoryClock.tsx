@@ -287,8 +287,8 @@ export function ObservatoryClock({
         )}
       </div>
       <p className="clock-honesty">
-        Offline demonstration classification — position on the dial is synthetic interface evidence, not an observation,
-        forecast, countdown or prediction.
+        Experimental domestic-condition cycle — dial positions are model classifications, not an observation,
+        international-power ranking, forecast, countdown or prediction.
       </p>
     </div>
   );

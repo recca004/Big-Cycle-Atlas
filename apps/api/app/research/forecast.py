@@ -40,7 +40,7 @@ class ReadinessRequirements:
     version: str = "readiness-req-v1"
     min_total_scored_periods: int = 100     # enough history to split at all
     min_independent_transitions: int = 30   # positive-label count
-    min_strict_eligible_periods: int = 1    # strict path must be non-empty
+    min_strict_eligible_periods: int = 40   # strict scored periods, not raw observations
     min_oos_periods: int = 40               # chronological holdout size
     max_autocorrelation_run: int = 8        # same-label runs tolerated
 
@@ -118,6 +118,10 @@ def evaluate_readiness(
 ) -> ForecastReadinessReport:
     """Evaluate forecast readiness for one model over one dataset.
 
+    `strict_eligible_periods` means fully eligible SCORED periods whose inputs
+    can be proven available at the period cutoff — never a count of raw
+    observation rows, retrieval timestamps or provider vintages.
+
     Pure function — the caller supplies the transition dataset (e.g. from
     the retrospective diagnostics manifest). Each gate is reported
     individually; a failed gate produces a clear blocker string.
@@ -189,8 +193,8 @@ def evaluate_readiness(
                     "strict-eligible scored periods"
                 ),
                 note=(
-                    "retrospective-only data cannot support a strict "
-                    "backtest claim"
+                    "requires release-date-safe scored periods; raw "
+                    "retrieval timestamps are prospective evidence only"
                 ),
             ),
         )

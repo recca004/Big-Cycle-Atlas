@@ -1,0 +1,4 @@
+country,statistical_entity,applies_from,applies_to,interpretation,source_methodology
+DEU,Germany (current boundaries),1991-01-01,present,Post-reunification Germany; directly comparable to current DEU identity.,Atlas boundary registry v1; provider-specific definitions still apply.
+DEU,Federal Republic of Germany / provider Germany series,series_start,1990-12-31,"Pre-1991 observations must be treated as provider-labelled Germany/Federal Republic history, not silently joined to a combined East+West territory.",World Bank/OECD/IMF provider conventions; unresolved territorial scope flagged.
+CHN,"China, mainland statistical coverage",series_start,present,"Provider definitions may exclude Hong Kong, Macao and Taiwan unless explicitly stated.",Atlas boundary registry v1; provider notes govern each series.

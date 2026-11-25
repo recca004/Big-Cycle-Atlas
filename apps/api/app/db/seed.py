@@ -84,16 +84,16 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
 
         # 2. Seed Data Sources
         sources_data = [
-            {"key": "world_bank", "name": "World Bank"},
-            {"key": "bis", "name": "Bank for International Settlements"},
-            {"key": "oecd", "name": "OECD"},
-            {"key": "imf", "name": "International Monetary Fund"},
-            {"key": "fred", "name": "Federal Reserve Economic Data (FRED)"},
-            {"key": "eurostat", "name": "Eurostat"},
-            {"key": "ecb", "name": "European Central Bank"},
-            {"key": "snb", "name": "Swiss National Bank"},
-            {"key": "un_comtrade", "name": "UN Comtrade"},
-            {"key": "wid", "name": "World Inequality Database (WID)"},
+            {"key": "world_bank", "name": "World Bank", "status": DataSourceStatus.active, "base_url": "https://api.worldbank.org/v2", "update_frequency": "daily", "documentation_url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581", "rate_limit_notes": "Public API; bounded retries and failure isolation handled by the unified updater."},
+            {"key": "bis", "name": "Bank for International Settlements", "status": DataSourceStatus.active, "base_url": "https://stats.bis.org/api/v2", "update_frequency": "daily", "documentation_url": "https://stats.bis.org/", "rate_limit_notes": "Public SDMX API; bounded retries and failure isolation handled by the unified updater."},
+            {"key": "oecd", "name": "OECD", "status": DataSourceStatus.active, "base_url": "https://sdmx.oecd.org/public/rest", "update_frequency": "daily", "documentation_url": "https://sdmx.oecd.org/", "rate_limit_notes": "OECD request budget and one bounded 429 retry are enforced by collection code."},
+            {"key": "imf", "name": "International Monetary Fund", "status": DataSourceStatus.active, "base_url": "https://api.imf.org", "update_frequency": "semi-annual", "documentation_url": "https://www.imf.org/external/datamapper/api/help", "rate_limit_notes": "WEO provider updates are less frequent; failures remain isolated."},
+            {"key": "fred", "name": "Federal Reserve Economic Data (FRED)", "status": DataSourceStatus.planned},
+            {"key": "eurostat", "name": "Eurostat", "status": DataSourceStatus.planned},
+            {"key": "ecb", "name": "European Central Bank", "status": DataSourceStatus.planned},
+            {"key": "snb", "name": "Swiss National Bank", "status": DataSourceStatus.planned},
+            {"key": "un_comtrade", "name": "UN Comtrade", "status": DataSourceStatus.planned},
+            {"key": "wid", "name": "World Inequality Database (WID)", "status": DataSourceStatus.active, "update_frequency": "manual bulk file", "documentation_url": "https://wid.world/", "rate_limit_notes": "Optional local bulk archive only; never auto-downloaded by the unified updater."},
         ]
 
         existing_sources = {
@@ -108,7 +108,11 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
                 session.add(DataSource(**s_data))
                 inserted_sources += 1
             else:
-                current.name = s_data["name"]
+                for field in (
+                    "name", "status", "base_url", "update_frequency",
+                    "rate_limit_notes", "documentation_url",
+                ):
+                    setattr(current, field, s_data.get(field))
                 updated_sources += 1
 
         # 3. Seed Indicators
@@ -141,6 +145,19 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
             {"code": "POLITICAL_STABILITY_WGI_SCORE", "name": "Political Stability — WGI governance score", "category": "Governance", "unit": "score 0-100", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank WGI (2025 revision) Political Stability and Absence of Violence/Terrorism absolute governance score, 0-100. Perception-based composite; larger = more stable."},
             {"code": "GOVERNMENT_EFFECTIVENESS_WGI_SCORE", "name": "Government Effectiveness — WGI governance score", "category": "Governance", "unit": "score 0-100", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank WGI (2025 revision) Government Effectiveness absolute governance score, 0-100. Quality of public services, civil service, policy formulation and implementation. Perception-based composite; larger = more effective government."},
 
+            {"code": "GDP_PPP_CURRENT_INTL", "name": "GDP, PPP (current international $)", "category": "Economy", "unit": "current international $", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank NY.GDP.MKTP.PP.CD. PPP output measure; method/base-year specific and not mixed with other PPP bases."},
+            {"code": "GDP_REAL_CONSTANT_USD", "name": "GDP (constant 2015 US$)", "category": "Economy", "unit": "constant 2015 US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank NY.GDP.MKTP.KD. Constant-price real GDP volume, fixed WDI 2015 base year."},
+            {"code": "MERCHANDISE_EXPORTS_USD", "name": "Merchandise exports (current US$)", "category": "International Power", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank TX.VAL.MRCH.CD.WT. Goods exports only; denominator-safe for global goods-export share."},
+            {"code": "MERCHANDISE_IMPORTS_USD", "name": "Merchandise imports (current US$)", "category": "International Power", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank TM.VAL.MRCH.CD.WT. Goods imports only; denominator-safe for global goods-import share."},
+            {"code": "COMMERCIAL_SERVICE_EXPORTS_USD", "name": "Commercial service exports (current US$)", "category": "International Power", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank TX.VAL.SERV.CD.WT. Commercial services excluding government services n.i.e."},
+            {"code": "COMMERCIAL_SERVICE_IMPORTS_USD", "name": "Commercial service imports (current US$)", "category": "International Power", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank TM.VAL.SERV.CD.WT. Commercial services excluding government services n.i.e."},
+            {"code": "PATENT_APPLICATIONS_RESIDENT", "name": "Patent applications, residents", "category": "Innovation", "unit": "applications", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "WIPO via World Bank IP.PAT.RESD. Filing count is an innovation-output proxy, not patent quality."},
+            {"code": "PATENT_APPLICATIONS_NONRESIDENT", "name": "Patent applications, nonresidents", "category": "Innovation", "unit": "applications", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "WIPO via World Bank IP.PAT.NRES. Foreign filing interest proxy; not a domestic invention count."},
+            {"code": "RESEARCHERS_PER_MILLION", "name": "Researchers in R&D (per million people)", "category": "Innovation", "unit": "per million people", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "UNESCO via World Bank SP.POP.SCIE.RD.P6. Research-capacity density; not output or quality."},
+            {"code": "HIGH_TECHNOLOGY_EXPORTS_USD", "name": "High-technology exports (current US$)", "category": "Innovation", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank TX.VAL.TECH.CD. High-R&D-intensity product exports; classification and assembly effects apply."},
+            {"code": "STOCK_MARKET_CAP_GDP", "name": "Market capitalization of listed domestic companies (% of GDP)", "category": "Financial Influence", "unit": "% of GDP", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "World Bank CM.MKT.LCAP.GD.ZS. Domestic listed-market depth; not an international financial-centre score."},
+            {"code": "DOMESTIC_CREDIT_PRIVATE_GDP", "name": "Domestic credit to private sector (% of GDP)", "category": "Financial Influence", "unit": "% of GDP", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "World Bank FS.AST.PRVT.GD.ZS. Financial-system depth; separate from international banking and reserve status."},
+            {"code": "BROAD_MONEY_GDP", "name": "Broad money (% of GDP)", "category": "Financial Influence", "unit": "% of GDP", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "World Bank FM.LBL.BMNY.GD.ZS. Monetary-system depth; not reserve status or international intermediation."},
             {"code": "GINI_INDEX", "name": "Gini index", "category": "Inequality", "unit": "index (0-100)", "frequency": "irregular", "strength_direction": IndicatorStrengthDirection.negative, "description": "World Bank Gini index (SI.POV.GINI): extent to which the income/consumption distribution deviates from perfect equality (0 = perfect equality, 100 = perfect inequality). Published irregularly; missing years are gaps, never zeros or forward-filled. Higher = more inequality."},
             {"code": "MILITARY_EXPENDITURE_USD", "name": "Military expenditure", "category": "Military", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Annual military expenditure in current US dollars, as published through World Bank WDI using SIPRI data (MS.MIL.XPND.CD; underlying source: SIPRI Military Expenditure Database). Input proxy for military strength, not a capability measure."},
             {"code": "MILITARY_EXPENDITURE_GDP", "name": "Military expenditure (% of GDP)", "category": "Military", "unit": "percent of GDP", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Military expenditure as a share of GDP, as published through World Bank WDI using SIPRI data (MS.MIL.XPND.GD.ZS; underlying source: SIPRI Military Expenditure Database). Input proxy for military strength, not a capability measure."},

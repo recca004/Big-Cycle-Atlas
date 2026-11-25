@@ -828,7 +828,7 @@ async def test_ingestion_creates_no_observation_or_series_rows(client):
     assert await _count(IndicatorDiagnostic) == 3
     assert await _count(Observation) == obs_before  # no Observation rows created
     assert await _count(SourceSeries) == series_before  # no SourceSeries rows created
-    assert await _count(Indicator) == indicators_before == 33  # catalog unchanged
+    assert await _count(Indicator) == indicators_before == 46  # catalog unchanged
 
 
 @pytest.mark.asyncio

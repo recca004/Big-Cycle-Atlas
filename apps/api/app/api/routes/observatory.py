@@ -8,9 +8,11 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_session
-from app.models import Country, DataSource, Indicator, Observation, SourceSeries
+from app.models import Country, DataSource, Indicator, Observation, ReferenceObservation, SourceSeries
+from app.research.power_registry import POWER_MEASURES_BY_INDICATOR
 from app.research import observatory as observatory_service
 from app.research.composite import COMPOSITE_MODELS
+from app.research.model_diagnostics import compare_core_histories
 
 router = APIRouter(prefix="/api/observatory", tags=["observatory"])
 
@@ -22,16 +24,13 @@ class RefreshRequest(BaseModel):
 
 
 async def _strict_count(session: AsyncSession) -> int:
-    return int(
-        (
-            await session.execute(
-                select(func.count(Observation.id)).where(
-                    Observation.retrieved_at.isnot(None)
-                )
-            )
-        ).scalar()
-        or 0
-    )
+    """Fully release-date-safe scored periods available to forecast gates.
+
+    Retrieved observation rows are prospective provenance, not strict
+    historical evidence. Until a strict-as-of composite run exists, zero
+    scored periods qualify.
+    """
+    return 0
 
 
 @router.get("/overview")
@@ -72,13 +71,121 @@ async def observatory_overview(
     }
 
 
+@router.get("/model-comparison")
+async def observatory_model_comparison(
+    start_year: int = Query(1980, ge=1960, le=2200),
+    period: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    """Actual latest/requested-period stage markers for every experimental model."""
+    cores = {
+        model_id: await observatory_service.compute_core_observatory(
+            session, model_id=model_id, start_year=start_year
+        )
+        for model_id in COMPOSITE_MODELS
+    }
+    reference = cores["model_b_domain"]
+    active_period = period or (reference["available_periods"][-1] if reference["available_periods"] else None)
+    rows = []
+    for country in reference["countries"]:
+        row = {"iso3": country["iso3"], "name": country["name"], "models": {}}
+        for model_id, core in cores.items():
+            model_country = next((c for c in core["countries"] if c["iso3"] == country["iso3"]), None)
+            point = None
+            if model_country:
+                point = next(
+                    (p for p in model_country["history"] if p["period"] == active_period),
+                    model_country["history"][-1] if model_country["history"] else None,
+                )
+            row["models"][model_id] = {
+                "stage": point.get("stage") if point else None,
+                "score": point.get("score") if point else None,
+                "momentum": point.get("momentum") if point else None,
+                "period": point.get("period") if point else None,
+                "coverage_ratio": model_country.get("coverage_ratio") if model_country else None,
+            }
+        rows.append(row)
+    model_ids = list(COMPOSITE_MODELS)
+    equivalence = {}
+    for i, left in enumerate(model_ids):
+        for right in model_ids[i + 1:]:
+            comparison = compare_core_histories(cores[left], cores[right])
+            equivalence[f"{left}__{right}"] = {
+                "comparisons": comparison.comparisons,
+                "exact_score_share": comparison.exact_score_share,
+                "near_score_share": comparison.near_score_share,
+                "exact_stage_share": comparison.exact_stage_share,
+                "equivalent_under_current_data": comparison.materially_equivalent,
+                "independent_evidence": not comparison.materially_equivalent,
+            }
+    return {
+        "cycle_label": "experimental_domestic_condition_cycle",
+        "requested_period": period,
+        "active_period": active_period,
+        "start_year": start_year,
+        "models": [
+            {
+                "model_id": model_id,
+                "model_version": spec.version,
+                "kind": spec.kind,
+                "notes": spec.notes,
+            }
+            for model_id, spec in COMPOSITE_MODELS.items()
+        ],
+        "countries": rows,
+        "equivalence": equivalence,
+        "note": (
+            "Stage markers are model outputs for the same experimental domestic-"
+            "condition cycle; materially equivalent models are not independent "
+            "confirmation."
+        ),
+    }
+
+
 @router.get("/series")
 async def observatory_series(
     indicator: str = Query("GDP_CURRENT_USD"),
     start_year: int = Query(1970, ge=1800, le=2200),
+    world_share: bool = Query(False),
     session: AsyncSession = Depends(get_session),
 ):
     """Latest-vintage measure history across all tracked countries."""
+    denominator_by_year: dict[int, float] = {}
+    denominator_entity = None
+    if world_share:
+        definition = POWER_MEASURES_BY_INDICATOR.get(indicator)
+        if not definition or not definition.global_denominator_code:
+            raise HTTPException(
+                status_code=422,
+                detail=f"No verified world denominator is registered for {indicator!r}",
+            )
+        ref_vintage = (
+            select(
+                ReferenceObservation.period_start.label("period_start"),
+                func.max(ReferenceObservation.vintage_number).label("vintage"),
+            )
+            .where(ReferenceObservation.universe_code == "world_wdi_denominator_v1")
+            .where(ReferenceObservation.indicator_code == indicator)
+            .where(ReferenceObservation.country_iso3 == "WLD")
+            .group_by(ReferenceObservation.period_start)
+            .subquery()
+        )
+        denominator_rows = (
+            await session.execute(
+                select(ReferenceObservation.period_start, ReferenceObservation.value)
+                .select_from(ReferenceObservation)
+                .join(
+                    ref_vintage,
+                    (ReferenceObservation.period_start == ref_vintage.c.period_start)
+                    & (ReferenceObservation.vintage_number == ref_vintage.c.vintage),
+                )
+                .where(ReferenceObservation.universe_code == "world_wdi_denominator_v1")
+                .where(ReferenceObservation.indicator_code == indicator)
+                .where(ReferenceObservation.country_iso3 == "WLD")
+            )
+        ).all()
+        denominator_by_year = {period.year: value for period, value in denominator_rows}
+        denominator_entity = "WLD"
     latest_vintage = (
         select(
             Observation.country_id.label("country_id"),
@@ -122,26 +229,35 @@ async def observatory_series(
     ).all()
     countries: dict[str, dict] = {}
     for iso3, name, unit, period, value, vintage, source in rows:
+        display_value = value
+        denominator = denominator_by_year.get(period.year) if world_share else None
+        if world_share:
+            if denominator in (None, 0):
+                continue
+            display_value = value / denominator * 100
         entry = countries.setdefault(
             iso3,
             {
                 "iso3": iso3,
-                "indicator_name": name,
-                "unit": unit,
+                "indicator_name": f"{name} — global share" if world_share else name,
+                "unit": "% of world" if world_share else unit,
                 "source": source,
+                "denominator_entity": denominator_entity,
                 "points": [],
             },
         )
         entry["points"].append(
             {
                 "period": period.year,
-                "value": value,
+                "value": display_value,
                 "vintage": vintage,
             }
         )
     return {
         "indicator": indicator,
         "start_year": start_year,
+        "world_share": world_share,
+        "denominator_entity": denominator_entity,
         "countries": list(countries.values()),
     }
 

@@ -275,13 +275,54 @@ export interface MeasureSeries {
   indicator_name: string;
   unit: string | null;
   source: string;
+  denominator_entity?: string | null;
   points: { period: number; value: number; vintage: number }[];
 }
 
 export interface MeasureHistory {
   indicator: string;
   start_year: number;
+  world_share?: boolean;
+  denominator_entity?: string | null;
   countries: MeasureSeries[];
+}
+
+export interface ModelStageMarker {
+  stage: string | null;
+  score: number | null;
+  momentum: number | null;
+  period: string | null;
+  coverage_ratio: number | null;
+}
+
+export interface ObservatoryModelComparison {
+  cycle_label: string;
+  requested_period: string | null;
+  active_period: string | null;
+  start_year: number;
+  models: {
+    model_id: string;
+    model_version: string;
+    kind: string;
+    notes: string;
+  }[];
+  countries: {
+    iso3: string;
+    name: string;
+    models: Record<string, ModelStageMarker>;
+  }[];
+  equivalence: Record<
+    string,
+    {
+      comparisons: number;
+      exact_score_share: number;
+      near_score_share: number;
+      exact_stage_share: number;
+      equivalent_under_current_data: boolean;
+      independent_evidence: boolean;
+    }
+  >;
+  note: string;
 }
 
 export interface RefreshJob {
@@ -305,6 +346,8 @@ export interface ObservatoryOverview {
   model: {
     model_id: string;
     model_version: string;
+    cycle_label?: string;
+    cycle_label_note?: string;
     available_models: {
       model_id: string;
       model_version: string;

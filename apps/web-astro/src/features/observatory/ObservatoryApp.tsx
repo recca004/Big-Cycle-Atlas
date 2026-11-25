@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
+  ObservatoryModelComparison,
   ObservatoryOverview,
   RefreshJob,
   TransitionMonitor,
@@ -76,6 +77,8 @@ export function ObservatoryApp({ mode }: Props) {
   const [monitor, setMonitor] = useState<TransitionMonitor | null>(null);
   const [monitorError, setMonitorError] = useState<string | null>(null);
   const [rangeStart, setRangeStart] = useState<number>(1980);
+  const [selectedModel, setSelectedModel] = useState("model_b_domain");
+  const [modelComparison, setModelComparison] = useState<ObservatoryModelComparison | null>(null);
   const refreshTimer = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -89,7 +92,7 @@ export function ObservatoryApp({ mode }: Props) {
     setError(null);
     setHistIndex(null);
     service
-      .loadOverview(rangeStart)
+      .loadOverview(rangeStart, selectedModel)
       .then((overview) => {
         if (!alive) return;
         setData(overview);
@@ -104,7 +107,20 @@ export function ObservatoryApp({ mode }: Props) {
     return () => {
       alive = false;
     };
-  }, [service, rangeStart]);
+  }, [service, rangeStart, selectedModel]);
+
+  useEffect(() => {
+    if (!data) return;
+    let alive = true;
+    setModelComparison(null);
+    service
+      .loadModelComparison(rangeStart)
+      .then((next) => alive && setModelComparison(next))
+      .catch(() => alive && setModelComparison(null));
+    return () => {
+      alive = false;
+    };
+  }, [service, rangeStart, data]);
 
   useEffect(() => {
     if (!data) return;
@@ -120,7 +136,7 @@ export function ObservatoryApp({ mode }: Props) {
     setMonitor(null);
     setMonitorError(null);
     service
-      .loadTransition(incumbent, challenger, rangeStart)
+      .loadTransition(incumbent, challenger, rangeStart, selectedModel)
       .then((next) => {
         if (alive) setMonitor(next);
       })
@@ -130,7 +146,7 @@ export function ObservatoryApp({ mode }: Props) {
     return () => {
       alive = false;
     };
-  }, [data, incumbent, challenger, rangeStart, service]);
+  }, [data, incumbent, challenger, rangeStart, selectedModel, service]);
 
   useEffect(
     () => () => {
@@ -170,7 +186,7 @@ export function ObservatoryApp({ mode }: Props) {
             refreshTimer.current = window.setTimeout(() => void poll(), 3000);
           } else if (status.status === "succeeded") {
             invalidateObservatoryCaches();
-            setData(await service.loadOverview(rangeStart));
+            setData(await service.loadOverview(rangeStart, selectedModel));
           }
         };
         void poll();
@@ -178,7 +194,7 @@ export function ObservatoryApp({ mode }: Props) {
       .catch((err: unknown) => {
         setError(err instanceof Error ? err.message : "Refresh request failed");
       });
-  }, [demo, job?.running, job?.status, rangeStart, service]);
+  }, [demo, job?.running, job?.status, rangeStart, selectedModel, service]);
 
   if (error && !data) {
     return (
@@ -264,6 +280,19 @@ export function ObservatoryApp({ mode }: Props) {
                 </button>
               ))}
             </div>
+            <label className="obs-model-picker">
+              <span className="obs-picker-kicker">Experimental model</span>
+              <select
+                className="glass-button"
+                value={selectedModel}
+                onChange={(event) => setSelectedModel(event.target.value)}
+                aria-label="Select experimental domestic-condition model"
+              >
+                {data.model.available_models.map((model) => (
+                  <option key={model.model_id} value={model.model_id}>{model.model_id}</option>
+                ))}
+              </select>
+            </label>
           </section>
           {!classifiedAtPlayback && (
             <p className="obs-unclassified-note" role="status">
@@ -284,7 +313,7 @@ export function ObservatoryApp({ mode }: Props) {
                 compact
               />
             }
-            periodLabel={playbackPeriod ? `${playbackPeriod} — historical` : `${latestPeriod} (latest ${demo ? "demo" : "production"})`}
+            periodLabel={playbackPeriod ? `${playbackPeriod} — historical` : `${latestPeriod} · experimental domestic-condition cycle`}
           />
           <section className="obs-event-rail" aria-label="Sourced historical context">
             {HISTORICAL_EVENTS.filter((event) => event.year >= rangeStart).map((event) => (
@@ -379,9 +408,60 @@ export function ObservatoryApp({ mode }: Props) {
           </p>
         </section>
 
+        {modelComparison && (
+          <section className="obs-panel obs-section glass" aria-labelledby="model-comparison-heading">
+            <SectionHeading id="model-comparison-heading" kicker="Model evidence" title={`Experimental model comparison — ${modelComparison.active_period ?? "latest"}`}>
+              Actual stage markers for each selectable model. Equivalent model pairs are labelled and do not count as independent confirmation.
+            </SectionHeading>
+            <div className="obs-table-wrap">
+              <table className="obs-powers obs-model-comparison">
+                <thead>
+                  <tr>
+                    <th scope="col">Power</th>
+                    {modelComparison.models.map((model) => (
+                      <th key={model.model_id} scope="col">{model.model_id}</th>
+                    ))}
+                    <th scope="col">Disagreement</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {modelComparison.countries.map((country) => {
+                    const stages = modelComparison.models
+                      .map((model) => country.models[model.model_id]?.stage)
+                      .filter(Boolean);
+                    return (
+                      <tr key={country.iso3} className={country.iso3 === selectedIso3 ? "selected" : undefined}>
+                        <td><strong>{country.name}</strong> <span className="obs-chip">{country.iso3}</span></td>
+                        {modelComparison.models.map((model) => {
+                          const marker = country.models[model.model_id];
+                          return (
+                            <td key={model.model_id}>
+                              {marker?.stage ? stageLabel(marker.stage) : "—"}
+                              <span className="obs-muted obs-model-score">
+                                {marker?.score !== null && marker?.score !== undefined ? ` ${marker.score.toFixed(1)}` : ""}
+                              </span>
+                            </td>
+                          );
+                        })}
+                        <td>{new Set(stages).size > 1 ? `${new Set(stages).size} stages` : "Agreement"}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p className="obs-note">
+              {modelComparison.note}
+              {Object.entries(modelComparison.equivalence)
+                .filter(([, result]) => result.equivalent_under_current_data)
+                .map(([pair]) => ` ${pair.replaceAll("__", " ↔ ")} is materially equivalent under current evidence.`)}
+            </p>
+          </section>
+        )}
+
         <section className="obs-panel obs-section glass" aria-labelledby="measures-heading">
-          <SectionHeading id="measures-heading" kicker="Power measures" title="The eight power measures">
-            Production output, trade, military, monetary, innovation, education and productivity measures — shown only where source observations exist.
+          <SectionHeading id="measures-heading" kicker="International power" title="Measured international-power evidence">
+            Production output, trade, military, monetary, innovation, education, financial-depth and productivity measures — shown only where source observations exist. No composite power ranking is inferred.
           </SectionHeading>
           <div>
             <PowerMeasuresMatrix countries={data.countries} selectedIso3={selectedIso3} demo={demo} />

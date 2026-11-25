@@ -6,11 +6,12 @@
     "blockers": [
       "eligible_origins",
       "positive_labels",
-      "sample_size"
+      "sample_size",
+      "strict_availability"
     ],
     "total_scored_periods": 31,
     "total_genuine_transitions": 50,
-    "strict_eligible_periods": 17170,
+    "strict_eligible_periods": 0,
     "horizons": [
       {
         "horizon": "1y",
@@ -18,7 +19,7 @@
         "horizon_quarters": 4,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 24 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 24 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 30,
         "positive_transitions": 24,
         "gates": [
@@ -52,10 +53,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -65,7 +66,7 @@
         "horizon_quarters": 8,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 29,
         "positive_transitions": 27,
         "gates": [
@@ -99,10 +100,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -112,7 +113,7 @@
         "horizon_quarters": 20,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 26,
         "positive_transitions": 26,
         "gates": [
@@ -146,10 +147,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -159,7 +160,7 @@
         "horizon_quarters": 40,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 21,
         "positive_transitions": 21,
         "gates": [
@@ -193,10 +194,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       }
@@ -209,11 +210,12 @@
     "blockers": [
       "eligible_origins",
       "positive_labels",
-      "sample_size"
+      "sample_size",
+      "strict_availability"
     ],
     "total_scored_periods": 31,
     "total_genuine_transitions": 49,
-    "strict_eligible_periods": 17170,
+    "strict_eligible_periods": 0,
     "horizons": [
       {
         "horizon": "1y",
@@ -221,7 +223,7 @@
         "horizon_quarters": 4,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 30,
         "positive_transitions": 27,
         "gates": [
@@ -255,10 +257,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -268,7 +270,7 @@
         "horizon_quarters": 8,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 29 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 29 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 29,
         "positive_transitions": 29,
         "gates": [
@@ -302,10 +304,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -315,7 +317,7 @@
         "horizon_quarters": 20,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 26,
         "positive_transitions": 26,
         "gates": [
@@ -349,10 +351,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -362,7 +364,7 @@
         "horizon_quarters": 40,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 21,
         "positive_transitions": 21,
         "gates": [
@@ -396,10 +398,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       }
@@ -412,11 +414,12 @@
     "blockers": [
       "eligible_origins",
       "positive_labels",
-      "sample_size"
+      "sample_size",
+      "strict_availability"
     ],
     "total_scored_periods": 31,
     "total_genuine_transitions": 49,
-    "strict_eligible_periods": 17170,
+    "strict_eligible_periods": 0,
     "horizons": [
       {
         "horizon": "1y",
@@ -424,7 +427,7 @@
         "horizon_quarters": 4,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 30,
         "positive_transitions": 27,
         "gates": [
@@ -458,10 +461,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -471,7 +474,7 @@
         "horizon_quarters": 8,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 29 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 29 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 29,
         "positive_transitions": 29,
         "gates": [
@@ -505,10 +508,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -518,7 +521,7 @@
         "horizon_quarters": 20,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 26,
         "positive_transitions": 26,
         "gates": [
@@ -552,10 +555,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -565,7 +568,7 @@
         "horizon_quarters": 40,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 21,
         "positive_transitions": 21,
         "gates": [
@@ -599,10 +602,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       }
@@ -615,11 +618,12 @@
     "blockers": [
       "eligible_origins",
       "positive_labels",
-      "sample_size"
+      "sample_size",
+      "strict_availability"
     ],
     "total_scored_periods": 30,
     "total_genuine_transitions": 39,
-    "strict_eligible_periods": 17170,
+    "strict_eligible_periods": 0,
     "horizons": [
       {
         "horizon": "1y",
@@ -627,7 +631,7 @@
         "horizon_quarters": 4,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 23 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 23 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 29,
         "positive_transitions": 23,
         "gates": [
@@ -661,10 +665,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -674,7 +678,7 @@
         "horizon_quarters": 8,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 28 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 25 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 28 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 25 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 28,
         "positive_transitions": 25,
         "gates": [
@@ -708,10 +712,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -721,7 +725,7 @@
         "horizon_quarters": 20,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 25 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 25 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 25 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 25 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 25,
         "positive_transitions": 25,
         "gates": [
@@ -755,10 +759,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       },
@@ -768,7 +772,7 @@
         "horizon_quarters": 40,
         "available": false,
         "status_label": "Gated \u2014 insufficient evidence",
-        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 20 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 20 (needs >= 30 positive labels at this horizon)",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 20 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 20 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
         "eligible_samples": 20,
         "positive_transitions": 20,
         "gates": [
@@ -802,10 +806,10 @@
           },
           {
             "gate": "strict_availability",
-            "passed": true,
-            "value": 17170,
-            "requirement": ">= 1 strict-eligible scored periods",
-            "note": "retrospective-only data cannot support a strict backtest claim"
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
           }
         ]
       }

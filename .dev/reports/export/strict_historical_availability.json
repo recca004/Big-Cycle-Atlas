@@ -1,0 +1,8 @@
+{
+  "raw_observation_vintages": 21178,
+  "distinct_observation_identities": 18402,
+  "with_provider_release_date": 0,
+  "with_atlas_retrieval": 18402,
+  "strict_scored_periods": 0,
+  "explanation": "Current observations lack provider release dates, and Atlas retrieval timestamps prove only prospective availability. No release-date-safe composite run exists, so zero scored periods are strictly eligible forecast samples."
+}

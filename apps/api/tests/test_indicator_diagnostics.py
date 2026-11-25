@@ -242,7 +242,7 @@ async def test_new_diagnostic_inserts_vintage_1_on_base_canonical_indicator(clie
 
     # Part 4 of the sprint: the BASE canonical indicator is REUSED — no new
     # indicator rows ("25 -> 34" pollution is structurally impossible here).
-    assert after == before == 33
+    assert after == before == 46
     async with session_module._sessionmaker() as session:
         rows = (await session.execute(select(IndicatorDiagnostic))).scalars().all()
         assert len(rows) == 1
@@ -516,7 +516,7 @@ async def test_diagnostics_never_become_observations_or_series(client):
 
     assert await _count(Observation) == obs_before  # no Observation rows created
     assert await _count(SourceSeries) == series_before  # no diagnostic SourceSeries
-    assert await _count(Indicator) == indicators_before == 33
+    assert await _count(Indicator) == indicators_before == 46
 
 
 async def test_api_catalog_and_indicator_count_unchanged(client):
@@ -528,7 +528,7 @@ async def test_api_catalog_and_indicator_count_unchanged(client):
     assert (await client.get("/api/indicators/")).json() == indicators_before
     assert (await client.get("/api/countries")).json() == countries_before
     # The catalog still reports exactly the 25 canonical indicators.
-    assert len(indicators_before) == 33
+    assert len(indicators_before) == 46
 
 
 async def test_force_coverage_unchanged(client):

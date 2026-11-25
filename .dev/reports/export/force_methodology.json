@@ -47,7 +47,7 @@
       ],
       "candidate_indicator_codes": [],
       "coverage_ceiling": null,
-      "coverage_notes": "World Bank WGI Rule of Law governance score (2025 revision, 0-100 absolute scale) live 1996-2024 for all 8 countries. Perception-based composite with measurement uncertainty (90% CI bounds and number of sources exist as separate WGI series, not yet imported). This is a SOURCE indicator for the force, not an Atlas force score."
+      "coverage_notes": "World Bank WGI Rule of Law governance score (2025 revision, 0-100 absolute scale) live 1996-present for all 8 countries. Perception-based composite with measurement uncertainty; the 90% CI bounds and source counts are stored in the separate indicator_diagnostics evidence path and never become force inputs. This is a SOURCE indicator for the force, not an Atlas force score."
     },
     {
       "code": "corruption",
@@ -58,7 +58,7 @@
       ],
       "candidate_indicator_codes": [],
       "coverage_ceiling": null,
-      "coverage_notes": "Source is WGI 'Control of Corruption' (2025 revision, 0-100): HIGHER means stronger control of corruption / less corruption \u2014 the raw stored value is never reversed or reinterpreted. Perception-based composite with measurement uncertainty. This is a SOURCE indicator, not an Atlas force score."
+      "coverage_notes": "Source is WGI 'Control of Corruption' (2025 revision, 0-100): HIGHER means stronger control of corruption / less corruption \u2014 the raw stored value is never reversed or reinterpreted. Perception-based composite; uncertainty bounds/source counts are stored separately as indicator diagnostics. This is a SOURCE indicator, not an Atlas force score."
     },
     {
       "code": "resource_allocation_efficiency",
@@ -191,7 +191,7 @@
       ],
       "candidate_indicator_codes": [],
       "coverage_ceiling": "partial",
-      "coverage_notes": "Initial institutional/conflict-risk proxy: WGI 'Political Stability and Absence of Violence/Terrorism' governance score (2025 revision, 0-100) live 1996-2024 for all 8 countries. It does NOT measure every form of domestic conflict (polarization, protests, distributional tension) \u2014 the force is capped at PARTIAL while this proxy is the only input; later ACLED / event data may strengthen it. Perception-based composite with measurement uncertainty. SOURCE indicator, not an Atlas force score."
+      "coverage_notes": "Initial institutional/conflict-risk proxy: WGI 'Political Stability and Absence of Violence/Terrorism' governance score (2025 revision, 0-100) live 1996-2024 for all 8 countries. It does NOT measure every form of domestic conflict (polarization, protests, distributional tension) \u2014 the force is capped at PARTIAL while this proxy is the only input; later ACLED / event data may strengthen it. Perception-based composite; uncertainty bounds/source counts are stored separately as indicator diagnostics. SOURCE indicator, not an Atlas force score."
     },
     {
       "code": "geography",
@@ -200,7 +200,7 @@
       "live_indicator_codes": [],
       "candidate_indicator_codes": [],
       "coverage_ceiling": null,
-      "coverage_notes": "Mostly static; no time-series catalog indicator planned."
+      "coverage_notes": "Structural context profile `geo_profile_v1` (landlocked status, coastline, island status, land area and maritime access) is available for all tracked countries. It is deliberately static context and has no live time-series input or score."
     },
     {
       "code": "acts_of_nature",

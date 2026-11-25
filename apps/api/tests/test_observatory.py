@@ -120,6 +120,43 @@ class TestObservatoryRoutes:
         )
         assert r.status_code == 422
 
+    async def test_model_comparison_reports_actual_markers_and_equivalence(
+        self, client, monkeypatch
+    ):
+        from app.api.routes import observatory as route_module
+
+        async def fake_core(session, model_id, start_year=1980):
+            return {
+                "available_periods": ["2025-Q4"],
+                "countries": [
+                    {
+                        "iso3": "USA", "name": "United States",
+                        "coverage_ratio": 1.0,
+                        "history": [
+                            {
+                                "period": "2025-Q4", "stage": "Rise",
+                                "score": 50.0 + (0.0 if model_id == "model_b_domain" else 1e-14),
+                                "momentum": 0.1,
+                            }
+                        ],
+                    }
+                ],
+            }
+
+        monkeypatch.setattr(
+            route_module.observatory_service,
+            "compute_core_observatory",
+            fake_core,
+        )
+
+        r = await client.get("/api/observatory/model-comparison")
+        assert r.status_code == 200
+        body = r.json()
+        assert body["cycle_label"] == "experimental_domestic_condition_cycle"
+        assert body["countries"][0]["models"]["model_b_domain"]["stage"] == "Rise"
+        assert body["equivalence"]["model_b_domain__model_c_overlap"]["equivalent_under_current_data"] is True
+        assert body["equivalence"]["model_b_domain__model_c_overlap"]["independent_evidence"] is False
+
 
 # --- v1.1 refinement regressions ---------------------------------------------
 

@@ -27,9 +27,29 @@ const MEASURES: MeasureDef[] = [
     meta: (c) => c.international_power.economic_size?.period ?? "",
   },
   {
+    key: "ppp_output", label: "PPP output", description: "GDP in current international dollars", unit: "usd_current",
+    value: (c) => snapshotValue(c, "GDP_PPP_CURRENT_INTL"),
+    meta: (c) => c.indicator_snapshots.GDP_PPP_CURRENT_INTL?.latest?.period ?? "",
+  },
+  {
+    key: "real_output", label: "Real output", description: "GDP in constant 2015 USD", unit: "usd_current",
+    value: (c) => snapshotValue(c, "GDP_REAL_CONSTANT_USD"),
+    meta: (c) => c.indicator_snapshots.GDP_REAL_CONSTANT_USD?.latest?.period ?? "",
+  },
+  {
     key: "share_world_trade", label: "Tracked trade share", description: "Share of tracked import/export volume", unit: "%",
     value: (c) => c.international_power.international_trade?.tracked_share_pct ?? null,
     meta: (c) => c.international_power.international_trade?.period ?? "",
+  },
+  {
+    key: "merch_exports", label: "Goods exports", description: "Merchandise exports in USD", unit: "usd_current",
+    value: (c) => snapshotValue(c, "MERCHANDISE_EXPORTS_USD"),
+    meta: (c) => c.indicator_snapshots.MERCHANDISE_EXPORTS_USD?.latest?.period ?? "",
+  },
+  {
+    key: "service_exports", label: "Service exports", description: "Commercial service exports in USD", unit: "usd_current",
+    value: (c) => snapshotValue(c, "COMMERCIAL_SERVICE_EXPORTS_USD"),
+    meta: (c) => c.indicator_snapshots.COMMERCIAL_SERVICE_EXPORTS_USD?.latest?.period ?? "",
   },
   {
     key: "military_resources", label: "Military resources", description: "Military expenditure in USD", unit: "usd_current",
@@ -51,6 +71,26 @@ const MEASURES: MeasureDef[] = [
     key: "innovation_output", label: "Innovation intensity", description: "R&D expenditure as % of GDP", unit: "% GDP",
     value: (c) => c.international_power.innovation_scale?.rnd_pct_gdp ?? null,
     meta: (c) => c.international_power.innovation_scale?.period ?? "",
+  },
+  {
+    key: "patent_output", label: "Patent output", description: "Resident patent applications", unit: "count",
+    value: (c) => snapshotValue(c, "PATENT_APPLICATIONS_RESIDENT"),
+    meta: (c) => c.indicator_snapshots.PATENT_APPLICATIONS_RESIDENT?.latest?.period ?? "",
+  },
+  {
+    key: "hightech_exports", label: "High-tech exports", description: "High-R&D-intensity exports in USD", unit: "usd_current",
+    value: (c) => snapshotValue(c, "HIGH_TECHNOLOGY_EXPORTS_USD"),
+    meta: (c) => c.indicator_snapshots.HIGH_TECHNOLOGY_EXPORTS_USD?.latest?.period ?? "",
+  },
+  {
+    key: "market_depth", label: "Market depth", description: "Listed market capitalisation / GDP", unit: "% GDP",
+    value: (c) => snapshotValue(c, "STOCK_MARKET_CAP_GDP"),
+    meta: (c) => c.indicator_snapshots.STOCK_MARKET_CAP_GDP?.latest?.period ?? "",
+  },
+  {
+    key: "credit_depth", label: "Credit depth", description: "Domestic private credit / GDP", unit: "% GDP",
+    value: (c) => snapshotValue(c, "DOMESTIC_CREDIT_PRIVATE_GDP"),
+    meta: (c) => c.indicator_snapshots.DOMESTIC_CREDIT_PRIVATE_GDP?.latest?.period ?? "",
   },
   {
     key: "education_attainment", label: "Education attainment", description: "Tertiary attainment, ages 25–34", unit: "%",

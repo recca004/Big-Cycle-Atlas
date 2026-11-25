@@ -18,11 +18,67 @@ CHE,international_trade,imports_pct_gdp,69.109307845911,model_b_domain
 CHE,international_trade,current_account_pct_gdp,6.24639351116552,model_b_domain
 CHE,international_trade,period,2025,model_b_domain
 CHE,international_trade,source,World Bank + World Bank,model_b_domain
+CHE,economic_output_detail,nominal_gdp.value,1043529899250.92,model_b_domain
+CHE,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+CHE,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+CHE,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+CHE,economic_output_detail,ppp_gdp.value,932096048760.891,model_b_domain
+CHE,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+CHE,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+CHE,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+CHE,economic_output_detail,real_gdp_2015_usd.value,848575173117.719,model_b_domain
+CHE,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+CHE,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+CHE,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+CHE,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+CHE,trade_detail,merchandise_exports_usd.value,554160000000.0,model_b_domain
+CHE,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+CHE,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+CHE,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+CHE,trade_detail,merchandise_imports_usd.value,507429000000.0,model_b_domain
+CHE,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+CHE,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+CHE,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+CHE,trade_detail,commercial_service_exports_usd.value,192541312007.976,model_b_domain
+CHE,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+CHE,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+CHE,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+CHE,trade_detail,commercial_service_imports_usd.value,215231017378.162,model_b_domain
+CHE,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+CHE,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+CHE,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+CHE,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 CHE,innovation_scale,rnd_pct_gdp,3.22178,model_b_domain
 CHE,innovation_scale,implied_rnd_usd,33620237588.08629,model_b_domain
 CHE,innovation_scale,tracked_share_pct,1.61,model_b_domain
 CHE,innovation_scale,period,2023,model_b_domain
 CHE,innovation_scale,source,World Bank,model_b_domain
+CHE,innovation_detail,resident_patent_applications.value,1191.0,model_b_domain
+CHE,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+CHE,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+CHE,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+CHE,innovation_detail,researchers_per_million.value,6107.95842,model_b_domain
+CHE,innovation_detail,researchers_per_million.period,2023,model_b_domain
+CHE,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+CHE,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+CHE,innovation_detail,high_technology_exports_usd.value,89522512070.0,model_b_domain
+CHE,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+CHE,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+CHE,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+CHE,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+CHE,financial_depth,listed_market_cap_pct_gdp.value,240.942562527901,model_b_domain
+CHE,financial_depth,listed_market_cap_pct_gdp.period,2025,model_b_domain
+CHE,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+CHE,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+CHE,financial_depth,domestic_credit_private_pct_gdp.value,152.585598347099,model_b_domain
+CHE,financial_depth,domestic_credit_private_pct_gdp.period,2025,model_b_domain
+CHE,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+CHE,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+CHE,financial_depth,broad_money_pct_gdp.value,181.877973322694,model_b_domain
+CHE,financial_depth,broad_money_pct_gdp.period,2016,model_b_domain
+CHE,financial_depth,broad_money_pct_gdp.source,World Bank,model_b_domain
+CHE,financial_depth,broad_money_pct_gdp.vintage,1,model_b_domain
+CHE,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 CHE,monetary_influence,currency_code,CHF,model_b_domain
 CHE,monetary_influence,reserve_anchor_role,Safe-haven regional financial currency,model_b_domain
 CHE,monetary_influence,reer_index,112.267720977404,model_b_domain
@@ -50,11 +106,67 @@ CHN,international_trade,imports_pct_gdp,16.8851895085539,model_b_domain
 CHN,international_trade,current_account_pct_gdp,3.76972243689338,model_b_domain
 CHN,international_trade,period,2025,model_b_domain
 CHN,international_trade,source,World Bank + World Bank,model_b_domain
+CHN,economic_output_detail,nominal_gdp.value,19498039388042.6,model_b_domain
+CHN,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+CHN,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+CHN,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+CHN,economic_output_detail,ppp_gdp.value,41259823532528.0,model_b_domain
+CHN,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+CHN,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+CHN,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+CHN,economic_output_detail,real_gdp_2015_usd.value,19401316126585.1,model_b_domain
+CHN,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+CHN,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+CHN,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+CHN,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+CHN,trade_detail,merchandise_exports_usd.value,3771842000000.0,model_b_domain
+CHN,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+CHN,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+CHN,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+CHN,trade_detail,merchandise_imports_usd.value,2582896000000.0,model_b_domain
+CHN,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+CHN,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+CHN,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+CHN,trade_detail,commercial_service_exports_usd.value,383154067120.32,model_b_domain
+CHN,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+CHN,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+CHN,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+CHN,trade_detail,commercial_service_imports_usd.value,619603232786.67,model_b_domain
+CHN,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+CHN,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+CHN,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+CHN,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 CHN,innovation_scale,rnd_pct_gdp,2.57729,model_b_domain
 CHN,innovation_scale,implied_rnd_usd,502521019344.0832,model_b_domain
 CHN,innovation_scale,tracked_share_pct,24.05,model_b_domain
 CHN,innovation_scale,period,2023,model_b_domain
 CHN,innovation_scale,source,World Bank,model_b_domain
+CHN,innovation_detail,resident_patent_applications.value,1672001.0,model_b_domain
+CHN,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+CHN,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+CHN,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+CHN,innovation_detail,researchers_per_million.value,2107.27003,model_b_domain
+CHN,innovation_detail,researchers_per_million.period,2023,model_b_domain
+CHN,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+CHN,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+CHN,innovation_detail,high_technology_exports_usd.value,856764726389.0,model_b_domain
+CHN,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+CHN,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+CHN,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+CHN,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+CHN,financial_depth,listed_market_cap_pct_gdp.value,79.540605039043,model_b_domain
+CHN,financial_depth,listed_market_cap_pct_gdp.period,2025,model_b_domain
+CHN,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+CHN,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+CHN,financial_depth,domestic_credit_private_pct_gdp.value,194.312528264561,model_b_domain
+CHN,financial_depth,domestic_credit_private_pct_gdp.period,2024,model_b_domain
+CHN,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+CHN,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+CHN,financial_depth,broad_money_pct_gdp.value,227.669028630796,model_b_domain
+CHN,financial_depth,broad_money_pct_gdp.period,2024,model_b_domain
+CHN,financial_depth,broad_money_pct_gdp.source,World Bank,model_b_domain
+CHN,financial_depth,broad_money_pct_gdp.vintage,1,model_b_domain
+CHN,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 CHN,monetary_influence,currency_code,CNY,model_b_domain
 CHN,monetary_influence,reserve_anchor_role,Managed bilateral trade & settlement currency,model_b_domain
 CHN,monetary_influence,reer_index,110.093630738086,model_b_domain
@@ -82,11 +194,67 @@ DEU,international_trade,imports_pct_gdp,38.0780373654056,model_b_domain
 DEU,international_trade,current_account_pct_gdp,4.44736378284623,model_b_domain
 DEU,international_trade,period,2025,model_b_domain
 DEU,international_trade,source,World Bank + World Bank,model_b_domain
+DEU,economic_output_detail,nominal_gdp.value,5050922925047.05,model_b_domain
+DEU,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+DEU,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+DEU,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+DEU,economic_output_detail,ppp_gdp.value,6295798631798.23,model_b_domain
+DEU,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+DEU,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+DEU,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+DEU,economic_output_detail,real_gdp_2015_usd.value,3685858188650.63,model_b_domain
+DEU,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+DEU,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+DEU,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+DEU,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+DEU,trade_detail,merchandise_exports_usd.value,1764188000000.0,model_b_domain
+DEU,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+DEU,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+DEU,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+DEU,trade_detail,merchandise_imports_usd.value,1542796000000.0,model_b_domain
+DEU,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+DEU,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+DEU,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+DEU,trade_detail,commercial_service_exports_usd.value,512377167872.701,model_b_domain
+DEU,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+DEU,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+DEU,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+DEU,trade_detail,commercial_service_imports_usd.value,600327871699.777,model_b_domain
+DEU,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+DEU,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+DEU,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+DEU,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 DEU,innovation_scale,rnd_pct_gdp,3.1539,model_b_domain
 DEU,innovation_scale,implied_rnd_usd,159301058133.0589,model_b_domain
 DEU,innovation_scale,tracked_share_pct,7.63,model_b_domain
 DEU,innovation_scale,period,2023,model_b_domain
 DEU,innovation_scale,source,World Bank,model_b_domain
+DEU,innovation_detail,resident_patent_applications.value,40085.0,model_b_domain
+DEU,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+DEU,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+DEU,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+DEU,innovation_detail,researchers_per_million.value,5926.07432,model_b_domain
+DEU,innovation_detail,researchers_per_million.period,2023,model_b_domain
+DEU,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+DEU,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+DEU,innovation_detail,high_technology_exports_usd.value,246637611895.0,model_b_domain
+DEU,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+DEU,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+DEU,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+DEU,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+DEU,financial_depth,listed_market_cap_pct_gdp.value,57.3881572341157,model_b_domain
+DEU,financial_depth,listed_market_cap_pct_gdp.period,2025,model_b_domain
+DEU,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+DEU,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+DEU,financial_depth,domestic_credit_private_pct_gdp.value,77.253484574492,model_b_domain
+DEU,financial_depth,domestic_credit_private_pct_gdp.period,2023,model_b_domain
+DEU,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+DEU,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+DEU,financial_depth,broad_money_pct_gdp.value,,model_b_domain
+DEU,financial_depth,broad_money_pct_gdp.period,,model_b_domain
+DEU,financial_depth,broad_money_pct_gdp.source,,model_b_domain
+DEU,financial_depth,broad_money_pct_gdp.vintage,,model_b_domain
+DEU,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 DEU,monetary_influence,currency_code,EUR,model_b_domain
 DEU,monetary_influence,reserve_anchor_role,Eurozone shared reserve & trade currency,model_b_domain
 DEU,monetary_influence,reer_index,98.8481643556826,model_b_domain
@@ -114,11 +282,67 @@ FRA,international_trade,imports_pct_gdp,33.7995547693485,model_b_domain
 FRA,international_trade,current_account_pct_gdp,-0.331289693053725,model_b_domain
 FRA,international_trade,period,2025,model_b_domain
 FRA,international_trade,source,World Bank + World Bank,model_b_domain
+FRA,economic_output_detail,nominal_gdp.value,3366315927447.33,model_b_domain
+FRA,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+FRA,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+FRA,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+FRA,economic_output_detail,ppp_gdp.value,4396407858114.73,model_b_domain
+FRA,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+FRA,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+FRA,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+FRA,economic_output_detail,real_gdp_2015_usd.value,2743239233772.68,model_b_domain
+FRA,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+FRA,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+FRA,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+FRA,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+FRA,trade_detail,merchandise_exports_usd.value,683095000000.0,model_b_domain
+FRA,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+FRA,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+FRA,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+FRA,trade_detail,merchandise_imports_usd.value,786434000000.0,model_b_domain
+FRA,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+FRA,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+FRA,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+FRA,trade_detail,commercial_service_exports_usd.value,428613705625.412,model_b_domain
+FRA,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+FRA,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+FRA,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+FRA,trade_detail,commercial_service_imports_usd.value,378612208100.584,model_b_domain
+FRA,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+FRA,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+FRA,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+FRA,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 FRA,innovation_scale,rnd_pct_gdp,2.17832,model_b_domain
 FRA,innovation_scale,implied_rnd_usd,73329133110.77068,model_b_domain
 FRA,innovation_scale,tracked_share_pct,3.51,model_b_domain
 FRA,innovation_scale,period,2023,model_b_domain
 FRA,innovation_scale,source,World Bank,model_b_domain
+FRA,innovation_detail,resident_patent_applications.value,12751.0,model_b_domain
+FRA,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+FRA,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+FRA,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+FRA,innovation_detail,researchers_per_million.value,5368.63555,model_b_domain
+FRA,innovation_detail,researchers_per_million.period,2023,model_b_domain
+FRA,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+FRA,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+FRA,innovation_detail,high_technology_exports_usd.value,116591262278.0,model_b_domain
+FRA,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+FRA,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+FRA,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+FRA,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+FRA,financial_depth,listed_market_cap_pct_gdp.value,85.0578939321398,model_b_domain
+FRA,financial_depth,listed_market_cap_pct_gdp.period,2018,model_b_domain
+FRA,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+FRA,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+FRA,financial_depth,domestic_credit_private_pct_gdp.value,107.58266062477,model_b_domain
+FRA,financial_depth,domestic_credit_private_pct_gdp.period,2024,model_b_domain
+FRA,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+FRA,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+FRA,financial_depth,broad_money_pct_gdp.value,,model_b_domain
+FRA,financial_depth,broad_money_pct_gdp.period,,model_b_domain
+FRA,financial_depth,broad_money_pct_gdp.source,,model_b_domain
+FRA,financial_depth,broad_money_pct_gdp.vintage,,model_b_domain
+FRA,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 FRA,monetary_influence,currency_code,EUR,model_b_domain
 FRA,monetary_influence,reserve_anchor_role,Eurozone shared reserve & trade currency,model_b_domain
 FRA,monetary_influence,reer_index,91.934128368136,model_b_domain
@@ -146,11 +370,67 @@ GBR,international_trade,imports_pct_gdp,31.8603712472379,model_b_domain
 GBR,international_trade,current_account_pct_gdp,-3.13347768999639,model_b_domain
 GBR,international_trade,period,2025,model_b_domain
 GBR,international_trade,source,World Bank + World Bank,model_b_domain
+GBR,economic_output_detail,nominal_gdp.value,4002587541846.01,model_b_domain
+GBR,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+GBR,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+GBR,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+GBR,economic_output_detail,ppp_gdp.value,4489311553269.46,model_b_domain
+GBR,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+GBR,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+GBR,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+GBR,economic_output_detail,real_gdp_2015_usd.value,3364704178220.16,model_b_domain
+GBR,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+GBR,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+GBR,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+GBR,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+GBR,trade_detail,merchandise_exports_usd.value,555829000000.0,model_b_domain
+GBR,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+GBR,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+GBR,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+GBR,trade_detail,merchandise_imports_usd.value,948641000000.0,model_b_domain
+GBR,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+GBR,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+GBR,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+GBR,trade_detail,commercial_service_exports_usd.value,714597645963.569,model_b_domain
+GBR,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+GBR,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+GBR,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+GBR,trade_detail,commercial_service_imports_usd.value,448000144616.641,model_b_domain
+GBR,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+GBR,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+GBR,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+GBR,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 GBR,innovation_scale,rnd_pct_gdp,2.67614,model_b_domain
 GBR,innovation_scale,implied_rnd_usd,107114846242.35782,model_b_domain
 GBR,innovation_scale,tracked_share_pct,5.13,model_b_domain
 GBR,innovation_scale,period,2023,model_b_domain
 GBR,innovation_scale,source,World Bank,model_b_domain
+GBR,innovation_detail,resident_patent_applications.value,11105.0,model_b_domain
+GBR,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+GBR,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+GBR,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+GBR,innovation_detail,researchers_per_million.value,4472.69458,model_b_domain
+GBR,innovation_detail,researchers_per_million.period,2017,model_b_domain
+GBR,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+GBR,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+GBR,innovation_detail,high_technology_exports_usd.value,84767727807.0,model_b_domain
+GBR,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+GBR,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+GBR,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+GBR,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+GBR,financial_depth,listed_market_cap_pct_gdp.value,97.3198877208869,model_b_domain
+GBR,financial_depth,listed_market_cap_pct_gdp.period,2022,model_b_domain
+GBR,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+GBR,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+GBR,financial_depth,domestic_credit_private_pct_gdp.value,112.372018963535,model_b_domain
+GBR,financial_depth,domestic_credit_private_pct_gdp.period,2024,model_b_domain
+GBR,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+GBR,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+GBR,financial_depth,broad_money_pct_gdp.value,141.905739831033,model_b_domain
+GBR,financial_depth,broad_money_pct_gdp.period,2024,model_b_domain
+GBR,financial_depth,broad_money_pct_gdp.source,World Bank,model_b_domain
+GBR,financial_depth,broad_money_pct_gdp.vintage,1,model_b_domain
+GBR,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 GBR,monetary_influence,currency_code,GBP,model_b_domain
 GBR,monetary_influence,reserve_anchor_role,Secondary international financial-centre currency,model_b_domain
 GBR,monetary_influence,reer_index,110.644601526328,model_b_domain
@@ -178,11 +458,67 @@ IND,international_trade,imports_pct_gdp,24.0051596190103,model_b_domain
 IND,international_trade,current_account_pct_gdp,-0.511308076227287,model_b_domain
 IND,international_trade,period,2025,model_b_domain
 IND,international_trade,source,World Bank + World Bank,model_b_domain
+IND,economic_output_detail,nominal_gdp.value,3956067115771.63,model_b_domain
+IND,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+IND,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+IND,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+IND,economic_output_detail,ppp_gdp.value,17197369286822.0,model_b_domain
+IND,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+IND,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+IND,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+IND,economic_output_detail,real_gdp_2015_usd.value,3693970992045.56,model_b_domain
+IND,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+IND,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+IND,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+IND,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+IND,trade_detail,merchandise_exports_usd.value,445278000000.0,model_b_domain
+IND,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+IND,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+IND,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+IND,trade_detail,merchandise_imports_usd.value,753481000000.0,model_b_domain
+IND,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+IND,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+IND,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+IND,trade_detail,commercial_service_exports_usd.value,411633248372.137,model_b_domain
+IND,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+IND,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+IND,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+IND,trade_detail,commercial_service_imports_usd.value,201385330788.838,model_b_domain
+IND,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+IND,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+IND,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+IND,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 IND,innovation_scale,rnd_pct_gdp,0.64558,model_b_domain
 IND,innovation_scale,implied_rnd_usd,,model_b_domain
 IND,innovation_scale,tracked_share_pct,,model_b_domain
 IND,innovation_scale,period,2020,model_b_domain
 IND,innovation_scale,source,World Bank,model_b_domain
+IND,innovation_detail,resident_patent_applications.value,63217.0,model_b_domain
+IND,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+IND,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+IND,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+IND,innovation_detail,researchers_per_million.value,259.26325,model_b_domain
+IND,innovation_detail,researchers_per_million.period,2020,model_b_domain
+IND,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+IND,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+IND,innovation_detail,high_technology_exports_usd.value,54140883629.0,model_b_domain
+IND,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+IND,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+IND,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+IND,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+IND,financial_depth,listed_market_cap_pct_gdp.value,266.92119852826,model_b_domain
+IND,financial_depth,listed_market_cap_pct_gdp.period,2025,model_b_domain
+IND,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+IND,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+IND,financial_depth,domestic_credit_private_pct_gdp.value,44.0305399373406,model_b_domain
+IND,financial_depth,domestic_credit_private_pct_gdp.period,2025,model_b_domain
+IND,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+IND,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+IND,financial_depth,broad_money_pct_gdp.value,82.1020348312414,model_b_domain
+IND,financial_depth,broad_money_pct_gdp.period,2021,model_b_domain
+IND,financial_depth,broad_money_pct_gdp.source,World Bank,model_b_domain
+IND,financial_depth,broad_money_pct_gdp.vintage,1,model_b_domain
+IND,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 IND,monetary_influence,currency_code,INR,model_b_domain
 IND,monetary_influence,reserve_anchor_role,Domestic-led emerging power currency,model_b_domain
 IND,monetary_influence,reer_index,,model_b_domain
@@ -210,11 +546,67 @@ JPN,international_trade,imports_pct_gdp,22.8730294879112,model_b_domain
 JPN,international_trade,current_account_pct_gdp,4.86496093471918,model_b_domain
 JPN,international_trade,period,2024,model_b_domain
 JPN,international_trade,source,World Bank + World Bank,model_b_domain
+JPN,economic_output_detail,nominal_gdp.value,4435162999976.94,model_b_domain
+JPN,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+JPN,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+JPN,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+JPN,economic_output_detail,ppp_gdp.value,6837216297272.17,model_b_domain
+JPN,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+JPN,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+JPN,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+JPN,economic_output_detail,real_gdp_2015_usd.value,4764341438831.9,model_b_domain
+JPN,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+JPN,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+JPN,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+JPN,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+JPN,trade_detail,merchandise_exports_usd.value,738337000000.0,model_b_domain
+JPN,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+JPN,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+JPN,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+JPN,trade_detail,merchandise_imports_usd.value,755553000000.0,model_b_domain
+JPN,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+JPN,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+JPN,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+JPN,trade_detail,commercial_service_exports_usd.value,242556125904.558,model_b_domain
+JPN,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+JPN,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+JPN,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+JPN,trade_detail,commercial_service_imports_usd.value,266127275499.835,model_b_domain
+JPN,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+JPN,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+JPN,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+JPN,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 JPN,innovation_scale,rnd_pct_gdp,3.44125,model_b_domain
 JPN,innovation_scale,implied_rnd_usd,152625046736.70645,model_b_domain
 JPN,innovation_scale,tracked_share_pct,7.31,model_b_domain
 JPN,innovation_scale,period,2023,model_b_domain
 JPN,innovation_scale,source,World Bank,model_b_domain
+JPN,innovation_detail,resident_patent_applications.value,237169.0,model_b_domain
+JPN,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+JPN,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+JPN,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+JPN,innovation_detail,researchers_per_million.value,5608.63075,model_b_domain
+JPN,innovation_detail,researchers_per_million.period,2023,model_b_domain
+JPN,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+JPN,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+JPN,innovation_detail,high_technology_exports_usd.value,102451366263.0,model_b_domain
+JPN,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+JPN,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+JPN,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+JPN,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+JPN,financial_depth,listed_market_cap_pct_gdp.value,171.595579915317,model_b_domain
+JPN,financial_depth,listed_market_cap_pct_gdp.period,2025,model_b_domain
+JPN,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+JPN,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+JPN,financial_depth,domestic_credit_private_pct_gdp.value,188.725562792304,model_b_domain
+JPN,financial_depth,domestic_credit_private_pct_gdp.period,2025,model_b_domain
+JPN,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+JPN,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+JPN,financial_depth,broad_money_pct_gdp.value,246.778137129339,model_b_domain
+JPN,financial_depth,broad_money_pct_gdp.period,2025,model_b_domain
+JPN,financial_depth,broad_money_pct_gdp.source,World Bank,model_b_domain
+JPN,financial_depth,broad_money_pct_gdp.vintage,1,model_b_domain
+JPN,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 JPN,monetary_influence,currency_code,JPY,model_b_domain
 JPN,monetary_influence,reserve_anchor_role,Major funding & reserve currency,model_b_domain
 JPN,monetary_influence,reer_index,56.0730750544094,model_b_domain
@@ -242,11 +634,67 @@ USA,international_trade,imports_pct_gdp,14.0413208226783,model_b_domain
 USA,international_trade,current_account_pct_gdp,-3.8254126624569,model_b_domain
 USA,international_trade,period,2024,model_b_domain
 USA,international_trade,source,World Bank + World Bank,model_b_domain
+USA,economic_output_detail,nominal_gdp.value,30769700000000.0,model_b_domain
+USA,economic_output_detail,nominal_gdp.period,2025,model_b_domain
+USA,economic_output_detail,nominal_gdp.source,World Bank,model_b_domain
+USA,economic_output_detail,nominal_gdp.vintage,1,model_b_domain
+USA,economic_output_detail,ppp_gdp.value,30769700000000.0,model_b_domain
+USA,economic_output_detail,ppp_gdp.period,2025,model_b_domain
+USA,economic_output_detail,ppp_gdp.source,World Bank,model_b_domain
+USA,economic_output_detail,ppp_gdp.vintage,1,model_b_domain
+USA,economic_output_detail,real_gdp_2015_usd.value,23222782186839.4,model_b_domain
+USA,economic_output_detail,real_gdp_2015_usd.period,2025,model_b_domain
+USA,economic_output_detail,real_gdp_2015_usd.source,World Bank,model_b_domain
+USA,economic_output_detail,real_gdp_2015_usd.vintage,1,model_b_domain
+USA,economic_output_detail,semantics,absolute economic size; not a domestic-condition score,model_b_domain
+USA,trade_detail,merchandise_exports_usd.value,2185220000000.0,model_b_domain
+USA,trade_detail,merchandise_exports_usd.period,2025,model_b_domain
+USA,trade_detail,merchandise_exports_usd.source,World Bank,model_b_domain
+USA,trade_detail,merchandise_exports_usd.vintage,1,model_b_domain
+USA,trade_detail,merchandise_imports_usd.value,3506554000000.0,model_b_domain
+USA,trade_detail,merchandise_imports_usd.period,2025,model_b_domain
+USA,trade_detail,merchandise_imports_usd.source,World Bank,model_b_domain
+USA,trade_detail,merchandise_imports_usd.vintage,1,model_b_domain
+USA,trade_detail,commercial_service_exports_usd.value,1212381000000.0,model_b_domain
+USA,trade_detail,commercial_service_exports_usd.period,2025,model_b_domain
+USA,trade_detail,commercial_service_exports_usd.source,World Bank,model_b_domain
+USA,trade_detail,commercial_service_exports_usd.vintage,1,model_b_domain
+USA,trade_detail,commercial_service_imports_usd.value,884705000000.0,model_b_domain
+USA,trade_detail,commercial_service_imports_usd.period,2025,model_b_domain
+USA,trade_detail,commercial_service_imports_usd.source,World Bank,model_b_domain
+USA,trade_detail,commercial_service_imports_usd.vintage,1,model_b_domain
+USA,trade_detail,semantics,gross USD trade measures; separate from exports/GDP openness,model_b_domain
 USA,innovation_scale,rnd_pct_gdp,3.44716,model_b_domain
 USA,innovation_scale,implied_rnd_usd,1060680790520.0,model_b_domain
 USA,innovation_scale,tracked_share_pct,50.77,model_b_domain
 USA,innovation_scale,period,2023,model_b_domain
 USA,innovation_scale,source,World Bank,model_b_domain
+USA,innovation_detail,resident_patent_applications.value,270295.0,model_b_domain
+USA,innovation_detail,resident_patent_applications.period,2024,model_b_domain
+USA,innovation_detail,resident_patent_applications.source,World Bank,model_b_domain
+USA,innovation_detail,resident_patent_applications.vintage,1,model_b_domain
+USA,innovation_detail,researchers_per_million.value,4937.49441,model_b_domain
+USA,innovation_detail,researchers_per_million.period,2022,model_b_domain
+USA,innovation_detail,researchers_per_million.source,World Bank,model_b_domain
+USA,innovation_detail,researchers_per_million.vintage,1,model_b_domain
+USA,innovation_detail,high_technology_exports_usd.value,232906639404.0,model_b_domain
+USA,innovation_detail,high_technology_exports_usd.period,2024,model_b_domain
+USA,innovation_detail,high_technology_exports_usd.source,World Bank,model_b_domain
+USA,innovation_detail,high_technology_exports_usd.vintage,1,model_b_domain
+USA,innovation_detail,semantics,"separate innovation inputs, outputs and research capacity",model_b_domain
+USA,financial_depth,listed_market_cap_pct_gdp.value,224.04464850161,model_b_domain
+USA,financial_depth,listed_market_cap_pct_gdp.period,2025,model_b_domain
+USA,financial_depth,listed_market_cap_pct_gdp.source,World Bank,model_b_domain
+USA,financial_depth,listed_market_cap_pct_gdp.vintage,1,model_b_domain
+USA,financial_depth,domestic_credit_private_pct_gdp.value,201.266130729677,model_b_domain
+USA,financial_depth,domestic_credit_private_pct_gdp.period,2025,model_b_domain
+USA,financial_depth,domestic_credit_private_pct_gdp.source,World Bank,model_b_domain
+USA,financial_depth,domestic_credit_private_pct_gdp.vintage,1,model_b_domain
+USA,financial_depth,broad_money_pct_gdp.value,99.7158460103202,model_b_domain
+USA,financial_depth,broad_money_pct_gdp.period,2025,model_b_domain
+USA,financial_depth,broad_money_pct_gdp.source,World Bank,model_b_domain
+USA,financial_depth,broad_money_pct_gdp.vintage,1,model_b_domain
+USA,financial_depth,semantics,"financial depth measures, not an international-centre score",model_b_domain
 USA,monetary_influence,currency_code,USD,model_b_domain
 USA,monetary_influence,reserve_anchor_role,Primary global invoicing & FX anchor in Atlas market layer,model_b_domain
 USA,monetary_influence,reer_index,130.979790009774,model_b_domain

@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Great Power Observatory homepage — production", () => {
+  test.setTimeout(180_000);
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(".obs-app[data-hydrated=\"true\"]")).toBeVisible({ timeout: 90_000 });
@@ -61,12 +63,26 @@ test.describe("Great Power Observatory homepage — production", () => {
   });
 
   test("full-width sections render real powers, measures, forces and history", async ({ page }) => {
-    await expect(page.locator(".obs-powers tbody tr")).toHaveCount(8);
+    await expect(page.locator("section[aria-labelledby='powers-heading'] .obs-powers tbody tr")).toHaveCount(8);
     await expect(page.locator("section[aria-label='What has changed']")).toBeVisible();
-    await expect(page.locator(".measure-matrix tbody tr")).toHaveCount(8);
+    await expect(page.locator(".measure-matrix tbody tr")).toHaveCount(16);
     await expect(page.locator(".force-row")).toHaveCount(17);
     await expect(page.locator(".history-chart")).toBeVisible();
     await expect(page.locator(".history-legend-item")).toHaveCount(8);
+  });
+
+  test("model selector and all-model markers expose equivalence honestly", async ({ page }) => {
+    const picker = page.locator(".obs-model-picker select");
+    await expect(picker).toBeVisible();
+    await expect(picker.locator("option")).toHaveCount(4);
+    await picker.selectOption("model_a_equal");
+    await expect(page.locator("section[aria-labelledby='powers-heading']")).toBeVisible({ timeout: 90_000 });
+
+    const section = page.locator("section[aria-labelledby='model-comparison-heading']");
+    await expect(section).toBeVisible({ timeout: 120_000 });
+    await expect(section.locator("tbody tr")).toHaveCount(8);
+    await expect(section).toContainText("materially equivalent");
+    await expect(section).toContainText("experimental domestic-condition");
   });
 
   test("homepage requests the production overview", async ({ page }) => {

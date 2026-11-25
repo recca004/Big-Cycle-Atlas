@@ -1,7 +1,7 @@
 # Big Cycle Atlas — economic research handover, 1980–present
 
-Generated: 2026-11-25T20:57:36.438304Z  
-Commit: `3ecd2c1e5aae0342081c517b4e508d4fbc7ef528`  
+Generated: 2026-11-25T21:52:40.386227Z
+Base commit: `762919c7923b14a4ab18a8fcbf519a072239c929`
 Methodology: `normalization-v1.4`, `force-aggregation-v1.0`, experimental cycle classifier v1
 
 ## 1. Executive economic summary
@@ -15,23 +15,23 @@ Largest tracked economy: **USA**; second: **CHN**. Highest domestic-condition sc
 | Table / object | Count |
 |---|---:|
 | `countries` | 8 |
-| `indicators` | 33 |
+| `indicators` | 46 |
 | `data_sources` | 10 |
-| `source_series` | 33 |
-| `observations_all_vintages` | 17170 |
-| `reference_observations` | 23928 |
+| `source_series` | 46 |
+| `observations_all_vintages` | 21178 |
+| `reference_observations` | 24377 |
 | `market_instruments` | 35 |
 | `market_observations` | 96090 |
 | `indicator_revisions` | 2776 |
 | `indicator_diagnostics` | 3855 |
-| `ingestion_runs` | 1479 |
-| `distinct_observation_identities` | 14394 |
-| `latest_vintage_rows` | 14394 |
+| `ingestion_runs` | 1501 |
+| `distinct_observation_identities` | 18402 |
+| `latest_vintage_rows` | 18402 |
 
 ## 3. Historical coverage assessment
 
-- Raw indicator coverage: `export/indicator_coverage.csv` (259 country/provider/indicator records).
-- Full latest-vintage country-indicator history: `export/country_indicator_history.csv` (14394 latest-vintage observations).
+- Raw indicator coverage: `export/indicator_coverage.csv` (361 country/provider/indicator records).
+- Full latest-vintage country-indicator history: `export/country_indicator_history.csv` (18402 latest-vintage observations).
 - GDP, GDP per capita and population extend to 1960 for all tracked countries.
 - Several trade and capital-flow measures reach 1970 or earlier.
 - Government debt starts 1980 or later; labour participation starts 1990; WGI starts 1996; productivity is country-dependent.
@@ -104,26 +104,71 @@ Key methodology constraints:
 
 ## 6. International power evidence
 
-See `export/power_measures.csv` and `export/power_measure_history.csv`. The production measurement set uses latest-vintage GDP, GDP per capita, growth, exports/imports, current account, military expenditure, R&D, labour productivity, government debt, population, REER, rule of law and tertiary attainment.
+See `export/power_measure_registry.json`, `export/global_power_shares.csv`, `export/power_measures.csv` and `export/power_measure_history.csv`. The registry separates economic output, trade, military resources, innovation, education, financial depth and reserve-currency entities; it does not define a composite power ranking.
 
-## 7. USA–China measured comparison
+### Latest verified global shares
 
-| Indicator | USA baseline | China baseline | USA latest | China latest | China/USA baseline | China/USA latest | Unit |
-|---|---:|---:|---:|---:|---:|---:|---|
-| `GDP_CURRENT_USD` | 2857307000000.0 | 191487500000.0 | 30769700000000.0 | 19498039388042.6 | 0.067 | 0.634 | USD |
-| `POPULATION` | 227225000.0 | 981235000.0 | 341784857.0 | 1406585000.0 | 4.318 | 4.115 | count |
-| `EXPORTS_GDP` | 9.82645547013324 | 10.1341967491351 | 10.97469647515 | 21.0711983566772 | 1.031 | 1.920 | percent |
-| `IMPORTS_GDP` | 10.2833892192894 | 11.406859455578 | 14.0413208226783 | 16.8851895085539 | 1.109 | 1.203 | percent |
-| `CURRENT_ACCOUNT_GDP` | 0.0744407233804418 | — | -3.8254126624569 | 3.76972243689338 | — | -0.985 | percent |
-| `MILITARY_EXPENDITURE_USD` | 143688354872.676 | — | 954387000000.0 | 335524155624.44 | — | 0.352 | current US$ |
-| `MILITARY_EXPENDITURE_GDP` | 5.1535374665 | — | 3.1173079811 | 1.7247233166 | — | 0.553 | percent of GDP |
-| `RND_EXPENDITURE_GDP` | — | — | 3.44716 | 2.57729 | — | 0.748 | percent |
-| `LABOUR_PRODUCTIVITY_PER_HOUR` | — | — | 85.60236428340167 | — | — | — | US dollars per hour, PPP converted |
-| `GOVERNMENT_DEBT_GDP` | — | — | 124.376732 | 98.608625 | — | 0.793 | percent |
+| Country | Measurement | Observation period | Global share |
+|---|---|---:|---:|
+| USA | `GDP_CURRENT_USD` | 2025-01-01 | 26.00% |
+| USA | `GDP_PPP_CURRENT_INTL` | 2025-01-01 | 14.57% |
+| USA | `GDP_REAL_CONSTANT_USD` | 2025-01-01 | 23.30% |
+| USA | `MERCHANDISE_EXPORTS_USD` | 2025-01-01 | 8.28% |
+| USA | `MERCHANDISE_IMPORTS_USD` | 2025-01-01 | 13.14% |
+| USA | `MILITARY_EXPENDITURE_USD` | 2025-01-01 | 33.42% |
+| USA | `PATENT_APPLICATIONS_RESIDENT` | 2024-01-01 | 10.00% |
+| USA | `HIGH_TECHNOLOGY_EXPORTS_USD` | 2023-01-01 | 5.83% |
+| CHN | `GDP_CURRENT_USD` | 2025-01-01 | 16.47% |
+| CHN | `GDP_PPP_CURRENT_INTL` | 2025-01-01 | 19.54% |
+| CHN | `GDP_REAL_CONSTANT_USD` | 2025-01-01 | 19.47% |
+| CHN | `MERCHANDISE_EXPORTS_USD` | 2025-01-01 | 14.29% |
+| CHN | `MERCHANDISE_IMPORTS_USD` | 2025-01-01 | 9.68% |
+| CHN | `MILITARY_EXPENDITURE_USD` | 2025-01-01 | 11.75% |
+| CHN | `PATENT_APPLICATIONS_RESIDENT` | 2024-01-01 | 61.87% |
+| CHN | `HIGH_TECHNOLOGY_EXPORTS_USD` | 2023-01-01 | 23.08% |
+| IND | `GDP_CURRENT_USD` | 2025-01-01 | 3.34% |
+| IND | `GDP_PPP_CURRENT_INTL` | 2025-01-01 | 8.14% |
+| IND | `GDP_REAL_CONSTANT_USD` | 2025-01-01 | 3.71% |
+| IND | `MERCHANDISE_EXPORTS_USD` | 2025-01-01 | 1.69% |
+| IND | `MERCHANDISE_IMPORTS_USD` | 2025-01-01 | 2.82% |
+| IND | `MILITARY_EXPENDITURE_USD` | 2025-01-01 | 3.22% |
+| IND | `PATENT_APPLICATIONS_RESIDENT` | 2024-01-01 | 2.34% |
+| IND | `HIGH_TECHNOLOGY_EXPORTS_USD` | 2023-01-01 | 1.15% |
 
-Ratios are direct raw-measurement ratios and are only meaningful for compatible units and reference populations. A change in ratio indicates convergence/divergence in that measurement, not a complete leadership transition.
+Global shares use provider world aggregates (`WLD`) as denominators and are distinct from the eight-country tracked shares shown above. Reserve-currency records are registered but remain unavailable because verified COFER/BIS currency observations have not yet been imported; unreported currencies are never set to zero.
 
-## 8. Four-model Big Cycle comparison
+## 7. USA–China–India measured comparison
+
+| Indicator | Common baseline | USA baseline | China baseline | Common latest | USA latest | China latest | China/USA baseline | China/USA latest | Unit |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| `GDP_CURRENT_USD` | 1980 | 2857307000000.0 | 191487500000.0 | 2025 | 30769700000000.0 | 19498039388042.6 | 0.067 | 0.634 | USD |
+| `GDP_PPP_CURRENT_INTL` | 1990 | 5963144000000.0 | 1124647401358.64 | 2025 | 30769700000000.0 | 41259823532528.0 | 0.189 | 1.341 | current international $ |
+| `GDP_REAL_CONSTANT_USD` | 1980 | 7062521475379.06 | 428434994544.795 | 2025 | 23222782186839.4 | 19401316126585.1 | 0.061 | 0.835 | constant 2015 US$ |
+| `POPULATION` | 1980 | 227225000.0 | 981235000.0 | 2025 | 341784857.0 | 1406585000.0 | 4.318 | 4.115 | count |
+| `MERCHANDISE_EXPORTS_USD` | 1980 | 225566000000.0 | 18099000000.0 | 2025 | 2185220000000.0 | 3771842000000.0 | 0.080 | 1.726 | current US$ |
+| `MERCHANDISE_IMPORTS_USD` | 1980 | 256985000000.0 | 19941000000.0 | 2025 | 3506554000000.0 | 2582896000000.0 | 0.078 | 0.737 | current US$ |
+| `COMMERCIAL_SERVICE_EXPORTS_USD` | 1982 | 50850000000.0 | 2476000000.0 | 2025 | 1212381000000.0 | 383154067120.32 | 0.049 | 0.316 | current US$ |
+| `COMMERCIAL_SERVICE_IMPORTS_USD` | 1982 | 37130000000.0 | 1865000000.0 | 2025 | 884705000000.0 | 619603232786.67 | 0.050 | 0.700 | current US$ |
+| `EXPORTS_GDP` | 1980 | 9.82645547013324 | 10.1341967491351 | 2024 | 10.97469647515 | 20.4428283665891 | 1.031 | 1.863 | percent |
+| `IMPORTS_GDP` | 1980 | 10.2833892192894 | 11.406859455578 | 2024 | 14.0413208226783 | 17.5132317706653 | 1.109 | 1.247 | percent |
+| `CURRENT_ACCOUNT_GDP` | 1982 | -0.347121184979076 | 2.76132699309013 | 2025 | -3.8254126624569 | 3.76972243689338 | -7.955 | -0.985 | percent |
+| `MILITARY_EXPENDITURE_USD` | 1989 | 321866558808.32 | 11251332630.388 | 2025 | 954387000000.0 | 335524155624.44 | 0.035 | 0.352 | current US$ |
+| `MILITARY_EXPENDITURE_GDP` | 1989 | 5.871206008 | 2.4471013153 | 2025 | 3.1173079811 | 1.7247233166 | 0.417 | 0.553 | percent of GDP |
+| `RND_EXPENDITURE_GDP` | 1996 | 2.45013 | 0.56014 | 2023 | 3.44716 | 2.57729 | 0.229 | 0.748 | percent |
+| `PATENT_APPLICATIONS_RESIDENT` | 1985 | 63673.0 | 4065.0 | 2024 | 270295.0 | 1672001.0 | 0.064 | 6.186 | applications |
+| `RESEARCHERS_PER_MILLION` | 1996 | 3206.67656 | 447.0994 | 2022 | 4937.49441 | 1849.23669 | 0.139 | 0.375 | per million people |
+| `HIGH_TECHNOLOGY_EXPORTS_USD` | 2007 | 240663518341.0 | 343558973511.0 | 2024 | 232906639404.0 | 856764726389.0 | 1.428 | 3.679 | current US$ |
+| `LABOUR_PRODUCTIVITY_PER_HOUR` | — | — | — | — | — | — | — | — |  |
+| `GOVERNMENT_DEBT_GDP` | 2001 | 53.488708 | 24.187029 | 2025 | 124.376732 | 98.608625 | 0.452 | 0.793 | percent |
+| `STOCK_MARKET_CAP_GDP` | 2003 | 124.5260586831 | 30.4636713403437 | 2025 | 224.04464850161 | 79.540605039043 | 0.245 | 0.355 | % of GDP |
+| `DOMESTIC_CREDIT_PRIVATE_GDP` | 1980 | 94.3548659876566 | 52.5338903757861 | 2024 | 195.875075677875 | 194.312528264561 | 0.557 | 0.992 | % of GDP |
+| `BROAD_MONEY_GDP` | 1980 | 69.5063918577878 | 36.3622516700394 | 2024 | 98.7562585226237 | 227.669028630796 | 0.523 | 2.305 | % of GDP |
+
+Ratios are direct raw-measurement ratios on common observation years and are only meaningful for compatible units and reference populations. A change in ratio indicates convergence/divergence in that measurement, not a complete leadership transition.
+
+Decade and recent 1/3/5/10-year changes for USA, China and India are exported in `export/historical_period_comparison.csv`. India is therefore compared on the same measurement definitions rather than forced into a cycle-stage narrative.
+
+## 8. Four-model experimental domestic-condition comparison
 
 | Model | Countries with latest score | Latest classified periods | Notes |
 |---|---:|---:|---|
@@ -131,6 +176,21 @@ Ratios are direct raw-measurement ratios and are only meaningful for compatible 
 | `model_b_domain` | 8 | 8 | equal weight per populated domain |
 | `model_c_overlap` | 8 | 8 | declared overlap groups share one weight |
 | `model_d_comparable` | 8 | 8 | forces present in all 8 tracked countries |
+
+### Equivalence and actual inclusion audit
+
+| Pair | Country-period comparisons | Exact score agreement | Near-exact score agreement | Exact stage agreement | Materially equivalent |
+|---|---:|---:|---:|---:|---|
+| `model_a_equal` vs `model_b_domain` | 368 | 33.7% | 33.7% | 56.2% | no |
+| `model_a_equal` vs `model_c_overlap` | 368 | 33.7% | 33.7% | 56.2% | no |
+| `model_a_equal` vs `model_d_comparable` | 368 | 44.8% | 44.8% | 78.5% | no |
+| `model_b_domain` vs `model_c_overlap` | 368 | 70.9% | 100.0% | 100.0% | yes |
+| `model_b_domain` vs `model_d_comparable` | 368 | 33.7% | 33.7% | 47.3% | no |
+| `model_c_overlap` vs `model_d_comparable` | 368 | 33.7% | 33.7% | 47.3% | no |
+
+`model_b_domain` versus `model_c_overlap`: 368 comparisons, 70.9% exact-score, 100.0% near-exact-score and 100.0% exact-stage agreement; **materially equivalent under the current force set**. Equivalent models are not independent confirmation. The current populated domain units collapse to the same four units as the declared overlap groups, so the intended weighting distinction produces identical effective weights; this is documented evidence, not a formula defect that should be hidden by artificial disagreement.
+
+Actual included/excluded forces are exported in `export/actual_force_inclusion.csv`; effective weights are in `export/model_effective_weights.csv`. Indebtedness is configured as a candidate but produced 32 semantic exclusions because its approved score is own-history condition, not a cross-country comparable level.
 
 ### Current model agreement
 
@@ -145,13 +205,13 @@ Ratios are direct raw-measurement ratios and are only meaningful for compatible 
 | FRA | model_a_equal=DECLINE; model_b_domain=DECLINE; model_c_overlap=DECLINE; model_d_comparable=DECLINE | 1 | 4.64 |
 | CHE | model_a_equal=EARLY_DECLINE; model_b_domain=EARLY_DECLINE; model_c_overlap=EARLY_DECLINE; model_d_comparable=EARLY_DECLINE | 1 | 9.39 |
 
-Detailed scores: `export/composite_results.csv`  
-Complete classifications: `export/cycle_history.csv`  
+Detailed scores: `export/composite_results.csv`
+Complete classifications: `export/cycle_history.csv`
 Transitions: `export/cycle_transitions.csv` (219 recorded model-country transitions)
 
 ## 9. Forecast readiness
 
-See `export/forecast_readiness.json`. The existing evidence gates remain active; no unsupported transition probability, countdown or leadership-transfer date is emitted.
+See `export/forecast_readiness.json` and `export/strict_historical_availability.json`. Raw observation vintages (21178) are stored data versions, not scored forecast samples. Atlas retrieval timestamps prove when data entered Atlas, not when providers published it historically. The corrected strict-eligible historical scored-period count is **0** until a release-date-safe scoring run exists; forecast probabilities remain unavailable.
 
 ## 10. Data quality findings
 
@@ -159,8 +219,8 @@ See `export/data_quality_findings.csv`. Material gaps are reported as gaps, not 
 
 | Finding | Records |
 |---|---:|
-| `large_period_gaps` | 14 |
-| `starts_after_1980` | 121 |
+| `large_period_gaps` | 16 |
+| `starts_after_1980` | 155 |
 
 ## 11. Scientific limitations
 
@@ -169,12 +229,12 @@ See `export/data_quality_findings.csv`. Material gaps are reported as gaps, not 
 - Military spending is an input resource, not full military capability.
 - OECD productivity percentiles are explicitly OECD-reference measurements and are not global percentiles.
 - Financial-centre and reserve-currency dimensions remain materially incomplete.
-- Country-boundary changes (especially Germany) require explicit interpretation before joining historical regimes.
+- Boundary metadata distinguishes current Germany from provider-labelled pre-1991 history and mainland-China coverage; provider definitions still limit historical joins.
 
 ## 12. Recommended next research priorities
 
 1. Add Maddison/PWT real-output and capital history as separate labelled historical methods.
 2. Add SIPRI direct military expenditure records for provenance and global-share denominators.
 3. Add verified financial-centre/capital-market and reserve-currency reference series.
-4. Add country-boundary discontinuity metadata for Germany and other territorial changes.
+4. Extend boundary metadata beyond the implemented Germany/China records as new territorial-history providers are integrated.
 5. Preserve evidence gates before attempting any leadership-transition forecast.

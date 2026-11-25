@@ -1,11 +1,11 @@
-provider,provider_name,status,base_url,update_frequency,rate_limit_notes,documentation_url
-world_bank,World Bank,planned,,,,
-fred,Federal Reserve Economic Data (FRED),planned,,,,
-eurostat,Eurostat,planned,,,,
-ecb,European Central Bank,planned,,,,
-snb,Swiss National Bank,planned,,,,
-un_comtrade,UN Comtrade,planned,,,,
-bis,Bank for International Settlements,testing,,,,
-oecd,OECD,testing,,,,
-imf,International Monetary Fund,planned,,,,
-wid,World Inequality Database (WID),planned,,,,
+provider,provider_name,configured_status,effective_status,country_indicator_series,latest_retrieval,base_url,auth_type,update_frequency,rate_limit_notes,documentation_url,metadata
+fred,Federal Reserve Economic Data (FRED),planned,planned,0,,,,,,,{}
+eurostat,Eurostat,planned,planned,0,,,,,,,{}
+ecb,European Central Bank,planned,planned,0,,,,,,,{}
+snb,Swiss National Bank,planned,planned,0,,,,,,,{}
+un_comtrade,UN Comtrade,planned,planned,0,,,,,,,{}
+world_bank,World Bank,active,ingested,309,2026-11-25,https://api.worldbank.org/v2,,daily,Public API; bounded retries and failure isolation handled by the unified updater.,https://datahelpdesk.worldbank.org/knowledgebase/articles/898581,{}
+bis,Bank for International Settlements,active,ingested,16,2026-11-25,https://stats.bis.org/api/v2,,daily,Public SDMX API; bounded retries and failure isolation handled by the unified updater.,https://stats.bis.org/,{}
+oecd,OECD,active,ingested,20,2026-11-25,https://sdmx.oecd.org/public/rest,,daily,OECD request budget and one bounded 429 retry are enforced by collection code.,https://sdmx.oecd.org/,{}
+imf,International Monetary Fund,active,ingested,8,2026-11-25,https://api.imf.org,,semi-annual,WEO provider updates are less frequent; failures remain isolated.,https://www.imf.org/external/datamapper/api/help,{}
+wid,World Inequality Database (WID),active,ingested,8,2026-09-09,,,manual bulk file,Optional local bulk archive only; never auto-downloaded by the unified updater.,https://wid.world/,{}

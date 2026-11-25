@@ -1,15 +1,15 @@
 {
   "countries": 8,
-  "indicators": 33,
+  "indicators": 46,
   "data_sources": 10,
-  "source_series": 33,
-  "observations_all_vintages": 17170,
-  "reference_observations": 23928,
+  "source_series": 46,
+  "observations_all_vintages": 21178,
+  "reference_observations": 24377,
   "market_instruments": 35,
   "market_observations": 96090,
   "indicator_revisions": 2776,
   "indicator_diagnostics": 3855,
-  "ingestion_runs": 1479,
-  "distinct_observation_identities": 14394,
-  "latest_vintage_rows": 14394
+  "ingestion_runs": 1501,
+  "distinct_observation_identities": 18402,
+  "latest_vintage_rows": 18402
 }

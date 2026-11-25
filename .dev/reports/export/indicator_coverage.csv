@@ -1,95 +1,133 @@
 country,country_name,indicator,indicator_name,unit,frequency,source_series,source_unit,provider,provider_name,earliest_period,latest_period,distinct_periods,max_vintage,release_dates,latest_retrieval
+CHE,Switzerland,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,FM.LBL.BMNY.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2016-01-01,37,1,0,2026-11-25
 CHE,Switzerland,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,2000-01-01,2024-01-01,25,1,0,2026-11-24
+CHE,Switzerland,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+CHE,Switzerland,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 CHE,Switzerland,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 CHE,Switzerland,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1970-10-01,2026-01-01,222,2,0,2026-11-25
 CHE,Switzerland,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1977-01-01,2025-01-01,49,2,0,2026-11-24
 CHE,Switzerland,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,1,0,2026-11-25
+CHE,Switzerland,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 CHE,Switzerland,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 CHE,Switzerland,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1983-01-01,2025-01-01,43,1,0,2026-11-25
 CHE,Switzerland,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 CHE,Switzerland,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 CHE,Switzerland,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+CHE,Switzerland,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+CHE,Switzerland,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 CHE,Switzerland,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,1982-01-01,2023-01-01,23,1,0,2026-11-24
 CHE,Switzerland,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,1990-01-01,2025-01-01,36,2,0,2026-11-25
 CHE,Switzerland,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 CHE,Switzerland,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
+CHE,Switzerland,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2007-01-01,2024-01-01,18,1,0,2026-11-25
 CHE,Switzerland,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 CHE,Switzerland,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 CHE,Switzerland,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
 CHE,Switzerland,LABOUR_PRODUCTIVITY_PER_HOUR,Labour productivity — GDP per hour worked,"US dollars per hour, PPP converted",annual,DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP,"US dollars per hour, PPP converted",oecd,OECD,1991-01-01,2025-01-01,35,2,0,2026-11-25
+CHE,Switzerland,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+CHE,Switzerland,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 CHE,Switzerland,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 CHE,Switzerland,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 CHE,Switzerland,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+CHE,Switzerland,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
+CHE,Switzerland,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 CHE,Switzerland,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 CHE,Switzerland,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 CHE,Switzerland,REER_INDEX,Real effective exchange rate index (2010=100),index,annual,PX.REX.REER,index,world_bank,World Bank,1979-01-01,2025-01-01,47,1,0,2026-11-25
+CHE,Switzerland,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2023-01-01,10,1,0,2026-11-25
 CHE,Switzerland,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2023-01-01,10,1,0,2026-11-24
 CHE,Switzerland,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 CHE,Switzerland,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,2000-01-01,2024-01-01,24,1,0,2026-11-24
+CHE,Switzerland,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 CHE,Switzerland,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,1989-01-01,2025-01-01,34,1,0,2026-11-25
 CHE,Switzerland,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,2000-01-01,2024-01-01,25,1,0,2026-11-24
 CHE,Switzerland,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 CHE,Switzerland,UNEMPLOYMENT_RATE,Unemployment Rate (ILO modeled),percent of labor force,annual,SL.UEM.TOTL.ZS,% of labor force,world_bank,World Bank,1991-01-01,2025-01-01,35,1,0,2026-11-24
 CHE,Switzerland,UNIT_LABOUR_COST_GROWTH,Unit labour cost growth,percent per annum,quarterly,DSD_PDB@DF_PDB_ULC_Q/{cc}.Q.ULCE._T.PA.V.GY.S.NC,percent per annum,oecd,OECD,1996-01-01,2026-04-01,122,2,0,2026-11-25
 CHE,Switzerland,WEALTH_SHARE_TOP_10,Top 10% net personal wealth share,share (0-1),annual,WID/shwealj992/p90p100,share (0-1),wid,World Inequality Database (WID),1980-01-01,2024-01-01,45,1,0,2026-09-09
+CHN,China,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,FM.LBL.BMNY.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 CHN,China,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,2000-01-01,2024-01-01,25,1,0,2026-11-24
+CHN,China,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1982-01-01,2025-01-01,44,1,0,2026-11-25
+CHN,China,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1982-01-01,2025-01-01,44,1,0,2026-11-25
 CHN,China,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 CHN,China,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1995-10-01,2026-01-01,122,2,0,2026-11-25
 CHN,China,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1982-01-01,2025-01-01,44,2,0,2026-11-24
 CHN,China,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,2,0,2026-11-25
+CHN,China,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 CHN,China,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 CHN,China,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1979-01-01,2025-01-01,47,1,0,2026-11-25
 CHN,China,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 CHN,China,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 CHN,China,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+CHN,China,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+CHN,China,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 CHN,China,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,1981-01-01,2022-01-01,23,2,0,2026-11-24
 CHN,China,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,1995-01-01,2025-01-01,31,2,0,2026-11-25
 CHN,China,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 CHN,China,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1960-01-01,2024-01-01,65,1,0,2026-11-24
+CHN,China,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2007-01-01,2024-01-01,18,1,0,2026-11-25
 CHN,China,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 CHN,China,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1987-01-01,2025-01-01,39,2,0,2026-11-24
 CHN,China,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
+CHN,China,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+CHN,China,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 CHN,China,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1989-01-01,2025-01-01,37,2,0,2026-11-24
 CHN,China,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1989-01-01,2025-01-01,37,2,0,2026-11-24
 CHN,China,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+CHN,China,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1985-01-01,2024-01-01,40,1,0,2026-11-25
+CHN,China,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1985-01-01,2024-01-01,40,1,0,2026-11-25
 CHN,China,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 CHN,China,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 CHN,China,REER_INDEX,Real effective exchange rate index (2010=100),index,annual,PX.REX.REER,index,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+CHN,China,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-25
 CHN,China,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-24
 CHN,China,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 CHN,China,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,1970-01-01,2012-01-01,40,1,0,2026-11-24
+CHN,China,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,2003-01-01,2025-01-01,23,1,0,2026-11-25
 CHN,China,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,2010-01-01,2010-01-01,1,1,0,2026-09-09
 CHN,China,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,1970-01-01,2024-01-01,51,1,0,2026-11-24
 CHN,China,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 CHN,China,UNEMPLOYMENT_RATE,Unemployment Rate (ILO modeled),percent of labor force,annual,SL.UEM.TOTL.ZS,% of labor force,world_bank,World Bank,1991-01-01,2025-01-01,35,1,0,2026-11-24
 CHN,China,WEALTH_SHARE_TOP_10,Top 10% net personal wealth share,share (0-1),annual,WID/shwealj992/p90p100,share (0-1),wid,World Inequality Database (WID),1820-01-01,2024-01-01,58,1,0,2026-09-09
 DEU,Germany,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,2000-01-01,2024-01-01,25,1,0,2026-11-24
+DEU,Germany,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+DEU,Germany,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 DEU,Germany,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 DEU,Germany,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1970-10-01,2026-01-01,222,2,0,2026-11-25
 DEU,Germany,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1971-01-01,2025-01-01,55,2,0,2026-11-24
 DEU,Germany,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,2,0,2026-11-25
+DEU,Germany,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,2001-01-01,2023-01-01,23,1,0,2026-11-25
 DEU,Germany,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 DEU,Germany,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1971-01-01,2025-01-01,55,1,0,2026-11-25
 DEU,Germany,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 DEU,Germany,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 DEU,Germany,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+DEU,Germany,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+DEU,Germany,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 DEU,Germany,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,1991-01-01,2022-01-01,32,1,0,2026-09-08
 DEU,Germany,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,1991-01-01,2025-01-01,35,2,0,2026-11-25
 DEU,Germany,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 DEU,Germany,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
+DEU,Germany,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2007-01-01,2024-01-01,18,1,0,2026-11-25
 DEU,Germany,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 DEU,Germany,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 DEU,Germany,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
 DEU,Germany,LABOUR_PRODUCTIVITY_PER_HOUR,Labour productivity — GDP per hour worked,"US dollars per hour, PPP converted",annual,DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP,"US dollars per hour, PPP converted",oecd,OECD,1991-01-01,2025-01-01,35,2,0,2026-11-25
+DEU,Germany,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+DEU,Germany,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 DEU,Germany,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 DEU,Germany,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 DEU,Germany,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+DEU,Germany,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
+DEU,Germany,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 DEU,Germany,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 DEU,Germany,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 DEU,Germany,REER_INDEX,Real effective exchange rate index (2010=100),index,annual,PX.REX.REER,index,world_bank,World Bank,1979-01-01,2025-01-01,47,1,0,2026-11-25
+DEU,Germany,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-25
 DEU,Germany,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-24
 DEU,Germany,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 DEU,Germany,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,2001-01-01,2024-01-01,24,1,0,2026-11-24
+DEU,Germany,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 DEU,Germany,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,1989-01-01,2025-01-01,34,1,0,2026-11-25
 DEU,Germany,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,2013-01-01,2024-01-01,12,1,0,2026-11-24
 DEU,Germany,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
@@ -97,161 +135,225 @@ DEU,Germany,UNEMPLOYMENT_RATE,Unemployment Rate (ILO modeled),percent of labor f
 DEU,Germany,UNIT_LABOUR_COST_GROWTH,Unit labour cost growth,percent per annum,quarterly,DSD_PDB@DF_PDB_ULC_Q/{cc}.Q.ULCE._T.PA.V.GY.S.NC,percent per annum,oecd,OECD,1992-01-01,2026-04-01,138,2,0,2026-11-25
 DEU,Germany,WEALTH_SHARE_TOP_10,Top 10% net personal wealth share,share (0-1),annual,WID/shwealj992/p90p100,share (0-1),wid,World Inequality Database (WID),1820-01-01,2024-01-01,76,1,0,2026-09-09
 FRA,France,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,1998-01-01,2024-01-01,27,1,0,2026-11-24
+FRA,France,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+FRA,France,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 FRA,France,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 FRA,France,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1979-10-01,2026-01-01,186,2,0,2026-11-25
 FRA,France,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1975-01-01,2025-01-01,51,2,0,2026-11-24
 FRA,France,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,2,0,2026-11-25
+FRA,France,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,2001-01-01,2024-01-01,24,1,0,2026-11-25
 FRA,France,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 FRA,France,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-25
 FRA,France,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 FRA,France,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 FRA,France,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+FRA,France,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+FRA,France,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 FRA,France,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,1970-01-01,2023-01-01,33,1,0,2026-11-24
 FRA,France,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,1980-01-01,2025-01-01,46,2,0,2026-11-25
 FRA,France,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 FRA,France,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+FRA,France,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2007-01-01,2024-01-01,18,1,0,2026-11-25
 FRA,France,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 FRA,France,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 FRA,France,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
 FRA,France,LABOUR_PRODUCTIVITY_PER_HOUR,Labour productivity — GDP per hour worked,"US dollars per hour, PPP converted",annual,DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP,"US dollars per hour, PPP converted",oecd,OECD,1970-01-01,2025-01-01,56,2,0,2026-11-25
+FRA,France,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+FRA,France,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 FRA,France,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 FRA,France,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 FRA,France,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+FRA,France,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
+FRA,France,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 FRA,France,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 FRA,France,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 FRA,France,REER_INDEX,Real effective exchange rate index (2010=100),index,annual,PX.REX.REER,index,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+FRA,France,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-25
 FRA,France,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-24
 FRA,France,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 FRA,France,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,2001-01-01,2024-01-01,24,1,0,2026-11-24
+FRA,France,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2018-01-01,39,1,0,2026-11-25
 FRA,France,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,1981-01-01,2025-01-01,35,1,0,2026-11-25
 FRA,France,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,2001-01-01,2024-01-01,24,1,0,2026-11-24
 FRA,France,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 FRA,France,UNEMPLOYMENT_RATE,Unemployment Rate (ILO modeled),percent of labor force,annual,SL.UEM.TOTL.ZS,% of labor force,world_bank,World Bank,1991-01-01,2025-01-01,35,1,0,2026-11-24
 FRA,France,UNIT_LABOUR_COST_GROWTH,Unit labour cost growth,percent per annum,quarterly,DSD_PDB@DF_PDB_ULC_Q/{cc}.Q.ULCE._T.PA.V.GY.S.NC,percent per annum,oecd,OECD,1950-01-01,2026-04-01,306,2,0,2026-11-25
 FRA,France,WEALTH_SHARE_TOP_10,Top 10% net personal wealth share,share (0-1),annual,WID/shwealj992/p90p100,share (0-1),wid,World Inequality Database (WID),1800-01-01,2024-01-01,135,1,0,2026-09-09
+GBR,United Kingdom,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,FM.LBL.BMNY.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 GBR,United Kingdom,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,2000-01-01,2024-01-01,25,1,0,2026-11-24
+GBR,United Kingdom,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+GBR,United Kingdom,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 GBR,United Kingdom,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 GBR,United Kingdom,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1973-01-01,2026-01-01,213,2,0,2026-11-25
 GBR,United Kingdom,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,2,0,2026-11-24
 GBR,United Kingdom,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,2,0,2026-11-25
+GBR,United Kingdom,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 GBR,United Kingdom,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 GBR,United Kingdom,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-25
 GBR,United Kingdom,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 GBR,United Kingdom,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 GBR,United Kingdom,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+GBR,United Kingdom,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+GBR,United Kingdom,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 GBR,United Kingdom,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,1968-01-01,2021-01-01,54,1,0,2026-11-24
 GBR,United Kingdom,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,1980-01-01,2025-01-01,46,2,0,2026-11-25
 GBR,United Kingdom,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 GBR,United Kingdom,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
+GBR,United Kingdom,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2007-01-01,2024-01-01,18,1,0,2026-11-25
 GBR,United Kingdom,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 GBR,United Kingdom,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 GBR,United Kingdom,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
 GBR,United Kingdom,LABOUR_PRODUCTIVITY_PER_HOUR,Labour productivity — GDP per hour worked,"US dollars per hour, PPP converted",annual,DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP,"US dollars per hour, PPP converted",oecd,OECD,1980-01-01,2025-01-01,46,2,0,2026-11-25
+GBR,United Kingdom,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+GBR,United Kingdom,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 GBR,United Kingdom,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 GBR,United Kingdom,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 GBR,United Kingdom,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+GBR,United Kingdom,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
+GBR,United Kingdom,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 GBR,United Kingdom,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 GBR,United Kingdom,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 GBR,United Kingdom,REER_INDEX,Real effective exchange rate index (2010=100),index,annual,PX.REX.REER,index,world_bank,World Bank,1979-01-01,2025-01-01,47,1,0,2026-11-25
+GBR,United Kingdom,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2017-01-01,22,1,0,2026-11-25
 GBR,United Kingdom,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-24
 GBR,United Kingdom,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 GBR,United Kingdom,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,2000-01-01,2023-01-01,23,1,0,2026-11-24
+GBR,United Kingdom,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2022-01-01,37,1,0,2026-11-25
 GBR,United Kingdom,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,1997-01-01,2025-01-01,29,1,0,2026-09-09
 GBR,United Kingdom,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,2000-01-01,2023-01-01,24,1,0,2026-11-24
 GBR,United Kingdom,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-24
 GBR,United Kingdom,UNEMPLOYMENT_RATE,Unemployment Rate (ILO modeled),percent of labor force,annual,SL.UEM.TOTL.ZS,% of labor force,world_bank,World Bank,1991-01-01,2025-01-01,35,1,0,2026-11-24
 GBR,United Kingdom,UNIT_LABOUR_COST_GROWTH,Unit labour cost growth,percent per annum,quarterly,DSD_PDB@DF_PDB_ULC_Q/{cc}.Q.ULCE._T.PA.V.GY.S.NC,percent per annum,oecd,OECD,1993-04-01,2026-01-01,132,2,0,2026-11-25
 GBR,United Kingdom,WEALTH_SHARE_TOP_10,Top 10% net personal wealth share,share (0-1),annual,WID/shwealj992/p90p100,share (0-1),wid,World Inequality Database (WID),1820-01-01,2024-01-01,125,1,0,2026-09-09
+IND,India,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,FM.LBL.BMNY.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2021-01-01,42,1,0,2026-11-25
 IND,India,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,2001-01-01,2024-01-01,24,1,0,2026-11-24
+IND,India,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+IND,India,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 IND,India,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 IND,India,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1961-04-01,2026-01-01,260,2,0,2026-11-25
 IND,India,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1975-01-01,2025-01-01,51,2,0,2026-11-24
 IND,India,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,1,0,2026-11-25
+IND,India,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 IND,India,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 IND,India,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-25
 IND,India,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 IND,India,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 IND,India,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+IND,India,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+IND,India,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 IND,India,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,1977-01-01,2023-01-01,9,1,0,2026-11-24
 IND,India,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,1991-01-01,2025-01-01,35,2,0,2026-11-25
 IND,India,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 IND,India,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+IND,India,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2009-01-01,2024-01-01,16,1,0,2026-11-25
 IND,India,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 IND,India,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 IND,India,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
+IND,India,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+IND,India,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 IND,India,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 IND,India,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 IND,India,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+IND,India,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1980-01-01,2024-01-01,44,1,0,2026-11-25
+IND,India,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1980-01-01,2024-01-01,44,1,0,2026-11-25
 IND,India,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 IND,India,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+IND,India,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2020-01-01,8,1,0,2026-11-25
 IND,India,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2020-01-01,25,1,0,2026-11-24
 IND,India,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 IND,India,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,1971-01-01,2025-01-01,48,1,0,2026-11-24
+IND,India,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,2000-01-01,2025-01-01,26,1,0,2026-11-25
 IND,India,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,2011-01-01,2023-01-01,8,1,0,2026-09-09
 IND,India,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,1971-01-01,2025-01-01,47,1,0,2026-11-24
 IND,India,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 IND,India,UNEMPLOYMENT_RATE,Unemployment Rate (ILO modeled),percent of labor force,annual,SL.UEM.TOTL.ZS,% of labor force,world_bank,World Bank,1991-01-01,2025-01-01,35,1,0,2026-11-24
 IND,India,WEALTH_SHARE_TOP_10,Top 10% net personal wealth share,share (0-1),annual,WID/shwealj992/p90p100,share (0-1),wid,World Inequality Database (WID),1820-01-01,2024-01-01,58,1,0,2026-09-09
+JPN,Japan,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,FM.LBL.BMNY.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 JPN,Japan,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,1998-01-01,2023-01-01,26,1,0,2026-11-24
+JPN,Japan,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1996-01-01,2025-01-01,30,1,0,2026-11-25
+JPN,Japan,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1996-01-01,2025-01-01,30,1,0,2026-11-25
 JPN,Japan,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 JPN,Japan,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1974-10-01,2026-01-01,206,2,0,2026-11-25
 JPN,Japan,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2025-01-01,30,2,0,2026-11-24
 JPN,Japan,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,2,0,2026-11-25
+JPN,Japan,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 JPN,Japan,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24
 JPN,Japan,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-25
 JPN,Japan,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 JPN,Japan,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 JPN,Japan,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+JPN,Japan,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+JPN,Japan,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 JPN,Japan,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,2008-01-01,2020-01-01,13,1,0,2026-09-08
 JPN,Japan,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,1980-01-01,2024-01-01,45,2,0,2026-11-25
 JPN,Japan,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 JPN,Japan,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24
+JPN,Japan,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2007-01-01,2024-01-01,18,1,0,2026-11-25
 JPN,Japan,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24
 JPN,Japan,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 JPN,Japan,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
 JPN,Japan,LABOUR_PRODUCTIVITY_PER_HOUR,Labour productivity — GDP per hour worked,"US dollars per hour, PPP converted",annual,DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP,"US dollars per hour, PPP converted",oecd,OECD,1970-01-01,2025-01-01,56,2,0,2026-11-25
+JPN,Japan,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+JPN,Japan,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 JPN,Japan,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 JPN,Japan,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 JPN,Japan,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+JPN,Japan,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1980-01-01,2024-01-01,43,1,0,2026-11-25
+JPN,Japan,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1980-01-01,2024-01-01,43,1,0,2026-11-25
 JPN,Japan,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 JPN,Japan,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 JPN,Japan,REER_INDEX,Real effective exchange rate index (2010=100),index,annual,PX.REX.REER,index,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+JPN,Japan,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-25
 JPN,Japan,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-24
 JPN,Japan,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 JPN,Japan,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,2013-01-01,2023-01-01,11,1,0,2026-11-24
+JPN,Japan,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 JPN,Japan,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,1997-01-01,2025-01-01,29,1,0,2026-09-09
 JPN,Japan,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,2013-01-01,2023-01-01,11,1,0,2026-11-24
 JPN,Japan,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24
 JPN,Japan,UNEMPLOYMENT_RATE,Unemployment Rate (ILO modeled),percent of labor force,annual,SL.UEM.TOTL.ZS,% of labor force,world_bank,World Bank,1991-01-01,2025-01-01,35,1,0,2026-11-24
 JPN,Japan,UNIT_LABOUR_COST_GROWTH,Unit labour cost growth,percent per annum,quarterly,DSD_PDB@DF_PDB_ULC_Q/{cc}.Q.ULCE._T.PA.V.GY.S.NC,percent per annum,oecd,OECD,1981-01-01,2026-04-01,182,2,0,2026-11-25
 JPN,Japan,WEALTH_SHARE_TOP_10,Top 10% net personal wealth share,share (0-1),annual,WID/shwealj992/p90p100,share (0-1),wid,World Inequality Database (WID),1820-01-01,2024-01-01,56,1,0,2026-09-09
+USA,United States,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,FM.LBL.BMNY.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 USA,United States,BROADBAND_PER_100,Fixed broadband subscriptions (per 100 people),per 100 people,annual,IT.NET.BBND.P2,per 100 people,world_bank,World Bank,1998-01-01,2024-01-01,27,1,0,2026-11-24
+USA,United States,COMMERCIAL_SERVICE_EXPORTS_USD,Commercial service exports (current US$),current US$,annual,TX.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+USA,United States,COMMERCIAL_SERVICE_IMPORTS_USD,Commercial service imports (current US$),current US$,annual,TM.VAL.SERV.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 USA,United States,CONTROL_OF_CORRUPTION_WGI_SCORE,Control of Corruption — WGI governance score,score 0-100,annual,GOV_WGI_CC_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 USA,United States,CREDIT_TO_GDP_GAP,Credit-to-GDP gap (private non-financial sector),percentage of GDP,quarterly,WS_CREDIT_GAP/Q.{cc}.P.A.C,percentage of GDP,bis,Bank for International Settlements,1957-10-01,2026-01-01,274,2,0,2026-11-25
 USA,United States,CURRENT_ACCOUNT_GDP,Current Account (% of GDP),percent,annual,BN.CAB.XOKA.GD.ZS,% of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,2,0,2026-11-24
 USA,United States,DEBT_SERVICE_RATIO,Debt service ratio (private non-financial sector),per cent,quarterly,WS_DSR/Q.{cc}.P,per cent,bis,Bank for International Settlements,1999-01-01,2026-01-01,109,2,0,2026-11-25
+USA,United States,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,FS.AST.PRVT.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 USA,United States,EXPORTS_GDP,Exports (% of GDP),percent,annual,NE.EXP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24
 USA,United States,FDI_NET_INFLOWS_GDP,"Foreign direct investment, net inflows (% of GDP)",percent of GDP,annual,BX.KLT.DINV.WD.GD.ZS,percent of GDP,world_bank,World Bank,1970-01-01,2025-01-01,56,1,0,2026-11-25
 USA,United States,GDP_CURRENT_USD,GDP (Current USD),USD,annual,NY.GDP.MKTP.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 USA,United States,GDP_GROWTH,GDP Growth,percent,annual,NY.GDP.MKTP.KD.ZG,annual %,world_bank,World Bank,1961-01-01,2025-01-01,65,1,0,2026-11-24
 USA,United States,GDP_PER_CAPITA,GDP Per Capita,USD,annual,NY.GDP.PCAP.CD,current US$ per person,world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
+USA,United States,GDP_PPP_CURRENT_INTL,"GDP, PPP (current international $)",current international $,annual,NY.GDP.MKTP.PP.CD,current international $,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-25
+USA,United States,GDP_REAL_CONSTANT_USD,GDP (constant 2015 US$),constant 2015 US$,annual,NY.GDP.MKTP.KD,constant 2015 US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 USA,United States,GINI_INDEX,Gini index,index (0-100),irregular,SI.POV.GINI,index (0-100),world_bank,World Bank,1963-01-01,2024-01-01,62,1,0,2026-11-24
 USA,United States,GOVERNMENT_DEBT_GDP,Government Debt (% of GDP),percent,annual,WEO/{cc}.GGXWDG_NGDP.A,percent of GDP,imf,International Monetary Fund,2001-01-01,2025-01-01,25,2,0,2026-11-25
 USA,United States,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,Government Effectiveness — WGI governance score,score 0-100,annual,GOV_WGI_GE_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,1,0,2026-11-24
 USA,United States,GROSS_CAPITAL_FORMATION_GDP,Gross Capital Formation (% of GDP),percent,annual,NE.GDI.TOTL.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24
+USA,United States,HIGH_TECHNOLOGY_EXPORTS_USD,High-technology exports (current US$),current US$,annual,TX.VAL.TECH.CD,current US$,world_bank,World Bank,2007-01-01,2024-01-01,18,1,0,2026-11-25
 USA,United States,IMPORTS_GDP,Imports (% of GDP),percent,annual,NE.IMP.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24
 USA,United States,INFLATION_CPI,Inflation (CPI),percent,annual,FP.CPI.TOTL.ZG,annual %,world_bank,World Bank,1960-01-01,2024-01-01,65,2,0,2026-11-24
 USA,United States,LABOUR_FORCE_PARTICIPATION_RATE,"Labour force participation rate, total (% ages 15+)",percent,annual,SL.TLF.CACT.ZS,percent,world_bank,World Bank,1990-01-01,2025-01-01,36,1,0,2026-11-24
 USA,United States,LABOUR_PRODUCTIVITY_PER_HOUR,Labour productivity — GDP per hour worked,"US dollars per hour, PPP converted",annual,DSD_PDB@DF_PDB/{cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP,"US dollars per hour, PPP converted",oecd,OECD,1987-01-01,2025-01-01,39,1,0,2026-11-25
+USA,United States,MERCHANDISE_EXPORTS_USD,Merchandise exports (current US$),current US$,annual,TX.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+USA,United States,MERCHANDISE_IMPORTS_USD,Merchandise imports (current US$),current US$,annual,TM.VAL.MRCH.CD.WT,current US$,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 USA,United States,MILITARY_EXPENDITURE_GDP,Military expenditure (% of GDP),percent of GDP,annual,MS.MIL.XPND.GD.ZS,% of GDP,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 USA,United States,MILITARY_EXPENDITURE_USD,Military expenditure,current US$,annual,MS.MIL.XPND.CD,current US$,world_bank,World Bank,1960-01-01,2025-01-01,66,2,0,2026-11-24
 USA,United States,NATURAL_DISASTER_AFFECTED_PCT,Population affected by natural disasters (% of population),percent of population,multi-decadal,EN.CLC.MDAT.ZS,% of population affected (annual average),world_bank,World Bank,2009-01-01,2009-01-01,1,1,0,2026-11-25
+USA,United States,PATENT_APPLICATIONS_NONRESIDENT,"Patent applications, nonresidents",applications,annual,IP.PAT.NRES,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
+USA,United States,PATENT_APPLICATIONS_RESIDENT,"Patent applications, residents",applications,annual,IP.PAT.RESD,applications,world_bank,World Bank,1980-01-01,2024-01-01,45,1,0,2026-11-25
 USA,United States,POLITICAL_STABILITY_WGI_SCORE,Political Stability — WGI governance score,score 0-100,annual,GOV_WGI_PV_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 USA,United States,POPULATION,Population,count,annual,SP.POP.TOTL,count (persons),world_bank,World Bank,1960-01-01,2025-01-01,66,1,0,2026-11-24
 USA,United States,REER_INDEX,Real effective exchange rate index (2010=100),index,annual,PX.REX.REER,index,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
+USA,United States,RESEARCHERS_PER_MILLION,Researchers in R&D (per million people),per million people,annual,SP.POP.SCIE.RD.P6,per million people,world_bank,World Bank,1996-01-01,2022-01-01,27,1,0,2026-11-25
 USA,United States,RND_EXPENDITURE_GDP,R&D Expenditure (% of GDP),percent,annual,GB.XPD.RSDV.GD.ZS,% of GDP,world_bank,World Bank,1996-01-01,2023-01-01,28,1,0,2026-11-24
 USA,United States,RULE_OF_LAW_WGI_SCORE,Rule of Law — WGI governance score,score 0-100,annual,GOV_WGI_RL_SC,score 0-100,world_bank,World Bank,1996-01-01,2025-01-01,27,2,0,2026-11-24
 USA,United States,SECONDARY_ENROLLMENT,Secondary Enrollment (% gross),percent,annual,SE.SEC.ENRR,% gross enrollment ratio,world_bank,World Bank,1971-01-01,2022-01-01,35,1,0,2026-11-24
+USA,United States,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,CM.MKT.LCAP.GD.ZS,% of GDP,world_bank,World Bank,1980-01-01,2025-01-01,46,1,0,2026-11-25
 USA,United States,TERTIARY_ATTAINMENT_25_34,"Tertiary educational attainment, age 25-34",percent,annual,"OECD.EDU.IMEP,DSD_EAG_LSO_EA@DF_LSO_NEAC_DISTR_EA,1.0/{cc}._T.Y25T34.ISCED11A_5T8._T.POP._Z._T._Z.ED_NED.POP._Z.PT_POP_SEX_AGE.OBS._Z.NEAC.A",percent,oecd,OECD,1981-01-01,2025-01-01,44,1,0,2026-11-25
 USA,United States,TERTIARY_ENROLLMENT,Tertiary Enrollment (% gross),percent,annual,SE.TER.ENRR,% gross enrollment ratio,world_bank,World Bank,1971-01-01,2022-01-01,39,1,0,2026-11-24
 USA,United States,TRADE_BALANCE,Trade Balance (% of GDP),percent,annual,NE.RSB.GNFS.ZS,% of GDP,world_bank,World Bank,1970-01-01,2024-01-01,55,1,0,2026-11-24

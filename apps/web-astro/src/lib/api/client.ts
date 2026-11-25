@@ -270,11 +270,23 @@ export function fetchObservatoryTransition(
   );
 }
 
+export function fetchObservatoryModelComparison(
+  opts?: FetchOptions & { startYear?: number; period?: string },
+): Promise<import("@/types/observatory").ObservatoryModelComparison> {
+  const { startYear = 1980, period, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ start_year: String(startYear) });
+  if (period) q.set("period", period);
+  return request<import("@/types/observatory").ObservatoryModelComparison>(
+    `/api/observatory/model-comparison?${q}`,
+    { timeoutMs: 90_000, ...rest },
+  );
+}
+
 export function fetchObservatorySeries(
-  opts?: FetchOptions & { indicator?: string; startYear?: number },
+  opts?: FetchOptions & { indicator?: string; startYear?: number; worldShare?: boolean },
 ): Promise<import("@/types/observatory").MeasureHistory> {
-  const { indicator = "GDP_CURRENT_USD", startYear = 1970, ...rest } = opts ?? {};
-  const q = new URLSearchParams({ indicator, start_year: String(startYear) });
+  const { indicator = "GDP_CURRENT_USD", startYear = 1970, worldShare = false, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ indicator, start_year: String(startYear), world_share: String(worldShare) });
   return request<import("@/types/observatory").MeasureHistory>(
     `/api/observatory/series?${q}`,
     { timeoutMs: 30_000, ...rest },

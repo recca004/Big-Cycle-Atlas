@@ -31,6 +31,7 @@ from app.models import (
 )
 from app.research import service as research_service
 from app.research.composite import COMPOSITE_MODELS
+from app.research.power_registry import POWER_MEASURES_BY_INDICATOR
 from app.research.forecast import (
     ForecastHorizon,
     TransitionRecord,
@@ -41,6 +42,7 @@ from app.services.update_lock import update_lock, update_lock_status
 
 ZURICH_TZ = ZoneInfo("Europe/Zurich")
 REPO_ROOT = Path(__file__).resolve().parents[4]
+OBSERVATORY_PAYLOAD_SCHEMA = "observatory-v2-power-measures"
 _FORCE_NAMES = {d.code: d.name for d in FORCE_DEFINITIONS}
 
 CURRENCY_ROLES: dict[str, dict[str, str]] = {
@@ -94,6 +96,16 @@ POWER_INDICATORS = (
     "REER_INDEX",
     "RULE_OF_LAW_WGI_SCORE",
     "TERTIARY_ATTAINMENT_25_34",
+) + tuple(
+    code for code in POWER_MEASURES_BY_INDICATOR
+    if code not in {
+        "GDP_CURRENT_USD", "GDP_PER_CAPITA", "GDP_GROWTH",
+        "MILITARY_EXPENDITURE_USD", "MILITARY_EXPENDITURE_GDP",
+        "EXPORTS_GDP", "IMPORTS_GDP", "CURRENT_ACCOUNT_GDP",
+        "RND_EXPENDITURE_GDP", "LABOUR_PRODUCTIVITY_PER_HOUR",
+        "GOVERNMENT_DEBT_GDP", "POPULATION", "REER_INDEX",
+        "RULE_OF_LAW_WGI_SCORE", "TERTIARY_ATTAINMENT_25_34",
+    }
 )
 
 _MEM_CACHE: dict[tuple[str, str, int], dict[str, Any]] = {}
@@ -273,6 +285,15 @@ def _latest_point(
     return pts[-1] if pts else None
 
 
+def _measurement(point: dict[str, Any] | None) -> dict[str, Any]:
+    return {
+        "value": point["value"] if point else None,
+        "period": point["period"] if point else None,
+        "source": point["source"] if point else None,
+        "vintage": point["vintage"] if point else None,
+    }
+
+
 def _point_near_offset(
     series: dict[str, list[dict[str, Any]]], code: str, years_back: int = 5
 ) -> dict[str, Any] | None:
@@ -397,7 +418,7 @@ async def compute_core_observatory(
         raise KeyError(model_id)
 
     fp = await db_fingerprint(session)
-    cache_key = (fp, model_id, start_year)
+    cache_key = (fp, model_id, start_year, OBSERVATORY_PAYLOAD_SCHEMA)
     if cache_key in _MEM_CACHE:
         return _MEM_CACHE[cache_key]
 
@@ -408,7 +429,10 @@ async def compute_core_observatory(
     if disk_cache.exists():
         try:
             saved = json.loads(disk_cache.read_text(encoding="utf-8"))
-            if saved.get("db_fingerprint") == fp:
+            if (
+                saved.get("db_fingerprint") == fp
+                and saved.get("payload_schema_version") == OBSERVATORY_PAYLOAD_SCHEMA
+            ):
                 _MEM_CACHE[cache_key] = saved
                 return saved
         except Exception:
@@ -528,6 +552,18 @@ async def compute_core_observatory(
         ca = _latest_point(cs, "CURRENT_ACCOUNT_GDP")
         rnd = _latest_point(cs, "RND_EXPENDITURE_GDP")
         reer = _latest_point(cs, "REER_INDEX")
+        gdp_ppp = _latest_point(cs, "GDP_PPP_CURRENT_INTL")
+        gdp_real = _latest_point(cs, "GDP_REAL_CONSTANT_USD")
+        merch_exp = _latest_point(cs, "MERCHANDISE_EXPORTS_USD")
+        merch_imp = _latest_point(cs, "MERCHANDISE_IMPORTS_USD")
+        svc_exp = _latest_point(cs, "COMMERCIAL_SERVICE_EXPORTS_USD")
+        svc_imp = _latest_point(cs, "COMMERCIAL_SERVICE_IMPORTS_USD")
+        patents = _latest_point(cs, "PATENT_APPLICATIONS_RESIDENT")
+        researchers = _latest_point(cs, "RESEARCHERS_PER_MILLION")
+        hightech = _latest_point(cs, "HIGH_TECHNOLOGY_EXPORTS_USD")
+        stock_cap = _latest_point(cs, "STOCK_MARKET_CAP_GDP")
+        private_credit = _latest_point(cs, "DOMESTIC_CREDIT_PRIVATE_GDP")
+        broad_money = _latest_point(cs, "BROAD_MONEY_GDP")
         mil_force = next(
             (
                 f
@@ -592,6 +628,19 @@ async def compute_core_observatory(
                     else (exp["source"] if exp else None)
                 ),
             },
+            "economic_output_detail": {
+                "nominal_gdp": _measurement(gdp),
+                "ppp_gdp": _measurement(gdp_ppp),
+                "real_gdp_2015_usd": _measurement(gdp_real),
+                "semantics": "absolute economic size; not a domestic-condition score",
+            },
+            "trade_detail": {
+                "merchandise_exports_usd": _measurement(merch_exp),
+                "merchandise_imports_usd": _measurement(merch_imp),
+                "commercial_service_exports_usd": _measurement(svc_exp),
+                "commercial_service_imports_usd": _measurement(svc_imp),
+                "semantics": "gross USD trade measures; separate from exports/GDP openness",
+            },
             "innovation_scale": {
                 "rnd_pct_gdp": rnd["value"] if rnd else None,
                 "implied_rnd_usd": rnd_vol["value"] if rnd_vol else None,
@@ -602,6 +651,18 @@ async def compute_core_observatory(
                 ),
                 "period": rnd["period"] if rnd else None,
                 "source": rnd["source"] if rnd else None,
+            },
+            "innovation_detail": {
+                "resident_patent_applications": _measurement(patents),
+                "researchers_per_million": _measurement(researchers),
+                "high_technology_exports_usd": _measurement(hightech),
+                "semantics": "separate innovation inputs, outputs and research capacity",
+            },
+            "financial_depth": {
+                "listed_market_cap_pct_gdp": _measurement(stock_cap),
+                "domestic_credit_private_pct_gdp": _measurement(private_credit),
+                "broad_money_pct_gdp": _measurement(broad_money),
+                "semantics": "financial depth measures, not an international-centre score",
             },
             "monetary_influence": {
                 "currency_code": ccy_meta["currency_code"],
@@ -657,12 +718,19 @@ async def compute_core_observatory(
 
     payload = {
         "db_fingerprint": fp,
+        "payload_schema_version": OBSERVATORY_PAYLOAD_SCHEMA,
         "computed_at": to_utc_iso(datetime.now(timezone.utc)),
         "methodology_status": "experimental",
         "normalization_version": CURRENT_MODEL_VERSION.version_id,
         "model": {
             "model_id": model_id,
             "model_version": COMPOSITE_MODELS[model_id].version,
+            "cycle_label": "experimental_domestic_condition_cycle",
+            "cycle_label_note": (
+                "Stages describe transitions in the experimental domestic-"
+                "condition composite, not a validated historical empire "
+                "life-cycle or international-leadership stage."
+            ),
             "available_models": [
                 {
                     "model_id": mid,

@@ -467,8 +467,8 @@ export function DailyChangesPanel({ data, demo = false }: { data: DailyChanges; 
   );
 }
 
-const fmt = (v: number | string | null) => {
-  if (v === null) return "—";
+const fmt = (v: number | string | null | undefined) => {
+  if (v == null) return "—";
   if (typeof v === "string") return v;
   if (Math.abs(v) >= 1e9) return fmtUsd(v);
   if (Math.abs(v) < 10) return v.toFixed(1);

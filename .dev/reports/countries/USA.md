@@ -1,12 +1,14 @@
 # United States (USA) — economic research profile
 
-Generated: 2026-11-25T20:57:36.438304Z  
-Methodology: experimental, `normalization-v1.4`, `force-aggregation-v1.0`  
-Latest production scoring period: `2026-Q3`
+Generated: 2026-11-25T21:52:40.386227Z
+Methodology: experimental, `normalization-v1.4`, `force-aggregation-v1.0`
+Requested calculation period: `2026-Q3`
+Latest classified composite period: `2025-Q4`
+Latest raw observation period: `2026`
 
 ## Current interpretation
 
-The production `model_b_domain` result is **57.99054005605417** with stage **RISE**, direction `rising`, and coverage ratio `0.6739130434782609`. This is a domestic-condition research result, not an international-power ranking.
+The production `model_b_domain` result is **57.99054005605417** with stage **RISE**, direction `rising`, and coverage ratio `0.6739130434782609`. This is an experimental domestic-condition cycle result, not an international-power ranking and not a claim about an empire life-cycle stage.
 
 ## Composite models
 
@@ -24,8 +26,8 @@ The production `model_b_domain` result is **57.99054005605417** with stage **RIS
 | Leadership capabilities | scored | 76.7214861 | partial | 2026-Q3 | WGI Government Effectiveness (2025 revision, 0-100) is the institutional proxy: quality of public services, civil service, policy formulation and implementation. It measures state capacity, not individual leaders — no subjective leader ratings. Capped PARTIAL: one governance dimension is not the whole leadership-capabilities concept (Sprint 6.21, DEC-041). |
 | Education | scored | 52.7706759165652 | partial | 2026-Q3 | Live input: OECD tertiary attainment age 25-34 (ISCED 5-8, % of population, annual, Sprint 5.20). Attainment != enrollment. CHN has only 1 data point (2010); IND has 8 sparse data points. Still missing: secondary attainment/enrollment, learning outcomes/test scores, education quality, years of schooling, skills. One tertiary series cannot make Education AVAILABLE — capped at PARTIAL. |
 | Character / determination | scored | 50.27472527472528 | partial | 2026-Q3 | PARTIAL proxy (V1 Mission 1, delegated working model): the executable component measures RELATIVE ECONOMIC PARTICIPATION — labour force participation rate (ILO modeled, ages 15+) scored as a WDI-universe percentile. This is a narrow, labeled proxy for economic participation only; it is NOT a measurement of national character or determination. Resourcefulness, entrepreneurship and innovation dimensions remain unmeasured. PARTIAL ceiling enforced; higher participation is not universally positive (documented limitation). |
-| Rule of law | scored | 71.672083 | available | 2026-Q3 | World Bank WGI Rule of Law governance score (2025 revision, 0-100 absolute scale) live 1996-2024 for all 8 countries. Perception-based composite with measurement uncertainty (90% CI bounds and number of sources exist as separate WGI series, not yet imported). This is a SOURCE indicator for the force, not an Atlas force score. |
-| Corruption | scored | 65.4953405 | available | 2026-Q3 | Source is WGI 'Control of Corruption' (2025 revision, 0-100): HIGHER means stronger control of corruption / less corruption — the raw stored value is never reversed or reinterpreted. Perception-based composite with measurement uncertainty. This is a SOURCE indicator, not an Atlas force score. |
+| Rule of law | scored | 71.672083 | available | 2026-Q3 | World Bank WGI Rule of Law governance score (2025 revision, 0-100 absolute scale) live 1996-present for all 8 countries. Perception-based composite with measurement uncertainty; the 90% CI bounds and source counts are stored in the separate indicator_diagnostics evidence path and never become force inputs. This is a SOURCE indicator for the force, not an Atlas force score. |
+| Corruption | scored | 65.4953405 | available | 2026-Q3 | Source is WGI 'Control of Corruption' (2025 revision, 0-100): HIGHER means stronger control of corruption / less corruption — the raw stored value is never reversed or reinterpreted. Perception-based composite; uncertainty bounds/source counts are stored separately as indicator diagnostics. This is a SOURCE indicator, not an Atlas force score. |
 | Resource allocation efficiency | context_only | — | partial | 2026-Q3 | Investment & resource-allocation CONTEXT profile (Mission 4 §17): investment effort (GCF % of GDP), output growth, and labour productivity describe the input side — none of them measures allocation efficiency itself, and all three overlap productivity / infrastructure inputs by design (documented, not deduplicated). |
 | Global openness | context_only | — | partial | 2026-Q3 | Descriptive openness CONTEXT profile (Mission 4 §16): trade intensity (exports+imports % of GDP, exposed as derived TRADE_OPENNESS_GDP), external balance, current account, FDI inflows, plus population/GDP size context as candidates. Trade intensity is NOT strength (DEC-035) and these inputs overlap trade_capital_flows deliberately. The full force (capital, people, ideas) remains unmeasurable — no level score is claimed. |
 | Productivity / output growth | scored | 81.42857142857143 | partial | 2026-Q3 | OECD labour productivity per hour (6/8 countries — CHN/IND are not OECD members and cannot receive an OECD-calibrated score). Sprint 6.14 (DEC-042 Option A — owner approved): level = mid-rank percentile within the versioned OECD universe oecd_lpph_v1, period-specific. Capped PARTIAL: OECD relative productivity position only — not the whole productivity/output-growth force, not a global percentile. |
@@ -35,48 +37,50 @@ The production `model_b_domain` result is **57.99054005605417** with stage **RIS
 | Indebtedness | scored | 97.70642201834862 | available | 2026-Q3 | Private-sector credit gap + debt service (BIS) + general-government gross debt (IMF WEO, Sprint 5.19). Government debt is a raw level input only — no monotonic 'higher debt = weaker' curve is approved; debt sustainability depends on interest cost, currency, maturity, fiscal capacity, monetary sovereignty, and growth (CONTEXTUAL_DEFERRED in the normalization registry). Sprint 6.13 (DEC-040, ratified) added a score: CONDITION_MINUS_PENALTY composition, level = clamp(DSR + (credit_gap - 50), 0, 100), force-aggregation-v0.4. |
 | Military strength | dimension_only | — | partial | 2026-Q3 | Live inputs are spending measures only (World Bank MS.MIL.XPND.CD / MS.MIL.XPND.GD.ZS, underlying source: SIPRI Military Expenditure Database). SIPRI describes military expenditure as an INPUT measure - resources absorbed by the military - not a measure of military capability or security. Personnel capability, equipment quality and quantity, technology, logistics, readiness, combat experience, alliances/force projection, and nuclear capability are not measured, so spending alone can never make this force AVAILABLE (DEC-009 ceiling). |
 | Wealth / opportunity / values gaps | scored | 30.459999999999997 | partial | 2026-Q3 | Live inputs: World Bank Gini index (income inequality, irregular) + WID top 10% net personal wealth share (wealth concentration, annual, Sprint 5.20). Both are distributional measures — opportunity gaps and values/social polarization remain missing. The force is capped at PARTIAL until its conceptual scope is better covered. WID data_quality column preserved but NOT used for filtering (official semantics unverified). |
-| Internal conflict | scored | 60.3146432 | partial | 2026-Q3 | Initial institutional/conflict-risk proxy: WGI 'Political Stability and Absence of Violence/Terrorism' governance score (2025 revision, 0-100) live 1996-2024 for all 8 countries. It does NOT measure every form of domestic conflict (polarization, protests, distributional tension) — the force is capped at PARTIAL while this proxy is the only input; later ACLED / event data may strengthen it. Perception-based composite with measurement uncertainty. SOURCE indicator, not an Atlas force score. |
-| Geography | context_only | — | missing | 2026-Q3 | Mostly static; no time-series catalog indicator planned. |
+| Internal conflict | scored | 60.3146432 | partial | 2026-Q3 | Initial institutional/conflict-risk proxy: WGI 'Political Stability and Absence of Violence/Terrorism' governance score (2025 revision, 0-100) live 1996-2024 for all 8 countries. It does NOT measure every form of domestic conflict (polarization, protests, distributional tension) — the force is capped at PARTIAL while this proxy is the only input; later ACLED / event data may strengthen it. Perception-based composite; uncertainty bounds/source counts are stored separately as indicator diagnostics. SOURCE indicator, not an Atlas force score. |
+| Geography | context_only | — | structural_context_available | 2026-Q3 | Structural context profile `geo_profile_v1` (landlocked status, coastline, island status, land area and maritime access) is available for all tracked countries. It is deliberately static context and has no live time-series input or score. |
 | Acts of nature | context_only | — | partial | 2026-Q3 | Verified structural exposure context (Mission 4 §18): WB EN.CLC.MDAT.ZS, an EM-DAT-derived % of population affected by droughts/floods/extreme temperatures averaged over 1990-2009 (published at 2009 only — no annual series). Pandemic and climate-change exposure have no legally accessible provider series ingested yet; missing values mean 'not published', never 'zero events'. |
 
 ## Historical raw-indicator changes
 
-| Force / indicator | Earliest | Latest | Baseline value | Latest value | Change | Unit |
-|---|---:|---:|---:|---:|---:|---|
-| wealth_opportunity_values_gaps `WEALTH_SHARE_TOP_10` | 1820 | 2024 | 0.6499 | 0.6954 | 0.045499999999999985 | share (0-1) |
-| cost_competitiveness `UNIT_LABOUR_COST_GROWTH` | 1956 | 2026 | 10.32788 | 1.543055 | -8.784825 | percent per annum |
-| indebtedness `CREDIT_TO_GDP_GAP` | 1957 | 2026 | -1.1903 | -11.3204 | -10.130099999999999 | percentage of GDP |
-| cost_competitiveness `INFLATION_CPI` | 1960 | 2024 | 13.5492019749684 | 2.94952520485207 | -10.599676770116329 | percent |
-| military_strength `MILITARY_EXPENDITURE_USD` | 1960 | 2025 | 143688354872.676 | 954387000000.0 | 810698645127.324 | current US$ |
-| military_strength `MILITARY_EXPENDITURE_GDP` | 1960 | 2025 | 5.1535374665 | 3.1173079811 | -2.0362294854000003 | percent of GDP |
-| resource_allocation_efficiency `GDP_GROWTH` | 1961 | 2025 | -0.256775739391401 | 2.16138195623856 | 2.418157695629961 | percent |
-| productivity_output_growth `GDP_GROWTH` | 1961 | 2025 | -0.256775739391401 | 2.16138195623856 | 2.418157695629961 | percent |
-| wealth_opportunity_values_gaps `GINI_INDEX` | 1963 | 2024 | 34.7 | 41.8 | 7.099999999999994 | index (0-100) |
-| resource_allocation_efficiency `GROSS_CAPITAL_FORMATION_GDP` | 1970 | 2024 | 23.3102708249411 | 21.5325967668865 | -1.7776740580546004 | percent |
-| global_openness `EXPORTS_GDP` | 1970 | 2024 | 9.82645547013324 | 10.97469647515 | 1.148241005016759 | percent |
-| global_openness `IMPORTS_GDP` | 1970 | 2024 | 10.2833892192894 | 14.0413208226783 | 3.757931603388899 | percent |
-| global_openness `TRADE_BALANCE` | 1970 | 2024 | -0.456933749156111 | -3.06662434752828 | -2.6096905983721688 | percent |
-| global_openness `CURRENT_ACCOUNT_GDP` | 1970 | 2025 | 0.0744407233804418 | -3.8254126624569 | -3.899853385837342 | percent |
-| global_openness `FDI_NET_INFLOWS_GDP` | 1970 | 2025 | 0.585866341978653 | 0.997793283652424 | 0.4119269416737711 | percent of GDP |
-| trade_capital_flows `EXPORTS_GDP` | 1970 | 2024 | 9.82645547013324 | 10.97469647515 | 1.148241005016759 | percent |
-| trade_capital_flows `IMPORTS_GDP` | 1970 | 2024 | 10.2833892192894 | 14.0413208226783 | 3.757931603388899 | percent |
-| trade_capital_flows `TRADE_BALANCE` | 1970 | 2024 | -0.456933749156111 | -3.06662434752828 | -2.6096905983721688 | percent |
-| trade_capital_flows `CURRENT_ACCOUNT_GDP` | 1970 | 2025 | 0.0744407233804418 | -3.8254126624569 | -3.899853385837342 | percent |
-| trade_capital_flows `FDI_NET_INFLOWS_GDP` | 1970 | 2025 | 0.585866341978653 | 0.997793283652424 | 0.4119269416737711 | percent of GDP |
-| infrastructure_investment `GROSS_CAPITAL_FORMATION_GDP` | 1970 | 2024 | 23.3102708249411 | 21.5325967668865 | -1.7776740580546004 | percent |
-| cost_competitiveness `REER_INDEX` | 1980 | 2025 | 105.856501096982 | 130.979790009774 | 25.123288912792006 | index |
-| education `TERTIARY_ATTAINMENT_25_34` | 1981 | 2025 | — | 52.7706759165652 | — | percent |
-| resource_allocation_efficiency `LABOUR_PRODUCTIVITY_PER_HOUR` | 1987 | 2025 | — | 85.60236428340167 | — | US dollars per hour, PPP converted |
-| productivity_output_growth `LABOUR_PRODUCTIVITY_PER_HOUR` | 1987 | 2025 | — | 85.60236428340167 | — | US dollars per hour, PPP converted |
-| character_determination `LABOUR_FORCE_PARTICIPATION_RATE` | 1990 | 2025 | — | 61.704 | — | percent |
-| leadership_capabilities `GOVERNMENT_EFFECTIVENESS_WGI_SCORE` | 1996 | 2025 | — | 76.7214861 | — | score 0-100 |
-| rule_of_law `RULE_OF_LAW_WGI_SCORE` | 1996 | 2025 | — | 71.672083 | — | score 0-100 |
-| corruption `CONTROL_OF_CORRUPTION_WGI_SCORE` | 1996 | 2025 | — | 65.4953405 | — | score 0-100 |
-| internal_conflict `POLITICAL_STABILITY_WGI_SCORE` | 1996 | 2025 | — | 60.3146432 | — | score 0-100 |
-| infrastructure_investment `BROADBAND_PER_100` | 1998 | 2024 | — | 38.8571729185246 | — | per 100 people |
-| indebtedness `DEBT_SERVICE_RATIO` | 1999 | 2026 | — | 13.8 | — | per cent |
-| indebtedness `GOVERNMENT_DEBT_GDP` | 2001 | 2025 | — | 124.376732 | — | percent |
-| acts_of_nature `NATURAL_DISASTER_AFFECTED_PCT` | 2009 | 2009 | — | 0.214155722534503 | — | percent of population |
+The `range baseline` is the first observation in the requested 1980-present window; the `full baseline` is the first observation ever stored. These are deliberately separate views.
+
+| Force / indicator | Earliest | Range baseline | Latest | Range baseline value | Latest value | Range change | Full baseline | Full change | Unit |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| wealth_opportunity_values_gaps `WEALTH_SHARE_TOP_10` | 1820 | 1980 | 2024 | 0.6499 | 0.6954 | 0.045499999999999985 | 1820 | -0.06790000000000007 | share (0-1) |
+| cost_competitiveness `UNIT_LABOUR_COST_GROWTH` | 1956 | 1980 | 2026 | 9.182787 | 1.543055 | -7.6397319999999995 | 1956 | -3.9994570000000005 | percent per annum |
+| indebtedness `CREDIT_TO_GDP_GAP` | 1957 | 1980 | 2026 | -1.3012 | -11.3204 | -10.0192 | 1957 | -12.095799999999999 | percentage of GDP |
+| cost_competitiveness `INFLATION_CPI` | 1960 | 1980 | 2024 | 13.5492019749684 | 2.94952520485207 | -10.599676770116329 | 1960 | 1.4915492185741699 | percent |
+| military_strength `MILITARY_EXPENDITURE_USD` | 1960 | 1980 | 2025 | 143688354872.676 | 954387000000.0 | 810698645127.324 | 1960 | 907040447329.7874 | current US$ |
+| military_strength `MILITARY_EXPENDITURE_GDP` | 1960 | 1980 | 2025 | 5.1535374665 | 3.1173079811 | -2.0362294854000003 | 1960 | -5.875816606100001 | percent of GDP |
+| resource_allocation_efficiency `GDP_GROWTH` | 1961 | 1980 | 2025 | -0.256775739391401 | 2.16138195623856 | 2.418157695629961 | 1961 | -0.13861804365379005 | percent |
+| productivity_output_growth `GDP_GROWTH` | 1961 | 1980 | 2025 | -0.256775739391401 | 2.16138195623856 | 2.418157695629961 | 1961 | -0.13861804365379005 | percent |
+| wealth_opportunity_values_gaps `GINI_INDEX` | 1963 | 1980 | 2024 | 34.7 | 41.8 | 7.099999999999994 | 1963 | 5.099999999999994 | index (0-100) |
+| resource_allocation_efficiency `GROSS_CAPITAL_FORMATION_GDP` | 1970 | 1980 | 2024 | 23.3102708249411 | 21.5325967668865 | -1.7776740580546004 | 1970 | 0.11786113305339896 | percent |
+| global_openness `EXPORTS_GDP` | 1970 | 1980 | 2024 | 9.82645547013324 | 10.97469647515 | 1.148241005016759 | 1970 | 5.4115889463347395 | percent |
+| global_openness `IMPORTS_GDP` | 1970 | 1980 | 2024 | 10.2833892192894 | 14.0413208226783 | 3.757931603388899 | 1970 | 8.84614294653335 | percent |
+| global_openness `TRADE_BALANCE` | 1970 | 1980 | 2024 | -0.456933749156111 | -3.06662434752828 | -2.6096905983721688 | 1970 | -3.434554000198588 | percent |
+| global_openness `CURRENT_ACCOUNT_GDP` | 1970 | 1980 | 2025 | 0.0744407233804418 | -3.8254126624569 | -3.899853385837342 | 1970 | -4.069518939994557 | percent |
+| global_openness `FDI_NET_INFLOWS_GDP` | 1970 | 1980 | 2025 | 0.585866341978653 | 0.997793283652424 | 0.4119269416737711 | 1970 | 0.8841254750280191 | percent of GDP |
+| trade_capital_flows `EXPORTS_GDP` | 1970 | 1980 | 2024 | 9.82645547013324 | 10.97469647515 | 1.148241005016759 | 1970 | 5.4115889463347395 | percent |
+| trade_capital_flows `IMPORTS_GDP` | 1970 | 1980 | 2024 | 10.2833892192894 | 14.0413208226783 | 3.757931603388899 | 1970 | 8.84614294653335 | percent |
+| trade_capital_flows `TRADE_BALANCE` | 1970 | 1980 | 2024 | -0.456933749156111 | -3.06662434752828 | -2.6096905983721688 | 1970 | -3.434554000198588 | percent |
+| trade_capital_flows `CURRENT_ACCOUNT_GDP` | 1970 | 1980 | 2025 | 0.0744407233804418 | -3.8254126624569 | -3.899853385837342 | 1970 | -4.069518939994557 | percent |
+| trade_capital_flows `FDI_NET_INFLOWS_GDP` | 1970 | 1980 | 2025 | 0.585866341978653 | 0.997793283652424 | 0.4119269416737711 | 1970 | 0.8841254750280191 | percent of GDP |
+| infrastructure_investment `GROSS_CAPITAL_FORMATION_GDP` | 1970 | 1980 | 2024 | 23.3102708249411 | 21.5325967668865 | -1.7776740580546004 | 1970 | 0.11786113305339896 | percent |
+| cost_competitiveness `REER_INDEX` | 1980 | 1980 | 2025 | 105.856501096982 | 130.979790009774 | 25.123288912792006 | 1980 | 25.123288912792006 | index |
+| education `TERTIARY_ATTAINMENT_25_34` | 1981 | 1981 | 2025 | 23.275386 | 52.7706759165652 | 29.495289916565202 | 1981 | 29.495289916565202 | percent |
+| resource_allocation_efficiency `LABOUR_PRODUCTIVITY_PER_HOUR` | 1987 | 1987 | 2025 | 45.86850117378371 | 85.60236428340167 | 39.73386310961796 | 1987 | 39.73386310961796 | US dollars per hour, PPP converted |
+| productivity_output_growth `LABOUR_PRODUCTIVITY_PER_HOUR` | 1987 | 1987 | 2025 | 45.86850117378371 | 85.60236428340167 | 39.73386310961796 | 1987 | 39.73386310961796 | US dollars per hour, PPP converted |
+| character_determination `LABOUR_FORCE_PARTICIPATION_RATE` | 1990 | 1990 | 2025 | 65.292 | 61.704 | -3.588000000000001 | 1990 | -3.588000000000001 | percent |
+| leadership_capabilities `GOVERNMENT_EFFECTIVENESS_WGI_SCORE` | 1996 | 1996 | 2025 | 88.7188679 | 76.7214861 | -11.9973818 | 1996 | -11.9973818 | score 0-100 |
+| rule_of_law `RULE_OF_LAW_WGI_SCORE` | 1996 | 1996 | 2025 | 83.4985269 | 71.672083 | -11.826443900000001 | 1996 | -11.826443900000001 | score 0-100 |
+| corruption `CONTROL_OF_CORRUPTION_WGI_SCORE` | 1996 | 1996 | 2025 | 81.8741323 | 65.4953405 | -16.378791800000002 | 1996 | -16.378791800000002 | score 0-100 |
+| internal_conflict `POLITICAL_STABILITY_WGI_SCORE` | 1996 | 1996 | 2025 | 82.605263 | 60.3146432 | -22.290619799999995 | 1996 | -22.290619799999995 | score 0-100 |
+| infrastructure_investment `BROADBAND_PER_100` | 1998 | 1998 | 2024 | 0.255913845 | 38.8571729185246 | 38.601259073524595 | 1998 | 38.601259073524595 | per 100 people |
+| indebtedness `DEBT_SERVICE_RATIO` | 1999 | 1999 | 2026 | 16.3 | 13.8 | -2.5 | 1999 | -2.5 | per cent |
+| indebtedness `GOVERNMENT_DEBT_GDP` | 2001 | 2001 | 2025 | 53.488708 | 124.376732 | 70.888024 | 2001 | 70.888024 | percent |
+| acts_of_nature `NATURAL_DISASTER_AFFECTED_PCT` | 2009 | 2009 | 2009 | 0.214155722534503 | 0.214155722534503 | 0.0 | 2009 | 0.0 | percent of population |
 
 ## Scientific limitations
 

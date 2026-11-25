@@ -673,13 +673,23 @@
   color: var(--text-secondary, #a8b3c7);
 }
 .badge-warn {
-  color: var(--warn, #eab308);
-  border-color: color-mix(in srgb, var(--warn, #eab308) 45%, transparent);
-  background: color-mix(in srgb, var(--warn, #eab308) 10%, transparent);
+  color: var(--status-warn, #eab308);
+  border-color: color-mix(in srgb, var(--status-warn, #eab308) 45%, transparent);
+  background: color-mix(in srgb, var(--status-warn, #eab308) 10%, transparent);
 }
 .badge-info {
   color: var(--chart-1, #4d8fd1);
   border-color: color-mix(in srgb, var(--chart-1, #4d8fd1) 45%, transparent);
+}
+.badge-ok {
+  color: var(--chart-2, #4fbf8f);
+  border-color: color-mix(in srgb, var(--chart-2, #4fbf8f) 45%, transparent);
+  background: color-mix(in srgb, var(--chart-2, #4fbf8f) 10%, transparent);
+}
+.badge-err {
+  color: var(--chart-4, #d16a6a);
+  border-color: color-mix(in srgb, var(--chart-4, #d16a6a) 45%, transparent);
+  background: color-mix(in srgb, var(--chart-4, #d16a6a) 10%, transparent);
 }
 
 /* Add-to-Workspace dialog */

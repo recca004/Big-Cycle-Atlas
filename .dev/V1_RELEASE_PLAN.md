@@ -1,6 +1,6 @@
 # Big Cycle Atlas — Road to v1.0
 
-Current programme state: **Mission 4 in progress** (2026-11-25). Missions 1–3 delivered; Mission 4 is closing application gaps and has landed the historical-validation foundation.
+Current programme state: **Mission 5 in progress** (2026-11-25). Missions 1–4 delivered; Mission 5 has landed the market-data layer, market-regime engine, strategy simulator, paper portfolio and forecast-readiness surface.
 
 ## The six missions
 
@@ -10,7 +10,7 @@ Current programme state: **Mission 4 in progress** (2026-11-25). Missions 1–3 
 | 2 | Big Cycle engine + Research Lab | Experimental composite engine; `/research` live; transition rules researched; experimental isolation | **COMPLETE** — registry + 4 composite models + phase/stage classifier + /research UI live, all experimental-gated; retrospective diagnostics manifest generated (4 models × 8 countries) |
 | 3 | Complete Astro + Liquid Glass app | Workspace completion (drag/resize/lock), all widgets on real data, component showcase | **MOSTLY COMPLETE** — workspace filters inherited by widgets, pointer drag/resize/lock/undo/redo Playwright-verified, Add to Workspace on key pages, Data Explorer + compare with exports, uncertainty band charts; search/settings/showcase remain (Mission 4 P2) |
 | 4 | Historical validation + forecasting | Release-date discipline, as-of queries, backtest-safety evidence, gated forecast architecture | **IN PROGRESS** — execution modes (current/retrospective/strict/assumption) threaded through alignment→normalizer→forces→composites; provider release-evidence matrix; leakage tests; validation API (execution-modes, release-evidence, availability, reference-availability, diagnostics); RL historical-validation section; forecasting scaffolding pending |
-| 5 | Market regime research + strategy + paper trading | Market regimes, asset-class analysis, historical strategy research, isolated paper trading, final integration | Pending |
+| 5 | Market regime research + strategy + paper trading | Market regimes, asset-class analysis, historical strategy research, isolated paper trading, final integration | **IN PROGRESS** — 35-instrument market layer with real FRED data (~63k obs from 2000); as-of FX conversion; growth×inflation regime engine + history/asset-returns APIs; monthly-grid simulator with next-period + FX-gated execution; Decimal paper ledger + watchlist; /forecast readiness gates (all gated today); 5 new Astro pages |
 | 6 | QA, self-hosting, v1.0 release prep | Full regression, deployment docs, release checklist | Pending |
 
 ## Mission 1 scope (completed)
@@ -43,7 +43,28 @@ Current programme state: **Mission 4 in progress** (2026-11-25). Missions 1–3 
 ## Remaining (Mission 4)
 
 - [ ] Historical-validation widget(s) in workspace registry
-- [ ] Forecast readiness report (§31) — evidence assessment, no fabricated probabilities
+- [x] Forecast readiness report — /api/research/forecast/readiness + /forecast page; all horizons gated on evidence (no fabricated probabilities)
 - [ ] Search, settings, component showcase (P2)
 - [ ] Browser screenshots + performance/accessibility audit
 - [ ] PR #1 update + consolidated acceptance report
+
+## Mission 5 delivered to date (this session)
+
+- **§8 resolved as reporting artifact**: 2015-window runs produced `stage=None` (min_observations=12 gate), which read as "stable"; with the 2000 window the classifiers produce 36–42 genuine transitions/model, 15–19 post-2015. Manifest now reports classification availability; regression test added.
+- **§6–7 release evidence**: STRICT_AS_OF accepts `retrieved_at ≤ cutoff` ("atlas_retrieved"); ingestion-run content checksums; `scripts/collect_snapshot.py` prospective vintage collector; availability endpoint reports retrieved-evidence counts.
+- **§9 sensitivity**: 108-config grid re-classified from diagnostics — 5–102 transitions, thresholds unvalidated; no config yields forecast-trainable samples.
+- **Market data (§14–18)**: `app/market/` — 35 instruments (8 country equity indices, US/DE/GB/JP/CH yields + policy rates, corp + HY, 6 FX pairs, commodity index), FRED adapter, idempotent ingestion, ~63k observations from 2000; ISO3→ISO2 mapping fix (CHN was pulling CHE equity).
+- **Asset research (§23–25)**: returns/vol/drawdown stats, rolling stats, shared-date correlation matrix, as-of FX conversion via USD legs — instrument `return_methodology` governs every response (a yield is never a return).
+- **Regimes (§19–22)**: experimental growth×inflation engine (4 regimes + UNCLASSIFIED, sub-eps carry-forward), financial-conditions panel, per-country history + regime-bucketed equity returns; explicitly association-not-causation.
+- **Strategy engine (§26–31)**: benchmark strategies + monthly-grid simulator — next-period execution (decision at T trades at first price after T), FX-gated joint execution, transaction costs, long-only/unleveraged, bounded ranges, §30 result contract with run manifest.
+- **Paper portfolio (§32–36)**: isolated Decimal ledger (paper_* tables), idempotent transactions, stored-price or flagged manual prices only, valuation with average-cost basis, watchlist endpoints — simulation=True on every response.
+- **Forecast surface (§10–13)**: typed contracts + per-model/horizon readiness evaluator (5 gates); /forecast page renders gate failures verbatim; forecast probe returns availability + evidence, `stage_probabilities: null` by design.
+- **Frontend (§37–45)**: /forecast, /markets, /strategies, /portfolio, /watchlist pages + nav; typed API client with POST/DELETE; badge-ok/badge-err tokens; 5 new routes added to Playwright suite (39 pass).
+- **Bugfix**: simulator FX-gated execution — entry slips to first jointly executable point instead of silently skipping; `_stats` zero-base guards; regression test.
+
+## Remaining (Mission 5)
+
+- [ ] collect_snapshot.py live run completing (in progress — prospective vintage capture across all providers)
+- [ ] Regime/macro-signal strategies stay gated pending release-date evidence (§31)
+- [ ] Performance + accessibility audit of new pages
+- [ ] Final regression totals + PR update + §55 report

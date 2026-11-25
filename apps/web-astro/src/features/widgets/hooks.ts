@@ -24,7 +24,8 @@ export type AsyncState<T> =
   | { kind: "error" }
   | { kind: "ready"; data: T };
 
-function useAsync<T>(
+/** Generic cancellable fetch hook — mirrors HistoricalValidation's useFetch. */
+export function useAsyncState<T>(
   fn: (signal: AbortSignal) => Promise<T>,
   deps: unknown[],
 ): AsyncState<T> {
@@ -61,7 +62,7 @@ export function useCountryList(): Country[] {
 }
 
 export function useLiveCountries(): AsyncState<Country[]> {
-  return useAsync((s) => fetchCountries({ signal: s }), []);
+  return useAsyncState((s) => fetchCountries({ signal: s }), []);
 }
 
 export function useObservations(
@@ -69,7 +70,7 @@ export function useObservations(
   indicator?: string,
   limit = 1000,
 ): AsyncState<CountryObservation[]> {
-  return useAsync(
+  return useAsyncState(
     (s) =>
       fetchCountryObservations(iso3!, { indicator, limit }, { signal: s }).then(
         (p) => p.items,
@@ -81,26 +82,26 @@ export function useObservations(
 export function useForceCoverage(
   iso3: string | undefined,
 ): AsyncState<ForceCoverageData> {
-  return useAsync(
+  return useAsyncState(
     (s) => fetchForceCoverage(iso3!, { signal: s }),
     [iso3],
   );
 }
 
 export function useDataSources(): AsyncState<DataSource[]> {
-  return useAsync((s) => fetchDataSources({ signal: s }), []);
+  return useAsyncState((s) => fetchDataSources({ signal: s }), []);
 }
 
 export function useIngestionRuns(): AsyncState<IngestionRun[]> {
-  return useAsync((s) => fetchIngestionRuns({ signal: s }), []);
+  return useAsyncState((s) => fetchIngestionRuns({ signal: s }), []);
 }
 
 export function useHealth(): AsyncState<HealthStatus> {
-  return useAsync((s) => fetchHealth({ signal: s }), []);
+  return useAsyncState((s) => fetchHealth({ signal: s }), []);
 }
 
 export function useIndicators(): AsyncState<Indicator[]> {
-  return useAsync((s) => fetchIndicators({ signal: s }), []);
+  return useAsyncState((s) => fetchIndicators({ signal: s }), []);
 }
 
 /** Fetch observations for several countries for one indicator. */
@@ -109,7 +110,7 @@ export function useMultiCountryObservations(
   indicator: string | undefined,
 ): AsyncState<Record<string, CountryObservation[]>> {
   const key = iso3s.join(",");
-  return useAsync(
+  return useAsyncState(
     async (s) => {
       const out: Record<string, CountryObservation[]> = {};
       await Promise.all(

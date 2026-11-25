@@ -202,3 +202,66 @@ export interface ForceHistoryResponse {
   points: ForceHistoryPoint[];
   backtest_safe: boolean;
 }
+
+/* ---------- Forecast research (Mission 5 §10-§13) ---------- */
+
+export interface ReadinessGate {
+  gate: string;
+  passed: boolean;
+  value: number | string | null;
+  requirement: string;
+  note: string | null;
+}
+
+export interface HorizonReadiness {
+  horizon: string;
+  horizon_quarters: number;
+  available: boolean;
+  unavailable_reason: string | null;
+  eligible_samples: number;
+  positive_transitions: number;
+  gates: ReadinessGate[];
+}
+
+export interface ModelReadiness {
+  model_id: string;
+  model_version: string;
+  requirements_version: string;
+  overall_available: boolean;
+  blockers: string[];
+  total_scored_periods: number;
+  total_genuine_transitions: number;
+  strict_eligible_periods: number;
+  horizons: HorizonReadiness[];
+}
+
+export interface ForecastReadinessResponse {
+  methodology_status: string;
+  dataset: {
+    source: string;
+    generated_at: string;
+    execution_mode: string;
+    warning: string;
+  };
+  models: Record<string, ModelReadiness>;
+  any_available: boolean;
+}
+
+export interface CountryForecastResponse {
+  methodology_status: string;
+  country: string;
+  model_id: string;
+  model_version: string;
+  horizon: string;
+  forecast: {
+    available: boolean;
+    unavailable_reason: string | null;
+    stage_probabilities: Record<string, number> | null;
+    calibration: unknown | null;
+  };
+  evidence: {
+    eligible_samples: number;
+    positive_transitions: number;
+    dataset_generated_at: string | null;
+  };
+}

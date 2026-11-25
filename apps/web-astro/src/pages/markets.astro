@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { MarketsExplorer } from "@/features/markets/MarketsExplorer";
+---
+
+<BaseLayout title="Markets">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Market research</p>
+    <h1 class="headline-lg">Markets</h1>
+    <p class="body-sm">
+      Stored market observations from public providers — price indices,
+      yields, policy rates, FX and commodities — plus an experimental
+      growth/inflation regime view. Stored values are provider data, not
+      real-time pricing; a yield quote is never shown as a return.
+    </p>
+  </header>
+  <MarketsExplorer client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+  .research-controls { display: flex; gap: var(--space-4); align-items: center; padding: var(--space-4); flex-wrap: wrap; }
+  .panel-title { margin-bottom: var(--space-3); }
+  .glass { margin-bottom: var(--space-5); }
+</style>

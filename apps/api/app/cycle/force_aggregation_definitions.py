@@ -469,25 +469,72 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             confidence_mode=_DEFERRED,
             notes="Single WGI core condition; identity inherits semantics.",
         ),
-        # 6. Resource allocation efficiency — no live indicators
+        # 6. Resource allocation efficiency — context profile (Mission 4 §17).
+        # All inputs are SUPPORTING_CONTEXT: investment effort and
+        # productivity describe the input side; none measures allocation
+        # efficiency, so no numeric dimension is claimed.
         ForceAggregationSpec(
             force_code="resource_allocation_efficiency",
-            components=(),
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="GROSS_CAPITAL_FORMATION_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="GDP_GROWTH",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="LABOUR_PRODUCTIVITY_PER_HOUR",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+            ),
             level_mode=_DEFERRED,
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="No live indicators; concept definition needed first.",
+            notes=(
+                "Investment & resource-allocation context only — inputs "
+                "overlap productivity/infrastructure deliberately; "
+                "investment intensity is not allocation efficiency."
+            ),
         ),
-        # 7. Global openness — no live indicators (trade data is candidate only)
+        # 7. Global openness — context profile (Mission 4 §16). Trade/capital
+        # and size series as SUPPORTING_CONTEXT; no composition — trade
+        # intensity is not strength (DEC-035) and people/ideas openness is
+        # unmeasured.
         ForceAggregationSpec(
             force_code="global_openness",
-            components=(),
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="EXPORTS_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="IMPORTS_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="TRADE_BALANCE",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="CURRENT_ACCOUNT_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="FDI_NET_INFLOWS_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+            ),
             level_mode=_DEFERRED,
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="No live indicators; trade data is candidate context only.",
+            notes=(
+                "Descriptive trade/capital/size context only — overlaps "
+                "trade_capital_flows deliberately; no openness level exists."
+            ),
         ),
         # 8. Productivity / output growth — IDENTITY_SINGLE (PROXY_CONDITION),
         # PARTIAL ceiling. Sprint 6.14 (DEC-042 Option A — OWNER APPROVED):
@@ -715,15 +762,25 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             confidence_mode=_DEFERRED,
             notes="Mostly static; no time-series catalog indicator planned.",
         ),
-        # 17. Acts of nature — no live indicators
+    # 17. Acts of nature — context profile (Mission 4 §18). One verified
+    # structural-exposure indicator as SUPPORTING_CONTEXT; a single
+    # 1990-2009 average cannot score anything.
     ForceAggregationSpec(
         force_code="acts_of_nature",
-        components=(),
+        components=(
+            ForceIndicatorComponentSpec(
+                indicator_code="NATURAL_DISASTER_AFFECTED_PCT",
+                role=ForceIndicatorRole.supporting_context,
+            ),
+        ),
         level_mode=_DEFERRED,
         relative_mode=_DEFERRED,
         momentum_mode=_DEFERRED,
         confidence_mode=_DEFERRED,
-        notes="No catalog indicator; candidate sources: EM-DAT, climate indices.",
+        notes=(
+            "Structural disaster-exposure context only — a multi-decadal "
+            "average, not an annual series; missing never means zero."
+        ),
     ),
 )
 

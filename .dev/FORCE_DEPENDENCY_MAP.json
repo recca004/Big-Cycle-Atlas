@@ -97,21 +97,81 @@
     },
     {
       "force": "resource_allocation_efficiency",
-      "live_inputs": [],
-      "ceiling": null,
+      "live_inputs": [
+        "GROSS_CAPITAL_FORMATION_GDP",
+        "GDP_GROWTH",
+        "LABOUR_PRODUCTIVITY_PER_HOUR"
+      ],
+      "ceiling": "partial",
       "level_mode": "deferred",
       "relative_mode": "deferred",
       "momentum_mode": "deferred",
-      "components": []
+      "components": [
+        {
+          "indicator": "GROSS_CAPITAL_FORMATION_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "GDP_GROWTH",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "LABOUR_PRODUCTIVITY_PER_HOUR",
+          "role": "supporting_context",
+          "level_family": "reference_percentile",
+          "executable": false
+        }
+      ]
     },
     {
       "force": "global_openness",
-      "live_inputs": [],
-      "ceiling": null,
+      "live_inputs": [
+        "EXPORTS_GDP",
+        "IMPORTS_GDP",
+        "TRADE_BALANCE",
+        "CURRENT_ACCOUNT_GDP",
+        "FDI_NET_INFLOWS_GDP"
+      ],
+      "ceiling": "partial",
       "level_mode": "deferred",
       "relative_mode": "deferred",
       "momentum_mode": "deferred",
-      "components": []
+      "components": [
+        {
+          "indicator": "EXPORTS_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "IMPORTS_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "TRADE_BALANCE",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "CURRENT_ACCOUNT_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        },
+        {
+          "indicator": "FDI_NET_INFLOWS_GDP",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
     },
     {
       "force": "productivity_output_growth",
@@ -352,15 +412,57 @@
     },
     {
       "force": "acts_of_nature",
-      "live_inputs": [],
-      "ceiling": null,
+      "live_inputs": [
+        "NATURAL_DISASTER_AFFECTED_PCT"
+      ],
+      "ceiling": "partial",
       "level_mode": "deferred",
       "relative_mode": "deferred",
       "momentum_mode": "deferred",
-      "components": []
+      "components": [
+        {
+          "indicator": "NATURAL_DISASTER_AFFECTED_PCT",
+          "role": "supporting_context",
+          "level_family": "contextual_deferred",
+          "executable": false
+        }
+      ]
     }
   ],
-  "shared_indicators": {},
+  "shared_indicators": {
+    "GROSS_CAPITAL_FORMATION_GDP": [
+      "resource_allocation_efficiency",
+      "infrastructure_investment"
+    ],
+    "GDP_GROWTH": [
+      "resource_allocation_efficiency",
+      "productivity_output_growth"
+    ],
+    "LABOUR_PRODUCTIVITY_PER_HOUR": [
+      "resource_allocation_efficiency",
+      "productivity_output_growth"
+    ],
+    "EXPORTS_GDP": [
+      "global_openness",
+      "trade_capital_flows"
+    ],
+    "IMPORTS_GDP": [
+      "global_openness",
+      "trade_capital_flows"
+    ],
+    "TRADE_BALANCE": [
+      "global_openness",
+      "trade_capital_flows"
+    ],
+    "CURRENT_ACCOUNT_GDP": [
+      "global_openness",
+      "trade_capital_flows"
+    ],
+    "FDI_NET_INFLOWS_GDP": [
+      "global_openness",
+      "trade_capital_flows"
+    ]
+  },
   "reference_universes": {
     "oecd_lpph_v1": {
       "indicator": "LABOUR_PRODUCTIVITY_PER_HOUR",

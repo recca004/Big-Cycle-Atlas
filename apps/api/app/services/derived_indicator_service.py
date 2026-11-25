@@ -42,6 +42,7 @@ from datetime import date
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.cycle.execution_modes import ExecutionSpec
 from app.cycle.normalization_definitions import (
     AlignedValue,
     DerivedAlignedValue,
@@ -85,6 +86,7 @@ async def _align_component_with_provenance(
     country_iso3: str,
     indicator_code: str,
     scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
 ) -> ComponentAlignmentResult:
     """Align one component using the shared selection primitive.
 
@@ -109,7 +111,7 @@ async def _align_component_with_provenance(
 
     spec = get_normalization_spec(indicator_code)
     observation = await _select_observation_as_of(
-        session, country, indicator, spec, scoring_period
+        session, country, indicator, spec, scoring_period, execution
     )
 
     if observation is None:
@@ -195,6 +197,7 @@ async def derive_trade_openness_as_of(
     session: AsyncSession,
     country_iso3: str,
     scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
 ) -> DerivedAlignedValue:
     """Compute TRADE_OPENNESS_GDP = EXPORTS_GDP + IMPORTS_GDP.
 
@@ -216,7 +219,7 @@ async def derive_trade_openness_as_of(
     component_results: list[ComponentAlignmentResult] = []
     for indicator_code in TRADE_OPENNESS_COMPONENTS:
         result = await _align_component_with_provenance(
-            session, country_iso3, indicator_code, scoring_period
+            session, country_iso3, indicator_code, scoring_period, execution
         )
         component_results.append(result)
 

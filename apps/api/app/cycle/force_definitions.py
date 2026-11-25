@@ -139,19 +139,44 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="resource_allocation_efficiency",
         name="Resource allocation efficiency",
         description="How efficiently capital, labor, and talent are allocated across the economy.",
-        coverage_notes="No catalog indicator assigned; capital-misallocation measures (e.g. credit gap vs trend) are currently mapped to Indebtedness instead.",
+        live_indicator_codes=(
+            "GROSS_CAPITAL_FORMATION_GDP",
+            "GDP_GROWTH",
+            "LABOUR_PRODUCTIVITY_PER_HOUR",
+        ),
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "Investment & resource-allocation CONTEXT profile (Mission 4 §17): "
+            "investment effort (GCF % of GDP), output growth, and labour "
+            "productivity describe the input side — none of them measures "
+            "allocation efficiency itself, and all three overlap productivity / "
+            "infrastructure inputs by design (documented, not deduplicated)."
+        ),
     ),
     ForceDefinition(
         code="global_openness",
         name="Global openness",
         description="Openness to trade, capital, people, and ideas.",
+        live_indicator_codes=(
+            "EXPORTS_GDP",
+            "IMPORTS_GDP",
+            "TRADE_BALANCE",
+            "CURRENT_ACCOUNT_GDP",
+            "FDI_NET_INFLOWS_GDP",
+        ),
+        # Size context is deliberately candidate-only: GDP_CURRENT_USD and
+        # POPULATION are unassigned scale context in the normalization
+        # registry, never force inputs.
+        candidate_indicator_codes=("POPULATION", "GDP_CURRENT_USD"),
+        coverage_ceiling=ForceCoverageStatus.partial,
         coverage_notes=(
-            "Not yet measurable as defined: the force covers openness to trade, "
-            "capital, people, AND ideas. World Bank trade data (exports, imports, "
-            "trade balance, current account) is now imported and available as a "
-            "future openness input candidate, but it deliberately does not raise "
-            "this force's status — a narrower proxy methodology needs owner "
-            "approval first."
+            "Descriptive openness CONTEXT profile (Mission 4 §16): trade "
+            "intensity (exports+imports % of GDP, exposed as derived "
+            "TRADE_OPENNESS_GDP), external balance, current account, FDI "
+            "inflows, plus population/GDP size context as candidates. Trade "
+            "intensity is NOT strength (DEC-035) and these inputs overlap "
+            "trade_capital_flows deliberately. The full force (capital, "
+            "people, ideas) remains unmeasurable — no level score is claimed."
         ),
     ),
     ForceDefinition(
@@ -293,7 +318,17 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="acts_of_nature",
         name="Acts of nature",
         description="Exposure to natural disasters, pandemics, and climate events.",
-        coverage_notes="No catalog indicator exists; candidate sources: EM-DAT, climate indices.",
+        live_indicator_codes=("NATURAL_DISASTER_AFFECTED_PCT",),
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "Verified structural exposure context (Mission 4 §18): WB "
+            "EN.CLC.MDAT.ZS, an EM-DAT-derived % of population affected by "
+            "droughts/floods/extreme temperatures averaged over 1990-2009 "
+            "(published at 2009 only — no annual series). Pandemic and "
+            "climate-change exposure have no legally accessible provider "
+            "series ingested yet; missing values mean 'not published', never "
+            "'zero events'."
+        ),
     ),
 )
 

@@ -258,9 +258,20 @@ _ENTRIES: tuple[MethodDescriptor, ...] = (
         method_id="ctx.openness.structural_v1",
         force_code="global_openness", formula_id="contextual_deferred",
         version="v1", state=MethodologyState.context_only,
-        dimension="level", inputs=("EXPORTS_GDP", "POPULATION", "GDP_CURRENT_USD"),
-        interpretation="Trade intensity + size context; structural reference model experimental",
-        limitations=("Trade intensity ≠ strength (DEC-035)",),
+        dimension="level",
+        inputs=("EXPORTS_GDP", "IMPORTS_GDP", "TRADE_BALANCE",
+                "CURRENT_ACCOUNT_GDP", "FDI_NET_INFLOWS_GDP",
+                "POPULATION", "GDP_CURRENT_USD"),
+        interpretation=(
+            "Trade intensity (derived TRADE_OPENNESS_GDP), external balance, "
+            "FDI and size context — a functioning descriptive profile, not a "
+            "level score"
+        ),
+        limitations=(
+            "Trade intensity ≠ strength (DEC-035)",
+            "Covers trade/capital only — people/ideas openness unmeasured",
+            "Inputs overlap trade_capital_flows deliberately",
+        ),
     ),
     MethodDescriptor(
         method_id="ctx.infrastructure.gcf_v1",
@@ -275,9 +286,17 @@ _ENTRIES: tuple[MethodDescriptor, ...] = (
         force_code="resource_allocation_efficiency",
         formula_id="contextual_deferred",
         version="v1", state=MethodologyState.context_only,
-        dimension="level", inputs=("GROSS_CAPITAL_FORMATION_GDP", "GDP_GROWTH"),
-        interpretation="Efficiency research: ICOR-style derived candidates experimental",
-        limitations=("Overlaps productivity/infrastructure/indebtedness inputs",),
+        dimension="level",
+        inputs=("GROSS_CAPITAL_FORMATION_GDP", "GDP_GROWTH",
+                "LABOUR_PRODUCTIVITY_PER_HOUR"),
+        interpretation=(
+            "Investment & resource-allocation context: investment effort, "
+            "output growth, labour productivity — the INPUT side only"
+        ),
+        limitations=(
+            "Investment intensity does not measure allocation efficiency",
+            "Overlaps productivity/infrastructure/indebtedness inputs",
+        ),
     ),
     MethodDescriptor(
         method_id="ctx.geography.structural_v1",
@@ -291,9 +310,17 @@ _ENTRIES: tuple[MethodDescriptor, ...] = (
         method_id="ctx.acts_of_nature.v1",
         force_code="acts_of_nature", formula_id="contextual_deferred",
         version="v1", state=MethodologyState.context_only,
-        dimension="level", inputs=(),
-        interpretation="Disaster exposure/impact/resilience research profile — no imported series yet",
-        limitations=("EM-DAT licensing under review; missing ≠ zero events",),
+        dimension="level", inputs=("NATURAL_DISASTER_AFFECTED_PCT",),
+        interpretation=(
+            "Structural disaster-exposure context: EM-DAT-derived % of "
+            "population affected by droughts/floods/extreme temperatures, "
+            "1990-2009 average published via WB at a single date"
+        ),
+        limitations=(
+            "Single multi-decadal average — no annual event series",
+            "Pandemic & climate-change exposure not covered",
+            "Missing ≠ zero events",
+        ),
     ),
 )
 

@@ -268,6 +268,21 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
             "source indicator, not an Atlas force score."
         ),
     ),
+    WorldBankMapping(
+        indicator_code="NATURAL_DISASTER_AFFECTED_PCT",
+        external_code="EN.CLC.MDAT.ZS",
+        external_name=(
+            "Droughts, floods, extreme temperatures "
+            "(% of population, average 1990-2009)"
+        ),
+        external_unit="% of population affected (annual average)",
+        transform_notes=(
+            "EM-DAT-derived structural exposure measure published by the World "
+            "Bank at a single date (2009) covering the 1990-2009 average — NOT "
+            "an annual time series and not an event count. Missing country "
+            "values mean 'no published average', never 'zero events'."
+        ),
+    ),
 )
 
 _MAPPING_BY_INDICATOR_CODE = {m.indicator_code: m for m in WORLD_BANK_MAPPINGS}

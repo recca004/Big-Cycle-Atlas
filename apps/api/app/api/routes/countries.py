@@ -393,6 +393,96 @@ async def get_country_force_history(
     )
 
 
+@router.get("/{iso3}/derived/trade-openness")
+async def get_country_trade_openness(
+    iso3: str,
+    start_year: int = Query(2000, ge=1960, le=2200),
+    end_year: Optional[int] = Query(None, ge=1960, le=2200),
+    execution_mode: Optional[str] = Query(
+        None,
+        description=(
+            "Information-selection mode: retrospective_latest_vintage "
+            "(default), strict_as_of or research_assumption. "
+            "Strict/assumption require info_cutoff."
+        ),
+    ),
+    info_cutoff: Optional[date] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    """Derived TRADE_OPENNESS_GDP history (Mission 4 §16).
+
+    exports + imports as % of GDP, computed AFTER both components are
+    aligned — a descriptive trade-intensity ratio, NOT an Atlas strength
+    score and NOT the Global Openness force level. Each point carries
+    independent component provenance; missing components produce null,
+    never zero.
+    """
+    from app.services import derived_indicator_service
+
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+    try:
+        execution = parse_execution_spec(execution_mode, info_cutoff)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    latest = _latest_completed_scoring_period()
+    end_year = end_year or latest.year
+    if end_year < start_year:
+        raise HTTPException(status_code=422, detail="end_year < start_year")
+    if (end_year - start_year) > 60:
+        raise HTTPException(status_code=422, detail="range too large (max 60 years)")
+
+    points: list[dict] = []
+    for year in range(start_year, end_year + 1):
+        sp = ScoringPeriod(year, 4)
+        if (sp.year, sp.quarter) > (latest.year, latest.quarter):
+            break
+        dav = await derived_indicator_service.derive_trade_openness_as_of(
+            session, country.iso3, sp, execution=execution
+        )
+        points.append({
+            "period": f"{year}-Q4",
+            "derived_value": dav.derived_value,
+            "components": [
+                {
+                    "indicator_code": c.indicator_code,
+                    "raw_value": (
+                        c.aligned_value.raw_value
+                        if c.aligned_value else None
+                    ),
+                    "source_period": (
+                        c.aligned_value.source_period
+                        if c.aligned_value else None
+                    ),
+                    "missing_reason": c.missing_reason,
+                }
+                for c in dav.components
+            ],
+        })
+    return {
+        "country": country.iso3,
+        "derived_indicator_code": derived_indicator_service.TRADE_OPENNESS_GDP_CODE,
+        "formula_id": derived_indicator_service.TRADE_OPENNESS_GDP_FORMULA_ID,
+        "formula_version": derived_indicator_service.TRADE_OPENNESS_GDP_FORMULA_VERSION,
+        "interpretation": (
+            "descriptive trade-intensity ratio — not an Atlas strength "
+            "score, not the Global Openness force level"
+        ),
+        "execution_mode": execution.mode.value,
+        "info_cutoff": (
+            execution.info_cutoff.isoformat()
+            if execution.info_cutoff else None
+        ),
+        "retrospective": execution.mode is not ExecutionMode.CURRENT_LATEST,
+        "backtest_safe": False,
+        "points": points,
+    }
+
+
 @router.get("/{iso3}/uncertainty", response_model=CountryUncertaintyResponse)
 async def get_country_uncertainty(
     iso3: str,

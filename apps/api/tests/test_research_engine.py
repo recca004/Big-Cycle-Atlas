@@ -233,8 +233,11 @@ async def test_research_progress_matches_registry(client):
     assert by_code["military_strength"]["primary_classification"] \
         == "dimension_only"
     assert by_code["geography"]["primary_classification"] == "context_profile"
-    for deferred in ("acts_of_nature",):
-        assert by_code[deferred]["primary_classification"] == "deferred"
+    # Mission 4 workstream C — all three previously deferred forces now have
+    # functioning context profiles with real verified inputs.
+    for ctx in ("global_openness", "resource_allocation_efficiency",
+                "acts_of_nature", "geography"):
+        assert by_code[ctx]["primary_classification"] == "context_profile"
 
 
 async def test_research_cycle_unknown_model_rejected(client):

@@ -32,6 +32,17 @@ def test_project_metadata_matches_registries():
         + r.stdout + r.stderr)
 
 
+def test_force_matrix_matches_live_registries():
+    """§4/Mission 4: FORCE_COMPLETION_MATRIX.md is derived — drift = stale docs."""
+    r = subprocess.run(
+        [sys.executable, "scripts/generate_force_matrix.py", "--check"],
+        cwd=API_DIR, capture_output=True, text=True,
+    )
+    assert r.returncode == 0, (
+        "FORCE_COMPLETION_MATRIX.md is stale — run "
+        "scripts/generate_force_matrix.py\n" + r.stdout + r.stderr)
+
+
 def test_primary_classification_sums_to_17():
     import json
     from pathlib import Path

@@ -1145,6 +1145,8 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         "TERTIARY_ATTAINMENT_25_34",
         # WID (1)
         "WEALTH_SHARE_TOP_10",
+        # WB EM-DAT-derived structural hazard exposure (1)
+        "NATURAL_DISASTER_AFFECTED_PCT",
     }
 )
 
@@ -1658,6 +1660,25 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "/ opportunity / values gaps force as a PROXY_CONDITION "
                 "(DEC-009 ceiling — wealth share does not address opportunity "
                 "or values/social gaps)."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="NATURAL_DISASTER_AFFECTED_PCT",
+            direction=IndicatorStrengthDirection.contextual,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=None,
+            freshness_class=FreshnessClass.irregular,
+            absolute_comparable=True,
+            notes=(
+                "Mission 4 §18: WB EN.CLC.MDAT.ZS (EM-DAT-derived) — annual "
+                "average % of population affected by droughts/floods/extreme "
+                "temperatures, averaged over 1990-2009 and published at date "
+                "2009 only. A SINGLE multi-decadal structural-exposure point: "
+                "no momentum exists (one period), relative ranking deferred "
+                "(a static exposure measure does not describe resilience). "
+                "Missing country values mean 'not published', never zero "
+                "events. Acts-of-nature context profile only."
             ),
         ),
     )

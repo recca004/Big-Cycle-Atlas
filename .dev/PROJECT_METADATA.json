@@ -47,15 +47,15 @@
         ]
       },
       {
-        "coverage_ceiling": null,
+        "coverage_ceiling": "partial",
         "force_code": "resource_allocation_efficiency",
-        "primary_classification": "deferred",
+        "primary_classification": "context_profile",
         "published_dimensions": []
       },
       {
-        "coverage_ceiling": null,
+        "coverage_ceiling": "partial",
         "force_code": "global_openness",
-        "primary_classification": "deferred",
+        "primary_classification": "context_profile",
         "published_dimensions": []
       },
       {
@@ -126,15 +126,15 @@
         "published_dimensions": []
       },
       {
-        "coverage_ceiling": null,
+        "coverage_ceiling": "partial",
         "force_code": "acts_of_nature",
-        "primary_classification": "deferred",
+        "primary_classification": "context_profile",
         "published_dimensions": []
       }
     ],
     "primary_counts": {
-      "context_profile": 3,
-      "deferred": 3,
+      "context_profile": 6,
+      "deferred": 0,
       "dimension_only": 2,
       "level_published": 9
     },
@@ -175,6 +175,6 @@
     "normalization": "normalization-v1.4"
   },
   "normalization": {
-    "registered_indicators": 27
+    "registered_indicators": 28
   }
 }

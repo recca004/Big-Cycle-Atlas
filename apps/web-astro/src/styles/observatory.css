@@ -1,0 +1,165 @@
+/* Great Power Observatory — clock instrument + wordmark. */
+
+/* --- Wordmark --- */
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.wordmark-name {
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wordmark);
+  color: var(--accent-text);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* --- Clock --- */
+.clock-figure {
+  margin: 0;
+}
+.clock-svg {
+  display: block;
+  width: min(100%, 34rem);
+  height: auto;
+  margin-inline: auto;
+  overflow: visible;
+}
+.clock-rim {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+}
+.clock-ring-inner {
+  fill: none;
+  stroke: var(--border-default);
+  stroke-width: 0.8;
+}
+.clock-meridian {
+  fill: none;
+  stroke: var(--border-subtle);
+  stroke-width: 0.8;
+}
+.clock-apex {
+  fill: var(--accent);
+}
+.clock-tick {
+  stroke: var(--border-strong);
+  stroke-width: 0.9;
+}
+.clock-tick.occupied {
+  stroke: var(--accent);
+  stroke-width: 1.6;
+}
+.clock-stage-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  fill: var(--text-tertiary);
+}
+.clock-marker {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.clock-marker.dominant {
+  fill: var(--accent);
+  stroke: var(--accent-strong);
+  stroke-width: 1.8;
+}
+.clock-iso {
+  font-size: 0.6rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  fill: var(--text-secondary);
+}
+.clock-iso.dominant {
+  font-size: 0.7rem;
+  fill: var(--accent-text);
+}
+.clock-hub {
+  font-size: 0.72rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.3em;
+  fill: var(--text-tertiary);
+}
+.clock-caption {
+  margin-top: var(--space-4);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  max-width: 34rem;
+  margin-inline: auto;
+}
+.clock-honesty {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+.clock-loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8) 0;
+}
+.clock-skeleton {
+  width: min(100%, 30rem);
+  aspect-ratio: 640 / 600;
+  border-radius: 50%;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  animation: pulse 1.6s var(--ease-in-out) infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* --- Finance disclosure nav --- */
+.nav-disclosure {
+  position: relative;
+}
+.nav-disclosure > summary {
+  list-style: none;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+.nav-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.nav-disclosure > summary::after {
+  content: " ▾";
+  font-size: 0.7em;
+}
+.nav-disclosure > summary:hover {
+  color: var(--text-primary);
+  background: var(--surface-2);
+}
+.nav-disclosure[open] > summary {
+  color: var(--text-primary);
+}
+.nav-disclosure-menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 10rem;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: var(--z-popover);
+}
+.nav-disclosure-menu .nav-link {
+  padding: var(--space-2) var(--space-3);
+}
+@media (prefers-reduced-motion: reduce) {
+  .clock-skeleton {
+    animation: none;
+  }
+}

@@ -11,18 +11,26 @@ const { title, description } = Astro.props;
 const path = Astro.url.pathname;
 
 const NAV = [
-  { href: "/", label: "Overview" },
-  { href: "/countries", label: "Countries" },
+  { href: "/", label: "Observatory" },
   { href: "/forces", label: "Forces" },
-  { href: "/workspace", label: "Workspace" },
+  { href: "/countries", label: "Countries" },
   { href: "/compare", label: "Compare" },
   { href: "/cycle", label: "Cycle" },
   { href: "/research", label: "Research" },
   { href: "/forecast", label: "Forecast" },
+  { href: "/workspace", label: "Workspace" },
+];
+
+// Financial research — implemented but hidden from default chrome.
+const FINANCE_NAV = [
   { href: "/markets", label: "Markets" },
   { href: "/strategies", label: "Strategies" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/watchlist", label: "Watchlist" },
+];
+
+// Reference & deep-dives — one click away, off the primary rail.
+const MORE_NAV = [
   { href: "/economy", label: "Economy" },
   { href: "/debt", label: "Debt" },
   { href: "/trade", label: "Trade" },
@@ -41,7 +49,8 @@ const isActive = (href: string) =>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description ?? "Big Cycle Atlas — country-level macro cycle research"} />
+    <meta name="description" content={description ?? "Big Cycle Atlas — Great Power Observatory"} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title} · Big Cycle Atlas</title>
     <script is:inline>
       // Resolve theme before first paint: versioned prefs blob, legacy
@@ -85,7 +94,10 @@ const isActive = (href: string) =>
   </head>
   <body>
     <header class="site-header glass">
-      <a class="site-logo" href="/">Big Cycle Atlas</a>
+      <a class="site-logo" href="/" aria-label="Big Cycle Atlas — Observatory">
+        <img src="/observatory-mark.svg" alt="" width="26" height="26" class="site-mark" />
+        <span class="wordmark"><span class="wordmark-name">Big Cycle Atlas</span></span>
+      </a>
       <nav class="site-nav" aria-label="Primary">
         {
           NAV.map((item) => (
@@ -98,6 +110,36 @@ const isActive = (href: string) =>
             </a>
           ))
         }
+        <details class="nav-disclosure">
+          <summary>Finance</summary>
+          <div class="nav-disclosure-menu glass-strong">
+            {
+              FINANCE_NAV.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["nav-link", { "nav-link-active": isActive(item.href) }]}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+          </div>
+        </details>
+        <details class="nav-disclosure">
+          <summary>More</summary>
+          <div class="nav-disclosure-menu glass-strong">
+            {
+              MORE_NAV.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["nav-link", { "nav-link-active": isActive(item.href) }]}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+          </div>
+        </details>
       </nav>
       <div class="header-actions">
         <GlobalSearch client:load />
@@ -170,11 +212,15 @@ const isActive = (href: string) =>
         width: calc(100% - var(--space-6));
       }
       .site-logo {
-        font-weight: var(--weight-bold);
-        font-size: var(--text-base);
-        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--accent);
         text-decoration: none;
         white-space: nowrap;
+      }
+      .site-mark {
+        flex: none;
       }
       .site-nav {
         display: flex;

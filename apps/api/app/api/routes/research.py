@@ -171,6 +171,89 @@ async def country_cycle(
     }
 
 
+_POSITIONS_CACHE: dict = {}
+_POSITIONS_TTL = 3600  # seconds — positions only change on new data
+
+
+@router.get("/cycle/positions")
+async def cycle_positions(
+    model: str = Query("model_b_domain"),
+    session: AsyncSession = Depends(get_session),
+):
+    """Latest classified cycle position for every tracked country.
+
+    One request so the Observatory clock doesn't fan out N slow
+    per-country history calls. Each country runs on its own DB session
+    concurrently; a country that fails classifies as unclassified
+    rather than failing the whole response."""
+    import asyncio
+
+    from sqlalchemy import select
+
+    from app.db.session import get_sessionmaker
+    from app.models import Country
+
+    if model not in COMPOSITE_MODELS:
+        raise HTTPException(422, f"unknown model {model!r}")
+    import time
+
+    cached = _POSITIONS_CACHE.get(model)
+    if cached and time.monotonic() - cached[0] < _POSITIONS_TTL:
+        return cached[1]
+    countries = (
+        (await session.execute(select(Country).order_by(Country.name)))
+        .scalars()
+        .all()
+    )
+    latest = _latest_completed_scoring_period()
+    sm = get_sessionmaker()
+
+    async def _one(iso3: str, name: str) -> dict:
+        base = {
+            "iso3": iso3,
+            "name": name,
+            "stage": None,
+            "phase": None,
+            "score": None,
+            "momentum": None,
+            "period": None,
+            "classified": False,
+        }
+        try:
+            async with sm() as s:
+                result = await research_service.cycle_history(
+                    s, iso3, model, 2000, latest.year, latest
+                )
+            if not result.points:
+                return base
+            last = result.points[-1]
+            return {
+                **base,
+                "stage": last.stage.value if last.stage else None,
+                "phase": last.phase.value if last.phase else None,
+                "score": last.score,
+                "momentum": last.momentum,
+                "period": last.period,
+                "classified": last.stage is not None,
+            }
+        except Exception:
+            return base
+
+    rows = await asyncio.gather(
+        *[_one(c.iso3, c.name) for c in countries]
+    )
+    payload = {
+        "methodology_status": "experimental",
+        "retrospective": True,
+        "model": model,
+        "model_version": COMPOSITE_MODELS[model].version,
+        "scoring_period": f"{latest.year}-Q{latest.quarter}",
+        "positions": list(rows),
+    }
+    _POSITIONS_CACHE[model] = (time.monotonic(), payload)
+    return payload
+
+
 @router.get("/countries/{iso3}/cycle/history")
 async def country_cycle_history(
     iso3: str,

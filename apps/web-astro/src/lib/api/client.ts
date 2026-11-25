@@ -219,6 +219,18 @@ export function fetchCountryCycle(
   );
 }
 
+export function fetchCyclePositions(
+  model: string,
+  opts?: FetchOptions,
+): Promise<import("@/types/research").CyclePositionsResponse> {
+  // Single-request fan-out — the server computes every country's latest
+  // stage concurrently (~20-30s), so allow a longer timeout.
+  return request<import("@/types/research").CyclePositionsResponse>(
+    `/api/research/cycle/positions?model=${encodeURIComponent(model)}`,
+    { timeoutMs: 60_000, ...opts },
+  );
+}
+
 export function fetchCycleHistory(
   iso3: string,
   model: string,

@@ -62,6 +62,26 @@ export interface CyclePoint {
   reason: string;
 }
 
+export interface CyclePosition {
+  iso3: string;
+  name: string;
+  stage: string | null;
+  phase: string | null;
+  score: number | null;
+  momentum: number | null;
+  period: string | null;
+  classified: boolean;
+}
+
+export interface CyclePositionsResponse {
+  methodology_status: string;
+  retrospective: boolean;
+  model: string;
+  model_version: string;
+  scoring_period: string;
+  positions: CyclePosition[];
+}
+
 export interface CycleHistoryResponse {
   methodology_status: string;
   retrospective: boolean;

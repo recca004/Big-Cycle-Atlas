@@ -98,7 +98,10 @@ export function polar(
   cy = 300,
 ): { x: number; y: number } {
   const a = hourToRad(hour);
-  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+  return {
+    x: Number((cx + r * Math.cos(a)).toFixed(3)),
+    y: Number((cy + r * Math.sin(a)).toFixed(3)),
+  };
 }
 
 export function stageLabel(stage: string | null): string {

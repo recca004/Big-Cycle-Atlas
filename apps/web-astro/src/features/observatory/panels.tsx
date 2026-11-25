@@ -11,6 +11,7 @@ import type {
   TransitionMonitor,
 } from "@/types/observatory";
 import { stageLabel } from "./stages";
+import { OFFLINE_MEASURE_PROFILES, formatMeasureValue } from "./offlineData";
 
 const fmtUsd = (v: number) =>
   v >= 1e12
@@ -58,6 +59,7 @@ export function CountryFocusPanel({
     );
 
   const snaps = Object.entries(country.indicator_snapshots).slice(0, 5);
+  const measures = OFFLINE_MEASURE_PROFILES[country.iso3];
   return (
     <section
       className="obs-panel glass"
@@ -140,6 +142,28 @@ export function CountryFocusPanel({
           </div>
         )}
       </dl>
+      {measures && (
+        <div className="obs-di-grid" data-fade>
+          <div className="obs-di-card domestic">
+            <h3>Domestic condition</h3>
+            <dl>
+              <div><dt>Productivity</dt><dd>{formatMeasureValue(measures.productivity_competitiveness.current, "score")}</dd></div>
+              <div><dt>Innovation</dt><dd>{formatMeasureValue(measures.innovation_output.current, "% of GDP")}</dd></div>
+              <div><dt>Education</dt><dd>{formatMeasureValue(measures.education_attainment.current, "% of adults")}</dd></div>
+            </dl>
+            <p>Internal capacity: cohesion, human capital, institutions and productivity.</p>
+          </div>
+          <div className="obs-di-card international">
+            <h3>International power</h3>
+            <dl>
+              <div><dt>Output</dt><dd>{formatMeasureValue(measures.economic_output.current, "usd_current")}</dd></div>
+              <div><dt>Trade share</dt><dd>{formatMeasureValue(measures.share_world_trade.current, "% of tracked trade")}</dd></div>
+              <div><dt>Finance / reserve</dt><dd>{formatMeasureValue(measures.financial_center.current, "score")} · {formatMeasureValue(measures.reserve_currency_status.current, "score")}</dd></div>
+            </dl>
+            <p>External scale: output, trade reach, capital markets and military resources.</p>
+          </div>
+        </div>
+      )}
       {snaps.length > 0 && (
         <table className="obs-snaps" data-fade>
           <caption className="obs-muted">Latest measurements</caption>
@@ -173,7 +197,7 @@ export function CountryFocusPanel({
 
 export function PowerTransitionMonitor({ data }: { data: TransitionMonitor }) {
   const fr = data.forecast_readiness;
-  const top = data.measurements.slice(0, 6);
+  const top = data.measurements;
   return (
     <section className="obs-panel glass obs-monitor" aria-label="Power transition monitor">
       <h2 className="obs-panel-title">Power transition monitor</h2>
@@ -265,12 +289,12 @@ export function PowerTransitionMonitor({ data }: { data: TransitionMonitor }) {
         <p className="obs-muted">
           Historical record: {data.incumbent_iso3} saw{" "}
           {data.historical_evidence.incumbent_transitions!.length} stage
-          transitions since 2000, {data.challenger_iso3} saw{" "}
+          transitions since 1950, {data.challenger_iso3} saw{" "}
           {data.historical_evidence.challenger_transitions?.length ?? 0}.
         </p>
       )}
       <div className="obs-window">
-        <span className="obs-muted">Estimated transition window</span>
+        <span className="obs-muted">Transition window status</span>
         <strong className={fr.overall_available ? "" : "obs-window-none"}>
           {fr.estimated_transition_window}
         </strong>
@@ -314,7 +338,7 @@ export function DataFreshnessIndicator({
       data-status={freshness.status}
     >
       <div className="obs-fresh-head">
-        <h2 className="obs-panel-title">Data freshness</h2>
+        <h2 className="obs-panel-title">Data freshness · simulated</h2>
         <span className={`obs-status s-${freshness.status}`}>
           {freshness.status_label}
         </span>
@@ -358,11 +382,9 @@ export function DataFreshnessIndicator({
         >
           {job?.status === "running" || job?.running
             ? "Refreshing…"
-            : "Refresh results"}
+            : "Run simulated refresh"}
         </button>
-        <a className="obs-muted" href="/data">
-          Data update workflow →
-        </a>
+        <span className="obs-muted">Offline fixture · no backend workflow</span>
       </div>
       {job?.status === "running" && (
         <p className="obs-muted" role="status">
@@ -383,7 +405,7 @@ export function DailyChangesPanel({ data }: { data: DailyChanges }) {
   if (data.changes.length === 0)
     return (
       <section className="obs-panel glass obs-changes-compact" aria-label="What has changed">
-        <h2 className="obs-panel-title">What has changed?</h2>
+        <h2 className="obs-panel-title">What changed in the simulated snapshot?</h2>
         <p className="obs-muted">
           {data.summary_message}
           {data.previous_snapshot_zurich
@@ -394,7 +416,7 @@ export function DailyChangesPanel({ data }: { data: DailyChanges }) {
     );
   return (
     <section className="obs-panel glass" aria-label="What has changed">
-      <h2 className="obs-panel-title">What has changed?</h2>
+      <h2 className="obs-panel-title">What changed in the simulated snapshot?</h2>
       {data.changes.length === 0 ? (
         <p className="obs-muted">{data.summary_message}</p>
       ) : (
@@ -416,7 +438,7 @@ export function DailyChangesPanel({ data }: { data: DailyChanges }) {
                 <td>{c.measurement}</td>
                 <td className="num">{fmt(c.previous)}</td>
                 <td className="num">{fmt(c.current)}</td>
-                <td className="num">{c.difference != null ? c.difference.toFixed(2) : "—"}</td>
+                <td className="num">{c.difference != null ? fmt(c.difference) : "—"}</td>
                 <td className="obs-muted">{c.period ?? "—"}</td>
               </tr>
             ))}
@@ -432,8 +454,13 @@ export function DailyChangesPanel({ data }: { data: DailyChanges }) {
   );
 }
 
-const fmt = (v: number | string | null) =>
-  v === null ? "—" : typeof v === "number" ? v.toFixed(1) : v;
+const fmt = (v: number | string | null) => {
+  if (v === null) return "—";
+  if (typeof v === "string") return v;
+  if (Math.abs(v) >= 1e9) return fmtUsd(v);
+  if (Math.abs(v) < 10) return v.toFixed(1);
+  return v.toLocaleString("en-CH", { maximumFractionDigits: 1 });
+};
 
 /* ---------- HistoricalPlayback ---------- */
 
@@ -494,7 +521,10 @@ export function HistoricalPlayback({
         <button
           type="button"
           className="glass-button"
-          onClick={() => setPlaying((v) => !v)}
+          onClick={() => {
+            if (!playing && index >= latestIndex) onIndex(0);
+            setPlaying((v) => !v);
+          }}
           aria-label={playing ? "Pause playback" : "Play historical classification"}
         >
           {playing ? "Pause" : "Play"}

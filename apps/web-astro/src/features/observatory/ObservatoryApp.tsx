@@ -1,22 +1,20 @@
-/** ObservatoryApp — root island for the animated observatory homepage.
- *  Fetches /api/observatory/overview once and shares the payload across
- *  the three-column layout: focus panel | clock | transition monitor,
- *  then the below-the-fold research sections. */
+/** ObservatoryApp — root island for the animated offline observatory.
+ *  All data comes from the isolated demonstration layer in offlineData.ts:
+ *  no backend request, provider claim, forecast, countdown or prediction. */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  fetchObservatoryOverview,
-  fetchObservatoryRefreshStatus,
-  fetchObservatoryTransition,
-  postObservatoryRefresh,
-} from "@/lib/api/client";
-import type {
-  ObservatoryOverview,
-  RefreshJob,
-  TransitionMonitor,
-} from "@/types/observatory";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { RefreshJob } from "@/types/observatory";
 import { ForcesOverview } from "./ForcesOverview";
+import { HistoricalCycleComparison } from "./HistoricalCycleComparison";
 import { ObservatoryClock } from "./ObservatoryClock";
+import { PowerMeasuresMatrix } from "./PowerMeasuresMatrix";
+import {
+  buildOfflineTransition,
+  createOfflineOverview,
+  offlineRefreshScenario,
+  runningOfflineRefreshJob,
+  DEMO_DISCLAIMER,
+} from "./offlineData";
 import {
   CountryFocusPanel,
   DailyChangesPanel,
@@ -26,154 +24,93 @@ import {
 } from "./panels";
 import { stageLabel } from "./stages";
 
-const MODEL = "model_b_domain";
+const MODEL = "offline_observatory_demo";
+
+function SectionHeading({ id, kicker, title, children }: { id: string; kicker: string; title: string; children?: React.ReactNode }) {
+  return (
+    <header className="obs-section-head">
+      <p className="obs-kicker">{kicker}</p>
+      <h2 id={id}>{title}</h2>
+      {children && <p className="obs-section-copy">{children}</p>}
+    </header>
+  );
+}
 
 export function ObservatoryApp() {
-  const [data, setData] = useState<ObservatoryOverview | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedIso3, setSelectedIso3] = useState<string | null>(null);
+  const [data, setData] = useState(() => createOfflineOverview());
+  const [selectedIso3, setSelectedIso3] = useState<string | null>(
+    () => createOfflineOverview().power_summary.highest_domestic_condition_iso3,
+  );
   const [histIndex, setHistIndex] = useState<number | null>(null);
-  const [job, setJob] = useState<RefreshJob | null>(null);
+  const [job, setJob] = useState<RefreshJob>(() => data.refresh_job);
+  const [refreshStep, setRefreshStep] = useState(0);
   const [incumbent, setIncumbent] = useState("USA");
   const [challenger, setChallenger] = useState("CHN");
-  const [monitor, setMonitor] = useState<TransitionMonitor | null>(null);
+  const refreshTimer = useRef<number | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let alive = true;
-    fetchObservatoryOverview()
-      .then((d) => {
-        if (!alive) return;
-        setData(d);
-        setJob(d.refresh_job);
-        // Default focus: highest domestic-condition power under study.
-        const top =
-          d.countries.find(
-            (c) => c.iso3 === d.power_summary.highest_domestic_condition_iso3,
-          ) ?? d.countries.find((c) => c.classified) ?? null;
-        if (top) setSelectedIso3(top.iso3);
-        setMonitor(d.transition_monitor);
-      })
-      .catch((e) => {
-        if (alive)
-          setError(e instanceof Error ? e.message : "Observatory unavailable");
-      });
-    return () => {
-      alive = false;
-    };
+    rootRef.current?.setAttribute("data-hydrated", "true");
   }, []);
 
-  // Refetch the monitor when the study pair changes (default USA/CHN —
-  // the overview payload already contains it, no extra round-trip).
-  useEffect(() => {
-    if (!data) return;
-    if (
-      incumbent === data.transition_monitor.incumbent_iso3 &&
-      challenger === data.transition_monitor.challenger_iso3
-    ) {
-      setMonitor(data.transition_monitor);
-      return;
-    }
-    let alive = true;
-    fetchObservatoryTransition({ incumbent, challenger })
-      .then((m) => {
-        if (alive) setMonitor(m);
-      })
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
-  }, [incumbent, challenger, data]);
+  const monitor = useMemo(() => buildOfflineTransition(incumbent, challenger), [incumbent, challenger]);
 
-  const triggerRefresh = useCallback(async () => {
-    setJob((j) => (j ? { ...j, status: "running", running: true } : j));
-    try {
-      const accepted = await postObservatoryRefresh();
-      setJob(accepted);
-      // Poll status until the job settles, then reload the overview.
-      const poll = async () => {
-        const st = await fetchObservatoryRefreshStatus();
-        setJob(st);
-        if (st.status === "running" || st.running) {
-          setTimeout(poll, 3000);
-        } else if (st.status === "succeeded") {
-          const d = await fetchObservatoryOverview();
-          setData(d);
-        }
-      };
-      setTimeout(poll, 3000);
-    } catch (e) {
-      setJob((j) =>
-        j
-          ? {
-              ...j,
-              status: "failed",
-              running: false,
-              error:
-                e instanceof Error
-                  ? e.message
-                  : "Refresh could not be started",
-            }
-          : j,
-      );
-    }
-  }, []);
-
-  const periods = data?.available_periods ?? [];
-  const latestIndex = Math.max(0, periods.length - 1);
-  const activeIndex = histIndex ?? latestIndex;
-  const playbackPeriod =
-    histIndex !== null && histIndex < latestIndex
-      ? (periods[histIndex] ?? null)
-      : null;
-
-  const selected = useMemo(
-    () => data?.countries.find((c) => c.iso3 === selectedIso3) ?? null,
-    [data, selectedIso3],
+  useEffect(
+    () => () => {
+      if (refreshTimer.current !== null) window.clearTimeout(refreshTimer.current);
+    },
+    [],
   );
 
-  if (error)
-    return (
-      <p className="body-md" role="alert">
-        Observatory unavailable: {error}
-      </p>
-    );
-  if (!data)
-    return (
-      <div className="clock-loading" aria-busy="true">
-        <div className="clock-skeleton" />
-        <p className="obs-muted">Assembling the observatory…</p>
-      </div>
-    );
+  const triggerRefresh = useCallback(() => {
+    if (job.running || job.status === "running") return;
+    setJob(runningOfflineRefreshJob());
+    refreshTimer.current = window.setTimeout(() => {
+      const nextStep = refreshStep + 1;
+      const scenario = offlineRefreshScenario(nextStep);
+      setData((current) => ({
+        ...current,
+        freshness: scenario.freshness,
+        daily_changes: scenario.dailyChanges,
+        refresh_job: scenario.job,
+      }));
+      setJob(scenario.job);
+      setRefreshStep(nextStep);
+      refreshTimer.current = null;
+    }, 1150);
+  }, [job.running, job.status, refreshStep]);
 
-  const incumbentCountry = data.countries.find(
-    (c) => c.iso3 === data.transition_monitor.incumbent_iso3,
+  const periods = data.available_periods;
+  const latestIndex = Math.max(0, periods.length - 1);
+  const activeIndex = histIndex ?? latestIndex;
+  const playbackPeriod = histIndex !== null && histIndex < latestIndex ? (periods[histIndex] ?? null) : null;
+  const selected = useMemo(
+    () => data.countries.find((country) => country.iso3 === selectedIso3) ?? null,
+    [data.countries, selectedIso3],
   );
 
   return (
-    <div className="obs-app">
-      <div className="obs-grid">
+    <div className="obs-app" ref={rootRef}>
+      <p className="obs-demo-banner" role="note">{DEMO_DISCLAIMER}</p>
+
+      <div className="obs-grid" aria-label="Big Cycle observatory instrument">
         <div className="obs-col-left">
-          <CountryFocusPanel
-            country={selected ?? incumbentCountry ?? null}
-            powerNote={data.power_summary.separation_note}
-          />
-          <div className="obs-country-picker">
-            <label htmlFor="obs-country-select" className="obs-muted">
-              Focus country
+          <div className="obs-country-picker obs-panel glass">
+            <label htmlFor="obs-country-select">
+              <span className="obs-picker-kicker">Country focus</span>
+              <select
+                id="obs-country-select"
+                className="glass-button"
+                value={selectedIso3 ?? ""}
+                onChange={(event) => setSelectedIso3(event.target.value)}
+              >
+                {data.countries.map((country) => (
+                  <option key={country.iso3} value={country.iso3}>{country.name}</option>
+                ))}
+              </select>
             </label>
-            <select
-              id="obs-country-select"
-              className="glass-button"
-              value={selectedIso3 ?? ""}
-              onChange={(e) => setSelectedIso3(e.target.value)}
-            >
-              {data.countries.map((c) => (
-                <option key={c.iso3} value={c.iso3}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
           </div>
+          <CountryFocusPanel country={selected} powerNote={data.power_summary.separation_note} />
         </div>
 
         <div className="obs-col-center">
@@ -187,122 +124,120 @@ export function ObservatoryApp() {
                 periods={periods}
                 index={activeIndex}
                 latestIndex={latestIndex}
-                onIndex={(i) => setHistIndex(i)}
+                onIndex={(index) => setHistIndex(index)}
                 compact
               />
             }
             periodLabel={
-              playbackPeriod
-                ? `${playbackPeriod} — historical`
-                : `${periods[latestIndex] ?? "—"} (latest)`
+              playbackPeriod ? `${playbackPeriod} — historical` : `${periods[latestIndex] ?? "—"} (latest demo)`
             }
           />
         </div>
 
         <div className="obs-col-right">
-          {monitor && (
-            <>
-              <div className="obs-pair-select">
-                <label className="obs-muted">
-                  Incumbent
-                  <select
-                    className="glass-button"
-                    value={incumbent}
-                    onChange={(e) => setIncumbent(e.target.value)}
-                  >
-                    {data.countries.map((c) => (
-                      <option key={c.iso3} value={c.iso3} disabled={c.iso3 === challenger}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="obs-muted">
-                  Challenger
-                  <select
-                    className="glass-button"
-                    value={challenger}
-                    onChange={(e) => setChallenger(e.target.value)}
-                  >
-                    {data.countries.map((c) => (
-                      <option key={c.iso3} value={c.iso3} disabled={c.iso3 === incumbent}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-              <PowerTransitionMonitor data={monitor} />
-            </>
-          )}
-          <DataFreshnessIndicator
-            freshness={data.freshness}
-            job={job}
-            onRefresh={triggerRefresh}
-          />
+          <div className="obs-pair-select obs-panel glass" aria-label="Transition study pair">
+            <label>
+              <span className="obs-picker-kicker">Incumbent</span>
+              <select className="glass-button" value={incumbent} onChange={(event) => setIncumbent(event.target.value)}>
+                {data.countries.map((country) => (
+                  <option key={country.iso3} value={country.iso3} disabled={country.iso3 === challenger}>{country.name}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span className="obs-picker-kicker">Challenger</span>
+              <select className="glass-button" value={challenger} onChange={(event) => setChallenger(event.target.value)}>
+                {data.countries.map((country) => (
+                  <option key={country.iso3} value={country.iso3} disabled={country.iso3 === incumbent}>{country.name}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <PowerTransitionMonitor data={monitor} />
         </div>
       </div>
 
-      <div className="obs-below">
-        <section className="obs-panel glass" aria-label="All tracked powers">
-          <h2 className="obs-panel-title">Eight powers under study</h2>
-          <table className="obs-powers">
-            <thead>
-              <tr>
-                <th>Power</th>
-                <th>Experimental stage</th>
-                <th className="num">Condition</th>
-                <th className="num">Momentum</th>
-                <th>Period</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.countries.map((c) => (
-                <tr
-                  key={c.iso3}
-                  className={c.iso3 === selectedIso3 ? "selected" : undefined}
-                  onClick={() => setSelectedIso3(c.iso3)}
-                >
-                  <td>
-                    <strong>{c.name}</strong>{" "}
-                    <span className="obs-chip">{c.iso3}</span>
-                  </td>
-                  <td>{stageLabel(c.stage)}</td>
-                  <td className="num">
-                    {c.domestic_condition_score !== null
-                      ? c.domestic_condition_score.toFixed(1)
-                      : "—"}
-                  </td>
-                  <td className="num">
-                    {c.momentum !== null ? c.momentum.toFixed(2) : "—"}
-                  </td>
-                  <td className="obs-muted">{c.period ?? "—"}</td>
+      <div className="obs-research-sections">
+        <section className="obs-panel obs-section glass" aria-labelledby="freshness-heading">
+          <SectionHeading id="freshness-heading" kicker="Snapshot integrity" title="Freshness and simulated daily change">
+            Europe/Zurich collection and calculation timestamps, with an explicit offline simulation of what changed since the prior fixture snapshot.
+          </SectionHeading>
+          <div className="obs-section-split">
+            <DataFreshnessIndicator freshness={data.freshness} job={job} onRefresh={triggerRefresh} />
+            <DailyChangesPanel data={data.daily_changes} />
+          </div>
+        </section>
+
+        <section className="obs-panel obs-section glass" aria-labelledby="powers-heading">
+          <SectionHeading id="powers-heading" kicker="Tracked powers" title="All eight powers under study">
+            Domestic condition, momentum and experimental stage across the complete offline demonstration set.
+          </SectionHeading>
+          <div className="obs-table-wrap">
+            <table className="obs-powers">
+              <thead>
+                <tr>
+                  <th scope="col">Power</th>
+                  <th scope="col">Experimental stage</th>
+                  <th scope="col" className="num">Condition</th>
+                  <th scope="col" className="num">Momentum</th>
+                  <th scope="col">Region</th>
+                  <th scope="col">Period</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data.countries.map((country) => (
+                  <tr key={country.iso3} className={country.iso3 === selectedIso3 ? "selected" : undefined}>
+                    <td>
+                      <button type="button" className="obs-power-select" onClick={() => setSelectedIso3(country.iso3)}>
+                        <strong>{country.name}</strong> <span className="obs-chip">{country.iso3}</span>
+                      </button>
+                    </td>
+                    <td>{stageLabel(country.stage)}</td>
+                    <td className="num">{country.domestic_condition_score?.toFixed(1) ?? "—"}</td>
+                    <td className="num">{country.momentum?.toFixed(2) ?? "—"}</td>
+                    <td>{country.region}</td>
+                    <td className="obs-muted">{country.period ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <p className="obs-note">
-            Condition is the experimental domestic composite — it measures
-            internal governance, productivity and cohesion, not international
-            dominance. Largest economy:{" "}
-            <strong>{data.power_summary.largest_economy_iso3}</strong>, second:{" "}
-            <strong>{data.power_summary.second_economy_iso3}</strong>.
+            {data.power_summary.separation_note} Largest economy: <strong>{data.power_summary.largest_economy_iso3}</strong>, second: <strong>{data.power_summary.second_economy_iso3}</strong>.
           </p>
         </section>
 
-        <DailyChangesPanel data={data.daily_changes} />
+        <section className="obs-panel obs-section glass" aria-labelledby="measures-heading">
+          <SectionHeading id="measures-heading" kicker="Power measures" title="The eight power measures">
+            Output, trade, military resources, innovation, education, productivity, financial depth and reserve-currency status — side by side for every tracked power.
+          </SectionHeading>
+          <div>
+            <PowerMeasuresMatrix selectedIso3={selectedIso3} />
+          </div>
+        </section>
 
-        <section className="obs-panel glass" aria-label="The seventeen forces">
-          <h2 className="obs-panel-title">
-            The seventeen forces{selected ? ` — ${selected.name}` : ""}
-          </h2>
-          <ForcesOverview iso3={selectedIso3} />
+        <section className="obs-panel obs-section glass" aria-labelledby="forces-heading">
+          <SectionHeading id="forces-heading" kicker="Determinants" title={`The seventeen forces${selected ? ` — ${selected.name}` : ""}`}>
+            Synthetic force profiles preserve the distinction between numerical levels, dimension-only evidence and context-only factors.
+          </SectionHeading>
+          <div>
+            <ForcesOverview iso3={selectedIso3} />
+          </div>
           <p className="obs-links">
             <a href="/forces">All forces →</a>
             <a href="/compare">Compare powers →</a>
             <a href="/cycle">Cycle explorer →</a>
             <a href="/methodology">Methodology →</a>
           </p>
+        </section>
+
+        <section className="obs-panel obs-section glass" aria-labelledby="history-heading">
+          <SectionHeading id="history-heading" kicker="Long-cycle evidence" title="Historical cycle comparisons, 1950–2026">
+            Exact annual classification bands for the demonstration histories. Bands are descriptive evidence, not a smoothed projection or future path.
+          </SectionHeading>
+          <div>
+            <HistoricalCycleComparison countries={data.countries} selectedIso3={selectedIso3} onSelect={setSelectedIso3} />
+          </div>
         </section>
       </div>
     </div>

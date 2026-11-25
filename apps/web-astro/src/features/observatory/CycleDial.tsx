@@ -218,7 +218,7 @@ export function CycleDial({
             tabIndex={0}
             aria-label={`${c.name} — ${stageLabel(c.stage)}${
               c.score !== null ? `, score ${c.score.toFixed(1)}` : ""
-            }`}
+            }, ${rising ? "improving" : "softening"} demonstration momentum`}
             onClick={() => onSelect(c.iso3)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -231,6 +231,13 @@ export function CycleDial({
             onFocus={() => setHover(c.iso3)}
             onBlur={() => setHover(null)}
           >
+            <circle
+              cx={m.x}
+              cy={m.y}
+              r="18"
+              className="clock-marker-hit"
+              aria-hidden="true"
+            />
             {isSel && (
               <circle
                 cx={m.x}

@@ -1,7 +1,7 @@
 {
   "countries": 8,
   "indicators": 46,
-  "data_sources": 10,
+  "data_sources": 13,
   "source_series": 46,
   "observations_all_vintages": 21178,
   "reference_observations": 24377,
@@ -9,7 +9,18 @@
   "market_observations": 96090,
   "indicator_revisions": 2776,
   "indicator_diagnostics": 3855,
-  "ingestion_runs": 1501,
+  "ingestion_runs": 1503,
+  "research_observations": 111546,
+  "crisis_events": 88,
+  "crisis_coverage_rows": 2668,
+  "theory_registry_entries": 7,
+  "hypothesis_protocols": 4,
+  "prediction_ledger_entries": 1666,
+  "prediction_outcomes": 1666,
+  "evaluation_results": 2,
+  "population_memberships": 26,
+  "dataset_rights": 3,
+  "evidence_status_entries": 6,
   "distinct_observation_identities": 18402,
   "latest_vintage_rows": 18402
 }

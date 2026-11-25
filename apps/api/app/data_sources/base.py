@@ -80,3 +80,6 @@ class BaseDataSourceAdapter(ABC):
         end_year: int | None = None,
     ) -> list[ObservationDTO]:
         """Fetch one indicator series for one country as normalized DTOs."""
+
+class DataSourceCredentialError(DataSourceError):
+    """Provider requires credentials that are not configured."""

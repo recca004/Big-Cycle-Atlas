@@ -1,0 +1,223 @@
+{
+  "count": 4,
+  "protocols": [
+    {
+      "hypothesis_code": "H01",
+      "protocol_version": "H01-P1.0",
+      "protocol_type": "retrospective_research_protocol",
+      "title": "Debt/credit burdens and subsequent systemic banking crises",
+      "definition": "Higher private-credit burden and weaker external positions are associated with higher later systemic-banking-crisis onset risk.",
+      "scientific_rationale": "Long debt-cycle mechanisms predict repayment stress before financial-system breakdown.",
+      "target_outcome": "source-defined systemic banking crisis onset (initially JST crisisJST=1)",
+      "research_population": {
+        "population_code": "jst_extended_research_v1",
+        "entity_type": "country",
+        "selection_rule": "predefined JST R6 source coverage; outcomes were not used to select countries"
+      },
+      "predictor_variables": {
+        "primary": [
+          "debtgdp"
+        ],
+        "secondary": [
+          "ca",
+          "tloans",
+          "money",
+          "stir"
+        ],
+        "transformation": "lagged level and five-year change; source units preserved"
+      },
+      "information_cutoff_rules": {
+        "execution_mode": "retrospective_latest_vintage",
+        "strict_release_safety": false,
+        "leakage_guard": "predictor period < outcome year; dataset-version fixed to JST R6"
+      },
+      "forecast_horizons": {
+        "years": [
+          1,
+          2,
+          5
+        ],
+        "event": "onset only; ongoing-crisis state is separate"
+      },
+      "measurement_method": {
+        "model": "univariate percentile-score benchmark",
+        "benchmark": "country-year base rate",
+        "split": "chronological train/test at 1990"
+      },
+      "training_periods": {
+        "start": 1870,
+        "end": 1989
+      },
+      "validation_periods": {
+        "type": "held_out_chronological_test",
+        "start": 1990,
+        "end": 2020
+      },
+      "test_population": {
+        "included_entities": "JST R6 covered countries",
+        "minimum_entity_years": 20
+      },
+      "evaluation_metrics": [
+        "auc",
+        "base_rate",
+        "crisis_precision_at_top_quintile",
+        "true_positive_rate",
+        "false_positive_rate"
+      ],
+      "minimum_evidence": {
+        "minimum_test_events": 10,
+        "minimum_entities": 10
+      },
+      "falsification_criteria": "No out-of-sample discrimination above base rate or an exploratory-only result is evidence inconsistent with predictive value.",
+      "known_limitations": [
+        "retrospective dataset, not real-time vintages",
+        "annual onset only",
+        "correlated crisis episodes",
+        "JST covers advanced economies only",
+        "IMF 2026 dataset unavailable at implementation time"
+      ],
+      "protocol_status": "exploratory",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "2b60a8a2fa61584002779ab09c811eee647282ce7b5fe0823410f7665f4c941b",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "hypothesis_code": "H02",
+      "protocol_version": "H02-P0.1",
+      "protocol_type": "exploratory_analysis",
+      "title": "Institutional deterioration and later investment/productivity weakness",
+      "definition": "WGI deterioration and inequality/institutional proxies are candidates for predicting later investment or productivity weakness.",
+      "scientific_rationale": "Internal-order theory links institutional cohesion to productive capacity.",
+      "target_outcome": "independently defined persistent productivity/investment weakness (outcome registry not yet populated)",
+      "research_population": {
+        "population_code": "primary_observatory_v1"
+      },
+      "predictor_variables": {
+        "candidates": [
+          "RULE_OF_LAW_WGI_SCORE",
+          "CONTROL_OF_CORRUPTION_WGI_SCORE",
+          "POLITICAL_STABILITY_WGI_SCORE",
+          "GINI_INDEX"
+        ]
+      },
+      "information_cutoff_rules": {
+        "strict_release_safety": false
+      },
+      "forecast_horizons": {
+        "years": [
+          5,
+          10
+        ]
+      },
+      "measurement_method": {
+        "status": "outcome definition required before evaluation"
+      },
+      "training_periods": {},
+      "validation_periods": {},
+      "test_population": {},
+      "evaluation_metrics": [],
+      "minimum_evidence": {
+        "status": "not_met"
+      },
+      "falsification_criteria": "Unavailable outcome evidence means untestable, not supported.",
+      "known_limitations": [
+        "no approved outcome registry yet"
+      ],
+      "protocol_status": "untestable_with_current_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "7e254807408bfe535f72e7cad9efe02b01e19698dc4450ad0202b89e8c7913c1",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "hypothesis_code": "H03",
+      "protocol_version": "H03-P0.1",
+      "protocol_type": "exploratory_analysis",
+      "title": "Relative international-power convergence and rivalry/crisis risk",
+      "definition": "Power convergence between major states may precede independently dated rivalry, conflict or order-transition episodes.",
+      "scientific_rationale": "External-order theory proposes challenger/incumbent transitions.",
+      "target_outcome": "independent rivalry, conflict or order-transition outcome registry (not populated)",
+      "research_population": {
+        "population_code": "primary_observatory_v1"
+      },
+      "predictor_variables": {
+        "candidates": [
+          "global GDP share",
+          "trade share",
+          "military share",
+          "financial depth",
+          "reserve share"
+        ]
+      },
+      "information_cutoff_rules": {
+        "strict_release_safety": false
+      },
+      "forecast_horizons": {
+        "years": [
+          5,
+          10,
+          20
+        ]
+      },
+      "measurement_method": {
+        "status": "outcome registry required"
+      },
+      "training_periods": {},
+      "validation_periods": {},
+      "test_population": {},
+      "evaluation_metrics": [],
+      "minimum_evidence": {
+        "status": "not_met"
+      },
+      "falsification_criteria": "No independent outcome evidence means untestable.",
+      "known_limitations": [
+        "reserve/cross-border banking/conflict outcomes missing"
+      ],
+      "protocol_status": "untestable_with_current_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "6db02a6cc62950e00b0c0a3b824ed342475ad13fb8b5d28ecf3dd5b09207cf0b",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "hypothesis_code": "H04",
+      "protocol_version": "H04-P0.1",
+      "protocol_type": "exploratory_analysis",
+      "title": "Recurring long sequences of monetary, domestic and external order changes",
+      "definition": "Historical orders may recur through a long sequence spanning decades to centuries.",
+      "scientific_rationale": "The broad Big Cycle claim motivates separated long-run measurements.",
+      "target_outcome": "independently dated complete order-transition cycles (not populated)",
+      "research_population": {
+        "population_code": "historical_entities_future_v0"
+      },
+      "predictor_variables": {
+        "status": "undefined"
+      },
+      "information_cutoff_rules": {
+        "strict_release_safety": false
+      },
+      "forecast_horizons": {
+        "years": [
+          25,
+          500
+        ]
+      },
+      "measurement_method": {
+        "status": "insufficient independent chronology"
+      },
+      "training_periods": {},
+      "validation_periods": {},
+      "test_population": {},
+      "evaluation_metrics": [],
+      "minimum_evidence": {
+        "status": "not_met"
+      },
+      "falsification_criteria": "Current evidence cannot test a universal duration or deterministic sequence.",
+      "known_limitations": [
+        "no consistent multi-century entities or outcomes"
+      ],
+      "protocol_status": "untestable_with_current_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "b82566d36bd7f8ebb32525c510c7884286f2c842973c2c9a020ee7d96223a88d",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    }
+  ]
+}

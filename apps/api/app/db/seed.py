@@ -29,6 +29,7 @@ from app.data_sources.imf_weo_mappings import IMF_WEO_MAPPINGS
 from app.data_sources.oecd_mappings import OECD_MAPPINGS
 from app.data_sources.wid_mappings import WID_MAPPINGS
 from app.data_sources.world_bank_mappings import WORLD_BANK_MAPPINGS
+from app.services.scientific_foundation import seed_scientific_foundation
 from app.models import (
     Country,
     DataSource,
@@ -89,6 +90,9 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
             {"key": "oecd", "name": "OECD", "status": DataSourceStatus.active, "base_url": "https://sdmx.oecd.org/public/rest", "update_frequency": "daily", "documentation_url": "https://sdmx.oecd.org/", "rate_limit_notes": "OECD request budget and one bounded 429 retry are enforced by collection code."},
             {"key": "imf", "name": "International Monetary Fund", "status": DataSourceStatus.active, "base_url": "https://api.imf.org", "update_frequency": "semi-annual", "documentation_url": "https://www.imf.org/external/datamapper/api/help", "rate_limit_notes": "WEO provider updates are less frequent; failures remain isolated."},
             {"key": "fred", "name": "Federal Reserve Economic Data (FRED)", "status": DataSourceStatus.planned},
+            {"key": "alfred_fred", "name": "ALFRED / FRED historical vintages", "status": DataSourceStatus.planned, "base_url": "https://api.stlouisfed.org/fred", "update_frequency": "manual historical vintage import", "documentation_url": "https://fred.stlouisfed.org/docs/api/fred/alfred.html", "rate_limit_notes": "Requires BCA_FRED_API_KEY; no key is stored in the repository."},
+            {"key": "jst_macrohistory", "name": "Jordà-Schularick-Taylor Macrohistory Database", "status": DataSourceStatus.active, "base_url": "https://www.macrohistory.net/database/", "update_frequency": "manual historical dataset release", "documentation_url": "https://www.macrohistory.net/database/", "rate_limit_notes": "Manual bulk historical import; CC BY-NC-SA 4.0."},
+            {"key": "imf_laeven_valencia_banking_crises", "name": "IMF Laeven-Valencia Systemic Banking Crises", "status": DataSourceStatus.planned, "base_url": "https://www.imf.org/en/publications/wp/issues/2026/05/14/systemic-banking-crises-database-1970-2025-576036", "update_frequency": "manual dataset release", "documentation_url": "https://www.imf.org/en/publications/wp/issues/2026/05/14/systemic-banking-crises-database-1970-2025-576036", "rate_limit_notes": "Official supplemental ZIP currently unavailable; local-bundle importer is supported."},
             {"key": "eurostat", "name": "Eurostat", "status": DataSourceStatus.planned},
             {"key": "ecb", "name": "European Central Bank", "status": DataSourceStatus.planned},
             {"key": "snb", "name": "Swiss National Bank", "status": DataSourceStatus.planned},
@@ -114,6 +118,8 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
                 ):
                     setattr(current, field, s_data.get(field))
                 updated_sources += 1
+
+        await seed_scientific_foundation(session)
 
         # 3. Seed Indicators
         indicators_data = [

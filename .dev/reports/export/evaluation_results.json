@@ -1,0 +1,267 @@
+{
+  "count": 2,
+  "evaluations": [
+    {
+      "evaluation_key": "H01-P1.0:retrospective_chronological_holdout:1990:jst-r6",
+      "hypothesis_code": "H01",
+      "protocol_version": "H01-P1.0",
+      "model_id": "debtgdp_5y_change_univariate",
+      "model_version": "v1",
+      "evaluation_type": "retrospective_chronological_holdout",
+      "result_state": "exploratory_association",
+      "sample_counts": {
+        "coverage_rows": 2668,
+        "event_onsets": 88,
+        "horizons": {
+          "1": {
+            "samples": 2326,
+            "train_samples": 1770,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3627854552582574,
+            "top_quintile_precision": 0.015384615384615385,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 192,
+              "fn": 16,
+              "tn": 345
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "2": {
+            "samples": 2308,
+            "train_samples": 1752,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3814564343820445,
+            "top_quintile_precision": 0.015,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 197,
+              "fn": 16,
+              "tn": 340
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "5": {
+            "samples": 2254,
+            "train_samples": 1700,
+            "test_samples": 554,
+            "test_events": 19,
+            "base_rate": 0.03429602888086643,
+            "auc": 0.2961633054599115,
+            "top_quintile_precision": 0.008849557522123894,
+            "confusion_at_p80": {
+              "tp": 2,
+              "fp": 224,
+              "fn": 17,
+              "tn": 311
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          }
+        }
+      },
+      "metrics": {
+        "horizons": {
+          "1": {
+            "samples": 2326,
+            "train_samples": 1770,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3627854552582574,
+            "top_quintile_precision": 0.015384615384615385,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 192,
+              "fn": 16,
+              "tn": 345
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "2": {
+            "samples": 2308,
+            "train_samples": 1752,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3814564343820445,
+            "top_quintile_precision": 0.015,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 197,
+              "fn": 16,
+              "tn": 340
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "5": {
+            "samples": 2254,
+            "train_samples": 1700,
+            "test_samples": 554,
+            "test_events": 19,
+            "base_rate": 0.03429602888086643,
+            "auc": 0.2961633054599115,
+            "top_quintile_precision": 0.008849557522123894,
+            "confusion_at_p80": {
+              "tp": 2,
+              "fp": 224,
+              "fn": 17,
+              "tn": 311
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          }
+        }
+      },
+      "evidence_cutoff": null,
+      "execution_mode": "retrospective_latest_vintage",
+      "dataset_versions": {
+        "jst_macrohistory": "R6"
+      },
+      "limitations": {
+        "items": [
+          "retrospective JST R6 dataset, not real-time vintages",
+          "annual crisis onsets only",
+          "correlated international crises are not independent experiments",
+          "univariate benchmark only; not a calibrated probability model"
+        ]
+      },
+      "started_at": "2026-11-25T22:07:07.161579+00:00",
+      "completed_at": "2026-11-25T22:07:07.161579+00:00",
+      "content_checksum": "3634ab61763b1fe35dd04db652759b1ee8b358bf1857918c4043130d74075ee1"
+    },
+    {
+      "evaluation_key": "H01-P1.0:retrospective_chronological_holdout:1990:jst-r6:v2",
+      "hypothesis_code": "H01",
+      "protocol_version": "H01-P1.0",
+      "model_id": "debtgdp_5y_change_univariate",
+      "model_version": "v1",
+      "evaluation_type": "retrospective_chronological_holdout",
+      "result_state": "no_evidence_of_improved_predictive_value",
+      "sample_counts": {
+        "coverage_rows": 2668,
+        "event_onsets": 88,
+        "horizons": {
+          "1": {
+            "samples": 2326,
+            "train_samples": 1770,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3627854552582574,
+            "top_quintile_precision": 0.015384615384615385,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 192,
+              "fn": 16,
+              "tn": 345
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "2": {
+            "samples": 2308,
+            "train_samples": 1752,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3814564343820445,
+            "top_quintile_precision": 0.015,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 197,
+              "fn": 16,
+              "tn": 340
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "5": {
+            "samples": 2254,
+            "train_samples": 1700,
+            "test_samples": 554,
+            "test_events": 19,
+            "base_rate": 0.03429602888086643,
+            "auc": 0.2961633054599115,
+            "top_quintile_precision": 0.008849557522123894,
+            "confusion_at_p80": {
+              "tp": 2,
+              "fp": 224,
+              "fn": 17,
+              "tn": 311
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          }
+        }
+      },
+      "metrics": {
+        "horizons": {
+          "1": {
+            "samples": 2326,
+            "train_samples": 1770,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3627854552582574,
+            "top_quintile_precision": 0.015384615384615385,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 192,
+              "fn": 16,
+              "tn": 345
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "2": {
+            "samples": 2308,
+            "train_samples": 1752,
+            "test_samples": 556,
+            "test_events": 19,
+            "base_rate": 0.0341726618705036,
+            "auc": 0.3814564343820445,
+            "top_quintile_precision": 0.015,
+            "confusion_at_p80": {
+              "tp": 3,
+              "fp": 197,
+              "fn": 16,
+              "tn": 340
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          },
+          "5": {
+            "samples": 2254,
+            "train_samples": 1700,
+            "test_samples": 554,
+            "test_events": 19,
+            "base_rate": 0.03429602888086643,
+            "auc": 0.2961633054599115,
+            "top_quintile_precision": 0.008849557522123894,
+            "confusion_at_p80": {
+              "tp": 2,
+              "fp": 224,
+              "fn": 17,
+              "tn": 311
+            },
+            "predictor": "debtgdp five-year change at forecast origin"
+          }
+        }
+      },
+      "evidence_cutoff": null,
+      "execution_mode": "retrospective_latest_vintage",
+      "dataset_versions": {
+        "jst_macrohistory": "R6"
+      },
+      "limitations": {
+        "items": [
+          "retrospective JST R6 dataset, not real-time vintages",
+          "annual crisis onsets only",
+          "correlated international crises are not independent experiments",
+          "univariate benchmark only; not a calibrated probability model"
+        ]
+      },
+      "started_at": "2026-11-25T22:07:34.161577+00:00",
+      "completed_at": "2026-11-25T22:07:34.161577+00:00",
+      "content_checksum": "8e8a269ca18d7c46a1b26666b4eec3e2756815b19c186560e5441faf9907763e"
+    }
+  ]
+}

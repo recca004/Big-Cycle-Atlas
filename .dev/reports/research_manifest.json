@@ -1,10 +1,12 @@
 {
-  "generated_at": "2026-11-25T21:52:40.386227Z",
-  "git_commit": "762919c7923b14a4ab18a8fcbf519a072239c929",
+  "generated_at": "2026-11-25T22:27:21.020278Z",
+  "information_cutoff": "2026-11-25T22:27:21.020278Z",
+  "execution_mode": "retrospective_latest_vintage",
+  "git_commit": "71d3e0589d10f4c412549fcd56b8701d45a69b60",
   "database": {
     "countries": 8,
     "indicators": 46,
-    "data_sources": 10,
+    "data_sources": 13,
     "source_series": 46,
     "observations_all_vintages": 21178,
     "reference_observations": 24377,
@@ -12,7 +14,18 @@
     "market_observations": 96090,
     "indicator_revisions": 2776,
     "indicator_diagnostics": 3855,
-    "ingestion_runs": 1501,
+    "ingestion_runs": 1503,
+    "research_observations": 111546,
+    "crisis_events": 88,
+    "crisis_coverage_rows": 2668,
+    "theory_registry_entries": 7,
+    "hypothesis_protocols": 4,
+    "prediction_ledger_entries": 1666,
+    "prediction_outcomes": 1666,
+    "evaluation_results": 2,
+    "population_memberships": 26,
+    "dataset_rights": 3,
+    "evidence_status_entries": 6,
     "distinct_observation_identities": 18402,
     "latest_vintage_rows": 18402
   },
@@ -233,6 +246,48 @@
       "update_frequency": "manual bulk file",
       "rate_limit_notes": "Optional local bulk archive only; never auto-downloaded by the unified updater.",
       "documentation_url": "https://wid.world/",
+      "metadata": {}
+    },
+    {
+      "provider": "alfred_fred",
+      "provider_name": "ALFRED / FRED historical vintages",
+      "configured_status": "planned",
+      "effective_status": "planned",
+      "country_indicator_series": 0,
+      "latest_retrieval": null,
+      "base_url": "https://api.stlouisfed.org/fred",
+      "auth_type": "",
+      "update_frequency": "manual historical vintage import",
+      "rate_limit_notes": "Requires BCA_FRED_API_KEY; no key is stored in the repository.",
+      "documentation_url": "https://fred.stlouisfed.org/docs/api/fred/alfred.html",
+      "metadata": {}
+    },
+    {
+      "provider": "jst_macrohistory",
+      "provider_name": "Jord\u00e0-Schularick-Taylor Macrohistory Database",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 0,
+      "latest_retrieval": "2026-11-25T22:05:48.423603+00:00",
+      "base_url": "https://www.macrohistory.net/database/",
+      "auth_type": "",
+      "update_frequency": "manual historical dataset release",
+      "rate_limit_notes": "Manual bulk historical import; CC BY-NC-SA 4.0.",
+      "documentation_url": "https://www.macrohistory.net/database/",
+      "metadata": {}
+    },
+    {
+      "provider": "imf_laeven_valencia_banking_crises",
+      "provider_name": "IMF Laeven-Valencia Systemic Banking Crises",
+      "configured_status": "planned",
+      "effective_status": "planned",
+      "country_indicator_series": 0,
+      "latest_retrieval": null,
+      "base_url": "https://www.imf.org/en/publications/wp/issues/2026/05/14/systemic-banking-crises-database-1970-2025-576036",
+      "auth_type": "",
+      "update_frequency": "manual dataset release",
+      "rate_limit_notes": "Official supplemental ZIP currently unavailable; local-bundle importer is supported.",
+      "documentation_url": "https://www.imf.org/en/publications/wp/issues/2026/05/14/systemic-banking-crises-database-1970-2025-576036",
       "metadata": {}
     }
   ],
@@ -944,15 +999,104 @@
       "source_methodology": "Atlas boundary registry v1; provider notes govern each series."
     }
   ],
+  "scientific_foundation": {
+    "theory_registry_version": "theory-registry-v1.0",
+    "hypotheses": [
+      "H01:H01-P1.0",
+      "H02:H02-P0.1",
+      "H03:H03-P0.1",
+      "H04:H04-P0.1"
+    ],
+    "research_populations": [
+      "jst_extended_research_v1",
+      "primary_observatory_v1"
+    ],
+    "prediction_ledger_append_only": true,
+    "latest_evaluation_state": "no_evidence_of_improved_predictive_value",
+    "timescales": [
+      {
+        "timescale_code": "short_economic_financial",
+        "label": "Short economic and financial cycle",
+        "candidate_window_years": [
+          1,
+          5
+        ],
+        "candidate_measurements": [
+          "growth",
+          "inflation",
+          "credit conditions",
+          "debt service",
+          "employment",
+          "monetary conditions"
+        ],
+        "independent_outcomes": [
+          "recession",
+          "banking crisis",
+          "currency crisis",
+          "sovereign debt crisis"
+        ],
+        "status": "candidate_definition_not_natural_law"
+      },
+      {
+        "timescale_code": "medium_institutional_financial",
+        "label": "Medium institutional and financial cycle",
+        "candidate_window_years": [
+          5,
+          25
+        ],
+        "candidate_measurements": [
+          "credit expansion",
+          "institutional changes",
+          "investment",
+          "wealth distribution",
+          "productivity",
+          "structural economic change"
+        ],
+        "independent_outcomes": [
+          "institutional deterioration",
+          "financial stress",
+          "persistent productivity weakness"
+        ],
+        "status": "candidate_definition_not_natural_law"
+      },
+      {
+        "timescale_code": "long_historical_big_cycle",
+        "label": "Long historical Big Cycle",
+        "candidate_window_years": [
+          25,
+          500
+        ],
+        "candidate_measurements": [
+          "relative international power",
+          "monetary influence",
+          "military resources",
+          "trade influence",
+          "institutional change",
+          "international order transitions"
+        ],
+        "independent_outcomes": [
+          "international order transition",
+          "leadership transition",
+          "external-order breakdown"
+        ],
+        "status": "candidate_definition_not_natural_law"
+      }
+    ]
+  },
   "generated_exports": [
     "actual_force_inclusion.csv",
     "composite_results.csv",
     "country_indicator_history.csv",
+    "crisis_chronology.csv",
+    "crisis_coverage.csv",
     "currency_influence.csv",
     "cycle_history.csv",
     "cycle_transitions.csv",
     "data_quality_findings.csv",
     "database_inventory.json",
+    "dataset_rights.json",
+    "evaluation_results.json",
+    "evidence_status.json",
     "financial_influence.csv",
     "force_history.csv",
     "force_measurements.csv",
@@ -961,6 +1105,8 @@
     "global_power_shares.csv",
     "historical_boundary_metadata.csv",
     "historical_period_comparison.csv",
+    "historical_vintage_inventory.csv",
+    "hypothesis_protocols.json",
     "indicator_coverage.csv",
     "model_comparison.csv",
     "model_effective_weights.csv",
@@ -969,17 +1115,25 @@
     "power_measure_history.csv",
     "power_measure_registry.json",
     "power_measures.csv",
+    "prediction_ledger.json",
+    "prediction_outcomes.json",
     "productivity_comparison.csv",
     "provider_status.csv",
     "research_manifest.json",
+    "research_population.json",
+    "research_timescales.json",
     "stage_disagreement.csv",
-    "strict_historical_availability.json"
+    "strict_historical_availability.json",
+    "theory_registry.json"
   ],
   "limitations": [
     "Retrospective history uses latest available vintages, not only information published at each historical date.",
     "Composite and stage labels are experimental and coverage-gated.",
     "Tracked-universe shares are not global shares.",
     "Military expenditure measures resources, not complete capability.",
-    "Missing observations remain missing and are never interpolated."
+    "Missing observations remain missing and are never interpolated.",
+    "JST research rows carry dataset-release evidence, not per-observation historical publication evidence.",
+    "ALFRED historical vintages require an unconfigured FRED API credential and are not imported.",
+    "The advertised IMF WP-2026-94 supplemental ZIP returned HTTP 404; no substitute crisis rows were fabricated."
   ]
 }

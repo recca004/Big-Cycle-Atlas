@@ -1,6 +1,6 @@
 # United Kingdom (GBR) — economic research profile
 
-Generated: 2026-11-25T21:52:40.386227Z
+Generated: 2026-11-25T22:27:21.020278Z
 Methodology: experimental, `normalization-v1.4`, `force-aggregation-v1.0`
 Requested calculation period: `2026-Q3`
 Latest classified composite period: `2025-Q4`

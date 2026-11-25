@@ -49,3 +49,7 @@ backups/
 *.dump
 .run/
 apps/web-astro/test-results/
+
+# Local downloaded research bundles (licensed sources; do not redistribute)
+.dev/tmp/
+apps/.dev/

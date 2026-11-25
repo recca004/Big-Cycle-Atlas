@@ -165,6 +165,49 @@ Mappings are seeded idempotently into the `source_series` table.
 | LABOUR_PRODUCTIVITY_PER_HOUR | DSD_PDB@DF_PDB v2.0 | {cc}.A.GDPHRS._T.USD_PPP_H.LR.N._Z.PPP | US dollars per hour, PPP converted | annual |
 | UNIT_LABOUR_COST_GROWTH | DSD_PDB@DF_PDB_ULC_Q v1.0 | {cc}.Q.ULCE._T.PA.V.GY.S.NC | percent per annum | quarterly |
 
+
+## JST Macrohistory Database — Phase 1 RESEARCH IMPORT
+
+- Adapter/importer: `apps/api/app/data_sources/jst_macrohistory.py` and
+  `scripts/import_jst_macrohistory.py`
+- Official source verified: `https://www.macrohistory.net/app/download/9834512569/JSTdatasetR6.xlsx`
+- SHA-256: `c1bb91fe56ea50d4f27af5c0fc897d481e89ae38ce41eaecab62134c9354981d`
+- Coverage: 18 advanced-economy entities, 1870–2020, 2,718 source rows
+- Imported: 111,546 `research_observations`, 88 `crisisJST` systemic
+  banking-crisis onset events, 2,668 explicit banking-crisis coverage rows,
+  18 `jst_extended_research_v1` population members
+- Release precision: dataset release only (R6, July 2022). Historical row
+  years are observation periods, not publication dates.
+- Licensing: CC BY-NC-SA 4.0; attribution required, non-commercial use,
+  no direct redistribution of the source workbook in the repository.
+- Status: research source imported; not merged into ordinary `observations`
+  and not used as release-date-safe vintage evidence.
+
+## FRED / ALFRED — Phase 1 adapter, credential-blocked
+
+- Adapter: `apps/api/app/data_sources/alfred.py`; CLI:
+  `scripts/ingest_alfred.py`
+- Official evidence model: FRED `vintagedates`,
+  `realtime_start`/`realtime_end`, and vintage observations
+- Priority series registered: GDP, CPIAUCSL, UNRATE, FEDFUNDS, TOTALSL,
+  BAMLH0A0HYM2, USREC
+- Importer contract: `--vintages N` requests the most recent N official
+  `vintage_dates` per series (`-1` for all); default scheduled depth is 5.
+- Precise blocker: the official API requires a registered 32-character
+  API key. `BCA_FRED_API_KEY` is not configured; no credential is stored.
+- Status: implemented but not live-imported.
+
+## IMF Systemic Banking Crises WP/2026/94 — Phase 1 importer, source-blocked
+
+- Importer: `scripts/import_imf_banking_crises.py`
+- Intended official bundle:
+  `https://www.imf.org/-/media/files/publications/wp/2026/datasets/wp2694.zip`
+- Verification result: official URL returned HTTP 404 during implementation;
+  alternative official paths were not accepted without verification.
+- Local execution path: `--file` accepts an official ZIP or CSV once
+  obtained; it preserves annual dating precision and does not invent months.
+- Status: blocked, no fabricated crisis rows.
+
 Planned sources and their adapter files:
 
 | Source | Adapter file | Indicators planned | Status |

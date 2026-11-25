@@ -1,7 +1,7 @@
 # Big Cycle Atlas — economic research handover, 1980–present
 
-Generated: 2026-11-25T21:52:40.386227Z
-Base commit: `762919c7923b14a4ab18a8fcbf519a072239c929`
+Generated: 2026-11-25T22:27:21.020278Z
+Base commit: `71d3e0589d10f4c412549fcd56b8701d45a69b60`
 Methodology: `normalization-v1.4`, `force-aggregation-v1.0`, experimental cycle classifier v1
 
 ## 1. Executive economic summary
@@ -16,7 +16,7 @@ Largest tracked economy: **USA**; second: **CHN**. Highest domestic-condition sc
 |---|---:|
 | `countries` | 8 |
 | `indicators` | 46 |
-| `data_sources` | 10 |
+| `data_sources` | 13 |
 | `source_series` | 46 |
 | `observations_all_vintages` | 21178 |
 | `reference_observations` | 24377 |
@@ -24,7 +24,18 @@ Largest tracked economy: **USA**; second: **CHN**. Highest domestic-condition sc
 | `market_observations` | 96090 |
 | `indicator_revisions` | 2776 |
 | `indicator_diagnostics` | 3855 |
-| `ingestion_runs` | 1501 |
+| `ingestion_runs` | 1503 |
+| `research_observations` | 111546 |
+| `crisis_events` | 88 |
+| `crisis_coverage_rows` | 2668 |
+| `theory_registry_entries` | 7 |
+| `hypothesis_protocols` | 4 |
+| `prediction_ledger_entries` | 1666 |
+| `prediction_outcomes` | 1666 |
+| `evaluation_results` | 2 |
+| `population_memberships` | 26 |
+| `dataset_rights` | 3 |
+| `evidence_status_entries` | 6 |
 | `distinct_observation_identities` | 18402 |
 | `latest_vintage_rows` | 18402 |
 

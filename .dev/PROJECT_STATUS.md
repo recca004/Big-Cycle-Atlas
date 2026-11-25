@@ -1,13 +1,15 @@
 # Project Status
 
-> **CURRENT STATE (2026-11-25, Mission 2 checkpoint):** branch
-> `feature/big-cycle-atlas-astro-v2`, PR #1. 9/17 forces with published
-> levels (8 approved + character_determination LFP proxy, PARTIAL ceiling),
-> military relative_share dimension-only, 7 context/profile forces.
-> normalization-v1.3 / force-aggregation-v1.0. 716 backend tests.
-> Research engine: methodology registry, composite engine, experimental
-> cycle classifier, /api/research/* + Astro /research lab. The milestone
-> log below is historical — superseded figures intentionally retained.
+> **CURRENT STATE (2026-11-25, Scientific Research Foundation Phase 1):**
+> branch `feature/great-power-observatory`. Versioned theory/hypothesis
+> registries, JST R6 long-history research panel, independent banking-crisis
+> outcomes, immutable prediction/outcome ledger, H01 evaluation and
+> research-foundation API/export are implemented. H01's latest result is
+> `no_evidence_of_improved_predictive_value`; strict forecast readiness
+> remains NOT READY. ALFRED is credential-blocked and the IMF WP-2026-94
+> bundle URL is unavailable (404), both recorded rather than fabricated.
+> The milestone log below is historical — superseded figures intentionally
+> retained.
 
 ## Phase
 
@@ -19,7 +21,18 @@ Milestone 3 — COMPLETE (World Bank connector). Milestone 4 — IN PROGRESS (WB
 percentage is tracked — progress is measured by milestone/sprint completion
 and the living DB/test state below.
 
-Current living truth (2026-09-10):
+Current living truth (2026-11-25):
+
+- 21,178 ordinary observations; 46 indicators; 46 SourceSeries; 13 DataSources
+- 111,546 research observations (JST R6); 88 crisis events; 2,668 crisis coverage rows
+- 7 theory-registry entries; 4 hypothesis protocols; 1,666 prediction ledger rows; 1,666 outcomes; 2 evaluation rows
+- Primary Observatory population remains 8 countries; JST extended research population has 18 source-defined entities
+- Latest H01 evaluation: `no_evidence_of_improved_predictive_value`
+- Strict release-date-safe forecast samples remain unavailable
+- Backend pytest 834 passed; Vitest 54 passed; Astro check clean; production build and 55 Playwright checks passed
+- Historical milestone figures below remain dated state, not current totals
+
+Historical living truth (2026-09-10):
 
 - 6814 observations
 - 27 indicators

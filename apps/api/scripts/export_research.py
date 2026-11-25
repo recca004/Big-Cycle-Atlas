@@ -38,6 +38,17 @@ from app.models import (
     Observation,
     ReferenceObservation,
     SourceSeries,
+    CrisisCoverage,
+    CrisisEvent,
+    DatasetRightsRegistry,
+    EvaluationResult,
+    EvidenceStatusEntry,
+    HypothesisProtocol,
+    PredictionLedgerEntry,
+    PredictionOutcome,
+    ResearchObservation,
+    ResearchPopulationMembership,
+    TheoryRegistryEntry,
 )
 from app.research.composite import COMPOSITE_MODELS, run_composite
 from app.research.model_diagnostics import (
@@ -59,6 +70,7 @@ from app.research.power_registry import (
     POWER_MEASURE_DEFINITIONS,
     POWER_MEASURES_BY_INDICATOR,
 )
+from app.research.scientific_registry import TIMESCALES
 from app.services import force_signal_service
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -178,6 +190,17 @@ async def main() -> None:
         "indicator_revisions": (await session.execute(select(func.count(IndicatorRevision.id)))).scalar(),
         "indicator_diagnostics": (await session.execute(select(func.count(IndicatorDiagnostic.id)))).scalar(),
         "ingestion_runs": (await session.execute(select(func.count(IngestionRun.id)))).scalar(),
+        "research_observations": (await session.execute(select(func.count(ResearchObservation.id)))).scalar(),
+        "crisis_events": (await session.execute(select(func.count(CrisisEvent.id)))).scalar(),
+        "crisis_coverage_rows": (await session.execute(select(func.count(CrisisCoverage.id)))).scalar(),
+        "theory_registry_entries": (await session.execute(select(func.count(TheoryRegistryEntry.id)))).scalar(),
+        "hypothesis_protocols": (await session.execute(select(func.count(HypothesisProtocol.id)))).scalar(),
+        "prediction_ledger_entries": (await session.execute(select(func.count(PredictionLedgerEntry.id)))).scalar(),
+        "prediction_outcomes": (await session.execute(select(func.count(PredictionOutcome.id)))).scalar(),
+        "evaluation_results": (await session.execute(select(func.count(EvaluationResult.id)))).scalar(),
+        "population_memberships": (await session.execute(select(func.count(ResearchPopulationMembership.id)))).scalar(),
+        "dataset_rights": (await session.execute(select(func.count(DatasetRightsRegistry.id)))).scalar(),
+        "evidence_status_entries": (await session.execute(select(func.count(EvidenceStatusEntry.id)))).scalar(),
     }
     inventory["distinct_observation_identities"] = (
         await session.execute(
@@ -723,10 +746,27 @@ async def main() -> None:
         power_history,
         list(history[0]),
     )
+    research_source_counts = {
+        r[0]: r[1] for r in (await session.execute(select(
+            ResearchObservation.source_key, func.count(ResearchObservation.id),
+        ).group_by(ResearchObservation.source_key))).all()
+    }
+    research_source_latest = {
+        r[0]: r[1] for r in (await session.execute(select(
+            ResearchObservation.source_key, func.max(ResearchObservation.retrieved_at),
+        ).group_by(ResearchObservation.source_key))).all()
+    }
+    crisis_source_counts = {
+        r[0]: r[1] for r in (await session.execute(select(
+            CrisisEvent.source_key, func.count(CrisisEvent.id),
+        ).group_by(CrisisEvent.source_key))).all()
+    }
     provider_rows = []
     for source in sources.values():
         provider_coverage = [r for r in coverage if r["provider"] == source.key]
-        ingested = bool(provider_coverage)
+        ingested = bool(provider_coverage) or bool(
+            research_source_counts.get(source.key) or crisis_source_counts.get(source.key)
+        )
         status = source.status.value if hasattr(source.status, "value") else str(source.status)
         provider_rows.append({
             "provider": source.key, "provider_name": source.name,
@@ -735,6 +775,9 @@ async def main() -> None:
             "country_indicator_series": len(provider_coverage),
             "latest_retrieval": max(
                 (r["latest_retrieval"] for r in provider_coverage), default=None
+            ) or (
+                research_source_latest.get(source.key).isoformat()
+                if research_source_latest.get(source.key) else None
             ),
             "base_url": source.base_url or "",
             "auth_type": source.auth_type or "",
@@ -777,8 +820,92 @@ async def main() -> None:
     )
     write_json(EXPORT / "database_inventory.json", inventory)
 
+    # Scientific research-foundation exports (Phase 1).
+    theory_rows = (await session.execute(select(TheoryRegistryEntry).order_by(TheoryRegistryEntry.theory_code))).scalars().all()
+    write_json(EXPORT / "theory_registry.json", {
+        "count": len(theory_rows),
+        "entries": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in theory_rows],
+    })
+    protocol_rows = (await session.execute(select(HypothesisProtocol).order_by(HypothesisProtocol.hypothesis_code, HypothesisProtocol.protocol_version))).scalars().all()
+    write_json(EXPORT / "hypothesis_protocols.json", {
+        "count": len(protocol_rows),
+        "protocols": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in protocol_rows],
+    })
+    research_obs_rows = (await session.execute(select(
+        ResearchObservation.source_key, ResearchObservation.dataset_version,
+        ResearchObservation.entity_code, ResearchObservation.variable_code,
+        func.count(ResearchObservation.id), func.min(ResearchObservation.period_start),
+        func.max(ResearchObservation.period_start), func.count(ResearchObservation.release_date),
+        func.count(ResearchObservation.vintage_date),
+    ).group_by(
+        ResearchObservation.source_key, ResearchObservation.dataset_version,
+        ResearchObservation.entity_code, ResearchObservation.variable_code,
+    ).order_by(ResearchObservation.source_key, ResearchObservation.entity_code, ResearchObservation.variable_code))).all()
+    vintage_inventory = [
+        {"source_key": r[0], "dataset_version": r[1], "entity_code": r[2], "variable_code": r[3], "observations": r[4], "earliest_period": _period(r[5]), "latest_period": _period(r[6]), "release_dates": r[7], "vintage_dates": r[8]}
+        for r in research_obs_rows
+    ]
+    write_csv(
+        EXPORT / "historical_vintage_inventory.csv", vintage_inventory,
+        ["source_key", "dataset_version", "entity_code", "variable_code", "observations", "earliest_period", "latest_period", "release_dates", "vintage_dates"],
+    )
+    crisis_rows = (await session.execute(select(CrisisEvent).order_by(CrisisEvent.entity_code, CrisisEvent.start_period))).scalars().all()
+    crisis_export = [
+        {"source_key": r.source_key, "dataset_version": r.dataset_version, "source_event_key": r.source_event_key, "entity_code": r.entity_code, "entity_name": r.entity_name, "event_type": r.event_type, "event_state": r.event_state, "classification": r.classification, "start_period": _period(r.start_period), "end_period": _period(r.end_period), "dating_precision": r.dating_precision, "publication_date": _period(r.publication_date), "source_reference": r.source_reference, "checksum": r.checksum}
+        for r in crisis_rows
+    ]
+    write_csv(
+        EXPORT / "crisis_chronology.csv", crisis_export,
+        ["source_key", "dataset_version", "source_event_key", "entity_code", "entity_name", "event_type", "event_state", "classification", "start_period", "end_period", "dating_precision", "publication_date", "source_reference", "checksum"],
+    )
+    crisis_cov_rows = (await session.execute(select(
+        CrisisCoverage.source_key, CrisisCoverage.dataset_version,
+        CrisisCoverage.entity_code, CrisisCoverage.event_type,
+        func.count(CrisisCoverage.id), func.min(CrisisCoverage.period_start),
+        func.max(CrisisCoverage.period_start),
+    ).group_by(CrisisCoverage.source_key, CrisisCoverage.dataset_version, CrisisCoverage.entity_code, CrisisCoverage.event_type))).all()
+    crisis_cov_export = [
+        {"source_key": r[0], "dataset_version": r[1], "entity_code": r[2], "event_type": r[3], "covered_periods": r[4], "earliest_period": _period(r[5]), "latest_period": _period(r[6])}
+        for r in crisis_cov_rows
+    ]
+    write_csv(EXPORT / "crisis_coverage.csv", crisis_cov_export, list(crisis_cov_export[0]) if crisis_cov_export else ["source_key"])
+    population_rows = (await session.execute(select(ResearchPopulationMembership).order_by(ResearchPopulationMembership.population_code, ResearchPopulationMembership.entity_code))).scalars().all()
+    write_json(EXPORT / "research_population.json", {
+        "count": len(population_rows),
+        "memberships": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in population_rows],
+    })
+    prediction_rows = (await session.execute(select(PredictionLedgerEntry).order_by(PredictionLedgerEntry.prediction_key))).scalars().all()
+    write_json(EXPORT / "prediction_ledger.json", {
+        "count": len(prediction_rows),
+        "predictions": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in prediction_rows],
+    })
+    outcome_rows = (await session.execute(select(PredictionOutcome))).scalars().all()
+    write_json(EXPORT / "prediction_outcomes.json", {
+        "count": len(outcome_rows),
+        "outcomes": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in outcome_rows],
+    })
+    eval_rows = (await session.execute(select(EvaluationResult).order_by(EvaluationResult.evaluation_key))).scalars().all()
+    write_json(EXPORT / "evaluation_results.json", {
+        "count": len(eval_rows),
+        "evaluations": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in eval_rows],
+    })
+    rights_rows = (await session.execute(select(DatasetRightsRegistry))).scalars().all()
+    write_json(EXPORT / "dataset_rights.json", {
+        "count": len(rights_rows),
+        "rights": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in rights_rows],
+    })
+    evidence_rows = (await session.execute(select(EvidenceStatusEntry))).scalars().all()
+    write_json(EXPORT / "evidence_status.json", {
+        "count": len(evidence_rows),
+        "entries": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in evidence_rows],
+    })
+    write_json(EXPORT / "research_timescales.json", {"timescales": TIMESCALES})
+
+    generated_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     manifest = {
-        "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "generated_at": generated_at,
+        "information_cutoff": generated_at,
+        "execution_mode": "retrospective_latest_vintage",
         "git_commit": _git_commit(),
         "database": inventory,
         "latest_vintage_rule": "maximum vintage_number per country + source_series + period_start",
@@ -809,6 +936,14 @@ async def main() -> None:
         "global_denominator_series": GLOBAL_DENOMINATOR_SERIES,
         "currency_research_entities": CURRENCY_RESEARCH_ENTITIES,
         "historical_boundaries": HISTORICAL_BOUNDARIES,
+        "scientific_foundation": {
+            "theory_registry_version": "theory-registry-v1.0",
+            "hypotheses": [f"{r.hypothesis_code}:{r.protocol_version}" for r in protocol_rows],
+            "research_populations": sorted({r.population_code for r in population_rows}),
+            "prediction_ledger_append_only": True,
+            "latest_evaluation_state": eval_rows[-1].result_state if eval_rows else None,
+            "timescales": TIMESCALES,
+        },
         "generated_exports": sorted(path.name for path in EXPORT.iterdir() if path.is_file()),
         "limitations": [
             "Retrospective history uses latest available vintages, not only information published at each historical date.",
@@ -816,6 +951,9 @@ async def main() -> None:
             "Tracked-universe shares are not global shares.",
             "Military expenditure measures resources, not complete capability.",
             "Missing observations remain missing and are never interpolated.",
+            "JST research rows carry dataset-release evidence, not per-observation historical publication evidence.",
+            "ALFRED historical vintages require an unconfigured FRED API credential and are not imported.",
+            "The advertised IMF WP-2026-94 supplemental ZIP returned HTTP 404; no substitute crisis rows were fabricated.",
         ],
     }
     write_json(EXPORT / "research_manifest.json", manifest)

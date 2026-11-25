@@ -1,7 +1,7 @@
 # Big Cycle Atlas — compact ChatGPT handover
 
-Generated: 2026-11-25T21:52:40.386227Z
-Base commit: `762919c7923b14a4ab18a8fcbf519a072239c929`
+Generated: 2026-11-25T22:27:21.020278Z
+Base commit: `71d3e0589d10f4c412549fcd56b8701d45a69b60`
 
 This package contains the actual database inventory, latest-vintage raw histories, approved force evidence, four-model experimental cycle results, international-power measurements and forecast-gate evidence.
 
@@ -14,7 +14,7 @@ This package contains the actual database inventory, latest-vintage raw historie
 
 - Raw GDP/population history reaches 1960; several trade/credit series reach 1970 or earlier.
 - Valid experimental classifications begin around 1995–1996, not 1980.
-- 13 inventory fields and 361 country-indicator coverage records were exported.
+- 24 inventory fields and 361 country-indicator coverage records were exported.
 - 136 country-force rows and 1472 model-history points were exported.
 - `model_b_domain` and `model_c_overlap` are materially equivalent under current data: 368 comparisons, 100.0% near-score and 100.0% stage agreement; they are not independent evidence.
 - Indebtedness is a configured own-history measurement but 32 semantic exclusions prevent it entering the 0–100 cross-country composites.

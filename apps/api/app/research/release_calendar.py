@@ -95,6 +95,34 @@ PROVIDER_RELEASE_METADATA: dict[str, ProviderReleaseMetadata] = {
         notes="Distributional accounts typically lag ~2 years. "
             "Assumption, not evidence.",
     ),
+    "alfred_fred": ProviderReleaseMetadata(
+        source_key="alfred_fred",
+        provider="ALFRED / FRED",
+        has_release_dates=True,
+        has_revision_dates=True,
+        has_vintage_history=True,
+        publication_calendar="Official realtime_start/realtime_end vintage "
+            "evidence via the FRED API.",
+        historical_archive="ALFRED historical vintages are first-class API "
+            "output.",
+        assumed_lag_days=None,
+        notes="Implemented adapter; BCA_FRED_API_KEY is required and "
+            "currently unconfigured.",
+    ),
+    "jst_macrohistory": ProviderReleaseMetadata(
+        source_key="jst_macrohistory",
+        provider="Jorda-Schularick-Taylor Macrohistory Database",
+        has_release_dates=True,
+        has_revision_dates=False,
+        has_vintage_history=True,
+        publication_calendar="Discrete dataset release (R6, July 2022), not "
+            "per-observation publication dates.",
+        historical_archive="Official R6 workbook; later releases are distinct "
+            "dataset versions.",
+        assumed_lag_days=None,
+        notes="Dataset-release evidence only; values must not be treated as "
+            "known in their historical year.",
+    ),
 }
 
 

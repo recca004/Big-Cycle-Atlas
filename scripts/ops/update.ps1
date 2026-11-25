@@ -19,6 +19,8 @@ param(
   [string]$Source,
   [string]$Country,
   [string]$WidZip,
+  [string]$JstFile,
+  [string]$ImfCrisisFile,
   [int]$MarketLookbackDays = 45,
   [int]$HistoricalStartYear = 1970
 )
@@ -63,6 +65,8 @@ Options
   -Source <provider>            world_bank, bis, oecd, imf_weo, or wid (with -WidZip)
   -Country <ISO3>               Limit provider collection to one tracked country
   -WidZip <path>                Use a locally downloaded WID bulk ZIP; never auto-downloads
+  -JstFile <path>               Use a local JSTdatasetR6.xlsx; otherwise -Historical downloads the official release
+  -ImfCrisisFile <path>         Use a local IMF WP-2026-094 ZIP/CSV bundle; the importer never invents dates
   -MarketLookbackDays <n>       Incremental market lookback (default: 45)
   -SkipMarkets                  Existing compatibility option; skips market ingestion
 
@@ -187,6 +191,8 @@ if ($Help) { Show-Help; exit 0 }
 if ($Status) { Show-Status; exit 0 }
 if ($SkipMarkets -and $MarketsOnly) { Write-Host "Incompatible options: -SkipMarkets cannot be used with -MarketsOnly." -ForegroundColor Red; exit 1 }
 if ($WidZip -and -not (Test-Path $WidZip)) { Write-Host "WID archive not found: $WidZip" -ForegroundColor Red; exit 1 }
+if ($JstFile -and -not (Test-Path $JstFile)) { Write-Host "JST workbook not found: $JstFile" -ForegroundColor Red; exit 1 }
+if ($ImfCrisisFile -and -not (Test-Path $ImfCrisisFile)) { Write-Host "IMF crisis bundle not found: $ImfCrisisFile" -ForegroundColor Red; exit 1 }
 if ($Source -and $Source -notin @("world_bank", "bis", "oecd", "imf_weo", "wid")) { Write-Host "Unknown provider source: $Source" -ForegroundColor Red; exit 1 }
 if ($Source -eq "wid" -and -not $WidZip) { Write-Host "-Source wid requires -WidZip (WID never auto-downloads)." -ForegroundColor Red; exit 1 }
 if (-not (Test-Path $py)) { Write-Host "API venv missing — run Setup.bat first" -ForegroundColor Red; exit 1 }
@@ -218,9 +224,15 @@ $referenceSteps = @(
   @{ Name = "World Bank global power denominators"; Args = @("scripts\ingest_wb_global_denominators.py", "--start", [string]$HistoricalStartYear) }
 )
 $widArgs = @("scripts\ingest_wid.py", "--all-countries", "--all-mapped", "--zip-path")
+$jstArgs = @("scripts\import_jst_macrohistory.py")
+if ($JstFile) { $jstArgs += @("--file", (Resolve-Path $JstFile).Path) }
+$imfCrisisArgs = @("scripts\import_imf_banking_crises.py")
+if ($ImfCrisisFile) { $imfCrisisArgs += @("--file", (Resolve-Path $ImfCrisisFile).Path) }
+$alfredArgs = @("scripts\ingest_alfred.py", "--vintages", "5", "GDP", "CPIAUCSL", "UNRATE", "FEDFUNDS", "TOTALSL", "BAMLH0A0HYM2", "USREC")
+$h01Args = @("scripts\run_h01_evaluation.py")
 if ($WidZip) { $widArgs += (Resolve-Path $WidZip).Path }
 
-$steps = switch ($mode) {
+$steps = @(switch ($mode) {
   "daily" {
     @("Provider snapshot collection", "Governance uncertainty diagnostics", "Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff")
   }
@@ -230,9 +242,9 @@ $steps = switch ($mode) {
   "macro-only" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Observatory recalculation and snapshot diff") }
   "markets-only" { @("Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff") }
   "references-only" { @("Reference universes and international power expansion", "Observatory recalculation and snapshot diff") }
-  "historical" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes from $HistoricalStartYear and international power expansion", "Observatory recalculation and snapshot diff") }
+  "historical" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes from $HistoricalStartYear and international power expansion", "JST historical bulk import", "Optional ALFRED/IMF historical imports", "H01 evaluation registration", "Observatory recalculation and snapshot diff") }
   "recalculate-only" { @("Observatory recalculation and snapshot diff") }
-}
+})
 if ($SkipMarkets) { $steps = $steps | Where-Object { $_ -notmatch "market" }; $steps += "Market update skipped" }
 if (-not $WidZip) { $steps += "WID skipped (local ZIP not supplied)" }
 
@@ -267,6 +279,22 @@ try {
     }
     if (($mode -in @("daily", "full", "markets-only")) -and -not $SkipMarkets) {
       Invoke-Step "Financial market update" $marketArgs @(1, 2) | Out-Null
+    }
+    if ($mode -eq "historical") {
+      Invoke-Step "JST historical bulk import" $jstArgs @(2) | Out-Null
+      if ($env:BCA_FRED_API_KEY) {
+        Invoke-Step "ALFRED historical vintage import" $alfredArgs @(1, 2) | Out-Null
+      } else {
+        $script:SkippedSteps.Add("ALFRED (BCA_FRED_API_KEY not configured)") | Out-Null
+        Write-Run "SKIP   ALFRED vintage import — set BCA_FRED_API_KEY to enable" "Yellow"
+      }
+      if ($ImfCrisisFile) {
+        Invoke-Step "IMF banking-crisis bundle import" $imfCrisisArgs @(2) | Out-Null
+      } else {
+        $script:SkippedSteps.Add("IMF WP-2026-094 (no local bundle supplied)") | Out-Null
+        Write-Run "SKIP   IMF crisis bundle — pass -ImfCrisisFile after official download" "Yellow"
+      }
+      Invoke-Step "H01 evaluation registration" $h01Args @(2) | Out-Null
     }
     if ($mode -eq "full" -and $WidZip) {
       Invoke-Step "WID local archive import" $widArgs @(2) | Out-Null

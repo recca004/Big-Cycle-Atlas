@@ -10,6 +10,7 @@ param(
   [switch]$MacroOnly,
   [switch]$MarketsOnly,
   [switch]$ReferencesOnly,
+  [switch]$Historical,
   [switch]$RecalculateOnly,
   [switch]$Status,
   [switch]$DryRun,
@@ -18,7 +19,8 @@ param(
   [string]$Source,
   [string]$Country,
   [string]$WidZip,
-  [int]$MarketLookbackDays = 45
+  [int]$MarketLookbackDays = 45,
+  [int]$HistoricalStartYear = 1970
 )
 
 $ErrorActionPreference = "Stop"
@@ -51,6 +53,7 @@ Big Cycle Atlas data update commands
   Update.bat -MacroOnly         Economic providers only
   Update.bat -MarketsOnly       Financial market and currency observations only
   Update.bat -ReferencesOnly    Reference population distributions only
+  Update.bat -Historical        Macro + reference history, no market update
   Update.bat -RecalculateOnly   Observatory recalculation without provider downloads
   Update.bat -Status            Database totals, provider freshness and lock status
   Update.bat -DryRun            Print planned operations without modifying data
@@ -177,7 +180,7 @@ function Show-Status {
   } finally { Pop-Location }
 }
 
-$modeCount = @($Full, $MacroOnly, $MarketsOnly, $ReferencesOnly, $RecalculateOnly, $Status, $Help).Where({ $_ }).Count
+$modeCount = @($Full, $MacroOnly, $MarketsOnly, $ReferencesOnly, $Historical, $RecalculateOnly, $Status, $Help).Where({ $_ }).Count
 if ($modeCount -gt 1) { Write-Host "Incompatible options: choose only one update mode." -ForegroundColor Red; exit 1 }
 if ($DryRun -and ($Status -or $Help)) { Write-Host "Incompatible options: -DryRun cannot be combined with -Status or -Help." -ForegroundColor Red; exit 1 }
 if ($Help) { Show-Help; exit 0 }
@@ -193,6 +196,7 @@ if ($Full) { $mode = "full" }
 if ($MacroOnly) { $mode = "macro-only" }
 if ($MarketsOnly) { $mode = "markets-only" }
 if ($ReferencesOnly) { $mode = "references-only" }
+if ($Historical) { $mode = "historical" }
 if ($RecalculateOnly) { $mode = "recalculate-only" }
 
 $collectionSummaryPath = Join-Path $logDir "collection-summary-$runId.json"
@@ -204,12 +208,12 @@ $marketArgs = @("scripts\ingest_markets.py", "--start", (Get-Date).AddDays(-$Mar
 $wgiArgs = @("scripts\ingest_wgi_diagnostics.py")
 if ($Country) { $wgiArgs += @("--country", $Country.ToUpperInvariant()) } else { $wgiArgs += "--all-countries" }
 $refreshArgs = @("scripts\refresh_observatory.py", "--all-models")
-if ($mode -in @("daily", "full", "macro-only")) {
+if ($mode -in @("daily", "full", "macro-only", "historical")) {
   $refreshArgs += @("--collection-summary", $collectionSummaryPath)
 }
 $referenceSteps = @(
-  @{ Name = "World Bank labour participation reference"; Args = @("scripts\ingest_wb_reference.py", "wdi_lfp_v1") },
-  @{ Name = "OECD labour productivity reference"; Args = @("scripts\ingest_oecd_reference.py", "--universe", "oecd_lpph_v1") }
+  @{ Name = "World Bank labour participation reference"; Args = @("scripts\ingest_wb_reference.py", "wdi_lfp_v1", [string]$HistoricalStartYear) },
+  @{ Name = "OECD labour productivity reference"; Args = @("scripts\ingest_oecd_reference.py", "--universe", "oecd_lpph_v1", "--start-year", [string]$HistoricalStartYear) }
 )
 $widArgs = @("scripts\ingest_wid.py", "--all-countries", "--all-mapped", "--zip-path")
 if ($WidZip) { $widArgs += (Resolve-Path $WidZip).Path }
@@ -224,6 +228,7 @@ $steps = switch ($mode) {
   "macro-only" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Observatory recalculation and snapshot diff") }
   "markets-only" { @("Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff") }
   "references-only" { @("Reference universes (WB + OECD)", "Observatory recalculation and snapshot diff") }
+  "historical" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes from $HistoricalStartYear (WB + OECD)", "Observatory recalculation and snapshot diff") }
   "recalculate-only" { @("Observatory recalculation and snapshot diff") }
 }
 if ($SkipMarkets) { $steps = $steps | Where-Object { $_ -notmatch "market" }; $steps += "Market update skipped" }
@@ -245,7 +250,7 @@ try {
   Enter-UpdateLock
   Push-Location $apiDir
   try {
-    if ($mode -in @("daily", "full", "macro-only")) {
+    if ($mode -in @("daily", "full", "macro-only", "historical")) {
       Invoke-Step "Provider snapshot collection" $collectArgs @(2) | Out-Null
       if (-not $Source -or $Source -eq "world_bank") {
         Invoke-Step "Governance uncertainty diagnostics" $wgiArgs @(1, 2) | Out-Null
@@ -255,7 +260,7 @@ try {
         Write-Run "SKIP   WID bulk provider — pass -WidZip to enable it" "Yellow"
       }
     }
-    if (($mode -eq "full" -or $mode -eq "references-only") -and -not $Source -and -not $Country) {
+    if (($mode -in @("full", "references-only", "historical")) -and -not $Source -and -not $Country) {
       foreach ($ref in $referenceSteps) { Invoke-Step $ref.Name $ref.Args @(2) | Out-Null }
     }
     if (($mode -in @("daily", "full", "markets-only")) -and -not $SkipMarkets) {

@@ -13,8 +13,8 @@ import type {
 export type ObservatoryMode = "production" | "demo";
 
 export interface ObservatoryService {
-  loadOverview: () => Promise<ObservatoryOverview>;
-  loadTransition: (incumbent: string, challenger: string) => Promise<TransitionMonitor>;
+  loadOverview: (startYear?: number) => Promise<ObservatoryOverview>;
+  loadTransition: (incumbent: string, challenger: string, startYear?: number) => Promise<TransitionMonitor>;
   requestRefresh: () => Promise<RefreshJob>;
   loadRefreshStatus: () => Promise<RefreshJob>;
 }
@@ -52,24 +52,25 @@ export function createObservatoryService(mode: ObservatoryMode): ObservatoryServ
   }
 
   return {
-    loadOverview: () => {
-      const key = `overview:${PRODUCTION_MODEL}`;
+    loadOverview: (startYear = 1980) => {
+      const key = `overview:${PRODUCTION_MODEL}:${startYear}`;
       let request = overviewCache.get(key);
       if (!request) {
-        request = fetchObservatoryOverview({ model: PRODUCTION_MODEL });
+        request = fetchObservatoryOverview({ model: PRODUCTION_MODEL, startYear });
         overviewCache.set(key, request);
         request.catch(() => overviewCache.delete(key));
       }
       return request;
     },
-    loadTransition: (incumbent, challenger) => {
-      const key = `transition:${PRODUCTION_MODEL}:${incumbent}:${challenger}`;
+    loadTransition: (incumbent, challenger, startYear = 1980) => {
+      const key = `transition:${PRODUCTION_MODEL}:${incumbent}:${challenger}:${startYear}`;
       let request = transitionCache.get(key);
       if (!request) {
         request = fetchObservatoryTransition({
           model: PRODUCTION_MODEL,
           incumbent,
           challenger,
+          startYear,
         });
         transitionCache.set(key, request);
         request.catch(() => transitionCache.delete(key));

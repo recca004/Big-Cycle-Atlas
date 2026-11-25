@@ -240,9 +240,54 @@
 .obs-snaps td:nth-child(2) { text-align: right; font-variant-numeric: tabular-nums; }
 .obs-snaps td:nth-child(3) { text-align: right; }
 
-/* --- Country picker --- */
+/* --- Country picker + historical range --- */
 .obs-country-picker { display: flex; align-items: center; gap: var(--space-3); }
 .obs-country-picker select { min-width: 11rem; }
+.obs-col-center { display: flex; flex-direction: column; gap: var(--space-3); }
+.obs-range-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+.obs-range-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.obs-range-copy strong { font-size: var(--text-xs); font-variant-numeric: tabular-nums; }
+.obs-range-buttons { display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: flex-end; }
+.obs-range-buttons .active { border-color: var(--accent); color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent); }
+.obs-unclassified-note {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--accent-text);
+  background: var(--surface-1);
+  font-size: var(--text-xs);
+}
+.obs-event-rail {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: 0 var(--space-1) var(--space-2);
+  scrollbar-width: thin;
+}
+.obs-event {
+  flex: 0 0 auto;
+  max-width: 16rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-tertiary);
+  font-size: 0.66rem;
+  line-height: 1.25;
+  background: var(--surface-1);
+}
+.obs-event strong { color: var(--accent-text); font-variant-numeric: tabular-nums; margin-right: var(--space-1); }
+.obs-event.active { border-color: var(--accent); color: var(--text-primary); box-shadow: 0 0 0 1px var(--accent-soft); }
+@media (max-width: 700px) {
+  .obs-range-picker { align-items: stretch; flex-direction: column; }
+  .obs-range-buttons { justify-content: flex-start; }
+}
 
 /* --- Clock composition --- */
 .obs-clock { display: flex; flex-direction: column; gap: var(--space-3); }
@@ -359,6 +404,54 @@
 .obs-powers tbody tr { cursor: pointer; }
 .obs-powers tbody tr:hover { background: var(--surface-2); }
 .obs-powers tr.selected { background: var(--accent-soft); }
+
+/* --- Coverage matrix --- */
+.obs-coverage-wrap {
+  overflow: auto;
+  max-block-size: 34rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+.obs-coverage {
+  width: 100%;
+  min-width: 62rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-xs);
+}
+.obs-coverage caption {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  color: var(--text-tertiary);
+}
+.obs-coverage thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  background: var(--surface-1);
+}
+.obs-coverage th, .obs-coverage td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+  vertical-align: top;
+}
+.obs-coverage tbody th {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  min-width: 13rem;
+  background: var(--surface-1);
+}
+.obs-coverage tbody th strong, .obs-coverage tbody th span { display: block; }
+.obs-coverage td strong { font-variant-numeric: tabular-nums; }
+.obs-coverage tbody tr:hover td, .obs-coverage tbody tr:hover th { background: var(--surface-2); }
+
+.measure-history { display: flex; flex-direction: column; gap: var(--space-3); }
+.obs-measure-picker { display: flex; align-items: center; gap: var(--space-3); }
+.measure-chart { width: 100%; height: auto; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-1); }
+.measure-chart text { font-size: 0.68rem; fill: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+.measure-grid { stroke: var(--border-subtle); stroke-width: 0.7; }
 
 /* --- Playback --- */
 .obs-playback { display: flex; flex-direction: column; gap: var(--space-2); }

@@ -251,6 +251,39 @@ export interface DailyChanges {
   changes: DailyChange[];
 }
 
+export interface CoverageSeries {
+  country: string;
+  country_name: string;
+  indicator: string;
+  indicator_name: string;
+  unit: string | null;
+  frequency: string | null;
+  source: string;
+  earliest_period: string | null;
+  latest_period: string | null;
+  periods: number;
+}
+
+export interface ObservatoryCoverage {
+  coverage_kind: string;
+  countries: number;
+  series: CoverageSeries[];
+}
+
+export interface MeasureSeries {
+  iso3: string;
+  indicator_name: string;
+  unit: string | null;
+  source: string;
+  points: { period: number; value: number; vintage: number }[];
+}
+
+export interface MeasureHistory {
+  indicator: string;
+  start_year: number;
+  countries: MeasureSeries[];
+}
+
 export interface RefreshJob {
   running: boolean;
   mode: string | null;

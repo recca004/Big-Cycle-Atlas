@@ -83,4 +83,10 @@ async def main(universe_code: str, start_year: int = 1990, end_year: int = 2100)
 
 
 if __name__ == "__main__":
-    asyncio.run(main(sys.argv[1] if len(sys.argv) > 1 else "wdi_lfp_v1"))
+    asyncio.run(
+        main(
+            sys.argv[1] if len(sys.argv) > 1 else "wdi_lfp_v1",
+            int(sys.argv[2]) if len(sys.argv) > 2 else 1990,
+            int(sys.argv[3]) if len(sys.argv) > 3 else 2100,
+        )
+    )

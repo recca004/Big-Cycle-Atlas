@@ -8,7 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_session
-from app.models import Observation
+from app.models import Country, DataSource, Indicator, Observation, SourceSeries
 from app.research import observatory as observatory_service
 from app.research.composite import COMPOSITE_MODELS
 
@@ -39,7 +39,7 @@ async def observatory_overview(
     model: str = Query("model_b_domain"),
     incumbent: str = Query("USA"),
     challenger: str = Query("CHN"),
-    start_year: int = Query(2000, ge=1990, le=2200),
+    start_year: int = Query(1980, ge=1960, le=2200),
     session: AsyncSession = Depends(get_session),
 ):
     if model not in COMPOSITE_MODELS:
@@ -72,12 +72,156 @@ async def observatory_overview(
     }
 
 
+@router.get("/series")
+async def observatory_series(
+    indicator: str = Query("GDP_CURRENT_USD"),
+    start_year: int = Query(1970, ge=1800, le=2200),
+    session: AsyncSession = Depends(get_session),
+):
+    """Latest-vintage measure history across all tracked countries."""
+    latest_vintage = (
+        select(
+            Observation.country_id.label("country_id"),
+            Observation.source_series_id.label("source_series_id"),
+            Observation.period_start.label("period_start"),
+            func.max(Observation.vintage_number).label("vintage"),
+        )
+        .group_by(
+            Observation.country_id,
+            Observation.source_series_id,
+            Observation.period_start,
+        )
+        .subquery()
+    )
+    rows = (
+        await session.execute(
+            select(
+                Country.iso3,
+                Indicator.name,
+                Indicator.unit,
+                Observation.period_start,
+                Observation.value,
+                Observation.vintage_number,
+                DataSource.name.label("source"),
+            )
+            .select_from(Observation)
+            .join(Country, Country.id == Observation.country_id)
+            .join(Indicator, Indicator.id == Observation.indicator_id)
+            .join(DataSource, DataSource.id == Observation.data_source_id)
+            .join(
+                latest_vintage,
+                (Observation.country_id == latest_vintage.c.country_id)
+                & (Observation.source_series_id == latest_vintage.c.source_series_id)
+                & (Observation.period_start == latest_vintage.c.period_start)
+                & (Observation.vintage_number == latest_vintage.c.vintage),
+            )
+            .where(Indicator.code == indicator)
+            .where(func.extract("year", Observation.period_start) >= start_year)
+            .order_by(Country.iso3, Observation.period_start)
+        )
+    ).all()
+    countries: dict[str, dict] = {}
+    for iso3, name, unit, period, value, vintage, source in rows:
+        entry = countries.setdefault(
+            iso3,
+            {
+                "iso3": iso3,
+                "indicator_name": name,
+                "unit": unit,
+                "source": source,
+                "points": [],
+            },
+        )
+        entry["points"].append(
+            {
+                "period": period.year,
+                "value": value,
+                "vintage": vintage,
+            }
+        )
+    return {
+        "indicator": indicator,
+        "start_year": start_year,
+        "countries": list(countries.values()),
+    }
+
+
+@router.get("/coverage")
+async def observatory_coverage(
+    session: AsyncSession = Depends(get_session),
+):
+    """Bounded raw-observation coverage for the eight tracked countries."""
+    rows = (
+        await session.execute(
+            select(
+                Country.iso3,
+                Country.name,
+                Indicator.code,
+                Indicator.name,
+                Indicator.unit,
+                Indicator.frequency,
+                DataSource.key,
+                func.min(Observation.period_start).label("earliest"),
+                func.max(Observation.period_start).label("latest"),
+                func.count(func.distinct(Observation.period_start)).label(
+                    "period_count"
+                ),
+            )
+            .select_from(Observation)
+            .join(Country, Country.id == Observation.country_id)
+            .join(Indicator, Indicator.id == Observation.indicator_id)
+            .join(SourceSeries, SourceSeries.id == Observation.source_series_id)
+            .join(DataSource, DataSource.id == Observation.data_source_id)
+            .group_by(
+                Country.iso3,
+                Country.name,
+                Indicator.code,
+                Indicator.name,
+                Indicator.unit,
+                Indicator.frequency,
+                DataSource.key,
+            )
+            .order_by(Country.iso3, Indicator.code, DataSource.key)
+        )
+    ).all()
+    return {
+        "coverage_kind": "raw_observations_all_vintages",
+        "countries": 8,
+        "series": [
+            {
+                "country": iso3,
+                "country_name": name,
+                "indicator": code,
+                "indicator_name": indicator_name,
+                "unit": unit,
+                "frequency": frequency,
+                "source": source,
+                "earliest_period": earliest.date().isoformat() if earliest else None,
+                "latest_period": latest.date().isoformat() if latest else None,
+                "periods": int(period_count),
+            }
+            for (
+                iso3,
+                name,
+                code,
+                indicator_name,
+                unit,
+                frequency,
+                source,
+                earliest,
+                latest,
+                period_count,
+            ) in rows
+        ],
+    }
+
+
 @router.get("/transition")
 async def observatory_transition(
     incumbent: str = Query("USA"),
     challenger: str = Query("CHN"),
     model: str = Query("model_b_domain"),
-    start_year: int = Query(2000, ge=1990, le=2200),
+    start_year: int = Query(1980, ge=1960, le=2200),
     session: AsyncSession = Depends(get_session),
 ):
     if model not in COMPOSITE_MODELS:

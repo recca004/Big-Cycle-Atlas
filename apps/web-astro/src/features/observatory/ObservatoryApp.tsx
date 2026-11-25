@@ -4,10 +4,12 @@ import type {
   RefreshJob,
   TransitionMonitor,
 } from "@/types/observatory";
+import { CoverageMatrix } from "./CoverageMatrix";
 import { ForcesOverview } from "./ForcesOverview";
 import { HistoricalCycleComparison } from "./HistoricalCycleComparison";
 import { ObservatoryClock } from "./ObservatoryClock";
 import { PowerMeasuresMatrix } from "./PowerMeasuresMatrix";
+import { RelativePowerHistory } from "./RelativePowerHistory";
 import {
   createObservatoryService,
   invalidateObservatoryCaches,
@@ -25,6 +27,26 @@ import { stageLabel } from "./stages";
 interface Props {
   mode?: ObservatoryMode;
 }
+
+const HISTORY_RANGES = [
+  { key: "standard", label: "1980+", startYear: 1980, description: "Primary research range" },
+  { key: "extended", label: "1970+", startYear: 1970, description: "Extended post-Bretton-Woods range" },
+  { key: "all", label: "All data", startYear: 1960, description: "Earliest mapped raw observations" },
+] as const;
+
+const HISTORICAL_EVENTS = [
+  { year: 1971, label: "End of US dollar–gold convertibility", source: "US Federal Reserve historical record" },
+  { year: 1973, label: "First oil price shock", source: "IEA/OPEC historical record" },
+  { year: 1979, label: "Second oil price shock", source: "IEA/OPEC historical record" },
+  { year: 1989, label: "Fall of the Berlin Wall", source: "European historical record" },
+  { year: 1990, label: "German reunification", source: "German federal historical record" },
+  { year: 1991, label: "Dissolution of the Soviet Union", source: "United Nations historical record" },
+  { year: 2001, label: "China joins the WTO", source: "World Trade Organization" },
+  { year: 2008, label: "Global financial crisis", source: "Financial Stability Board record" },
+  { year: 2010, label: "European sovereign debt crisis", source: "European Central Bank record" },
+  { year: 2020, label: "COVID-19 pandemic", source: "World Health Organization" },
+  { year: 2021, label: "Global inflation and monetary tightening", source: "IMF/BIS policy records" },
+] as const;
 
 function SectionHeading({ id, kicker, title, children }: { id: string; kicker: string; title: string; children?: React.ReactNode }) {
   return (
@@ -53,6 +75,7 @@ export function ObservatoryApp({ mode }: Props) {
   const [challenger, setChallenger] = useState("CHN");
   const [monitor, setMonitor] = useState<TransitionMonitor | null>(null);
   const [monitorError, setMonitorError] = useState<string | null>(null);
+  const [rangeStart, setRangeStart] = useState<number>(1980);
   const refreshTimer = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -64,8 +87,9 @@ export function ObservatoryApp({ mode }: Props) {
     let alive = true;
     setData(null);
     setError(null);
+    setHistIndex(null);
     service
-      .loadOverview()
+      .loadOverview(rangeStart)
       .then((overview) => {
         if (!alive) return;
         setData(overview);
@@ -80,7 +104,7 @@ export function ObservatoryApp({ mode }: Props) {
     return () => {
       alive = false;
     };
-  }, [service]);
+  }, [service, rangeStart]);
 
   useEffect(() => {
     if (!data) return;
@@ -96,7 +120,7 @@ export function ObservatoryApp({ mode }: Props) {
     setMonitor(null);
     setMonitorError(null);
     service
-      .loadTransition(incumbent, challenger)
+      .loadTransition(incumbent, challenger, rangeStart)
       .then((next) => {
         if (alive) setMonitor(next);
       })
@@ -106,7 +130,7 @@ export function ObservatoryApp({ mode }: Props) {
     return () => {
       alive = false;
     };
-  }, [data, incumbent, challenger, service]);
+  }, [data, incumbent, challenger, rangeStart, service]);
 
   useEffect(
     () => () => {
@@ -146,7 +170,7 @@ export function ObservatoryApp({ mode }: Props) {
             refreshTimer.current = window.setTimeout(() => void poll(), 3000);
           } else if (status.status === "succeeded") {
             invalidateObservatoryCaches();
-            setData(await service.loadOverview());
+            setData(await service.loadOverview(rangeStart));
           }
         };
         void poll();
@@ -154,7 +178,7 @@ export function ObservatoryApp({ mode }: Props) {
       .catch((err: unknown) => {
         setError(err instanceof Error ? err.message : "Refresh request failed");
       });
-  }, [demo, job?.running, job?.status, service]);
+  }, [demo, job?.running, job?.status, rangeStart, service]);
 
   if (error && !data) {
     return (
@@ -189,6 +213,13 @@ export function ObservatoryApp({ mode }: Props) {
   const selected = data.countries.find((country) => country.iso3 === selectedIso3) ?? null;
   const firstHistoryPeriod = periods[0] ?? "available history";
   const latestPeriod = periods[latestIndex] ?? data.scoring_period ?? "latest";
+  const playbackYear = playbackPeriod ? Number(playbackPeriod.slice(0, 4)) : null;
+  const classifiedAtPlayback = !playbackPeriod || data.countries.some(
+    (country) => country.history.find((point) => point.period === playbackPeriod)?.stage,
+  );
+  const activeEventYear = playbackYear
+    ? HISTORICAL_EVENTS.filter((event) => event.year <= playbackYear).at(-1)?.year
+    : null;
 
   return (
     <div className="obs-app" ref={rootRef} data-source={demo ? "demo" : "production"}>
@@ -215,6 +246,30 @@ export function ObservatoryApp({ mode }: Props) {
         </div>
 
         <div className="obs-col-center">
+          <section className="obs-range-picker obs-panel glass" aria-label="Historical research range">
+            <div className="obs-range-copy">
+              <span className="obs-picker-kicker">Research horizon</span>
+              <strong>{data.scoring_period} latest calculated period</strong>
+            </div>
+            <div className="obs-range-buttons" role="group" aria-label="Choose the earliest requested cycle period">
+              {HISTORY_RANGES.map((range) => (
+                <button
+                  key={range.key}
+                  type="button"
+                  className={range.startYear === rangeStart ? "glass-button active" : "glass-button"}
+                  title={range.description}
+                  onClick={() => setRangeStart(range.startYear)}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </div>
+          </section>
+          {!classifiedAtPlayback && (
+            <p className="obs-unclassified-note" role="status">
+              Historical observations available — cycle classification unavailable for this period.
+            </p>
+          )}
           <ObservatoryClock
             countries={data.countries}
             selectedIso3={selectedIso3}
@@ -231,6 +286,17 @@ export function ObservatoryApp({ mode }: Props) {
             }
             periodLabel={playbackPeriod ? `${playbackPeriod} — historical` : `${latestPeriod} (latest ${demo ? "demo" : "production"})`}
           />
+          <section className="obs-event-rail" aria-label="Sourced historical context">
+            {HISTORICAL_EVENTS.filter((event) => event.year >= rangeStart).map((event) => (
+              <span
+                key={event.year}
+                className={event.year === activeEventYear ? "obs-event active" : "obs-event"}
+                title={`${event.year}: ${event.label}. Source: ${event.source}.`}
+              >
+                <strong>{event.year}</strong> {event.label}
+              </span>
+            ))}
+          </section>
         </div>
 
         <div className="obs-col-right">
@@ -336,6 +402,24 @@ export function ObservatoryApp({ mode }: Props) {
             <a href="/methodology">Methodology →</a>
           </p>
         </section>
+
+        {!demo && (
+          <section className="obs-panel obs-section glass" aria-labelledby="relative-history-heading">
+            <SectionHeading id="relative-history-heading" kicker="Relative power" title="Historical measure comparison">
+              Comparable latest-vintage observations across all tracked powers. Units remain separated by the selected measure.
+            </SectionHeading>
+            <RelativePowerHistory rangeStart={rangeStart} />
+          </section>
+        )}
+
+        {!demo && (
+          <section className="obs-panel obs-section glass" aria-labelledby="coverage-heading">
+            <SectionHeading id="coverage-heading" kicker="Evidence inventory" title="Verified raw-data coverage">
+              Earliest and latest real observations are reported before force calculations or experimental cycle classifications. Blank cells remain unsupported rather than interpolated.
+            </SectionHeading>
+            <CoverageMatrix />
+          </section>
+        )}
 
         <section className="obs-panel obs-section glass" aria-labelledby="history-heading">
           <SectionHeading id="history-heading" kicker="Long-cycle evidence" title={`Historical cycle comparisons, ${firstHistoryPeriod}–${latestPeriod}`}>

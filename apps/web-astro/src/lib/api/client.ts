@@ -232,12 +232,13 @@ export function fetchCyclePositions(
 }
 
 export function fetchObservatoryOverview(
-  opts?: FetchOptions & { model?: string },
+  opts?: FetchOptions & { model?: string; startYear?: number },
 ): Promise<import("@/types/observatory").ObservatoryOverview> {
-  const { model = "model_b_domain", ...rest } = opts ?? {};
+  const { model = "model_b_domain", startYear = 1980, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ model, start_year: String(startYear) });
   // First call computes all country composites server-side (~20-30s).
   return request<import("@/types/observatory").ObservatoryOverview>(
-    `/api/observatory/overview?model=${encodeURIComponent(model)}`,
+    `/api/observatory/overview?${q}`,
     { timeoutMs: 90_000, ...rest },
   );
 }
@@ -253,18 +254,39 @@ export function postObservatoryRefresh(
 }
 
 export function fetchObservatoryTransition(
-  opts?: FetchOptions & { model?: string; incumbent?: string; challenger?: string },
+  opts?: FetchOptions & { model?: string; incumbent?: string; challenger?: string; startYear?: number },
 ): Promise<import("@/types/observatory").TransitionMonitor> {
   const {
     model = "model_b_domain",
     incumbent = "USA",
     challenger = "CHN",
+    startYear = 1980,
     ...rest
   } = opts ?? {};
-  const q = new URLSearchParams({ model, incumbent, challenger });
+  const q = new URLSearchParams({ model, incumbent, challenger, start_year: String(startYear) });
   return request<import("@/types/observatory").TransitionMonitor>(
     `/api/observatory/transition?${q}`,
     { timeoutMs: 90_000, ...rest },
+  );
+}
+
+export function fetchObservatorySeries(
+  opts?: FetchOptions & { indicator?: string; startYear?: number },
+): Promise<import("@/types/observatory").MeasureHistory> {
+  const { indicator = "GDP_CURRENT_USD", startYear = 1970, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ indicator, start_year: String(startYear) });
+  return request<import("@/types/observatory").MeasureHistory>(
+    `/api/observatory/series?${q}`,
+    { timeoutMs: 30_000, ...rest },
+  );
+}
+
+export function fetchObservatoryCoverage(
+  opts?: FetchOptions,
+): Promise<import("@/types/observatory").ObservatoryCoverage> {
+  return request<import("@/types/observatory").ObservatoryCoverage>(
+    "/api/observatory/coverage",
+    { timeoutMs: 30_000, ...opts },
   );
 }
 

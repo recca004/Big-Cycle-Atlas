@@ -1,0 +1,247 @@
+{
+  "generated_at": "2026-11-25T20:57:36.438304Z",
+  "git_commit": "3ecd2c1e5aae0342081c517b4e508d4fbc7ef528",
+  "database": {
+    "countries": 8,
+    "indicators": 33,
+    "data_sources": 10,
+    "source_series": 33,
+    "observations_all_vintages": 17170,
+    "reference_observations": 23928,
+    "market_instruments": 35,
+    "market_observations": 96090,
+    "indicator_revisions": 2776,
+    "indicator_diagnostics": 3855,
+    "ingestion_runs": 1479,
+    "distinct_observation_identities": 14394,
+    "latest_vintage_rows": 14394
+  },
+  "latest_vintage_rule": "maximum vintage_number per country + source_series + period_start",
+  "historical_execution_mode": "retrospective_latest_vintage; not a release-date-safe backtest",
+  "scoring_period": "2026-Q3",
+  "requested_from_year": 1980,
+  "normalization_version": "normalization-v1.4",
+  "force_aggregation_version": "force-aggregation-v1.0",
+  "composite_models": {
+    "model_a_equal": {
+      "version": "v1",
+      "kind": "equal",
+      "eligible_forces": [
+        "character_determination",
+        "corruption",
+        "education",
+        "indebtedness",
+        "internal_conflict",
+        "leadership_capabilities",
+        "productivity_output_growth",
+        "rule_of_law",
+        "wealth_opportunity_values_gaps"
+      ],
+      "missing_policy": "min_coverage",
+      "min_coverage": 0.5,
+      "notes": "equal-force benchmark \u2014 reference only"
+    },
+    "model_b_domain": {
+      "version": "v1",
+      "kind": "domain",
+      "eligible_forces": [
+        "character_determination",
+        "corruption",
+        "education",
+        "indebtedness",
+        "internal_conflict",
+        "leadership_capabilities",
+        "productivity_output_growth",
+        "rule_of_law",
+        "wealth_opportunity_values_gaps"
+      ],
+      "missing_policy": "min_coverage",
+      "min_coverage": 0.5,
+      "notes": "equal weight per populated domain"
+    },
+    "model_c_overlap": {
+      "version": "v1",
+      "kind": "overlap_adjusted",
+      "eligible_forces": [
+        "character_determination",
+        "corruption",
+        "education",
+        "indebtedness",
+        "internal_conflict",
+        "leadership_capabilities",
+        "productivity_output_growth",
+        "rule_of_law",
+        "wealth_opportunity_values_gaps"
+      ],
+      "missing_policy": "min_coverage",
+      "min_coverage": 0.5,
+      "notes": "declared overlap groups share one weight"
+    },
+    "model_d_comparable": {
+      "version": "v1",
+      "kind": "fixed_subset",
+      "eligible_forces": [
+        "character_determination",
+        "corruption",
+        "indebtedness",
+        "internal_conflict",
+        "leadership_capabilities",
+        "rule_of_law",
+        "wealth_opportunity_values_gaps"
+      ],
+      "missing_policy": "strict",
+      "min_coverage": 0.5,
+      "notes": "forces present in all 8 tracked countries"
+    }
+  },
+  "providers": [
+    {
+      "provider": "world_bank",
+      "provider_name": "World Bank",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "fred",
+      "provider_name": "Federal Reserve Economic Data (FRED)",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "eurostat",
+      "provider_name": "Eurostat",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "ecb",
+      "provider_name": "European Central Bank",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "snb",
+      "provider_name": "Swiss National Bank",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "un_comtrade",
+      "provider_name": "UN Comtrade",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "bis",
+      "provider_name": "Bank for International Settlements",
+      "status": "testing",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "oecd",
+      "provider_name": "OECD",
+      "status": "testing",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "imf",
+      "provider_name": "International Monetary Fund",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    },
+    {
+      "provider": "wid",
+      "provider_name": "World Inequality Database (WID)",
+      "status": "planned",
+      "base_url": null,
+      "update_frequency": null,
+      "rate_limit_notes": null,
+      "documentation_url": null
+    }
+  ],
+  "currency_roles": {
+    "USA": {
+      "currency_code": "USD",
+      "role": "Primary global invoicing & FX anchor in Atlas market layer"
+    },
+    "CHN": {
+      "currency_code": "CNY",
+      "role": "Managed bilateral trade & settlement currency"
+    },
+    "DEU": {
+      "currency_code": "EUR",
+      "role": "Eurozone shared reserve & trade currency"
+    },
+    "FRA": {
+      "currency_code": "EUR",
+      "role": "Eurozone shared reserve & trade currency"
+    },
+    "GBR": {
+      "currency_code": "GBP",
+      "role": "Secondary international financial-centre currency"
+    },
+    "JPN": {
+      "currency_code": "JPY",
+      "role": "Major funding & reserve currency"
+    },
+    "CHE": {
+      "currency_code": "CHF",
+      "role": "Safe-haven regional financial currency"
+    },
+    "IND": {
+      "currency_code": "INR",
+      "role": "Domestic-led emerging power currency"
+    }
+  },
+  "power_indicators": [
+    "GDP_CURRENT_USD",
+    "GDP_PER_CAPITA",
+    "GDP_GROWTH",
+    "MILITARY_EXPENDITURE_USD",
+    "MILITARY_EXPENDITURE_GDP",
+    "EXPORTS_GDP",
+    "IMPORTS_GDP",
+    "CURRENT_ACCOUNT_GDP",
+    "RND_EXPENDITURE_GDP",
+    "LABOUR_PRODUCTIVITY_PER_HOUR",
+    "GOVERNMENT_DEBT_GDP",
+    "POPULATION",
+    "REER_INDEX",
+    "RULE_OF_LAW_WGI_SCORE",
+    "TERTIARY_ATTAINMENT_25_34"
+  ],
+  "limitations": [
+    "Retrospective history uses latest available vintages, not only information published at each historical date.",
+    "Composite and stage labels are experimental and coverage-gated.",
+    "Tracked-universe shares are not global shares.",
+    "Military expenditure measures resources, not complete capability.",
+    "Missing observations remain missing and are never interpolated."
+  ]
+}

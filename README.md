@@ -101,10 +101,12 @@ Update.bat -Full              :: daily update + reference universes + optional W
 Update.bat -MacroOnly         :: economic providers only
 Update.bat -MarketsOnly       :: financial markets/currencies only
 Update.bat -ReferencesOnly    :: reference distributions only
+Update.bat -Historical        :: macro + reference history without market updates
 Update.bat -RecalculateOnly   :: recalculate without downloading provider data
 Update.bat -Status            :: DB totals, refresh state, lock and schedules
 Update.bat -DryRun            :: print the plan without changing data
 Update.bat -Help              :: command reference
+Export-Research.bat -FromYear 1980 :: regenerate the ChatGPT research package
 ```
 
 Optional filters: `-Source world_bank|bis|oecd|imf_weo|wid`, `-Country USA`,

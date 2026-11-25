@@ -1,0 +1,220 @@
+model,country,period,to_stage,reason
+model_a_equal,CHE,1995-Q4,RISE,initial
+model_a_equal,CHE,1997-Q4,PEAK,persisted 2 periods
+model_a_equal,CHE,2000-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,CHE,2002-Q4,PEAK,persisted 2 periods
+model_a_equal,CHE,2005-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,CHE,2009-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,CHE,2013-Q4,PEAK,persisted 2 periods
+model_a_equal,CHE,2015-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,CHE,2023-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,CHN,1996-Q4,RISE,initial
+model_a_equal,CHN,2001-Q4,DECLINE,persisted 2 periods
+model_a_equal,CHN,2009-Q4,RISE,persisted 2 periods
+model_a_equal,CHN,2011-Q4,DECLINE,persisted 2 periods
+model_a_equal,CHN,2015-Q4,RISE,persisted 2 periods
+model_a_equal,CHN,2024-Q4,LATE_PEAK,persisted 2 periods
+model_a_equal,DEU,1995-Q4,RISE,initial
+model_a_equal,DEU,1997-Q4,PEAK,persisted 2 periods
+model_a_equal,DEU,2004-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,DEU,2006-Q4,PEAK,persisted 2 periods
+model_a_equal,DEU,2010-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,DEU,2012-Q4,PEAK,persisted 2 periods
+model_a_equal,DEU,2014-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,DEU,2021-Q4,PEAK,persisted 2 periods
+model_a_equal,DEU,2024-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,FRA,1995-Q4,RISE,initial
+model_a_equal,FRA,1997-Q4,PEAK,persisted 2 periods
+model_a_equal,FRA,2003-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,FRA,2011-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,FRA,2013-Q4,PEAK,persisted 2 periods
+model_a_equal,FRA,2016-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,FRA,2019-Q4,PEAK,persisted 2 periods
+model_a_equal,FRA,2023-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,FRA,2025-Q4,DECLINE,persisted 2 periods
+model_a_equal,GBR,1996-Q4,PEAK,initial
+model_a_equal,GBR,2007-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,GBR,2010-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,GBR,2014-Q4,PEAK,persisted 2 periods
+model_a_equal,GBR,2016-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,GBR,2019-Q4,PEAK,persisted 2 periods
+model_a_equal,GBR,2024-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,IND,1996-Q4,RISE,initial
+model_a_equal,IND,2003-Q4,DECLINE,persisted 2 periods
+model_a_equal,IND,2005-Q4,LATE_PEAK,persisted 2 periods
+model_a_equal,IND,2007-Q4,RISE,persisted 2 periods
+model_a_equal,IND,2010-Q4,DECLINE,persisted 2 periods
+model_a_equal,IND,2019-Q4,EARLY_RISE,persisted 2 periods
+model_a_equal,IND,2023-Q4,LATE_PEAK,persisted 2 periods
+model_a_equal,JPN,1996-Q4,PEAK,initial
+model_a_equal,JPN,2005-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,JPN,2007-Q4,PEAK,persisted 2 periods
+model_a_equal,JPN,2012-Q4,LATE_RISE,persisted 2 periods
+model_a_equal,JPN,2021-Q4,PEAK,persisted 2 periods
+model_a_equal,USA,1995-Q4,RISE,initial
+model_a_equal,USA,1997-Q4,PEAK,persisted 2 periods
+model_a_equal,USA,2004-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,USA,2008-Q4,PEAK,persisted 2 periods
+model_a_equal,USA,2020-Q4,EARLY_DECLINE,persisted 2 periods
+model_a_equal,USA,2024-Q4,PEAK,persisted 2 periods
+model_b_domain,CHE,1995-Q4,RISE,initial
+model_b_domain,CHE,1997-Q4,PEAK,persisted 2 periods
+model_b_domain,CHE,2000-Q4,LATE_RISE,persisted 2 periods
+model_b_domain,CHE,2002-Q4,PEAK,persisted 2 periods
+model_b_domain,CHE,2005-Q4,EARLY_DECLINE,persisted 2 periods
+model_b_domain,CHE,2009-Q4,LATE_RISE,persisted 2 periods
+model_b_domain,CHE,2013-Q4,PEAK,persisted 2 periods
+model_b_domain,CHE,2019-Q4,LATE_RISE,persisted 2 periods
+model_b_domain,CHE,2023-Q4,PEAK,persisted 2 periods
+model_b_domain,CHE,2025-Q4,EARLY_DECLINE,persisted 2 periods
+model_b_domain,CHN,1996-Q4,PEAK,initial
+model_b_domain,CHN,2001-Q4,EARLY_DECLINE,persisted 2 periods
+model_b_domain,CHN,2006-Q4,DECLINE,persisted 2 periods
+model_b_domain,CHN,2016-Q4,RISE,persisted 2 periods
+model_b_domain,CHN,2023-Q4,DECLINE,persisted 2 periods
+model_b_domain,DEU,1995-Q4,RISE,initial
+model_b_domain,DEU,2003-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,DEU,2010-Q4,DECLINE,persisted 2 periods
+model_b_domain,DEU,2013-Q4,RISE,persisted 2 periods
+model_b_domain,DEU,2017-Q4,LATE_RISE,persisted 2 periods
+model_b_domain,DEU,2023-Q4,PEAK,persisted 2 periods
+model_b_domain,DEU,2025-Q4,DECLINE,persisted 2 periods
+model_b_domain,FRA,1995-Q4,RISE,initial
+model_b_domain,FRA,2003-Q4,LATE_RISE,persisted 2 periods
+model_b_domain,FRA,2007-Q4,PEAK,persisted 2 periods
+model_b_domain,FRA,2011-Q4,DECLINE,persisted 2 periods
+model_b_domain,FRA,2020-Q4,RISE,persisted 2 periods
+model_b_domain,FRA,2022-Q4,DECLINE,persisted 2 periods
+model_b_domain,GBR,1996-Q4,PEAK,initial
+model_b_domain,GBR,1998-Q4,RISE,persisted 2 periods
+model_b_domain,GBR,2005-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,GBR,2007-Q4,LATE_RISE,persisted 2 periods
+model_b_domain,GBR,2012-Q4,DECLINE,persisted 2 periods
+model_b_domain,GBR,2014-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,GBR,2019-Q4,RISE,persisted 2 periods
+model_b_domain,GBR,2021-Q4,PEAK,persisted 2 periods
+model_b_domain,GBR,2025-Q4,DECLINE,persisted 2 periods
+model_b_domain,IND,1996-Q4,RISE,initial
+model_b_domain,IND,2003-Q4,DECLINE,persisted 2 periods
+model_b_domain,IND,2012-Q4,RESET,persisted 2 periods
+model_b_domain,IND,2016-Q4,DECLINE,persisted 2 periods
+model_b_domain,IND,2018-Q4,EARLY_RISE,persisted 2 periods
+model_b_domain,IND,2023-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,JPN,1996-Q4,RISE,initial
+model_b_domain,JPN,2002-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,JPN,2008-Q4,DECLINE,persisted 2 periods
+model_b_domain,JPN,2012-Q4,RISE,persisted 2 periods
+model_b_domain,JPN,2021-Q4,DECLINE,persisted 2 periods
+model_b_domain,JPN,2023-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,JPN,2025-Q4,RISE,persisted 2 periods
+model_b_domain,USA,1995-Q4,RISE,initial
+model_b_domain,USA,2004-Q4,DECLINE,persisted 2 periods
+model_b_domain,USA,2010-Q4,RISE,persisted 2 periods
+model_b_domain,USA,2014-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,USA,2016-Q4,RISE,persisted 2 periods
+model_b_domain,USA,2020-Q4,LATE_PEAK,persisted 2 periods
+model_b_domain,USA,2024-Q4,RISE,persisted 2 periods
+model_c_overlap,CHE,1995-Q4,RISE,initial
+model_c_overlap,CHE,1997-Q4,PEAK,persisted 2 periods
+model_c_overlap,CHE,2000-Q4,LATE_RISE,persisted 2 periods
+model_c_overlap,CHE,2002-Q4,PEAK,persisted 2 periods
+model_c_overlap,CHE,2005-Q4,EARLY_DECLINE,persisted 2 periods
+model_c_overlap,CHE,2009-Q4,LATE_RISE,persisted 2 periods
+model_c_overlap,CHE,2013-Q4,PEAK,persisted 2 periods
+model_c_overlap,CHE,2019-Q4,LATE_RISE,persisted 2 periods
+model_c_overlap,CHE,2023-Q4,PEAK,persisted 2 periods
+model_c_overlap,CHE,2025-Q4,EARLY_DECLINE,persisted 2 periods
+model_c_overlap,CHN,1996-Q4,PEAK,initial
+model_c_overlap,CHN,2001-Q4,EARLY_DECLINE,persisted 2 periods
+model_c_overlap,CHN,2006-Q4,DECLINE,persisted 2 periods
+model_c_overlap,CHN,2016-Q4,RISE,persisted 2 periods
+model_c_overlap,CHN,2023-Q4,DECLINE,persisted 2 periods
+model_c_overlap,DEU,1995-Q4,RISE,initial
+model_c_overlap,DEU,2003-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,DEU,2010-Q4,DECLINE,persisted 2 periods
+model_c_overlap,DEU,2013-Q4,RISE,persisted 2 periods
+model_c_overlap,DEU,2017-Q4,LATE_RISE,persisted 2 periods
+model_c_overlap,DEU,2023-Q4,PEAK,persisted 2 periods
+model_c_overlap,DEU,2025-Q4,DECLINE,persisted 2 periods
+model_c_overlap,FRA,1995-Q4,RISE,initial
+model_c_overlap,FRA,2003-Q4,LATE_RISE,persisted 2 periods
+model_c_overlap,FRA,2007-Q4,PEAK,persisted 2 periods
+model_c_overlap,FRA,2011-Q4,DECLINE,persisted 2 periods
+model_c_overlap,FRA,2020-Q4,RISE,persisted 2 periods
+model_c_overlap,FRA,2022-Q4,DECLINE,persisted 2 periods
+model_c_overlap,GBR,1996-Q4,PEAK,initial
+model_c_overlap,GBR,1998-Q4,RISE,persisted 2 periods
+model_c_overlap,GBR,2005-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,GBR,2007-Q4,LATE_RISE,persisted 2 periods
+model_c_overlap,GBR,2012-Q4,DECLINE,persisted 2 periods
+model_c_overlap,GBR,2014-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,GBR,2019-Q4,RISE,persisted 2 periods
+model_c_overlap,GBR,2021-Q4,PEAK,persisted 2 periods
+model_c_overlap,GBR,2025-Q4,DECLINE,persisted 2 periods
+model_c_overlap,IND,1996-Q4,RISE,initial
+model_c_overlap,IND,2003-Q4,DECLINE,persisted 2 periods
+model_c_overlap,IND,2012-Q4,RESET,persisted 2 periods
+model_c_overlap,IND,2016-Q4,DECLINE,persisted 2 periods
+model_c_overlap,IND,2018-Q4,EARLY_RISE,persisted 2 periods
+model_c_overlap,IND,2023-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,JPN,1996-Q4,RISE,initial
+model_c_overlap,JPN,2002-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,JPN,2008-Q4,DECLINE,persisted 2 periods
+model_c_overlap,JPN,2012-Q4,RISE,persisted 2 periods
+model_c_overlap,JPN,2021-Q4,DECLINE,persisted 2 periods
+model_c_overlap,JPN,2023-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,JPN,2025-Q4,RISE,persisted 2 periods
+model_c_overlap,USA,1995-Q4,RISE,initial
+model_c_overlap,USA,2004-Q4,DECLINE,persisted 2 periods
+model_c_overlap,USA,2010-Q4,RISE,persisted 2 periods
+model_c_overlap,USA,2014-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,USA,2016-Q4,RISE,persisted 2 periods
+model_c_overlap,USA,2020-Q4,LATE_PEAK,persisted 2 periods
+model_c_overlap,USA,2024-Q4,RISE,persisted 2 periods
+model_d_comparable,CHE,1996-Q4,PEAK,initial
+model_d_comparable,CHE,2005-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,CHE,2010-Q4,PEAK,persisted 2 periods
+model_d_comparable,CHE,2022-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,CHN,1996-Q4,RISE,initial
+model_d_comparable,CHN,2001-Q4,DECLINE,persisted 2 periods
+model_d_comparable,CHN,2009-Q4,RISE,persisted 2 periods
+model_d_comparable,CHN,2013-Q4,DECLINE,persisted 2 periods
+model_d_comparable,CHN,2015-Q4,RISE,persisted 2 periods
+model_d_comparable,CHN,2024-Q4,LATE_PEAK,persisted 2 periods
+model_d_comparable,DEU,1996-Q4,PEAK,initial
+model_d_comparable,DEU,2004-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,DEU,2006-Q4,PEAK,persisted 2 periods
+model_d_comparable,DEU,2008-Q4,LATE_RISE,persisted 2 periods
+model_d_comparable,DEU,2012-Q4,PEAK,persisted 2 periods
+model_d_comparable,DEU,2015-Q4,LATE_RISE,persisted 2 periods
+model_d_comparable,DEU,2021-Q4,PEAK,persisted 2 periods
+model_d_comparable,DEU,2023-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,FRA,1996-Q4,PEAK,initial
+model_d_comparable,FRA,2008-Q4,LATE_RISE,persisted 2 periods
+model_d_comparable,FRA,2014-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,FRA,2019-Q4,PEAK,persisted 2 periods
+model_d_comparable,FRA,2025-Q4,DECLINE,persisted 2 periods
+model_d_comparable,GBR,1996-Q4,PEAK,initial
+model_d_comparable,GBR,2003-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,GBR,2007-Q4,PEAK,persisted 2 periods
+model_d_comparable,GBR,2010-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,GBR,2014-Q4,PEAK,persisted 2 periods
+model_d_comparable,GBR,2016-Q4,LATE_RISE,persisted 2 periods
+model_d_comparable,GBR,2019-Q4,PEAK,persisted 2 periods
+model_d_comparable,GBR,2022-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,IND,1996-Q4,RISE,initial
+model_d_comparable,IND,2003-Q4,DECLINE,persisted 2 periods
+model_d_comparable,IND,2005-Q4,LATE_PEAK,persisted 2 periods
+model_d_comparable,IND,2007-Q4,RISE,persisted 2 periods
+model_d_comparable,IND,2010-Q4,DECLINE,persisted 2 periods
+model_d_comparable,IND,2017-Q4,RISE,persisted 2 periods
+model_d_comparable,JPN,1996-Q4,PEAK,initial
+model_d_comparable,JPN,2002-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,JPN,2007-Q4,PEAK,persisted 2 periods
+model_d_comparable,JPN,2015-Q4,LATE_RISE,persisted 2 periods
+model_d_comparable,USA,1996-Q4,PEAK,initial
+model_d_comparable,USA,2004-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,USA,2009-Q4,PEAK,persisted 2 periods
+model_d_comparable,USA,2011-Q4,EARLY_DECLINE,persisted 2 periods
+model_d_comparable,USA,2015-Q4,PEAK,persisted 2 periods
+model_d_comparable,USA,2019-Q4,EARLY_DECLINE,persisted 2 periods

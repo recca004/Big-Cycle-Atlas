@@ -1,0 +1,136 @@
+country,indicator,finding,detail
+CHE,BROADBAND_PER_100,starts_after_1980,earliest=2000
+CHE,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+CHE,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+CHE,FDI_NET_INFLOWS_GDP,starts_after_1980,earliest=1983
+CHE,GINI_INDEX,starts_after_1980,earliest=1982
+CHE,GINI_INDEX,large_period_gaps,19 missing periods
+CHE,GOVERNMENT_DEBT_GDP,starts_after_1980,earliest=1990
+CHE,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+CHE,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+CHE,LABOUR_PRODUCTIVITY_PER_HOUR,starts_after_1980,earliest=1991
+CHE,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+CHE,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+CHE,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+CHE,RND_EXPENDITURE_GDP,large_period_gaps,18 missing periods
+CHE,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+CHE,SECONDARY_ENROLLMENT,starts_after_1980,earliest=2000
+CHE,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=1989
+CHE,TERTIARY_ENROLLMENT,starts_after_1980,earliest=2000
+CHE,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+CHE,UNIT_LABOUR_COST_GROWTH,starts_after_1980,earliest=1996
+CHN,BROADBAND_PER_100,starts_after_1980,earliest=2000
+CHN,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+CHN,CREDIT_TO_GDP_GAP,starts_after_1980,earliest=1995
+CHN,CURRENT_ACCOUNT_GDP,starts_after_1980,earliest=1982
+CHN,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+CHN,GINI_INDEX,starts_after_1980,earliest=1981
+CHN,GINI_INDEX,large_period_gaps,19 missing periods
+CHN,GOVERNMENT_DEBT_GDP,starts_after_1980,earliest=1995
+CHN,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+CHN,INFLATION_CPI,starts_after_1980,earliest=1987
+CHN,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+CHN,MILITARY_EXPENDITURE_GDP,starts_after_1980,earliest=1989
+CHN,MILITARY_EXPENDITURE_USD,starts_after_1980,earliest=1989
+CHN,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+CHN,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+CHN,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+CHN,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+CHN,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=2010
+CHN,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+CHN,WEALTH_SHARE_TOP_10,large_period_gaps,147 missing periods
+DEU,BROADBAND_PER_100,starts_after_1980,earliest=2000
+DEU,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+DEU,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+DEU,GINI_INDEX,starts_after_1980,earliest=1991
+DEU,GOVERNMENT_DEBT_GDP,starts_after_1980,earliest=1991
+DEU,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+DEU,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+DEU,LABOUR_PRODUCTIVITY_PER_HOUR,starts_after_1980,earliest=1991
+DEU,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+DEU,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+DEU,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+DEU,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+DEU,SECONDARY_ENROLLMENT,starts_after_1980,earliest=2001
+DEU,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=1989
+DEU,TERTIARY_ENROLLMENT,starts_after_1980,earliest=2013
+DEU,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+DEU,UNIT_LABOUR_COST_GROWTH,starts_after_1980,earliest=1992
+DEU,WEALTH_SHARE_TOP_10,large_period_gaps,129 missing periods
+FRA,BROADBAND_PER_100,starts_after_1980,earliest=1998
+FRA,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+FRA,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+FRA,GINI_INDEX,large_period_gaps,21 missing periods
+FRA,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+FRA,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+FRA,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+FRA,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+FRA,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+FRA,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+FRA,SECONDARY_ENROLLMENT,starts_after_1980,earliest=2001
+FRA,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=1981
+FRA,TERTIARY_ENROLLMENT,starts_after_1980,earliest=2001
+FRA,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+FRA,WEALTH_SHARE_TOP_10,large_period_gaps,90 missing periods
+GBR,BROADBAND_PER_100,starts_after_1980,earliest=2000
+GBR,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+GBR,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+GBR,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+GBR,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+GBR,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+GBR,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+GBR,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+GBR,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+GBR,SECONDARY_ENROLLMENT,starts_after_1980,earliest=2000
+GBR,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=1997
+GBR,TERTIARY_ENROLLMENT,starts_after_1980,earliest=2000
+GBR,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+GBR,UNIT_LABOUR_COST_GROWTH,starts_after_1980,earliest=1993
+GBR,WEALTH_SHARE_TOP_10,large_period_gaps,80 missing periods
+IND,BROADBAND_PER_100,starts_after_1980,earliest=2001
+IND,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+IND,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+IND,GINI_INDEX,large_period_gaps,38 missing periods
+IND,GOVERNMENT_DEBT_GDP,starts_after_1980,earliest=1991
+IND,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+IND,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+IND,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+IND,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+IND,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+IND,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+IND,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=2011
+IND,TERTIARY_ATTAINMENT_25_34,large_period_gaps,5 missing periods
+IND,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+IND,WEALTH_SHARE_TOP_10,large_period_gaps,147 missing periods
+JPN,BROADBAND_PER_100,starts_after_1980,earliest=1998
+JPN,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+JPN,CURRENT_ACCOUNT_GDP,starts_after_1980,earliest=1996
+JPN,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+JPN,GINI_INDEX,starts_after_1980,earliest=2008
+JPN,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+JPN,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+JPN,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+JPN,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+JPN,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+JPN,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+JPN,SECONDARY_ENROLLMENT,starts_after_1980,earliest=2013
+JPN,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=1997
+JPN,TERTIARY_ENROLLMENT,starts_after_1980,earliest=2013
+JPN,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+JPN,UNIT_LABOUR_COST_GROWTH,starts_after_1980,earliest=1981
+JPN,WEALTH_SHARE_TOP_10,large_period_gaps,149 missing periods
+USA,BROADBAND_PER_100,starts_after_1980,earliest=1998
+USA,CONTROL_OF_CORRUPTION_WGI_SCORE,starts_after_1980,earliest=1996
+USA,DEBT_SERVICE_RATIO,starts_after_1980,earliest=1999
+USA,GOVERNMENT_DEBT_GDP,starts_after_1980,earliest=2001
+USA,GOVERNMENT_EFFECTIVENESS_WGI_SCORE,starts_after_1980,earliest=1996
+USA,LABOUR_FORCE_PARTICIPATION_RATE,starts_after_1980,earliest=1990
+USA,LABOUR_PRODUCTIVITY_PER_HOUR,starts_after_1980,earliest=1987
+USA,NATURAL_DISASTER_AFFECTED_PCT,starts_after_1980,earliest=2009
+USA,POLITICAL_STABILITY_WGI_SCORE,starts_after_1980,earliest=1996
+USA,RND_EXPENDITURE_GDP,starts_after_1980,earliest=1996
+USA,RULE_OF_LAW_WGI_SCORE,starts_after_1980,earliest=1996
+USA,SECONDARY_ENROLLMENT,large_period_gaps,17 missing periods
+USA,TERTIARY_ATTAINMENT_25_34,starts_after_1980,earliest=1981
+USA,UNEMPLOYMENT_RATE,starts_after_1980,earliest=1991
+USA,WEALTH_SHARE_TOP_10,large_period_gaps,88 missing periods

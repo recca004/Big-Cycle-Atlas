@@ -1,0 +1,11 @@
+provider,provider_name,status,base_url,update_frequency,rate_limit_notes,documentation_url
+world_bank,World Bank,planned,,,,
+fred,Federal Reserve Economic Data (FRED),planned,,,,
+eurostat,Eurostat,planned,,,,
+ecb,European Central Bank,planned,,,,
+snb,Swiss National Bank,planned,,,,
+un_comtrade,UN Comtrade,planned,,,,
+bis,Bank for International Settlements,testing,,,,
+oecd,OECD,testing,,,,
+imf,International Monetary Fund,planned,,,,
+wid,World Inequality Database (WID),planned,,,,

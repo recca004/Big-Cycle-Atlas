@@ -26,5 +26,15 @@ it("widget registry doc matches the live registry (drift check)", () => {
         `### \`${d.typeId}\` — ${d.displayName}\n\n${d.description}\n\n${d.configFields.map((f) => `- \`${f.key}\` (${f.type})${f.default !== undefined ? ` — default \`${JSON.stringify(f.default)}\`` : ""}`).join("\n") || "- none"}\n`,
     ),
   ];
-  writeFileSync("../../docs/WIDGET_REGISTRY.md", lines.join("\n"));
+  const generated = lines.join("\n");
+  if (process.env.REGEN === "1") {
+    writeFileSync(DOC, generated);
+    return;
+  }
+  const committed = readFileSync(DOC, "utf-8");
+  if (committed !== generated) {
+    throw new Error(
+      "docs/WIDGET_REGISTRY.md is stale — regenerate with REGEN=1",
+    );
+  }
 });

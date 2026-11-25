@@ -47,7 +47,7 @@ function build(
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     builtin: true,
-    filters: { country: null, countries: [], startYear: null, methodScope: "both" },
+    filters: { country: null, countries: [], startYear: null, endYear: null, methodScope: "both" },
   };
 }
 

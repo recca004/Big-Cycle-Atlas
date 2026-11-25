@@ -12,6 +12,7 @@ import {
   type GridBreakpoint,
 } from "@/features/workspace/types";
 import { getWidget } from "@/features/workspace/widgetRegistry";
+import { defaultInstanceConfig } from "@/features/workspace/effectiveConfig";
 import { DEFAULT_WORKSPACES } from "@/features/workspace/defaultWorkspaces";
 
 const STORAGE_KEY = "bca:workspaces:v1";
@@ -79,8 +80,8 @@ export interface WorkspaceState {
   editMode: boolean;
   /** Layout-history stacks (not persisted). Entries snapshot the affected
    *  workspace BEFORE a mutating action so undo restores exactly. */
-  _past: { workspaceId: string; snapshot: Workspace }[];
-  _future: { workspaceId: string; snapshot: Workspace }[];
+  _past: { workspaceId: string; at: number; snapshot: Workspace }[];
+  _future: { workspaceId: string; at: number; snapshot: Workspace }[];
 
   setActiveWorkspace: (id: string) => void;
   toggleEditMode: () => void;
@@ -144,7 +145,8 @@ function freshWorkspace(name: string, builtin = false): Workspace {
     updatedAt: now(),
     builtin,
     filters: {
-      country: null, countries: [], startYear: null, methodScope: "both",
+      country: null, countries: [], startYear: null, endYear: null,
+      methodScope: "both",
     },
   };
 }
@@ -172,9 +174,17 @@ export const useWorkspaceStore = create<WorkspaceState>()(
         set((s) => {
           const ws = s.workspaces.find((w) => w.id === workspaceId);
           if (!ws) return s;
+          const nowMs = Date.now();
+          const last = s._past.at(-1);
+          // One drag/resize gesture can emit several layout writes —
+          // coalesce into a single undo step (keep the earliest snapshot).
+          if (last && last.workspaceId === workspaceId &&
+              nowMs - last.at < 800) {
+            return s;
+          }
           return {
             _past: [...s._past.slice(-49),
-                    { workspaceId, snapshot: ws }],
+                    { workspaceId, at: nowMs, snapshot: ws }],
             _future: [],
           };
         }),
@@ -192,7 +202,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
                 ? { ...last.snapshot, updatedAt: now() } : w),
             _past: s._past.slice(0, -1),
             _future: [...s._future,
-                      { workspaceId: last.workspaceId, snapshot: current }],
+                      { workspaceId: last.workspaceId,
+                        at: Date.now(), snapshot: current }],
           };
         }),
 
@@ -209,7 +220,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
                 ? { ...next.snapshot, updatedAt: now() } : w),
             _future: s._future.slice(0, -1),
             _past: [...s._past,
-                    { workspaceId: next.workspaceId, snapshot: current }],
+                    { workspaceId: next.workspaceId,
+                      at: Date.now(), snapshot: current }],
           };
         }),
 
@@ -350,16 +362,13 @@ export const useWorkspaceStore = create<WorkspaceState>()(
                 id,
                 type: typeId,
                 config: {
-                  ...Object.fromEntries(
-                    def.configFields
-                      .filter((f) => f.default !== undefined)
-                      .map((f) => [f.key, f.default]),
-                  ),
+                  ...defaultInstanceConfig(def),
                   // Add-to-Workspace passes the chart's live configuration;
-                  // only keys declared by the widget's schema are kept.
+                  // only schema keys (+ inherit_ flags) are kept.
                   ...Object.fromEntries(
                     Object.entries(config ?? {}).filter(([k]) =>
-                      def.configFields.some((f) => f.key === k)),
+                      def.configFields.some((f) => f.key === k) ||
+                      k.startsWith("inherit_")),
                   ),
                 },
                 collapsed: false,

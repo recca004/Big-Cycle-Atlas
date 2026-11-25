@@ -17,6 +17,11 @@ import {
 import { getWidget } from "./widgetRegistry";
 import type { WidgetInstance } from "./types";
 import { useWorkspaceStore } from "@/stores/workspaceStore";
+import {
+  isInheritable,
+  inheritFlag,
+  resolveEffectiveConfig,
+} from "./effectiveConfig";
 
 interface FrameProps {
   workspaceId: string;
@@ -34,6 +39,9 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
   const toggleCollapsed = useWorkspaceStore((s) => s.toggleCollapsed);
   const updateWidgetConfig = useWorkspaceStore((s) => s.updateWidgetConfig);
   const moveWidgetKeyboard = useWorkspaceStore((s) => s.moveWidgetKeyboard);
+  const wsFilters = useWorkspaceStore(
+    (s) => s.workspaces.find((w) => w.id === workspaceId)?.filters,
+  );
   const toggleLocked = useWorkspaceStore((s) => s.toggleLocked);
 
   const title =
@@ -167,16 +175,38 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
         <div className="widget-config" role="group" aria-label={`${title} settings`}>
           {def.configFields.map((field) => (
             <label key={field.key} className="widget-config-field">
-              <span className="label-md text-tertiary">{field.label}</span>
+              <span className="label-md text-tertiary">
+                {field.label}
+                {isInheritable(field) &&
+                  instance.config[inheritFlag(field.key)] === true && (
+                    <em className="inherit-hint"> (inherited)</em>
+                  )}
+              </span>
               <ConfigInput
                 field={field}
                 value={instance.config[field.key]}
                 onChange={(v) =>
                   updateWidgetConfig(workspaceId, instance.id, {
                     [field.key]: v,
+                    // choosing a value turns inheritance off (override wins)
+                    [inheritFlag(field.key)]: false,
                   })
                 }
               />
+              {isInheritable(field) && (
+                <span className="inherit-toggle">
+                  <input
+                    type="checkbox"
+                    checked={instance.config[inheritFlag(field.key)] === true}
+                    onChange={(e) =>
+                      updateWidgetConfig(workspaceId, instance.id, {
+                        [inheritFlag(field.key)]: e.target.checked,
+                      })
+                    }
+                  />{" "}
+                  <span className="label-md text-tertiary">inherit</span>
+                </span>
+              )}
             </label>
           ))}
         </div>
@@ -186,14 +216,11 @@ export function WidgetFrame({ workspaceId, instance, editMode }: FrameProps) {
           {def ? (
             <def.component
               instanceId={instance.id}
-              config={{
-                ...Object.fromEntries(
-                  def.configFields
-                    .filter((f) => f.default !== undefined)
-                    .map((f) => [f.key, f.default]),
-                ),
-                ...instance.config,
-              }}
+              config={
+                wsFilters
+                  ? resolveEffectiveConfig(def, instance.config, wsFilters)
+                  : instance.config
+              }
               editMode={editMode}
             />
           ) : (

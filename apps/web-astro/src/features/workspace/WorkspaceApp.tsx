@@ -101,13 +101,14 @@ export function WorkspaceApp() {
 
   const ws = workspace;
 
-  const onLayoutChange = (_layout: Layout, all: ResponsiveLayouts<string>) => {
+  const breakpointRef = useRef<GridBreakpoint>("lg");
+  // Persist once per gesture (drag/resize stop) — writing on every
+  // onLayoutChange event spammed the undo history with noise snapshots.
+  const onGestureEnd = (layout: Layout) => {
     if (!editMode) return;
-    const stored: Partial<Record<GridBreakpoint, StoredLayoutItem[]>> = {};
-    for (const bp of ["lg", "md", "sm"] as const) {
-      if (all[bp]) stored[bp] = toStored(all[bp]);
-    }
-    setLayouts(ws.id, stored);
+    setLayouts(ws.id, {
+      [breakpointRef.current]: toStored(layout),
+    });
   };
 
   const doExport = () => {
@@ -329,6 +330,23 @@ export function WorkspaceApp() {
             ))}
           </select>
         </label>
+        <label className="body-sm">
+          To{" "}
+          <select
+            className="config-select"
+            value={ws.filters.endYear ?? ""}
+            onChange={(e) =>
+              setFilters(ws.id, {
+                endYear: e.target.value ? Number(e.target.value) : null,
+              })
+            }
+          >
+            <option value="">Latest</option>
+            {[2015, 2020, 2022, 2024].map((y) => (
+              <option key={y}>{y}</option>
+            ))}
+          </select>
+        </label>
         <span className="body-sm text-tertiary">
           Widgets inherit these filters unless overridden in their settings.
         </span>
@@ -390,7 +408,11 @@ export function WorkspaceApp() {
             }}
             resizeConfig={{ enabled: editMode }}
             compactor={verticalCompactor}
-            onLayoutChange={onLayoutChange}
+            onDragStop={onGestureEnd}
+            onResizeStop={onGestureEnd}
+            onBreakpointChange={(bp) => {
+              breakpointRef.current = bp as GridBreakpoint;
+            }}
           >
             {ws.widgets.map((instance) => (
               <div key={instance.id} className="grid-cell"

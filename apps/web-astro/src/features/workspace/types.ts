@@ -43,9 +43,11 @@ export const workspaceSchema = z.object({
     country: z.string().nullable().default(null),
     countries: z.array(z.string()).default([]),
     startYear: z.number().nullable().default(null),
+    endYear: z.number().nullable().default(null),
     methodScope: z.enum(["approved", "experimental", "both"]).default("both"),
   }).default({
-    country: null, countries: [], startYear: null, methodScope: "both",
+    country: null, countries: [], startYear: null, endYear: null,
+    methodScope: "both",
   }),
 });
 export type Workspace = z.infer<typeof workspaceSchema>;

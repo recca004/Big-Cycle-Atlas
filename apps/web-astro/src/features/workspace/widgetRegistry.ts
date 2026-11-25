@@ -29,6 +29,8 @@ export interface ConfigField {
   options?: { value: string; label: string }[];
   min?: number;
   max?: number;
+  /** If true, this field can inherit the workspace-level filter. */
+  inheritable?: boolean;
 }
 
 export interface WidgetConfig {

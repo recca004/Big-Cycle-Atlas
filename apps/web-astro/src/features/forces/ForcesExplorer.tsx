@@ -445,7 +445,7 @@ function ForceResearch({
         </label>
         <AddToWorkspace
           typeId="force-history"
-          config={{ iso3, force_code: forceCode }}
+          config={{ country: iso3, force: forceCode }}
           label="Add to Workspace"
         />
       </div>

@@ -173,5 +173,18 @@ export const DEFAULT_WORKSPACES: (() => Workspace)[] = [
       w("data-table", { country: "CHN", indicator: "", limit: 20 }, { x: 6, y: 5, w: 6, h: 6 }),
     ]),
 
+
+  () =>
+    build("Great Power Observatory", [
+      w("big-cycle-clock", {}, { x: 0, y: 0, w: 8, h: 7 }),
+      w("all-forces", { country: "USA" }, { x: 8, y: 0, w: 4, h: 7 }),
+      w("force-history", { country: "USA", force: "indebtedness" }, { x: 0, y: 7, w: 6, h: 5 }),
+      w("cycle-history", { country: "USA" }, { x: 6, y: 7, w: 6, h: 5 }),
+      w("country-ranking", { indicator: "GDP_CURRENT_USD" }, { x: 0, y: 12, w: 6, h: 5 }),
+      w("research-progress", {}, { x: 6, y: 12, w: 6, h: 5 }),
+      w("ingestion-status", {}, { x: 0, y: 17, w: 4, h: 3 }),
+      w("model-version", {}, { x: 4, y: 17, w: 4, h: 3 }),
+    ]),
+
   () => build("Empty Custom Workspace", []),
 ];

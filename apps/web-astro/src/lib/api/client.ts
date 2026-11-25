@@ -95,11 +95,21 @@ export async function fetchCountry(
 
 export function fetchCountryObservations(
   iso3: string,
-  params: { indicator?: string | undefined; limit?: number; offset?: number } = {},
+  params: {
+    indicator?: string | undefined;
+    source?: string | undefined;
+    start?: string | undefined;
+    end?: string | undefined;
+    limit?: number;
+    offset?: number;
+  } = {},
   opts?: FetchOptions,
 ): Promise<ObservationPage> {
   const query = new URLSearchParams();
   if (params.indicator) query.set("indicator", params.indicator);
+  if (params.source) query.set("source", params.source);
+  if (params.start) query.set("start", params.start);
+  if (params.end) query.set("end", params.end);
   query.set("limit", String(params.limit ?? 100));
   query.set("offset", String(params.offset ?? 0));
   return request<ObservationPage>(

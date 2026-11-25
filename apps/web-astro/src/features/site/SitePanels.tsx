@@ -7,11 +7,11 @@ import {
   useDataSources,
   useIngestionRuns,
   useHealth,
-  useIndicators,
   useForceCoverage,
 } from "@/features/widgets/hooks";
 import { formatDate } from "@/lib/format";
 import { EChart } from "@/lib/charts/EChart";
+import { AddToWorkspace } from "@/features/workspace/AddToWorkspace";
 import { indicatorLabel } from "@/features/widgets/indicatorMeta";
 import {
   FORCE_PROGRESS,
@@ -76,81 +76,6 @@ function useForceScores(iso3: string | undefined) {
     return () => c.abort();
   }, [iso3]);
   return { data, error };
-}
-
-function ForceScoreCell({ score }: { score: ForceScore | undefined }) {
-  if (!score) return <td className="num">—</td>;
-  if (score.level_score == null)
-    return (
-      <td className="num text-tertiary" title={score.reasons.join("; ")}>
-        deferred
-      </td>
-    );
-  return (
-    <td className="num" title={score.limitations.join("; ")}>
-      {score.level_score.toFixed(1)}
-    </td>
-  );
-}
-
-/* ---------- /compare ---------- */
-
-export function ComparePanel() {
-  const countriesState = useLiveCountries();
-  const countries = ready(countriesState);
-  const iso3s = countries?.map((c) => c.iso3) ?? [];
-  const [a, setA] = useState("USA");
-  const [b, setB] = useState("CHN");
-  const scoresA = useForceScores(a);
-  const scoresB = useForceScores(b);
-
-  const rows = useMemo(() => {
-    if (!scoresA.data || !scoresB.data) return [];
-    return scoresA.data.map((fa) => ({
-      fa,
-      fb: scoresB.data?.find((x) => x.force_code === fa.force_code),
-    }));
-  }, [scoresA.data, scoresB.data]);
-
-  return (
-    <div className="section-stack">
-      <div className="glass compare-controls">
-        <CountrySelect value={a} onChange={setA} iso3s={iso3s} />
-        <span className="text-tertiary">vs</span>
-        <CountrySelect value={b} onChange={setB} iso3s={iso3s} />
-      </div>
-      {!scoresA.data || !scoresB.data ? (
-        <PanelState state="Loading force scores…" />
-      ) : (
-        <div className="glass table-wrap">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Force</th>
-                <th className="num">{a}</th>
-                <th className="num">{b}</th>
-                <th className="num">Δ (A−B)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map(({ fa, fb }) => (
-                <tr key={fa.force_code}>
-                  <td>{fa.force_name}</td>
-                  <ForceScoreCell score={fa} />
-                  <ForceScoreCell score={fb} />
-                  <td className="num">
-                    {fa.level_score != null && fb?.level_score != null
-                      ? (fa.level_score - fb.level_score).toFixed(1)
-                      : "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
 }
 
 /* ---------- /forces overview ---------- */
@@ -285,87 +210,17 @@ function DomainChart({ iso3, indicator }: { iso3: string; indicator: string }) {
 
   return (
     <div className="glass chart-card">
-      <p className="label-md text-tertiary">{indicatorLabel(indicator)}</p>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <p className="label-md text-tertiary">{indicatorLabel(indicator)}</p>
+        <AddToWorkspace typeId="indicator-chart"
+                        config={{ countries: [iso3], indicator }} label="＋" />
+      </div>
       {obs === null ? (
         <p className="body-sm">Loading…</p>
       ) : option ? (
         <EChart option={option} style={{ height: 220, width: "100%" }} />
       ) : (
         <p className="body-sm text-tertiary">No observations for {indicator}.</p>
-      )}
-    </div>
-  );
-}
-
-/* ---------- /data ---------- */
-
-export function DataExplorer() {
-  const indicatorsState = useIndicators();
-  const indicators = ready(indicatorsState);
-  const countriesState = useLiveCountries();
-  const countries = ready(countriesState);
-  const iso3s = countries?.map((c) => c.iso3) ?? [];
-  const [iso3, setIso3] = useState("USA");
-  const [code, setCode] = useState<string>("");
-  const [obs, setObs] = useState<CountryObservation[] | null>(null);
-
-  useEffect(() => {
-    if (!code) return;
-    const c = new AbortController();
-    setObs(null);
-    fetchCountryObservations(iso3, { indicator: code, limit: 300 }, { signal: c.signal })
-      .then((r) => setObs(r.items))
-      .catch(() => setObs([]));
-    return () => c.abort();
-  }, [iso3, code]);
-
-  return (
-    <div className="section-stack">
-      <div className="glass compare-controls">
-        <CountrySelect value={iso3} onChange={setIso3} iso3s={iso3s} />
-        <select
-          className="config-select"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          aria-label="Select indicator"
-        >
-          <option value="">Select indicator…</option>
-          {(indicators ?? []).map((i) => (
-            <option key={i.code} value={i.code}>
-              {i.code}
-            </option>
-          ))}
-        </select>
-      </div>
-      {!code ? (
-        <PanelState state="Choose a country and indicator to inspect observations." />
-      ) : obs === null ? (
-        <PanelState state="Loading observations…" />
-      ) : obs.length === 0 ? (
-        <PanelState state="No observations for this selection." />
-      ) : (
-        <div className="glass table-wrap">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Period</th>
-                <th className="num">Value</th>
-                <th>Source</th>
-                <th>Vintage</th>
-              </tr>
-            </thead>
-            <tbody>
-              {obs.map((o) => (
-                <tr key={o.id}>
-                  <td>{formatDate(o.period_start)}</td>
-                  <td className="num">{o.value}</td>
-                  <td>{o.source_key ?? "—"}</td>
-                  <td>{o.vintage_number ?? "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       )}
     </div>
   );

@@ -14,6 +14,8 @@ if ($TargetUrl -match "bigcycleatlas_dev") {
 }
 
 Write-Host "Restoring $File -> $TargetUrl ..."
-pg_restore --clean --if-exists --no-owner --no-privileges --dbname=$TargetUrl $File
+$pgRestore = "pg_restore"
+if ($env:PG_BIN) { $pgRestore = Join-Path $env:PG_BIN "pg_restore.exe" }
+& $pgRestore --clean --if-exists --no-owner --no-privileges --dbname=$TargetUrl $File
 if ($LASTEXITCODE -ne 0) { throw "pg_restore failed ($LASTEXITCODE)" }
 Write-Host "Restore complete. Verify with scripts/ops/verify-restore.ps1 -TargetUrl <same>"

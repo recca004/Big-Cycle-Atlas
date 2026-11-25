@@ -24,6 +24,9 @@ async def client(tmp_path):
 
     await seed(data_file)
 
+    import os
+    os.environ["ALLOWED_HOSTS"] = '["*"]'
+
     from app.main import app
 
     async def override_get_session():

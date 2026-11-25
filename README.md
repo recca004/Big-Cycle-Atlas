@@ -4,15 +4,22 @@ A country-level macro cycle tracker built on a measurable Big Cycle framework.
 
 The main question the product answers: **Where are we in the Big Cycle?**
 
-For each supported country, the Atlas collects public economic and institutional
-data (World Bank, IMF WEO, BIS, OECD, FRED, WID.world and more), scores 17
-forces (0–100), places the country in a phase/stage of the long-term debt and
-internal-order cycle, and tracks changes over time. It also provides market
-regime analysis, strategy research tools, a portfolio ledger, and a composable
-workspace of chart and data widgets.
+For each supported country, the Atlas collects public economic and
+institutional data (World Bank, IMF WEO, BIS, OECD, FRED, WID.world and more)
+and measures the 17 Big Cycle forces. All 17 forces are represented through
+research modules; published numerical levels currently exist for **9 forces**,
+with **2 dimension-only forces** (component scores, no primary level) and
+**6 context profiles** (descriptive, not scores). No force is listed as
+"deferred" for lack of a score — but unavailability is always labelled, never
+substituted. It also provides market regime analysis, strategy research tools,
+a portfolio ledger, and a composable workspace of chart and data widgets.
 
-No live or simulated data is presented as real beyond its stated provenance —
-every value carries source, vintage, and retrieval metadata.
+Big Cycle classifications and any composite cycle output are **experimental
+research results** — not validated production classifications, and no
+forecast probabilities are published (every forecast horizon is gated on
+data sufficiency and currently reports unavailable rather than fabricating a
+number). No live or simulated data is presented as real beyond its stated
+provenance — every value carries source, vintage, and retrieval metadata.
 
 ## Status
 
@@ -36,11 +43,22 @@ Initial countries: United States (USA), China (CHN), Switzerland (CHE), Germany
 - Node.js 20+
 - Python 3.11+
 - [uv](https://docs.astral.sh/uv/)
-- PostgreSQL 14+ — via Docker (`docker compose -f docker-compose.dev.yml up -d`)
-  or an existing local/network instance
+- PostgreSQL 14+ — an existing local/network instance (native), or Docker
+  (`docker compose -f docker-compose.dev.yml up -d`)
 - Optional: Docker Desktop / Compose v2 for the containerised alternative
 
 ## Local setup
+
+### Recommended — native Windows launchers
+
+```bat
+Setup.bat       :: one-time: deps, .env, migrations, seed
+Start-Prod.bat  :: production mode — one process on http://localhost:8000
+Start.bat       :: development mode — API :8000 + Astro dev :3000
+```
+
+`Setup.bat` and the launchers handle everything below automatically; the
+manual steps are for non-Windows setups or troubleshooting.
 
 ### 1. Database
 
@@ -78,7 +96,7 @@ Notes:
 ```bash
 # from the repo root
 npm install
-npm run dev      # http://localhost:4321
+npm run dev      # http://localhost:3000
 ```
 
 The dev server proxies `/api` to `http://localhost:8000`. Set

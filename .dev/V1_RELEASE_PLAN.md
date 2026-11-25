@@ -1,6 +1,6 @@
 # Big Cycle Atlas — Road to v1.0
 
-Current programme state: **Mission 5 delivered** (2026-11-25). Missions 1–5 delivered; Mission 6 (QA, self-hosting, v1.0 release prep) is next. Acceptance report: .dev/MISSION5_ACCEPTANCE.md.
+Current programme state: **all six missions delivered — v1.0.0-rc.1 ready for owner review** (2026-11-25). Acceptance reports: .dev/MISSION5_ACCEPTANCE.md, .dev/MISSION6_RELEASE.md. PR #1 `feature/big-cycle-atlas-astro-v2` open/mergeable.
 
 ## The six missions
 
@@ -8,10 +8,10 @@ Current programme state: **Mission 5 delivered** (2026-11-25). Missions 1–5 de
 |---|---------|------|--------|
 | 1 | Complete the 17-force economic engine | 17/17 research modules; max defensible executable forces; momentum for productivity; uncertainty contract; dependency map | **COMPLETE** — 9 level-published + 2 dimension-only + 6 context profiles + 0 deferred (17 total); dependency map + force matrix reproducible; uncertainty endpoint + history live |
 | 2 | Big Cycle engine + Research Lab | Experimental composite engine; `/research` live; transition rules researched; experimental isolation | **COMPLETE** — registry + 4 composite models + phase/stage classifier + /research UI live, all experimental-gated; retrospective diagnostics manifest generated (4 models × 8 countries) |
-| 3 | Complete Astro + Liquid Glass app | Workspace completion (drag/resize/lock), all widgets on real data, component showcase | **MOSTLY COMPLETE** — workspace filters inherited by widgets, pointer drag/resize/lock/undo/redo Playwright-verified, Add to Workspace on key pages, Data Explorer + compare with exports, uncertainty band charts; search/settings/showcase remain (Mission 4 P2) |
-| 4 | Historical validation + forecasting | Release-date discipline, as-of queries, backtest-safety evidence, gated forecast architecture | **IN PROGRESS** — execution modes (current/retrospective/strict/assumption) threaded through alignment→normalizer→forces→composites; provider release-evidence matrix; leakage tests; validation API (execution-modes, release-evidence, availability, reference-availability, diagnostics); RL historical-validation section; forecasting scaffolding pending |
+| 3 | Complete Astro + Liquid Glass app | Workspace completion (drag/resize/lock), all widgets on real data, component showcase | **COMPLETE** — everything in the Mission 3 row plus: global search (Ctrl+K palette + /api/search), versioned local preferences + Settings page, dev-only component showcase, historical-validation workspace widget (Mission 6) |
+| 4 | Historical validation + forecasting | Release-date discipline, as-of queries, backtest-safety evidence, gated forecast architecture | **COMPLETE (with evidence gates)** — all API surfaces live + historical-validation widget; forecast surface returns gated-unavailable by design (no fabricated probabilities — an evidence limitation, not missing software) |
 | 5 | Market regime research + strategy + paper trading | Market regimes, asset-class analysis, historical strategy research, isolated paper trading, final integration | **COMPLETE** — 35-instrument market layer with real FRED data (~63k obs from 2000); as-of FX conversion; growth×inflation regime engine + history/asset-returns APIs; monthly-grid simulator with next-period + FX-gated execution; Decimal paper ledger + watchlist; /forecast readiness gates (all gated today); 5 new Astro pages, browser-verified |
-| 6 | QA, self-hosting, v1.0 release prep | Full regression, deployment docs, release checklist | Pending |
+| 6 | QA, self-hosting, v1.0 release prep | Full regression, deployment docs, release checklist | **COMPLETE** — native-first deployment (Windows launchers + Linux systemd docs), prod verified end-to-end incl. owner acceptance browser walkthrough (21/21), backup/restore drill, 798+43+44 tests green, docs+CI+PR updated. Docker demoted to optional-unverified |
 
 ## Mission 1 scope (completed)
 
@@ -42,9 +42,9 @@ Current programme state: **Mission 5 delivered** (2026-11-25). Missions 1–5 de
 
 ## Remaining (Mission 4)
 
-- [ ] Historical-validation widget(s) in workspace registry
+- [x] Historical-validation widget(s) in workspace registry — shipped Mission 6 (HistoricalValidationWidget, registry doc regenerated)
 - [x] Forecast readiness report — /api/research/forecast/readiness + /forecast page; all horizons gated on evidence (no fabricated probabilities)
-- [ ] Search, settings, component showcase (P2)
+- [x] Search, settings, component showcase (P2) — shipped Mission 6
 - [x] Browser screenshots + performance/accessibility audit — .dev/review/m5-*.png; a11y spec (single h1, labeled controls, named buttons, img alt) green on all 5 new pages; perf within existing envelope (~16MB dev vs 24MB on /cycle)
 - [x] PR #1 update + consolidated acceptance report — .dev/MISSION5_ACCEPTANCE.md
 
@@ -65,6 +65,23 @@ Current programme state: **Mission 5 delivered** (2026-11-25). Missions 1–5 de
 ## Remaining (Mission 5)
 
 - [x] collect_snapshot.py live run complete — 4 live providers swept (world_bank/bis/oecd/imf_weo); hundreds of NEW + REVISED vintages captured incl. IMF WEO re-vintage (200 revised obs); WID skipped (bulk-file provider, --wid-zip opt-in). Live run also exposed + fixed an IMF SDMX-JSON schema drift (attributes.dimensionGroup).
-- [ ] Regime/macro-signal strategies stay gated pending release-date evidence (§31)
-- [ ] Performance + accessibility audit of new pages
+- [ ] Regime/macro-signal strategies stay gated pending release-date evidence (§31) — **evidence gate, not a software task**: stays closed until provider release dates are ingested
+- [x] Performance + accessibility audit — a11y spec green on all new pages; EChart chunk tree-shaken 1096→532KB (+gzip 180KB on the wire)
 - [x] Final regression totals + PR update + §55 report — .dev/MISSION5_ACCEPTANCE.md
+
+
+## Mission 6 delivered (this session)
+
+- Native-first deployment: serve.py single-process prod (API+built frontend, gzip), Windows launchers (Setup/Start/Start-Prod/Stop/Update/Upgrade/Backup/Restore/Test/Status), Task Scheduler installer (approval-gated), Linux systemd units + DEPLOYMENT.md (unverified on Linux)
+- Global search endpoint + Ctrl+K palette; versioned prefs (theme/motion/transparency/defaults) + Settings rewrite; historical-validation widget; dev-only showcase
+- Correctness: portfolio row-lock concurrency fix; alembic migration gap closed (market/paper/watchlist); /api/indicators + /api/search bare+slashed route fix (prod 404s found in owner walkthrough)
+- Ops: backup→isolated-restore drill (14 tables identical, API against restored DB); retention policy (BCA_BACKUP_KEEP, pinned bca-keep-*.dump); GZip; TrustedHost (DNS-rebinding guard)
+- Docs: README/DEPLOYMENT/OWNER_GUIDE/SECURITY/TROUBLESHOOTING/DATA_COLLECTION/RELEASE_NOTES; CI workflow; legacy Next.js removed
+- Regression: 798 backend + 43 vitest + 44 playwright (incl. a11y) + astro check 0 — all green
+
+## Genuinely unfinished (post-v1.0 backlog)
+
+- Linux/Proxmox deployment not run on a live host; Docker path unverified (optional)
+- Regime/macro strategies gated on release-date evidence (§31 — evidence, not code)
+- ~455 pre-existing ruff findings in legacy diagnostic scripts
+- WID.world bulk-ingest remains manual opt-in

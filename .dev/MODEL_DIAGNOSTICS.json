@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T01:38:03.272937+00:00",
+  "generated_at": "2026-11-25T02:04:21.956573+00:00",
   "normalization_version": "normalization-v1.4",
   "execution_mode": "retrospective_latest_vintage",
   "retrospective": true,
@@ -34,6 +34,10 @@
           "score_mean": 74.64148466850122,
           "score_volatility": 1.5957385790233762,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -569,6 +573,10 @@
           "score_mean": 52.68414163906126,
           "score_volatility": 3.012254729693286,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -1128,6 +1136,10 @@
           "score_mean": 66.08659523085097,
           "score_volatility": 1.1601333070745445,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -1661,6 +1673,10 @@
           "score_mean": 63.132271135743274,
           "score_volatility": 1.6185417244474887,
           "stage_transitions": 8,
+          "genuine_transitions": 7,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "EARLY_DECLINE",
@@ -2207,6 +2223,10 @@
           "score_mean": 66.9012487611368,
           "score_volatility": 1.016090129639294,
           "stage_transitions": 8,
+          "genuine_transitions": 7,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -2754,6 +2774,10 @@
           "score_mean": 43.25057008282797,
           "score_volatility": 3.1336229044273796,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "EARLY_RISE",
@@ -3314,6 +3338,10 @@
           "score_mean": 64.31056056354404,
           "score_volatility": 1.9512329354884987,
           "stage_transitions": 5,
+          "genuine_transitions": 4,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -3841,6 +3869,10 @@
           "score_mean": 63.96388425787317,
           "score_volatility": 1.5901922592372522,
           "stage_transitions": 5,
+          "genuine_transitions": 4,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "PEAK"
@@ -4375,6 +4407,10 @@
           "score_mean": 67.0252612620314,
           "score_volatility": 1.6524341163596024,
           "stage_transitions": 7,
+          "genuine_transitions": 6,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -4916,6 +4952,10 @@
           "score_mean": 54.454676555637896,
           "score_volatility": 5.761980356269229,
           "stage_transitions": 4,
+          "genuine_transitions": 3,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "PEAK",
@@ -5463,6 +5503,10 @@
           "score_mean": 60.08758991873385,
           "score_volatility": 1.2511363638607158,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -5998,6 +6042,10 @@
           "score_mean": 59.47518072063729,
           "score_volatility": 2.038260683024958,
           "stage_transitions": 9,
+          "genuine_transitions": 8,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "EARLY_DECLINE",
@@ -6551,6 +6599,10 @@
           "score_mean": 60.52446777895809,
           "score_volatility": 1.0742114959282285,
           "stage_transitions": 3,
+          "genuine_transitions": 2,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "LATE_PEAK",
             "PEAK"
@@ -7067,6 +7119,10 @@
           "score_mean": 38.947057099518396,
           "score_volatility": 3.92669899064309,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "EARLY_RISE",
@@ -7628,6 +7684,10 @@
           "score_mean": 54.446812383752764,
           "score_volatility": 1.0481781435787565,
           "stage_transitions": 7,
+          "genuine_transitions": 6,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -8167,6 +8227,10 @@
           "score_mean": 56.715415294887514,
           "score_volatility": 0.8887457080225971,
           "stage_transitions": 7,
+          "genuine_transitions": 6,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -8714,6 +8778,10 @@
           "score_mean": 67.0252612620314,
           "score_volatility": 1.6524341163596015,
           "stage_transitions": 7,
+          "genuine_transitions": 6,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -9255,6 +9323,10 @@
           "score_mean": 54.454676555637896,
           "score_volatility": 5.7619803562692296,
           "stage_transitions": 4,
+          "genuine_transitions": 3,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "PEAK",
@@ -9802,6 +9874,10 @@
           "score_mean": 60.08758991873385,
           "score_volatility": 1.2511363638607156,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -10337,6 +10413,10 @@
           "score_mean": 59.47518072063729,
           "score_volatility": 2.0382606830249563,
           "stage_transitions": 9,
+          "genuine_transitions": 8,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "EARLY_DECLINE",
@@ -10890,6 +10970,10 @@
           "score_mean": 60.52446777895809,
           "score_volatility": 1.0742114959282318,
           "stage_transitions": 3,
+          "genuine_transitions": 2,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "LATE_PEAK",
             "PEAK"
@@ -11406,6 +11490,10 @@
           "score_mean": 38.947057099518396,
           "score_volatility": 3.92669899064309,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "EARLY_RISE",
@@ -11967,6 +12055,10 @@
           "score_mean": 54.446812383752764,
           "score_volatility": 1.048178143578758,
           "stage_transitions": 7,
+          "genuine_transitions": 6,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -12506,6 +12598,10 @@
           "score_mean": 56.715415294887514,
           "score_volatility": 0.8887457080225949,
           "stage_transitions": 7,
+          "genuine_transitions": 6,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -13051,6 +13147,10 @@
           "score_mean": 79.32978133086941,
           "score_volatility": 1.0696137921964308,
           "stage_transitions": 4,
+          "genuine_transitions": 3,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "PEAK"
@@ -13517,6 +13617,10 @@
           "score_mean": 53.61431664092998,
           "score_volatility": 1.4596140107357747,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -13996,6 +14100,10 @@
           "score_mean": 70.14143423349441,
           "score_volatility": 1.1721769042482681,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -14475,6 +14583,10 @@
           "score_mean": 62.99296973624163,
           "score_volatility": 1.8943768727070718,
           "stage_transitions": 5,
+          "genuine_transitions": 4,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "EARLY_DECLINE",
@@ -14949,6 +15061,10 @@
           "score_mean": 70.26742203433245,
           "score_volatility": 2.0282451786397604,
           "stage_transitions": 8,
+          "genuine_transitions": 7,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -15440,6 +15556,10 @@
           "score_mean": 45.41626744765805,
           "score_volatility": 1.4640375610482912,
           "stage_transitions": 5,
+          "genuine_transitions": 4,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "DECLINE",
             "LATE_PEAK",
@@ -15913,6 +16033,10 @@
           "score_mean": 68.97939659779684,
           "score_volatility": 2.6306394346396487,
           "stage_transitions": 4,
+          "genuine_transitions": 3,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "LATE_RISE",
@@ -16380,6 +16504,10 @@
           "score_mean": 66.50313883937224,
           "score_volatility": 3.5592912070889615,
           "stage_transitions": 6,
+          "genuine_transitions": 5,
+          "classified_periods": 26,
+          "classifiable": true,
+          "unclassified_reason": null,
           "stages_seen": [
             "EARLY_DECLINE",
             "PEAK"
@@ -18369,5 +18497,14 @@
         }
       ]
     }
+  },
+  "sample_counts": {
+    "country_period_combinations": 208,
+    "model_country_period_combinations": 832,
+    "available_composites": 832,
+    "classified_periods": 832,
+    "unclassifiable_country_series": 0,
+    "genuine_transitions": 160,
+    "initial_assignments": 32
   }
 }

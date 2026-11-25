@@ -11,8 +11,8 @@ exactly why, and what would have to change.
 | Tracked countries | 8 |
 | Annual scoring periods | ~26 (2000–2025), quarterly only for BIS series |
 | Composite samples (4 models × 8 countries) | **832 valid periods** in the 2000–2025 diagnostic window |
-| Observed stage transitions (2000–2025) | 44–50 per model across 8 countries, **but ~1/5 are initial assignments** — only ~35–42 genuine transitions per model (~4–6 per country over 26 years) |
-| Observed stage transitions (2015–2025 sub-window) | **0** — no movement in the most recent decade |
+| Observed genuine stage transitions (2000–2025) | 36–42 per model across 8 countries (~4–5 per country over 26 years; initial assignments excluded) |
+| Observed genuine stage transitions (2015–2025 sub-window) | 15–19 per model — post-2015 transitions **do exist** (see correction below) |
 | Score volatility | 0.6–2.1 points — composites move far less than stage thresholds |
 | Strict as-of samples | **0** — no provider release evidence is ingested (§21) |
 
@@ -20,10 +20,18 @@ exactly why, and what would have to change.
 
 1. **Too few positive examples.** A stage-transition classifier or
    probability model needs transition events. The 2000–2025 retrospective
-   run produces only ~35–42 genuine transitions per model (~4–6 per
-   country over 26 years), and **zero** in 2015–2025 — the experimental
-   composites are too stable (or the classifier too insensitive) to
-   produce trainable labels with any class balance.
+   run produces only 36–42 genuine transitions per model (~4–5 per
+   country over 26 years), of which 15–19 fall post-2015 — far too few
+   for trainable labels with any class balance.
+
+   **§8 correction (Mission 5):** the earlier "zero transitions in
+   2015–2025" statement was a reporting artifact, not evidence of
+   stability. A 2015–2025 annual window contains only 11 scored periods,
+   below the classifier's `min_observations=12` gate, so it returned
+   `stage=None` for the whole window — "unclassified" was misread as
+   "no transitions". The diagnostics manifest now reports
+   `classifiable`/`classified_periods`/`unclassified_reason` separately,
+   and a regression test locks the 11-vs-12 boundary.
 2. **Sample size.** 832 valid country-periods across 4 models sounds
    adequate, but with ~40 positive labels per model and heavy
    autocorrelation (a transition "event" spans adjacent periods), the
@@ -45,9 +53,11 @@ exactly why, and what would have to change.
 - A verified crisis/event chronology to define transition targets.
 - Explicit benchmark models (persistence, unconditional frequency) to
   beat before any learned model is considered.
-- Classifier sensitivity review: zero transitions over a decade may
-  indicate thresholds too wide rather than genuinely stable conditions
-  (recorded as a §28 finding, not hidden).
+- Classifier sensitivity review: ~4–5 genuine transitions per country
+  over 26 years is plausible for a long-cycle model, but the
+  level-band thresholds are unvalidated assumptions — sensitivity to
+  `peak_low`, `persist_periods`, and `min_stage_periods` should be
+  quantified before any forecast use (recorded as a §28 finding).
 
 ## Proposed API contracts (scaffolding only)
 

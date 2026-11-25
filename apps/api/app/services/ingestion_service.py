@@ -40,6 +40,20 @@ def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def _dto_checksum(dtos) -> str:
+    """Deterministic checksum of a fetched DTO batch — (period, value, unit,
+    release_date) tuples in provider order, sha256 hex."""
+    import hashlib
+
+    h = hashlib.sha256()
+    for d in dtos:
+        h.update(
+            f"{d.country_iso3}|{d.external_series_code}|{d.observation_date}"
+            f"|{d.value!r}|{d.unit}|{d.release_date}\n".encode()
+        )
+    return h.hexdigest()
+
+
 async def run_ingestion(
     session: AsyncSession,
     adapter: BaseDataSourceAdapter,
@@ -112,6 +126,12 @@ async def run_ingestion(
     run.rows_inserted = persistence.inserted
     run.rows_skipped = persistence.skipped
     run.rows_revised = persistence.revised
+    # §7 prospective evidence: checksum of the exact response payload so a
+    # later re-fetch can prove "same content seen again" vs "revised".
+    metadata = dict(run.run_metadata or {})
+    metadata["content_sha256"] = _dto_checksum(dtos)
+    metadata["dto_count"] = len(dtos)
+    run.run_metadata = metadata
     await session.flush()
 
     return IngestionOutcome(run=run, persistence=persistence, error=None)

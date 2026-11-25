@@ -188,6 +188,23 @@ def test_classifier_experimental_label():
     assert res.backtest_safe is False
 
 
+def test_classifier_window_boundary_11_vs_12_periods():
+    """§8 regression: an 11-period annual window (e.g. 2015–2025) is below
+    min_observations=12, so the classifier returns stage=None for every
+    point — "no transitions" must never be read as "stable stage"."""
+    short = classify_series("USA", _series([60.0 + i * 0.1 for i in range(11)]))
+    assert all(p.stage is None for p in short.points)
+    assert len(short.transitions) == 0
+    assert "min" in short.warnings[0]
+
+    enough = classify_series(
+        "USA", _series([60.0 + i * 0.1 for i in range(12)])
+    )
+    assert any(p.stage is not None for p in enough.points)
+    # the only transition is the initial assignment, not a genuine change
+    assert [t["reason"] for t in enough.transitions] == ["initial"]
+
+
 # --- Research API contracts -----------------------------------------------------
 
 

@@ -7,6 +7,7 @@ there is no promotion endpoint.
 from __future__ import annotations
 
 from datetime import date
+from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -292,10 +293,12 @@ async def list_execution_modes():
             {
                 "mode": ExecutionMode.STRICT_AS_OF.value,
                 "description": (
-                    "Only observations with provider release evidence "
-                    "published at/before the info cutoff are eligible; rows "
-                    "without evidence are excluded, never silently included. "
-                    "No fallback to latest-vintage."
+                    "Only observations with positive evidence the value "
+                    "existed at/before the info cutoff are eligible: "
+                    "provider release_date OR Atlas first-observed "
+                    "retrieved_at (conservative — retrieval only delays "
+                    "eligibility). Rows without evidence are excluded, "
+                    "never silently included. No fallback to latest-vintage."
                 ),
                 "requires_info_cutoff": True,
                 "backtest_safe_by_construction": False,
@@ -316,6 +319,31 @@ async def list_execution_modes():
             "data and model availability conditions satisfy strict rules — "
             "the mode alone never confers safety."
         ),
+        "evidence_types": {
+            "provider_release_date": {
+                "description": (
+                    "Publication date supplied by the provider — the only "
+                    "evidence that proves when a value first became public."
+                ),
+                "eligible_modes": ["strict_as_of"],
+            },
+            "atlas_first_observed": {
+                "description": (
+                    "retrieved_at on the stored vintage — proves Atlas had "
+                    "this exact value by that timestamp. Conservative "
+                    "strict evidence; does NOT establish provider "
+                    "publication date."
+                ),
+                "eligible_modes": ["strict_as_of"],
+            },
+            "assumed_release_lag": {
+                "description": (
+                    "Documented provider lag estimates — research "
+                    "assumptions only, never evidence."
+                ),
+                "eligible_modes": ["research_assumption"],
+            },
+        },
     }
 
 
@@ -377,6 +405,8 @@ async def country_data_availability(
                 func.min(Observation.period_start),
                 func.max(Observation.period_start),
                 func.count(Observation.release_date),
+                func.count(Observation.retrieved_at),
+                func.min(Observation.retrieved_at),
                 func.max(Observation.vintage_number),
             )
             .join(Observation, Observation.indicator_id == Indicator.id)
@@ -400,15 +430,23 @@ async def country_data_availability(
                     latest.date().isoformat() if latest else None
                 ),
                 "with_release_evidence": with_release,
+                "with_retrieval_evidence": with_retrieved,
+                "first_observed_at": (
+                    first_seen.isoformat() if first_seen else None
+                ),
                 "max_vintage": max_vintage,
-                "strict_eligible": with_release > 0,
+                # Both evidence types qualify a row for strict_as_of;
+                # retrieval evidence only ever delays eligibility.
+                "strict_eligible": (with_release + with_retrieved) > 0,
             }
-            for code, source, n, earliest, latest, with_release, max_vintage
-            in rows
+            for code, source, n, earliest, latest, with_release,
+            with_retrieved, first_seen, max_vintage in rows
         ],
         "note": (
-            "strict_eligible reflects stored provider release evidence — "
-            "ingestion timestamps are never used as publication proof."
+            "strict_eligible reflects positive evidence a value existed — "
+            "provider release_date OR Atlas first-observed retrieved_at. "
+            "Retrieval evidence is conservative: it can only delay "
+            "eligibility vs the true publication date, never accelerate it."
         ),
     }
 
@@ -563,4 +601,192 @@ async def research_progress(session: AsyncSession = Depends(get_session)):
         "counts": counts,
         "counts_sum_to_total": sum(counts.values()) == len(FORCE_DEFINITIONS),
         "forces": forces,
+    }
+
+
+# --- Forecast research (Mission 5 §10-§13) -------------------------------------
+
+_DIAGNOSTICS_PATH = (
+    Path(__file__).resolve().parents[5] / ".dev" / "MODEL_DIAGNOSTICS.json"
+)
+
+
+def _load_transition_dataset():
+    """Build the transition dataset from the retrospective diagnostics
+    manifest. Returns (transitions, scored_periods, generated_at) or None."""
+    import json
+
+    from app.research.forecast import TransitionRecord
+
+    if not _DIAGNOSTICS_PATH.exists():
+        return None
+    manifest = json.loads(_DIAGNOSTICS_PATH.read_text(encoding="utf-8"))
+    transitions: list[TransitionRecord] = []
+    scored_periods: set[str] = set()
+    for model_id, model in manifest["models"].items():
+        for iso3, c in model["countries"].items():
+            scored_periods.update(
+                p["period"] for p in c["points"] if p["score"] is not None
+            )
+            for t in c.get("transitions_detail", []):
+                if t.get("reason") == "initial" or "from" not in t:
+                    continue
+                transitions.append(TransitionRecord(
+                    country_iso3=iso3, period=t["period"],
+                    from_stage=t["from"], to_stage=t["to"],
+                    model_id=model_id,
+                ))
+    return transitions, sorted(scored_periods), manifest["generated_at"]
+
+
+async def _strict_eligible_periods(session: AsyncSession) -> int:
+    """Live count: observation rows with ANY strict evidence
+    (provider release_date or Atlas retrieved_at) — both non-null by
+    construction for retrieved_at, so this counts rows eligible under
+    at least one evidence type."""
+    from sqlalchemy import func, select
+
+    from app.models import Observation
+
+    return int((await session.execute(
+        select(func.count(Observation.id)).where(Observation.retrieved_at.isnot(None))
+    )).scalar() or 0)
+
+
+def _readiness_json(report) -> dict:
+    return {
+        "model_id": report.model_id,
+        "model_version": report.model_version,
+        "requirements_version": report.requirements_version,
+        "overall_available": report.overall_available,
+        "blockers": list(report.blockers),
+        "total_scored_periods": report.total_scored_periods,
+        "total_genuine_transitions": report.total_genuine_transitions,
+        "strict_eligible_periods": report.strict_eligible_periods,
+        "horizons": [
+            {
+                "horizon": hr.horizon.value,
+                "horizon_quarters": hr.horizon_quarters,
+                "available": hr.available,
+                "unavailable_reason": hr.unavailable_reason,
+                "eligible_samples": hr.eligible_samples,
+                "positive_transitions": hr.positive_transitions,
+                "gates": [
+                    {
+                        "gate": g.gate,
+                        "passed": g.passed,
+                        "value": g.value,
+                        "requirement": g.requirement,
+                        "note": g.note or None,
+                    }
+                    for g in hr.gates
+                ],
+            }
+            for hr in report.horizon_results
+        ],
+    }
+
+
+@router.get("/forecast/readiness")
+async def forecast_readiness(session: AsyncSession = Depends(get_session)):
+    """Explicit readiness evaluation per model and horizon (§11).
+
+    Transition data comes from the retrospective diagnostics manifest
+    (labeled with its generated_at — latest-vintage, NOT strict);
+    strict-eligible sample counts are computed live. A failed gate
+    means that horizon stays unavailable — no probability is emitted."""
+    from app.research.forecast import evaluate_readiness
+
+    dataset = _load_transition_dataset()
+    if dataset is None:
+        raise HTTPException(
+            503,
+            "MODEL_DIAGNOSTICS.json missing — run "
+            "scripts/generate_model_diagnostics.py first",
+        )
+    transitions, scored_periods, generated_at = dataset
+    strict_periods = await _strict_eligible_periods(session)
+
+    models = {}
+    for model_id, model in COMPOSITE_MODELS.items():
+        model_transitions = [
+            t for t in transitions if t.model_id == model_id
+        ]
+        report = evaluate_readiness(
+            model_id, model.version, scored_periods,
+            model_transitions, strict_periods,
+        )
+        models[model_id] = _readiness_json(report)
+
+    return {
+        "methodology_status": "experimental",
+        "dataset": {
+            "source": ".dev/MODEL_DIAGNOSTICS.json",
+            "generated_at": generated_at,
+            "execution_mode": "retrospective_latest_vintage",
+            "warning": (
+                "latest-vintage transitions — NOT release-date-safe; "
+                "usable for readiness evaluation, not backtesting"
+            ),
+        },
+        "models": models,
+        "any_available": any(
+            m["overall_available"] for m in models.values()
+        ),
+    }
+
+
+@router.get("/forecast/{iso3}")
+async def country_forecast(
+    iso3: str,
+    model: str = Query("model_a_equal"),
+    horizon: str = Query("1y"),
+    session: AsyncSession = Depends(get_session),
+):
+    """Stage-transition forecast contract (§10). Today every horizon is
+    gated: the response returns availability + reasons, NEVER a
+    probability. When gates pass in future, stage_probabilities,
+    calibration and run_manifest fields appear."""
+    from app.research.forecast import ForecastHorizon, evaluate_readiness
+
+    if model not in COMPOSITE_MODELS:
+        raise HTTPException(404, f"Unknown model {model!r}")
+    try:
+        hz = ForecastHorizon(horizon)
+    except ValueError:
+        raise HTTPException(422, f"Unknown horizon {horizon!r}") from None
+
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(404, f"Country {iso3!r} not found")
+
+    dataset = _load_transition_dataset()
+    strict_periods = await _strict_eligible_periods(session)
+    transitions, scored_periods, generated_at = (
+        dataset if dataset else ([], [], None)
+    )
+    report = evaluate_readiness(
+        model, COMPOSITE_MODELS[model].version, scored_periods,
+        [t for t in transitions if t.model_id == model], strict_periods,
+    )
+    hr = next(h for h in report.horizon_results if h.horizon is hz)
+    return {
+        "methodology_status": "experimental",
+        "country": country.iso3,
+        "model_id": model,
+        "model_version": COMPOSITE_MODELS[model].version,
+        "horizon": hz.value,
+        "forecast": {
+            "available": hr.available,
+            "unavailable_reason": hr.unavailable_reason,
+            # Probability fields intentionally absent while unavailable —
+            # a gate failure never emits a fictional probability.
+            "stage_probabilities": None,
+            "calibration": None,
+        },
+        "evidence": {
+            "eligible_samples": hr.eligible_samples,
+            "positive_transitions": hr.positive_transitions,
+            "dataset_generated_at": generated_at,
+        },
     }

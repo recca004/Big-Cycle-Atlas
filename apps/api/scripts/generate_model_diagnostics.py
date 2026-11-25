@@ -142,6 +142,13 @@ async def run(start_year: int) -> dict:
                 {f for r in records for f in r.missing}
             )
             stage_seq = [r.stage for r in records if r.stage]
+            classified_periods = sum(
+                1 for r in records if r.stage is not None
+            )
+            genuine_transitions = [
+                t for t in cycle.transitions
+                if t.get("reason") != "initial"
+            ]
             model_block["countries"][iso3] = {
                 "earliest_usable_period": next(
                     (r.period for r in records if r.score is not None), None
@@ -161,6 +168,15 @@ async def run(start_year: int) -> dict:
                     statistics.pstdev(scored) if len(scored) > 1 else None
                 ),
                 "stage_transitions": len(cycle.transitions),
+                "genuine_transitions": len(genuine_transitions),
+                "classified_periods": classified_periods,
+                # Distinguishes "no transitions" from "classifier did not
+                # run" (min_observations / coverage gate) — the §8 fix.
+                "classifiable": bool(cycle.transitions) or classified_periods > 0,
+                "unclassified_reason": (
+                    next(iter(cycle.warnings), None)
+                    if classified_periods == 0 else None
+                ),
                 "stages_seen": sorted(set(stage_seq)),
                 "transitions_detail": list(cycle.transitions),
                 "coverage_ratio_path": cycle.coverage_ratio,
@@ -217,6 +233,37 @@ async def run(start_year: int) -> dict:
             "entries": entries,
         }
         for iso3, entries in disagreement.items()
+    }
+
+    # §8: explicit sample accounting — "valid periods" means country-periods
+    # with a non-None composite score, counted per model.
+    all_country_blocks = [
+        c for m in manifest["models"].values() for c in m["countries"].values()
+    ]
+    total_periods = sum(
+        len(c["points"]) for c in all_country_blocks
+    )
+    manifest["sample_counts"] = {
+        "country_period_combinations": total_periods // max(
+            1, len(manifest["models"])
+        ),
+        "model_country_period_combinations": total_periods,
+        "available_composites": sum(
+            c["valid_periods"] for c in all_country_blocks
+        ),
+        "classified_periods": sum(
+            c["classified_periods"] for c in all_country_blocks
+        ),
+        "unclassifiable_country_series": sum(
+            1 for c in all_country_blocks if not c["classifiable"]
+        ),
+        "genuine_transitions": sum(
+            c["genuine_transitions"] for c in all_country_blocks
+        ),
+        "initial_assignments": sum(
+            c["stage_transitions"] - c["genuine_transitions"]
+            for c in all_country_blocks
+        ),
     }
     return manifest
 

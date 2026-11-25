@@ -157,9 +157,13 @@ def _release_availability_conditions(
     Returns a list whose elements are AND-ed into both the vintage subquery
     and the outer query, plus whether a DataSource join is needed.
 
-    STRICT_AS_OF: provider release evidence is mandatory — release_date IS
-    NOT NULL and <= cutoff. Rows lacking evidence are ineligible, and
-    revisions released after the cutoff never satisfy the vintage max.
+    STRICT_AS_OF: positive evidence the value existed by the cutoff is
+    mandatory — provider release_date <= cutoff (true publication date)
+    OR retrieved_at <= cutoff (Atlas itself fetched this exact vintage
+    before the cutoff — "first-observed" evidence, strictly conservative:
+    it can only delay eligibility, never accelerate it). Rows lacking
+    either evidence are ineligible, and revisions without evidence at the
+    cutoff never satisfy the vintage max.
 
     RESEARCH_ASSUMPTION: effective_period_end + assumed provider lag <=
     cutoff, where the lag is the provider's documented estimate — a
@@ -170,8 +174,10 @@ def _release_availability_conditions(
             execution.info_cutoff, time(23, 59, 59), tzinfo=timezone.utc
         )
         return [
-            Observation.release_date.isnot(None),
-            Observation.release_date <= cutoff_dt,
+            or_(
+                Observation.release_date <= cutoff_dt,
+                Observation.retrieved_at <= cutoff_dt,
+            ),
         ], False
 
     if execution.mode is ExecutionMode.RESEARCH_ASSUMPTION:

@@ -184,6 +184,56 @@ async def test_strict_never_falls_back_to_latest_vintage(client):
     assert strict is None  # strict refuses the same row
 
 
+# --- First-observed (Atlas retrieval) evidence — §7 ----------------------------
+
+
+async def test_strict_accepts_atlas_retrieval_evidence(client):
+    """No provider release_date, but Atlas retrieved this vintage on
+    2026-09-09 — a cutoff after that date has positive evidence the
+    value existed (conservative: retrieval only ever DELAYS eligibility
+    relative to the true publication date)."""
+    await _persist([_dto(2020, 82.5, release_date=None)])
+    aligned = await _align(
+        "USA", RL, ScoringPeriod(2021, 4), _strict(date(2026, 10, 1))
+    )
+    assert aligned is not None
+    assert aligned.raw_value == 82.5
+
+
+async def test_strict_rejects_cutoff_before_retrieval(client):
+    """The same row is ineligible at a cutoff before Atlas fetched it —
+    retrieval evidence can never accelerate eligibility."""
+    await _persist([_dto(2020, 82.5, release_date=None)])
+    aligned = await _align(
+        "USA", RL, ScoringPeriod(2021, 4), _strict(date(2026, 9, 1))
+    )
+    assert aligned is None
+
+
+async def test_strict_retrieval_evidence_respects_vintages(client):
+    """v1 retrieved 2026-09-09; a later revision row retrieved 2027-01-01
+    (mocked via a second persist with a future retrieved_at) must not be
+    visible at a 2026-10 cutoff, while v1 is."""
+    await _persist([_dto(2020, 80.0, release_date=None)])
+    # simulate a later re-fetch that produced a revised vintage
+    later = _dto(2020, 85.0, release_date=None)
+    later.retrieved_at = datetime(2027, 1, 1, tzinfo=timezone.utc)
+    await _persist([later])
+
+    at_2026 = await _align(
+        "USA", RL, ScoringPeriod(2021, 4), _strict(date(2026, 10, 1))
+    )
+    assert at_2026 is not None
+    assert at_2026.raw_value == 80.0
+    assert at_2026.vintage_number == 1
+
+    at_2027 = await _align(
+        "USA", RL, ScoringPeriod(2021, 4), _strict(date(2027, 2, 1))
+    )
+    assert at_2027.raw_value == 85.0
+    assert at_2027.vintage_number == 2
+
+
 # --- Normalizer propagation ----------------------------------------------------
 
 
@@ -434,14 +484,19 @@ async def test_country_availability_endpoint(client):
     assert rl["latest_period"].startswith("2020")
 
 
-async def test_availability_marks_no_evidence_ineligible(client):
+async def test_availability_reports_evidence_types(client):
+    """§7: no provider release_date but retrieved_at present — the row
+    carries retrieval evidence (strict_eligible via atlas_first_observed),
+    while with_release_evidence stays honestly 0."""
     await _persist([_dto(2020, 82.5, release_date=None)])
     r = await client.get("/api/research/countries/USA/availability")
     rl = next(
         i for i in r.json()["indicators"] if i["indicator_code"] == RL
     )
     assert rl["with_release_evidence"] == 0
-    assert rl["strict_eligible"] is False
+    assert rl["with_retrieval_evidence"] == 1
+    assert rl["first_observed_at"] is not None
+    assert rl["strict_eligible"] is True
 
 
 async def test_reference_availability_endpoint(client):

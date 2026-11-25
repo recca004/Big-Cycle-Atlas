@@ -4,134 +4,161 @@ A country-level macro cycle tracker built on a measurable Big Cycle framework.
 
 The main question the product answers: **Where are we in the Big Cycle?**
 
-For each supported country, the Atlas will collect public economic and institutional
-data, score 17 forces (0–100), determine the country's current phase and stage,
-track changes over time, and later support forecasting, market regime analysis,
-backtesting, and paper trading.
+For each supported country, the Atlas collects public economic and institutional
+data (World Bank, IMF WEO, BIS, OECD, FRED, WID.world and more), scores 17
+forces (0–100), places the country in a phase/stage of the long-term debt and
+internal-order cycle, and tracks changes over time. It also provides market
+regime analysis, strategy research tools, a portfolio ledger, and a composable
+workspace of chart and data widgets.
 
-No live or simulated data is presented as real. The project is in early development.
+No live or simulated data is presented as real beyond its stated provenance —
+every value carries source, vintage, and retrieval metadata.
 
 ## Status
 
-Milestone 5 (indicator normalization + first executable force layer) is complete;
-Sprint 6.12 done. Live dev state: 6,814 observations, 27 indicators, 22 source
-series, 10 data sources, 1,872 indicator diagnostics, 8 countries, 660 backend
-tests passing, `normalization-v0.8` / `force-aggregation-v0.3`. 5/17 forces have
-executable scores (all computed in-memory; no force-score API yet). See
-`.dev/PROJECT_STATUS.md` for details.
+v1.0.0-rc.1. Live dev state: 17,141 observations, 87,872 market observations,
+7,976 reference observations, 33 indicators, 10 data sources, 8 countries,
+967 ingestion runs. Backend: ~800 tests. Frontend: vitest + Playwright suites
+including an accessibility audit.
 
 Initial countries: United States (USA), China (CHN), Switzerland (CHE), Germany
 (DEU), France (FRA), United Kingdom (GBR), Japan (JPN), India (IND).
 
 ## Tech stack
 
-- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS v4 — an Astro
-  migration is in progress under `apps/web-astro` (see `feature/big-cycle-atlas-astro-v2`)
-- **Backend:** Python, FastAPI, SQLAlchemy 2.0 (async), psycopg 3, Pydantic
-- **Database:** PostgreSQL (any reachable instance; docker-compose provided)
-- **Tooling:** uv, npm workspaces, pytest, Ruff
+- **Frontend:** Astro + React islands, TypeScript, Tailwind CSS v4, ECharts
+- **Backend:** Python 3.11+, FastAPI, SQLAlchemy 2.0 (async), psycopg 3, Pydantic
+- **Database:** PostgreSQL 14+ (16 in Docker)
+- **Tooling:** uv, npm workspaces, pytest, Ruff, Playwright, vitest
 
 ## Requirements
 
 - Node.js 20+
 - Python 3.11+
 - [uv](https://docs.astral.sh/uv/)
-- PostgreSQL 14+ — via Docker Desktop (`docker compose up -d`) or an existing
-  local/network instance
+- PostgreSQL 14+ — via Docker (`docker compose -f docker-compose.dev.yml up -d`)
+  or an existing local/network instance
+- For the full container deployment: Docker Desktop / Docker Engine + Compose v2
 
 ## Local setup
 
 ### 1. Database
 
-Option A — Docker Compose:
+Option A — dev compose (PostgreSQL only):
 
 ```bash
-docker compose up -d
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-This starts PostgreSQL 16 on `localhost:5432` with user/password `postgres`/`postgres`
-and database `bigcycleatlas`.
-
-Option B — an existing PostgreSQL instance (what the primary dev machine uses):
-point `DATABASE_URL` in `apps/api/.env` at it. Example (host PostgreSQL 18):
-
-```
-DATABASE_URL=postgresql+psycopg://<user>:<password>@localhost:5432/<database>
-```
-
-Set it once — `.env` must not contain multiple `DATABASE_URL` lines (the last
-one silently wins).
+Option B — an existing PostgreSQL instance: point `DATABASE_URL` in
+`apps/api/.env` at it (see `apps/api/.env.example`). Set it once — `.env` must
+not contain multiple `DATABASE_URL` lines (the last one silently wins).
 
 ### 2. Backend (apps/api)
 
 ```bash
 cd apps/api
 uv sync
-# On Windows, set the DATABASE_URL in apps/api/.env first (see .env.example)
-uv run python -m app.db.seed     # creates tables + seeds the 8 countries
-uv run python run.py            # starts the API on http://localhost:8000
+uv run alembic upgrade head      # schema migrations
+uv run python -m app.db.seed     # seeds countries, indicators, sources
+uv run python run.py             # API on http://localhost:8000
 ```
 
 Notes:
 
 - On Windows, always start the server with `uv run python run.py` (not
-  `uvicorn app.main:app` directly). The entrypoint sets the selector event loop
-  that psycopg requires; uvicorn would otherwise default to the Proactor loop.
+  `uvicorn app.main:app` directly): the entrypoint sets the selector event
+  loop that psycopg requires.
 - `GET /health` reports API status and database connectivity.
-- `GET /api/countries` returns the database-backed country list.
+- Data ingestion is a separate step — see `apps/api/scripts/` (e.g.
+  `collect_snapshot.py`, `ingest_markets.py`).
 
-### 3. Frontend (apps/web)
+### 3. Frontend (apps/web-astro)
 
 ```bash
 # from the repo root
 npm install
-npm run dev
+npm run dev      # http://localhost:4321
 ```
 
-Opens on http://localhost:3000.
+The dev server proxies `/api` to `http://localhost:8000`. Set
+`PUBLIC_API_URL` if the API lives elsewhere.
 
-- `/` — global dashboard with tracked-country cards
-- `/countries` — country list with data coverage, fetched live from the API
-- `/country/{iso3}` — per-country data: economic, trade, governance, inequality,
-  military, debt & credit, and productivity sections
-- `/country/{iso3}/forces` — 17-force coverage statuses (scores not yet exposed)
-
-Set `NEXT_PUBLIC_API_URL` in `apps/web/.env.local` if the API is not on
-http://localhost:8000 (see `.env.example`).
+Key surfaces: global dashboard, per-country pages (data + forces), markets,
+strategies, research lab, portfolio, and a composable workspace. Press
+**Ctrl/Cmd+K** anywhere for global search. Preferences (theme, transparency,
+motion, default country/currency) live under Settings and persist versioned
+in localStorage.
 
 ### 4. Tests
 
 ```bash
-# backend
-cd apps/api
-uv run pytest
-
-# frontend typecheck + production build
-cd ../..
-npm run build
+cd apps/api && uv run pytest          # backend suite
+npm run test                           # frontend vitest
+npm run test:e2e                       # Playwright (needs dev servers)
+npm run check                          # astro check (0 errors)
+npm run build                          # production build
 ```
+
+## Production deployment (Docker Compose)
+
+```bash
+cp .env.example .env          # set POSTGRES_PASSWORD
+docker compose up -d --build  # web on http://localhost:8080
+```
+
+- Single exposed port (`WEB_PORT`, default 8080), bound to loopback by
+  default. For LAN exposure set `BIND_ADDR=0.0.0.0` and put your own
+  authenticated reverse proxy in front — the app has no built-in auth.
+- The API container runs `alembic upgrade head` + idempotent seed on start.
+- Scheduled collection: `docker compose --profile scheduled up -d` adds a
+  collector that runs a daily macro snapshot (06:00 Europe/Zurich) and an
+  incremental market update.
+
+## Backup & restore
+
+```powershell
+scripts\ops\backup.ps1            # pg_dump -Fc into .\backups\
+scripts\ops\restore.ps1 <file>    # restore (refuses to run against dev DB)
+scripts\ops\verify-restore.ps1    # restore into scratch DB + count check
+```
+
+`pg_dump` must be on PATH or `PG_BIN` set (e.g.
+`C:\Program Files\PostgreSQL\18\bin`). Backups are gitignored.
 
 ## Repository layout
 
 ```
 apps/
-  web/        Next.js frontend
-  api/        FastAPI backend
+  web-astro/  Astro + React frontend (the shipped UI)
+  api/        FastAPI backend, ingestion scripts, alembic migrations
 packages/
   shared/     Shared TypeScript types + canonical country data
-scripts/      Ingest / calculate / maintenance scripts (later)
+scripts/
+  ingest/     Data ingestion entry points
+  ops/        Backup / restore / dev / setup scripts (ps1 + sh)
 data/         Fixtures and mappings
 docs/         Architecture, methodology, data model, API docs
 .dev/         Development handoff system (not part of the product)
 ```
 
+## Security & limitations
+
+- No authentication or multi-user support — designed for local or
+  single-operator deployment. Do not expose the API publicly.
+- No built-in rate limiting beyond source-API politeness.
+- Docker deployment files are provided and statically reviewed; verify
+  `docker compose up -d --build` on your own host before relying on it.
+- WID.world data requires a manually downloaded bulk ZIP (opt-in).
+
 ## Development handoff system
 
 The `.dev/` folder tracks project state between development sessions:
 `HANDOFF.md`, `PROJECT_STATUS.md`, `DEVLOG.md`, `DECISIONS.md`, `ISSUES.md`,
-`BACKLOG.md`, `DATA_SOURCES.md`. Read `HANDOFF.md` first when resuming work.
-It is committed to Git but is not part of the shipped product.
+`BACKLOG.md`, `DATA_SOURCES.md`, plus per-mission acceptance reports. Read
+`HANDOFF.md` first when resuming work. Committed to Git, not part of the
+shipped product.
 
 ## License
 
-All rights reserved.
+Proprietary / private project.

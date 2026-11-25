@@ -1,6 +1,6 @@
 # Widget Registry
 
-Generated from `src/features/widgets/index.ts` — 53 registered widget types.
+Generated from `src/features/widgets/index.ts` — 54 registered widget types.
 
 | ID | Name | Category | Default | Min | Data requirement |
 |---|---|---|---|---|---|
@@ -57,6 +57,7 @@ Generated from `src/features/widgets/index.ts` — 53 registered widget types.
 | `research-progress` | Research completion | research | 5×5 | 4×3 | static metadata synced with force_aggregation_definitions.py |
 | `cycle-history` | Big Cycle history (experimental) | research | 8×4 | 5×3 | GET /api/research/countries/{iso3}/cycle/history |
 | `force-history` | Force history | research | 6×4 | 4×3 | GET /api/countries/{iso3}/forces/{force}/history |
+| `historical-validation` | Historical validation | research | 5×4 | 4×3 | GET /api/research/countries/{iso3}/availability + /api/research/execution-modes |
 
 ## Config fields per widget
 
@@ -460,4 +461,11 @@ Historical force level / relative / momentum dimensions — retrospective latest
 - `country` (country) — default `"USA"`
 - `force` (force) — default `"rule_of_law"`
 - `startYear` (number) — default `1996`
+- `title` (text)
+
+### `historical-validation` — Historical validation
+
+Availability evidence per country: strict eligibility, provider publication and atlas retrieval evidence, missing evidence, latest period.
+
+- `country` (country) — default `"USA"`
 - `title` (text)

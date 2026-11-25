@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        working-directory: apps/api
+        run: uv sync --frozen
+      - name: Test
+        working-directory: apps/api
+        run: uv run pytest tests -x -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Typecheck
+        working-directory: apps/web-astro
+        run: npx astro check
+      - name: Unit tests
+        working-directory: apps/web-astro
+        run: npm run test -- --run
+      - name: Production build
+        working-directory: apps/web-astro
+        run: npm run build

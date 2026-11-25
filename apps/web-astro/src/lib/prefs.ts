@@ -20,7 +20,7 @@ export const DEFAULT_PREFS: Prefs = {
   theme: "system",
   reducedMotion: false,
   reducedTransparency: false,
-  defaultCountry: "CHE",
+  defaultCountry: "USA",
   defaultDateRange: "25y",
   defaultWorkspace: null,
   portfolioCurrency: "CHF",

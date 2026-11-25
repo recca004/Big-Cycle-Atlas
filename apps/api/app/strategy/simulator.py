@@ -163,15 +163,21 @@ async def simulate(
         return conv["value"] if conv["value"] is not None else None
 
     async def exec_price_base(s: _Series, after: date) -> tuple[date, float] | None:
-        """Next stored price strictly after `after`, converted to base."""
-        hit = s.first_price_after(after)
-        if hit is None:
-            return None
-        d, p = hit
-        if s.currency == base_ccy:
-            return d, p
-        conv = await fx_service.convert(session, p, s.currency, base_ccy, d)
-        return (d, conv["value"]) if conv["value"] is not None else None
+        """First jointly executable point after `after`: stored price plus
+        an FX conversion available as of that same date. Skipping forward
+        keeps the no-lookahead rule — a trade never uses an FX rate from
+        after its own price date."""
+        for d, p in s.points:
+            if d <= after:
+                continue
+            if s.currency == base_ccy:
+                return d, p
+            conv = await fx_service.convert(
+                session, p, s.currency, base_ccy, d
+            )
+            if conv["value"] is not None:
+                return d, conv["value"]
+        return None
 
     async def value_positions(
         positions: dict[str, float], d: date, missing: set[str]
@@ -335,17 +341,21 @@ async def simulate(
 def _stats(values: list[float], periods_per_year: int) -> dict:
     if len(values) < 2:
         return {"cumulative_return": None}
-    cum = values[-1] / values[0] - 1.0
+    base = next((v for v in values if v > 0), None)
+    if base is None:
+        return {"cumulative_return": None}
+    cum = values[-1] / base - 1.0
     years = len(values) / periods_per_year
     rets = [b / a - 1 for a, b in zip(values, values[1:]) if a]
-    peak, mdd = values[0], 0.0
+    peak, mdd = base, 0.0
     for v in values:
         peak = max(peak, v)
-        mdd = min(mdd, v / peak - 1.0)
+        if peak > 0:
+            mdd = min(mdd, v / peak - 1.0)
     return {
         "cumulative_return": cum,
-        "annualised_return": (values[-1] / values[0]) ** (1 / years) - 1
-        if years > 0 and values[0] > 0 and values[-1] > 0 else None,
+        "annualised_return": (values[-1] / base) ** (1 / years) - 1
+        if years > 0 and values[-1] > 0 else None,
         "volatility": (
             statistics.pstdev(rets) * math.sqrt(periods_per_year)
             if len(rets) > 1 else None

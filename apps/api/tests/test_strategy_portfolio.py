@@ -106,6 +106,32 @@ async def test_next_period_execution_rule(client):
     assert all(t["date"] == "2025-01-31" for t in rebal_trades)
 
 
+async def test_fx_gated_execution_slips_forward(client):
+    """Entry requires a price AND an FX rate both available as of the
+    execution date. If FX coverage starts after the first price, the
+    trade slides to the first jointly executable point — it never uses
+    a future FX rate and never silently skips the trade."""
+    await _seed("USA_EQUITY_PRICE_INDEX", [
+        (date(2024, 1, 31), 100.0),   # no CHF rate available yet
+        (date(2024, 2, 29), 100.0),   # first joint point
+        (date(2024, 3, 31), 200.0),
+    ])
+    await _seed("FX_CHF_USD", [
+        (date(2024, 2, 15), 1.0),     # FX coverage begins mid-Feb
+        (date(2024, 3, 31), 1.0),
+    ])
+    async with _session() as s:
+        res = await simulator.simulate(
+            s, BENCHMARK_STRATEGIES["buy_and_hold_us_equity"],
+            date(2024, 1, 1), date(2024, 3, 31), 1000.0, "CHF",
+            cost_bps=0, slippage_bps=0,
+        )
+    assert res["available"] is True
+    assert res["trades"], "trade must happen once FX exists"
+    assert res["trades"][0]["date"] == "2024-02-29"
+    assert res["final_value"] == pytest.approx(2000.0)
+
+
 async def test_weight_validation_rejected(client):
     spec = fixed_weight_strategy(
         {"USA_EQUITY_PRICE_INDEX": 0.5}, rebalance="annual"

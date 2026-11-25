@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchCountry, fetchCountryObservations } from "@/lib/api/client";
 import type { Country, CountryObservation } from "@/types/api";
+import { UncertaintyBand } from "@/features/widgets/UncertaintyBand";
+import { AddToWorkspace } from "@/features/workspace/AddToWorkspace";
 import {
   formatDate,
   formatDecimal,
@@ -263,7 +265,23 @@ export function CountryProfile({ iso3 }: { iso3: string }) {
 
       {hasGovernanceData && (
         <div className="glass" style={{ padding: "var(--space-5)" }}>
-          <p className="headline-sm">Governance</p>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <p className="headline-sm">Governance</p>
+            <AddToWorkspace
+              typeId="governance-uncertainty"
+              config={{
+                country: iso3,
+                indicator: "RULE_OF_LAW_WGI_SCORE",
+                title: `Rule of law uncertainty — ${country.name}`,
+              }}
+            />
+          </div>
           <div className="metric-grid" style={{ marginTop: "var(--space-4)" }}>
             {GOVERNANCE_LABELS.map(([code, label]) => {
               const obs = latest(code);
@@ -286,6 +304,11 @@ export function CountryProfile({ iso3 }: { iso3: string }) {
             Annual World Bank WGI governance scores (0–100). WGI scores are
             perception-based composites and include measurement uncertainty.
           </p>
+          <UncertaintyBand
+            iso3={iso3}
+            indicator="RULE_OF_LAW_WGI_SCORE"
+            height={200}
+          />
         </div>
       )}
 

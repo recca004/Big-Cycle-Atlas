@@ -29,6 +29,7 @@ import {
   CoverageMatrixWidget,
 } from "./StatusWidgets";
 import { UnavailableWidget } from "./UnavailableWidget";
+import { UncertaintyBandWidget } from "./UncertaintyBand";
 import { INDICATOR_META } from "./indicatorMeta";
 import { INITIAL_COUNTRIES, FORCES } from "@big-cycle-atlas/shared";
 
@@ -241,15 +242,33 @@ for (const [id, name, code] of [
 ] as const) {
   registerWidget(metricDef(id, name, code, "governance"));
 }
-registerWidget(
-  unavailableDef(
-    "governance-uncertainty",
-    "Governance uncertainty",
-    "WGI 90% confidence bounds (LB/UB) and source counts are imported into indicator_diagnostics (1,872 rows) but not yet exposed via the API. A numeric confidence methodology is deferred (DEC-023).",
-    "governance",
-    "Diagnostics imported; confidence methodology deferred (DEC-023).",
-  ),
-);
+registerWidget({
+  typeId: "governance-uncertainty",
+  displayName: "Governance uncertainty",
+  description:
+    "Published WGI 90% confidence band and source counts around the score. Provider-published only — no computed confidence (DEC-022/023).",
+  category: "governance",
+  defaultSize: { w: 6, h: 4 },
+  minSize: { w: 4, h: 3 },
+  configFields: [
+    { ...countryField },
+    {
+      ...indicatorField,
+      default: "RULE_OF_LAW_WGI_SCORE",
+      options: [
+        { value: "RULE_OF_LAW_WGI_SCORE", label: "Rule of Law" },
+        { value: "CONTROL_OF_CORRUPTION_WGI_SCORE", label: "Control of Corruption" },
+        { value: "POLITICAL_STABILITY_WGI_SCORE", label: "Political Stability" },
+        { value: "GOVERNMENT_EFFECTIVENESS_WGI_SCORE", label: "Government Effectiveness" },
+      ],
+    },
+    titleField,
+  ],
+  dataRequirement:
+    "GET /api/countries/{iso3}/indicators/{code}/uncertainty + observations",
+  configVersion: 1,
+  component: UncertaintyBandWidget,
+});
 
 // --- National strength widgets ---------------------------------------------
 registerWidget({

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LayoutGrid } from "lucide-react";
 import { useWorkspaceStore } from "@/stores/workspaceStore";
 import { getWidget } from "./widgetRegistry";
+import "@/features/widgets"; // ensure registry is populated outside /workspace
 
 interface Props {
   /** Widget type id — must exist in the central registry. */

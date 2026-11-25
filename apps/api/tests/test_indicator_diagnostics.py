@@ -593,3 +593,67 @@ def test_model_version_unchanged_and_no_force_fields():
     diagnostic_fields = set(get_type_hints(IndicatorDiagnostic))
     for forbidden in ("force_score", "weight", "confidence", "level_score"):
         assert forbidden not in diagnostic_fields
+
+# --- Mission 4 §9: historical uncertainty endpoint --------------------------
+
+
+async def test_uncertainty_history_endpoint_returns_published_periods(client):
+    """GET .../indicators/{code}/uncertainty returns every published period
+    (latest vintage per kind/period); absent periods are never interpolated."""
+    dtos = [
+        _dto("USA", kind, year, value)
+        for year in (2019, 2020, 2021)
+        for kind, value in (
+            (IndicatorDiagnosticKind.ci_lower_bound, 80.0 + year - 2019),
+            (IndicatorDiagnosticKind.ci_upper_bound, 90.0 + year - 2019),
+            (IndicatorDiagnosticKind.source_count, 8.0),
+        )
+    ]
+    await _persist_diagnostics(dtos)
+
+    response = await client.get(
+        "/api/countries/USA/indicators/RULE_OF_LAW_WGI_SCORE/uncertainty"
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["country"] == "USA"
+    assert body["indicator_code"] == RL
+    periods = [p["period_start"] for p in body["points"]]
+    assert periods == ["2019-01-01", "2020-01-01", "2021-01-01"]
+    p2020 = body["points"][1]
+    assert p2020["ci_lower_bound"] == 81.0
+    assert p2020["ci_upper_bound"] == 91.0
+    assert p2020["source_count"] == 8.0
+
+
+async def test_uncertainty_history_latest_vintage_only(client):
+    """A newer vintage replaces the old bound at the same period."""
+    base = [
+        _dto("USA", IndicatorDiagnosticKind.ci_lower_bound, 2020, 80.0),
+        _dto("USA", IndicatorDiagnosticKind.ci_upper_bound, 2020, 90.0),
+    ]
+    await _persist_diagnostics(base)
+    revised = [
+        _dto("USA", IndicatorDiagnosticKind.ci_lower_bound, 2020, 82.0),
+        _dto("USA", IndicatorDiagnosticKind.ci_upper_bound, 2020, 90.0),
+    ]
+    # re-ingest changed values → vintage 2
+    await _persist_diagnostics(revised)
+
+    body = (
+        await client.get(
+            "/api/countries/USA/indicators/RULE_OF_LAW_WGI_SCORE/uncertainty"
+        )
+    ).json()
+    assert len(body["points"]) == 1
+    assert body["points"][0]["ci_lower_bound"] == 82.0
+    assert body["points"][0]["ci_upper_bound"] == 90.0
+
+
+async def test_uncertainty_history_no_diagnostics_empty_points(client):
+    """An indicator with no diagnostics yields empty points, not 404/zeros."""
+    response = await client.get(
+        "/api/countries/USA/indicators/GDP_GROWTH/uncertainty"
+    )
+    assert response.status_code == 200
+    assert response.json()["points"] == []

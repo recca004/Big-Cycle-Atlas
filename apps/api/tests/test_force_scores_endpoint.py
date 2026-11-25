@@ -119,3 +119,16 @@ async def test_uncertainty_endpoint_returns_published_bounds(client):
 
 async def test_uncertainty_unknown_country_404(client):
     assert (await client.get("/api/countries/ZZZ/uncertainty")).status_code == 404
+
+
+async def test_indicator_uncertainty_history_404s(client):
+    assert (
+        await client.get(
+            "/api/countries/USA/indicators/NO_SUCH_INDICATOR/uncertainty"
+        )
+    ).status_code == 404
+    assert (
+        await client.get(
+            "/api/countries/ZZZ/indicators/RULE_OF_LAW_WGI_SCORE/uncertainty"
+        )
+    ).status_code == 404

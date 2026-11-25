@@ -85,3 +85,24 @@ class CountryUncertaintyResponse(BaseModel):
 
     country: str
     indicators: list[UncertaintyIndicatorRead]
+
+
+class UncertaintyPoint(BaseModel):
+    """Published provider diagnostics for ONE source period.
+
+    Every field is provider-published (WGI 90% CI bounds, source count).
+    Periods without published diagnostics are ABSENT — never interpolated.
+    """
+
+    period_start: str
+    ci_lower_bound: Optional[float] = None
+    ci_upper_bound: Optional[float] = None
+    source_count: Optional[float] = None
+
+
+class IndicatorUncertaintyHistory(BaseModel):
+    """Full published uncertainty history for one indicator."""
+
+    country: str
+    indicator_code: str
+    points: list[UncertaintyPoint]

@@ -11,6 +11,7 @@ import type {
   IndicatorRevision,
   HealthStatus,
   ForceScoresResponse,
+  IndicatorUncertaintyHistory,
 } from "@/types/api";
 
 export const API_URL: string =
@@ -203,6 +204,17 @@ export function fetchResearchProgress(
   opts?: FetchOptions,
 ): Promise<ResearchProgress> {
   return request<ResearchProgress>("/api/research/progress", opts);
+}
+
+export function fetchIndicatorUncertaintyHistory(
+  iso3: string,
+  indicatorCode: string,
+  opts?: FetchOptions,
+): Promise<IndicatorUncertaintyHistory> {
+  return request<IndicatorUncertaintyHistory>(
+    `/api/countries/${encodeURIComponent(iso3)}/indicators/${encodeURIComponent(indicatorCode)}/uncertainty`,
+    opts,
+  );
 }
 
 export function fetchForceHistory(

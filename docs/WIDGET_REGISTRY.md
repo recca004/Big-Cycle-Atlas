@@ -29,7 +29,7 @@ Generated from `src/features/widgets/index.ts` — 53 registered widget types.
 | `wealth-inequality` | Wealth inequality | governance | 3×3 | 2×2 | WEALTH_SHARE_TOP_10 observations via /api/countries/{iso3}/observations |
 | `gini-index` | Gini index | governance | 3×3 | 2×2 | GINI_INDEX observations via /api/countries/{iso3}/observations |
 | `internal-conflict-proxy` | Internal conflict proxy | governance | 3×3 | 2×2 | POLITICAL_STABILITY_WGI_SCORE observations via /api/countries/{iso3}/observations |
-| `governance-uncertainty` | Governance uncertainty | governance | 4×3 | 3×2 | none — explicit unavailable state |
+| `governance-uncertainty` | Governance uncertainty | governance | 6×4 | 4×3 | GET /api/countries/{iso3}/indicators/{code}/uncertainty + observations |
 | `force-score` | Force score | strength | 4×3 | 3×2 | GET /api/countries/{iso3}/force-scores |
 | `all-forces` | All 17 forces | strength | 6×5 | 4×3 | force-coverage + force-scores endpoints |
 | `force-coverage` | Force coverage | strength | 4×5 | 3×3 | GET /api/countries/{iso3}/force-coverage |
@@ -263,10 +263,11 @@ Latest Political stability value for a country.
 
 ### `governance-uncertainty` — Governance uncertainty
 
-WGI 90% confidence bounds (LB/UB) and source counts are imported into indicator_diagnostics (1,872 rows) but not yet exposed via the API. A numeric confidence methodology is deferred (DEC-023).
+Published WGI 90% confidence band and source counts around the score. Provider-published only — no computed confidence (DEC-022/023).
 
-- `reason` (text) — default `"WGI 90% confidence bounds (LB/UB) and source counts are imported into indicator_diagnostics (1,872 rows) but not yet exposed via the API. A numeric confidence methodology is deferred (DEC-023)."`
-- `methodologyStatus` (text) — default `"Diagnostics imported; confidence methodology deferred (DEC-023)."`
+- `country` (country) — default `"USA"`
+- `indicator` (indicator) — default `"RULE_OF_LAW_WGI_SCORE"`
+- `title` (text)
 
 ### `force-score` — Force score
 

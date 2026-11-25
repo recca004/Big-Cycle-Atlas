@@ -127,3 +127,18 @@ export interface ForceScoresResponse {
   force_aggregation_version: string;
   forces: ForceScore[];
 }
+
+/** Published provider uncertainty at one source period (Mission 4 §9).
+ *  Fields stay null when the provider published nothing for that kind. */
+export interface UncertaintyPoint {
+  period_start: string;
+  ci_lower_bound: number | null;
+  ci_upper_bound: number | null;
+  source_count: number | null;
+}
+
+export interface IndicatorUncertaintyHistory {
+  country: string;
+  indicator_code: string;
+  points: UncertaintyPoint[];
+}

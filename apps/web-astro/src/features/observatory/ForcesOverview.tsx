@@ -1,37 +1,44 @@
-/** Seventeen-forces overview for the homepage — offline demonstration
- *  force rows with explicit scored / dimension / context semantics. */
+import type { ObservatoryCountry, TopForce } from "@/types/observatory";
 
-import { useMemo } from "react";
-import { buildOfflineForceScores } from "./offlineData";
+interface Props {
+  country: ObservatoryCountry | null;
+  demo?: boolean;
+}
 
 const STATUS_LABELS: Record<string, string> = {
   scored: "level",
   dimension_only: "dimension",
+  context_only: "context",
   context: "context",
   deferred: "unavailable",
 };
 
-export function ForcesOverview({ iso3 }: { iso3: string | null }) {
-  const data = useMemo(() => (iso3 ? buildOfflineForceScores(iso3) : null), [iso3]);
-  if (!iso3 || !data) return null;
+function forceValue(force: TopForce): number | null {
+  return force.level_score ?? force.relative_score;
+}
+
+export function ForcesOverview({ country, demo = false }: Props) {
+  const forces = country?.force_summary?.forces ?? [];
+  if (!country) {
+    return <p className="obs-muted">Select a power to inspect the seventeen forces.</p>;
+  }
 
   return (
-    <div className="force-grid" role="list" aria-label={`${iso3} — 17 forces, offline demonstration`}>
-      {data.forces.map((force, index) => {
-        const status = force.execution_status;
-        const numeric = force.level_score ?? force.relative_score;
+    <div className="force-grid" role="list" aria-label={`${country.iso3} — seventeen forces`}>
+      {forces.map((force, index) => {
+        const numeric = forceValue(force);
         return (
           <a
             key={force.force_code}
             role="listitem"
             className="force-row"
-            href={`/forces?force=${force.force_code}&country=${iso3}`}
+            href={`/forces?force=${force.force_code}&country=${country.iso3}`}
           >
             <span className="force-num">{String(index + 1).padStart(2, "0")}</span>
             <span className="force-name">{force.force_name}</span>
             {numeric !== null && (
               <span className="force-meter" aria-hidden="true">
-                <span style={{ width: `${Math.max(3, Math.min(100, numeric))}%` }} />
+                <span style={{ width: `${Math.max(3, Math.min(100, Math.abs(numeric)))}%` }} />
               </span>
             )}
             <span className="force-value">
@@ -48,14 +55,15 @@ export function ForcesOverview({ iso3 }: { iso3: string | null }) {
                 "—"
               )}
             </span>
-            <span className={`force-status s-${status}`}>{STATUS_LABELS[status] ?? status}</span>
+            <span className={`force-status s-${force.execution_status}`}>
+              {STATUS_LABELS[force.execution_status] ?? force.execution_status}
+            </span>
           </a>
         );
       })}
       <p className="obs-note" style={{ gridColumn: "1 / -1" }}>
-        Offline demonstration force surface — {data.forces.filter((force) => force.execution_status === "scored").length} synthetic levels,
-        dimension-only and context profiles shown as such. No composite average is computed.{" "}
-        <a href={`/forces?country=${iso3}`}>Full force research →</a>
+        {demo ? "Demonstration fixture" : "Production evidence"} — {country.force_summary.scored_count} numerical levels, {country.force_summary.dimension_only_count} dimension-only and {country.force_summary.context_only_count} context profiles. Missing evidence remains unavailable, not zero-filled.{" "}
+        <a href={`/forces?country=${country.iso3}`}>Full force research →</a>
       </p>
     </div>
   );

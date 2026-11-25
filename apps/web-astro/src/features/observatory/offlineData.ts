@@ -202,6 +202,7 @@ function forceSummaryFor(iso3: string) {
     dimension_only_count: response.forces.filter((force) => force.execution_status === "dimension_only").length,
     context_only_count: response.forces.filter((force) => force.execution_status === "context").length,
     top_forces: response.forces.slice(0, 5).map((force) => ({ force_code: force.force_code, force_name: force.force_name, execution_status: force.execution_status, level_score: force.level_score, relative_score: force.relative_score, momentum_score: force.momentum_score })),
+    forces: response.forces.map((force) => ({ force_code: force.force_code, force_name: force.force_name, execution_status: force.execution_status, level_score: force.level_score, relative_score: force.relative_score, momentum_score: force.momentum_score, coverage_status: force.coverage_status, period: force.period })),
   };
 }
 

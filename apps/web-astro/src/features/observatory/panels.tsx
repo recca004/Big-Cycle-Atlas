@@ -11,7 +11,7 @@ import type {
   TransitionMonitor,
 } from "@/types/observatory";
 import { stageLabel } from "./stages";
-import { OFFLINE_MEASURE_PROFILES, formatMeasureValue } from "./offlineData";
+import { formatMeasureValue } from "./observatoryService";
 
 const fmtUsd = (v: number) =>
   v >= 1e12
@@ -58,8 +58,15 @@ export function CountryFocusPanel({
       </section>
     );
 
-  const snaps = Object.entries(country.indicator_snapshots).slice(0, 5);
-  const measures = OFFLINE_MEASURE_PROFILES[country.iso3];
+  const snaps = Object.entries(country.indicator_snapshots)
+    .filter(([, snapshot]) => snapshot?.latest?.value != null)
+    .slice(0, 5);
+  const snap = (code: string) => country.indicator_snapshots[code]?.latest?.value ?? null;
+  const power = country.international_power;
+  const econ = power.economic_size;
+  const military = power.military_resources;
+  const trade = power.international_trade as { tracked_share_pct?: number | null } | undefined;
+  const monetary = power.monetary_influence as { currency_code?: string; gov_10y_yield?: number | null; reserve_anchor_role?: string } | undefined;
   return (
     <section
       className="obs-panel glass"
@@ -113,57 +120,51 @@ export function CountryFocusPanel({
             {country.force_summary.context_only_count} context
           </dd>
         </div>
-        {country.international_power.economic_size && (
+        {econ?.value_usd != null && (
           <div data-fade>
-            <dt>Economic size ({country.international_power.economic_size.period})</dt>
+            <dt>Economic size ({econ.period})</dt>
             <dd>
-              {fmtUsd(country.international_power.economic_size.value_usd)}
+              {fmtUsd(econ.value_usd)}
               <span className="obs-muted">
                 {" "}
-                ·{" "}
-                {country.international_power.economic_size.tracked_share_pct.toFixed(
-                  1,
-                )}
-                % of tracked output
+                · {econ.tracked_share_pct?.toFixed(1) ?? "—"}% of tracked output
               </span>
             </dd>
           </div>
         )}
-        {country.international_power.military_resources && (
+        {military?.expenditure_usd != null && (
           <div data-fade>
             <dt>Military expenditure</dt>
             <dd>
-              {fmtUsd(country.international_power.military_resources.expenditure_usd)}
+              {fmtUsd(military.expenditure_usd)}
               <span className="obs-muted">
                 {" "}
-                · {country.international_power.military_resources.pct_gdp.toFixed(1)}% GDP
+                · {military.pct_gdp?.toFixed(1) ?? "—"}% GDP
               </span>
             </dd>
           </div>
         )}
       </dl>
-      {measures && (
-        <div className="obs-di-grid" data-fade>
-          <div className="obs-di-card domestic">
-            <h3>Domestic condition</h3>
-            <dl>
-              <div><dt>Productivity</dt><dd>{formatMeasureValue(measures.productivity_competitiveness.current, "score")}</dd></div>
-              <div><dt>Innovation</dt><dd>{formatMeasureValue(measures.innovation_output.current, "% of GDP")}</dd></div>
-              <div><dt>Education</dt><dd>{formatMeasureValue(measures.education_attainment.current, "% of adults")}</dd></div>
-            </dl>
-            <p>Internal capacity: cohesion, human capital, institutions and productivity.</p>
-          </div>
-          <div className="obs-di-card international">
-            <h3>International power</h3>
-            <dl>
-              <div><dt>Output</dt><dd>{formatMeasureValue(measures.economic_output.current, "usd_current")}</dd></div>
-              <div><dt>Trade share</dt><dd>{formatMeasureValue(measures.share_world_trade.current, "% of tracked trade")}</dd></div>
-              <div><dt>Finance / reserve</dt><dd>{formatMeasureValue(measures.financial_center.current, "score")} · {formatMeasureValue(measures.reserve_currency_status.current, "score")}</dd></div>
-            </dl>
-            <p>External scale: output, trade reach, capital markets and military resources.</p>
-          </div>
+      <div className="obs-di-grid" data-fade>
+        <div className="obs-di-card domestic">
+          <h3>Domestic condition</h3>
+          <dl>
+            <div><dt>Productivity</dt><dd>{formatMeasureValue(snap("LABOUR_PRODUCTIVITY_PER_HOUR"), "score")}</dd></div>
+            <div><dt>Innovation</dt><dd>{formatMeasureValue(snap("RND_EXPENDITURE_GDP"), "% of GDP")}</dd></div>
+            <div><dt>Education</dt><dd>{formatMeasureValue(snap("TERTIARY_ATTAINMENT_25_34"), "% of adults")}</dd></div>
+          </dl>
+          <p>Internal capacity: cohesion, human capital, institutions and productivity.</p>
         </div>
-      )}
+        <div className="obs-di-card international">
+          <h3>International power</h3>
+          <dl>
+            <div><dt>Output</dt><dd>{formatMeasureValue(econ?.value_usd ?? null, "usd_current")}</dd></div>
+            <div><dt>Trade share</dt><dd>{formatMeasureValue(trade?.tracked_share_pct ?? null, "% of tracked trade")}</dd></div>
+            <div><dt>Finance / reserve</dt><dd>{monetary?.currency_code ?? "—"} · {formatMeasureValue(monetary?.gov_10y_yield ?? null, "% 10Y")}</dd></div>
+          </dl>
+          <p>{monetary?.reserve_anchor_role ?? "External scale: output, trade reach, capital markets and military resources."}</p>
+        </div>
+      </div>
       {snaps.length > 0 && (
         <table className="obs-snaps" data-fade>
           <caption className="obs-muted">Latest measurements</caption>
@@ -172,13 +173,13 @@ export function CountryFocusPanel({
               <tr key={code}>
                 <td>{code.replaceAll("_", " ").toLowerCase()}</td>
                 <td>
-                  {s.latest.value >= 1e9
+                  {s.latest!.value >= 1e9
                     ? fmtUsd(s.latest.value)
-                    : s.latest.value.toLocaleString("en-CH", {
+                    : s.latest!.value.toLocaleString("en-CH", {
                         maximumFractionDigits: 1,
                       })}
                 </td>
-                <td className="obs-muted">{s.latest.period}</td>
+                <td className="obs-muted">{s.latest!.period}</td>
               </tr>
             ))}
           </tbody>
@@ -326,10 +327,12 @@ export function DataFreshnessIndicator({
   freshness,
   job,
   onRefresh,
+  demo = false,
 }: {
   freshness: ObservatoryFreshness;
   job: RefreshJob | null;
   onRefresh: () => void;
+  demo?: boolean;
 }) {
   return (
     <section
@@ -338,7 +341,7 @@ export function DataFreshnessIndicator({
       data-status={freshness.status}
     >
       <div className="obs-fresh-head">
-        <h2 className="obs-panel-title">Data freshness · simulated</h2>
+        <h2 className="obs-panel-title">Data freshness{demo ? " · simulated" : ""}</h2>
         <span className={`obs-status s-${freshness.status}`}>
           {freshness.status_label}
         </span>
@@ -382,9 +385,11 @@ export function DataFreshnessIndicator({
         >
           {job?.status === "running" || job?.running
             ? "Refreshing…"
-            : "Run simulated refresh"}
+            : demo
+              ? "Run simulated refresh"
+              : "Refresh production data"}
         </button>
-        <span className="obs-muted">Offline fixture · no backend workflow</span>
+        <span className="obs-muted">{demo ? "Offline fixture · no backend workflow" : "Production collection workflow"}</span>
       </div>
       {job?.status === "running" && (
         <p className="obs-muted" role="status">
@@ -400,12 +405,12 @@ export function DataFreshnessIndicator({
 
 /* ---------- DailyChangesPanel ---------- */
 
-export function DailyChangesPanel({ data }: { data: DailyChanges }) {
+export function DailyChangesPanel({ data, demo = false }: { data: DailyChanges; demo?: boolean }) {
   // Compact one-line state when nothing changed — no large empty card.
   if (data.changes.length === 0)
     return (
       <section className="obs-panel glass obs-changes-compact" aria-label="What has changed">
-        <h2 className="obs-panel-title">What changed in the simulated snapshot?</h2>
+        <h2 className="obs-panel-title">What changed in the {demo ? "simulated " : ""}snapshot?</h2>
         <p className="obs-muted">
           {data.summary_message}
           {data.previous_snapshot_zurich
@@ -416,7 +421,7 @@ export function DailyChangesPanel({ data }: { data: DailyChanges }) {
     );
   return (
     <section className="obs-panel glass" aria-label="What has changed">
-      <h2 className="obs-panel-title">What changed in the simulated snapshot?</h2>
+      <h2 className="obs-panel-title">What changed in the {demo ? "simulated " : ""}snapshot?</h2>
       {data.changes.length === 0 ? (
         <p className="obs-muted">{data.summary_message}</p>
       ) : (

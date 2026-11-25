@@ -1,7 +1,3 @@
-/** Historical cycle comparison — 1950–2026 stage bands for all powers in
- *  the offline demonstration layer. Exact classification bands, not a
- *  smoothed forecast path. */
-
 import { useMemo } from "react";
 import type { ObservatoryCountry, ObservatoryHistoryPoint } from "@/types/observatory";
 import { STAGES, STAGE_LABELS } from "./stages";
@@ -10,6 +6,7 @@ interface Props {
   countries: ObservatoryCountry[];
   selectedIso3: string | null;
   onSelect: (iso3: string) => void;
+  demo?: boolean;
 }
 
 interface Segment {
@@ -26,16 +23,26 @@ const TOP = 34;
 const LANE = 34;
 const AXIS_H = 30;
 
+function periodPosition(period: string): number | null {
+  const match = /^(\d{4})(?:-Q([1-4]))?$/.exec(period);
+  if (!match) return null;
+  const quarter = match[2] ? Number(match[2]) : 1;
+  return Number(match[1]) + (quarter - 1) / 4;
+}
+
 function segmentsFromHistory(history: ObservatoryHistoryPoint[]): Segment[] {
   const segments: Segment[] = [];
   for (const point of history) {
     if (!point.stage) continue;
-    const year = Number(point.period);
+    const position = periodPosition(point.period);
+    if (position === null) continue;
+    const end = point.period.includes("-Q") ? position + 0.25 : position + 1;
+    const phase = point.phase ?? "unclassified phase";
     const last = segments[segments.length - 1];
-    if (last && last.stage === point.stage && last.phase === (point.phase ?? "demonstration phase")) {
-      last.to = year;
+    if (last && last.stage === point.stage && last.phase === phase) {
+      last.to = end;
     } else {
-      segments.push({ stage: point.stage, phase: point.phase ?? "demonstration phase", from: year, to: year });
+      segments.push({ stage: point.stage, phase, from: position, to: end });
     }
   }
   return segments;
@@ -43,16 +50,18 @@ function segmentsFromHistory(history: ObservatoryHistoryPoint[]): Segment[] {
 
 const stageClass = (stage: string) => `stage-${stage.toLowerCase().replaceAll("_", "-")}`;
 
-export function HistoricalCycleComparison({ countries, selectedIso3, onSelect }: Props) {
+export function HistoricalCycleComparison({ countries, selectedIso3, onSelect, demo = false }: Props) {
   const rows = useMemo(
     () => countries.map((country) => ({ country, segments: segmentsFromHistory(country.history) })),
     [countries],
   );
-  const minYear = 1950;
-  const maxYear = 2026;
+  const positions = rows.flatMap((row) => row.segments.flatMap((segment) => [segment.from, segment.to]));
+  const minYear = Math.floor(Math.min(...positions, 2000));
+  const maxYear = Math.ceil(Math.max(...positions, minYear + 1));
   const plotWidth = WIDTH - LEFT - RIGHT;
   const height = TOP + rows.length * LANE + AXIS_H;
-  const x = (year: number) => Number((LEFT + ((year - minYear) / (maxYear - minYear)) * plotWidth).toFixed(3));
+  const x = (position: number) => Number((LEFT + ((position - minYear) / Math.max(1, maxYear - minYear)) * plotWidth).toFixed(3));
+  const ticks = Array.from({ length: 6 }, (_, index) => Math.round(minYear + ((maxYear - minYear) * index) / 5));
 
   return (
     <div className="history-comparison">
@@ -71,8 +80,8 @@ export function HistoricalCycleComparison({ countries, selectedIso3, onSelect }:
       </div>
 
       <div className="history-chart-wrap" role="region" aria-label="Historical cycle comparison chart" tabIndex={0}>
-        <svg viewBox={`0 0 ${WIDTH} ${height}`} className="history-chart" role="img" aria-label="Stage bands for eight powers, 1950 through 2026">
-          {[1950, 1965, 1980, 1995, 2010, 2026].map((year) => (
+        <svg viewBox={`0 0 ${WIDTH} ${height}`} className="history-chart" role="img" aria-label={`Stage bands for eight powers, ${minYear} through ${maxYear}`}>
+          {ticks.map((year) => (
             <g key={year} className="history-axis-tick">
               <line x1={x(year)} y1={TOP - 8} x2={x(year)} y2={height - AXIS_H + 8} />
               <text x={x(year)} y={height - 8} textAnchor="middle">{year}</text>
@@ -87,23 +96,19 @@ export function HistoricalCycleComparison({ countries, selectedIso3, onSelect }:
                   {country.iso3}
                 </text>
                 <line x1={LEFT} x2={WIDTH - RIGHT} y1={y + LANE / 2} y2={y + LANE / 2} className="history-lane-line" />
-                {segments.map((segment) => {
-                  const sx = x(segment.from);
-                  const ex = x(segment.to + 1);
-                  return (
-                    <rect
-                      key={`${country.iso3}-${segment.from}-${segment.stage}`}
-                      x={sx}
-                      y={y + 7}
-                      width={Number(Math.max(2, ex - sx).toFixed(3))}
-                      height={LANE - 14}
-                      rx="4"
-                      className={`history-segment ${stageClass(segment.stage)}`}
-                    >
-                      <title>{`${country.name}: ${STAGE_LABELS[segment.stage] ?? segment.stage}, ${segment.from}–${segment.to}. ${segment.phase}. Offline demonstration classification.`}</title>
-                    </rect>
-                  );
-                })}
+                {segments.map((segment) => (
+                  <rect
+                    key={`${country.iso3}-${segment.from}-${segment.stage}`}
+                    x={x(segment.from)}
+                    y={y + 7}
+                    width={Number(Math.max(2, x(segment.to) - x(segment.from)).toFixed(3))}
+                    height={LANE - 14}
+                    rx="4"
+                    className={`history-segment ${stageClass(segment.stage)}`}
+                  >
+                    <title>{`${country.name}: ${STAGE_LABELS[segment.stage] ?? segment.stage}, ${segment.from.toFixed(2)}–${segment.to.toFixed(2)}. ${segment.phase}. ${demo ? "Demonstration" : "Production"} classification.`}</title>
+                  </rect>
+                ))}
               </g>
             );
           })}

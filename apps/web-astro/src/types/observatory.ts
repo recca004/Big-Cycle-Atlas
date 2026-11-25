@@ -25,11 +25,18 @@ export interface TopForce {
   momentum_score: number | null;
 }
 
+export interface ForceRecord extends TopForce {
+  coverage_status?: string;
+  period?: string | null;
+}
+
 export interface ForceSummary {
   scored_count: number;
   dimension_only_count: number;
   context_only_count: number;
   top_forces: TopForce[];
+  weakest_forces?: TopForce[];
+  forces: ForceRecord[];
 }
 
 export interface IndicatorSnapshot {
@@ -38,6 +45,35 @@ export interface IndicatorSnapshot {
   value: number;
   vintage: number;
   source: string;
+}
+
+export interface TradePower {
+  trade_volume_usd?: number | null;
+  tracked_share_pct?: number | null;
+  exports_pct_gdp?: number | null;
+  imports_pct_gdp?: number | null;
+  current_account_pct_gdp?: number | null;
+  period?: string | null;
+  source?: string | null;
+}
+
+export interface InnovationPower {
+  rnd_pct_gdp?: number | null;
+  implied_rnd_usd?: number | null;
+  tracked_share_pct?: number | null;
+  period?: string | null;
+  source?: string | null;
+}
+
+export interface MonetaryPower {
+  currency_code?: string;
+  reserve_anchor_role?: string;
+  reer_index?: number | null;
+  reer_period?: string | null;
+  gov_10y_yield?: number | null;
+  gov_10y_period?: string | null;
+  source?: string | null;
+  scope_note?: string;
 }
 
 export interface InternationalPower {
@@ -54,6 +90,9 @@ export interface InternationalPower {
     period: string;
     source: string;
   };
+  international_trade?: TradePower;
+  innovation_scale?: InnovationPower;
+  monetary_influence?: MonetaryPower;
   [key: string]: unknown;
 }
 

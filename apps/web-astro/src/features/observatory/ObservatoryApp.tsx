@@ -1,20 +1,18 @@
-/** ObservatoryApp — root island for the animated offline observatory.
- *  All data comes from the isolated demonstration layer in offlineData.ts:
- *  no backend request, provider claim, forecast, countdown or prediction. */
-
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { RefreshJob } from "@/types/observatory";
+import type {
+  ObservatoryOverview,
+  RefreshJob,
+  TransitionMonitor,
+} from "@/types/observatory";
 import { ForcesOverview } from "./ForcesOverview";
 import { HistoricalCycleComparison } from "./HistoricalCycleComparison";
 import { ObservatoryClock } from "./ObservatoryClock";
 import { PowerMeasuresMatrix } from "./PowerMeasuresMatrix";
 import {
-  buildOfflineTransition,
-  createOfflineOverview,
-  offlineRefreshScenario,
-  runningOfflineRefreshJob,
-  DEMO_DISCLAIMER,
-} from "./offlineData";
+  createObservatoryService,
+  invalidateObservatoryCaches,
+  type ObservatoryMode,
+} from "./observatoryService";
 import {
   CountryFocusPanel,
   DailyChangesPanel,
@@ -24,7 +22,9 @@ import {
 } from "./panels";
 import { stageLabel } from "./stages";
 
-const MODEL = "offline_observatory_demo";
+interface Props {
+  mode?: ObservatoryMode;
+}
 
 function SectionHeading({ id, kicker, title, children }: { id: string; kicker: string; title: string; children?: React.ReactNode }) {
   return (
@@ -36,16 +36,23 @@ function SectionHeading({ id, kicker, title, children }: { id: string; kicker: s
   );
 }
 
-export function ObservatoryApp() {
-  const [data, setData] = useState(() => createOfflineOverview());
-  const [selectedIso3, setSelectedIso3] = useState<string | null>(
-    () => createOfflineOverview().power_summary.highest_domestic_condition_iso3,
-  );
+export function ObservatoryApp({ mode }: Props) {
+  const [resolvedMode] = useState<ObservatoryMode>(() => {
+    if (mode) return mode;
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).has("demo")) return "demo";
+    return "production";
+  });
+  const demo = resolvedMode === "demo";
+  const service = useMemo(() => createObservatoryService(resolvedMode), [resolvedMode]);
+  const [data, setData] = useState<ObservatoryOverview | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedIso3, setSelectedIso3] = useState<string | null>(null);
   const [histIndex, setHistIndex] = useState<number | null>(null);
-  const [job, setJob] = useState<RefreshJob>(() => data.refresh_job);
-  const [refreshStep, setRefreshStep] = useState(0);
+  const [job, setJob] = useState<RefreshJob | null>(null);
   const [incumbent, setIncumbent] = useState("USA");
   const [challenger, setChallenger] = useState("CHN");
+  const [monitor, setMonitor] = useState<TransitionMonitor | null>(null);
+  const [monitorError, setMonitorError] = useState<string | null>(null);
   const refreshTimer = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +60,53 @@ export function ObservatoryApp() {
     rootRef.current?.setAttribute("data-hydrated", "true");
   }, []);
 
-  const monitor = useMemo(() => buildOfflineTransition(incumbent, challenger), [incumbent, challenger]);
+  useEffect(() => {
+    let alive = true;
+    setData(null);
+    setError(null);
+    service
+      .loadOverview()
+      .then((overview) => {
+        if (!alive) return;
+        setData(overview);
+        setSelectedIso3(overview.power_summary.highest_domestic_condition_iso3);
+        setMonitor(overview.transition_monitor);
+        setJob(overview.refresh_job);
+      })
+      .catch((err: unknown) => {
+        if (!alive) return;
+        setError(err instanceof Error ? err.message : "Unable to load observatory data");
+      });
+    return () => {
+      alive = false;
+    };
+  }, [service]);
+
+  useEffect(() => {
+    if (!data) return;
+    if (
+      incumbent === data.transition_monitor.incumbent_iso3 &&
+      challenger === data.transition_monitor.challenger_iso3
+    ) {
+      setMonitor(data.transition_monitor);
+      setMonitorError(null);
+      return;
+    }
+    let alive = true;
+    setMonitor(null);
+    setMonitorError(null);
+    service
+      .loadTransition(incumbent, challenger)
+      .then((next) => {
+        if (alive) setMonitor(next);
+      })
+      .catch((err: unknown) => {
+        if (alive) setMonitorError(err instanceof Error ? err.message : "Transition comparison unavailable");
+      });
+    return () => {
+      alive = false;
+    };
+  }, [data, incumbent, challenger, service]);
 
   useEffect(
     () => () => {
@@ -63,35 +116,83 @@ export function ObservatoryApp() {
   );
 
   const triggerRefresh = useCallback(() => {
-    if (job.running || job.status === "running") return;
-    setJob(runningOfflineRefreshJob());
-    refreshTimer.current = window.setTimeout(() => {
-      const nextStep = refreshStep + 1;
-      const scenario = offlineRefreshScenario(nextStep);
-      setData((current) => ({
-        ...current,
-        freshness: scenario.freshness,
-        daily_changes: scenario.dailyChanges,
-        refresh_job: scenario.job,
-      }));
-      setJob(scenario.job);
-      setRefreshStep(nextStep);
-      refreshTimer.current = null;
-    }, 1150);
-  }, [job.running, job.status, refreshStep]);
+    if (job?.running || job?.status === "running") return;
+    if (demo) {
+      void service.requestRefresh().then(setJob);
+      refreshTimer.current = window.setTimeout(() => {
+        void import("./offlineData").then((fixture) => {
+          const scenario = fixture.offlineRefreshScenario(1);
+          setData((current) => current ? {
+            ...current,
+            freshness: scenario.freshness,
+            daily_changes: scenario.dailyChanges,
+            refresh_job: scenario.job,
+          } : current);
+          setJob(scenario.job);
+        });
+        refreshTimer.current = null;
+      }, 1100);
+      return;
+    }
+
+    void service
+      .requestRefresh()
+      .then((accepted) => {
+        setJob(accepted);
+        const poll = async () => {
+          const status = await service.loadRefreshStatus();
+          setJob(status);
+          if (status.status === "running" || status.running) {
+            refreshTimer.current = window.setTimeout(() => void poll(), 3000);
+          } else if (status.status === "succeeded") {
+            invalidateObservatoryCaches();
+            setData(await service.loadOverview());
+          }
+        };
+        void poll();
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : "Refresh request failed");
+      });
+  }, [demo, job?.running, job?.status, service]);
+
+  if (error && !data) {
+    return (
+      <div className="obs-app obs-error" ref={rootRef} role="alert">
+        <section className="obs-panel glass">
+          <p className="obs-kicker">Observatory unavailable</p>
+          <h2>Production atlas data could not be loaded.</h2>
+          <p className="obs-muted">
+            {error}. No offline demonstration values were substituted for real observations.
+          </p>
+          <button type="button" className="glass-button" onClick={() => window.location.reload()}>
+            Retry connection
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="clock-loading" aria-busy="true" ref={rootRef}>
+        <div className="clock-skeleton" />
+        <p className="obs-muted">Assembling the production observatory…</p>
+      </div>
+    );
+  }
 
   const periods = data.available_periods;
   const latestIndex = Math.max(0, periods.length - 1);
   const activeIndex = histIndex ?? latestIndex;
   const playbackPeriod = histIndex !== null && histIndex < latestIndex ? (periods[histIndex] ?? null) : null;
-  const selected = useMemo(
-    () => data.countries.find((country) => country.iso3 === selectedIso3) ?? null,
-    [data.countries, selectedIso3],
-  );
+  const selected = data.countries.find((country) => country.iso3 === selectedIso3) ?? null;
+  const firstHistoryPeriod = periods[0] ?? "available history";
+  const latestPeriod = periods[latestIndex] ?? data.scoring_period ?? "latest";
 
   return (
-    <div className="obs-app" ref={rootRef}>
-      <p className="obs-demo-banner" role="note">{DEMO_DISCLAIMER}</p>
+    <div className="obs-app" ref={rootRef} data-source={demo ? "demo" : "production"}>
+      {demo && <p className="obs-demo-banner" role="note">Demonstration fixture — synthetic observations for interface review only. No backend measurement, forecast or production result.</p>}
 
       <div className="obs-grid" aria-label="Big Cycle observatory instrument">
         <div className="obs-col-left">
@@ -128,9 +229,7 @@ export function ObservatoryApp() {
                 compact
               />
             }
-            periodLabel={
-              playbackPeriod ? `${playbackPeriod} — historical` : `${periods[latestIndex] ?? "—"} (latest demo)`
-            }
+            periodLabel={playbackPeriod ? `${playbackPeriod} — historical` : `${latestPeriod} (latest ${demo ? "demo" : "production"})`}
           />
         </div>
 
@@ -153,24 +252,31 @@ export function ObservatoryApp() {
               </select>
             </label>
           </div>
-          <PowerTransitionMonitor data={monitor} />
+          {monitor ? (
+            <PowerTransitionMonitor data={monitor} />
+          ) : (
+            <section className="obs-panel glass" role="status">
+              <h2 className="obs-panel-title">Power transition monitor</h2>
+              <p className="obs-muted">{monitorError ?? "Loading production transition comparison…"}</p>
+            </section>
+          )}
         </div>
       </div>
 
       <div className="obs-research-sections">
         <section className="obs-panel obs-section glass" aria-labelledby="freshness-heading">
-          <SectionHeading id="freshness-heading" kicker="Snapshot integrity" title="Freshness and simulated daily change">
-            Europe/Zurich collection and calculation timestamps, with an explicit offline simulation of what changed since the prior fixture snapshot.
+          <SectionHeading id="freshness-heading" kicker="Snapshot integrity" title={demo ? "Freshness and simulated daily change" : "Freshness and daily change"}>
+            {demo ? "Simulated Europe/Zurich collection timestamps and fixture changes." : "Europe/Zurich collection and calculation timestamps, revisions and production snapshot changes."}
           </SectionHeading>
           <div className="obs-section-split">
-            <DataFreshnessIndicator freshness={data.freshness} job={job} onRefresh={triggerRefresh} />
-            <DailyChangesPanel data={data.daily_changes} />
+            <DataFreshnessIndicator freshness={data.freshness} job={job} onRefresh={triggerRefresh} demo={demo} />
+            <DailyChangesPanel data={data.daily_changes} demo={demo} />
           </div>
         </section>
 
         <section className="obs-panel obs-section glass" aria-labelledby="powers-heading">
           <SectionHeading id="powers-heading" kicker="Tracked powers" title="All eight powers under study">
-            Domestic condition, momentum and experimental stage across the complete offline demonstration set.
+            Domestic condition, momentum and experimental stage across the complete {demo ? "demonstration" : "production"} set.
           </SectionHeading>
           <div className="obs-table-wrap">
             <table className="obs-powers">
@@ -209,19 +315,19 @@ export function ObservatoryApp() {
 
         <section className="obs-panel obs-section glass" aria-labelledby="measures-heading">
           <SectionHeading id="measures-heading" kicker="Power measures" title="The eight power measures">
-            Output, trade, military resources, innovation, education, productivity, financial depth and reserve-currency status — side by side for every tracked power.
+            Production output, trade, military, monetary, innovation, education and productivity measures — shown only where source observations exist.
           </SectionHeading>
           <div>
-            <PowerMeasuresMatrix selectedIso3={selectedIso3} />
+            <PowerMeasuresMatrix countries={data.countries} selectedIso3={selectedIso3} demo={demo} />
           </div>
         </section>
 
         <section className="obs-panel obs-section glass" aria-labelledby="forces-heading">
           <SectionHeading id="forces-heading" kicker="Determinants" title={`The seventeen forces${selected ? ` — ${selected.name}` : ""}`}>
-            Synthetic force profiles preserve the distinction between numerical levels, dimension-only evidence and context-only factors.
+            {demo ? "Synthetic force profiles preserve status distinctions." : "Approved numerical levels, dimension-only signals and context profiles preserve evidence gates."}
           </SectionHeading>
           <div>
-            <ForcesOverview iso3={selectedIso3} />
+            <ForcesOverview country={selected} demo={demo} />
           </div>
           <p className="obs-links">
             <a href="/forces">All forces →</a>
@@ -232,16 +338,14 @@ export function ObservatoryApp() {
         </section>
 
         <section className="obs-panel obs-section glass" aria-labelledby="history-heading">
-          <SectionHeading id="history-heading" kicker="Long-cycle evidence" title="Historical cycle comparisons, 1950–2026">
-            Exact annual classification bands for the demonstration histories. Bands are descriptive evidence, not a smoothed projection or future path.
+          <SectionHeading id="history-heading" kicker="Long-cycle evidence" title={`Historical cycle comparisons, ${firstHistoryPeriod}–${latestPeriod}`}>
+            Exact classified periods from {demo ? "the demonstration fixture" : "the production composite model"}. Bands are descriptive evidence, not a smoothed projection or future path.
           </SectionHeading>
           <div>
-            <HistoricalCycleComparison countries={data.countries} selectedIso3={selectedIso3} onSelect={setSelectedIso3} />
+            <HistoricalCycleComparison countries={data.countries} selectedIso3={selectedIso3} onSelect={setSelectedIso3} demo={demo} />
           </div>
         </section>
       </div>
     </div>
   );
 }
-
-export { MODEL };

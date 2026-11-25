@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { ObservatoryApp } from "@/features/observatory/ObservatoryApp";
+
 ---
 
 <BaseLayout title="Great Power Observatory" fullWidth>
@@ -11,9 +12,9 @@ import { ObservatoryApp } from "@/features/observatory/ObservatoryApp";
     </div>
     <p class="body-md obs-hero-sub">
       A full-width observatory instrument for the rise → peak → decline
-      cycle, historical playback from 1950–2026 and the 17 Atlas forces —
-      operating entirely on an isolated offline demonstration layer with no
-      external backend, provider measurement, forecast or predictive claim.
+      cycle, historical playback and the 17 Atlas forces — powered by
+      production PostgreSQL observations by default, with an explicit
+      ?demo=1 fixture isolated for interface review.
     </p>
   </header>
   <ObservatoryApp client:load />

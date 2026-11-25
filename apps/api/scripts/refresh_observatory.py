@@ -25,6 +25,7 @@ if sys.platform == "win32":
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.db.session import get_sessionmaker  # noqa: E402
+from app.research.composite import COMPOSITE_MODELS  # noqa: E402
 from app.research.observatory import run_daily_refresh_workflow  # noqa: E402
 
 
@@ -52,6 +53,11 @@ async def main() -> int:
         default=None,
         help="JSON summary produced by collect_snapshot.py --summary-json",
     )
+    parser.add_argument(
+        "--all-models",
+        action="store_true",
+        help="Recalculate every experimental composite model; --model remains the reported default",
+    )
     args = parser.parse_args()
 
     collection_summary = None
@@ -60,27 +66,41 @@ async def main() -> int:
             args.collection_summary.read_text(encoding="utf-8")
         )
 
-    sm = get_sessionmaker()
-    async with sm() as session:
-        state = await run_daily_refresh_workflow(
-            session,
-            model_id=args.model,
-            collect_providers=args.collect,
-            sources=args.source,
-            collection_summary=collection_summary,
-        )
+    model_ids = [args.model]
+    if args.all_models:
+        model_ids = [args.model] + [
+            model_id for model_id in COMPOSITE_MODELS if model_id != args.model
+        ]
 
-    print(
-        f"Observatory refresh status={state['status']} | "
-        f"new={state['new_observations_count']} | "
-        f"revisions={state['revisions_count']} | "
-        f"stage_changes={state['changed_classifications_count']} | "
-        f"changes={len(state['changes'])}"
-    )
-    print(state["summary_message"])
-    if state["status"] == "update_failed":
+    sm = get_sessionmaker()
+    states = []
+    async with sm() as session:
+        for index, model_id in enumerate(model_ids):
+            reported_model = index == 0
+            state = await run_daily_refresh_workflow(
+                session,
+                model_id=model_id,
+                collect_providers=args.collect and reported_model,
+                sources=args.source if reported_model else None,
+                collection_summary=(
+                    collection_summary if reported_model else None
+                ),
+                persist_result=reported_model,
+            )
+            states.append(state)
+            print(
+                f"Observatory refresh model={model_id} status={state['status']} | "
+                f"new={state['new_observations_count']} | "
+                f"revisions={state['revisions_count']} | "
+                f"stage_changes={state['changed_classifications_count']} | "
+                f"changes={len(state['changes'])}"
+            )
+            print(state["summary_message"])
+
+    state = states[0]
+    if any(s["status"] == "update_failed" for s in states):
         return 1
-    if state["status"] == "partial_provider_failure":
+    if any(s["status"] == "partial_provider_failure" for s in states):
         return 2
     return 0
 

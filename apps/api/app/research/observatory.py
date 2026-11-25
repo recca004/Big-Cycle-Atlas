@@ -1585,6 +1585,7 @@ async def _run_daily_refresh_workflow_unlocked(
     collect_providers: bool = False,
     sources: list[str] | None = None,
     collection_summary: dict[str, Any] | None = None,
+    persist_result: bool = True,
 ) -> dict[str, Any]:
     """Execute the §9 daily Big Cycle refresh & snapshot comparison workflow.
 
@@ -1677,6 +1678,27 @@ async def _run_daily_refresh_workflow_unlocked(
     # Clear memory cache so recalculation reflects any new DB rows
     _MEM_CACHE.clear()
     core = await compute_core_observatory(session, model_id=model_id)
+    if not persist_result:
+        return {
+            "status": "recalculated",
+            "model_id": model_id,
+            "db_fingerprint": core["db_fingerprint"],
+            "latest_collection_at": None,
+            "latest_update_attempt_at": None,
+            "latest_successful_update_at": (
+                (prior_state or {}).get("latest_successful_update_at")
+            ),
+            "latest_calculation_at": to_utc_iso(datetime.now(timezone.utc)),
+            "new_observations_count": inserted,
+            "revisions_count": revised,
+            "changed_classifications_count": 0,
+            "provider_failures": provider_failures,
+            "changes": [],
+            "summary_message": (
+                f"Experimental model {model_id} recalculated without "
+                "replacing the reported snapshot."
+            ),
+        }
     curr_snap = extract_snapshot_record(core)
     revs = await _recent_revisions_since(session, before_rev_time)
     diff = diff_snapshots(prior_snap, curr_snap, revisions=revs)
@@ -1737,6 +1759,7 @@ async def run_daily_refresh_workflow(
     collect_providers: bool = False,
     sources: list[str] | None = None,
     collection_summary: dict[str, Any] | None = None,
+    persist_result: bool = True,
 ) -> dict[str, Any]:
     """Run the refresh workflow under the shared cross-process update lock."""
     async with update_lock("observatory-refresh"):
@@ -1746,6 +1769,7 @@ async def run_daily_refresh_workflow(
             collect_providers=collect_providers,
             sources=sources,
             collection_summary=collection_summary,
+            persist_result=persist_result,
         )
 
 

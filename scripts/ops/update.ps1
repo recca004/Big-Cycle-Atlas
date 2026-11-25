@@ -201,7 +201,7 @@ if ($Source) { $collectArgs += @("--source", $Source) }
 if ($Country) { $collectArgs += @("--country", $Country.ToUpperInvariant()) }
 if ($WidZip) { $collectArgs += @("--wid-zip", (Resolve-Path $WidZip).Path) }
 $marketArgs = @("scripts\ingest_markets.py", "--start", (Get-Date).AddDays(-$MarketLookbackDays).ToString("yyyy-MM-dd"))
-$refreshArgs = @("scripts\refresh_observatory.py")
+$refreshArgs = @("scripts\refresh_observatory.py", "--all-models")
 if ($mode -in @("daily", "full", "macro-only")) {
   $refreshArgs += @("--collection-summary", $collectionSummaryPath)
 }

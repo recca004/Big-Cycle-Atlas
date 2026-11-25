@@ -22,6 +22,7 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
+from app.cycle.reference_universes import get_reference_universe
 from app.cycle.force_definitions import (
     FORCE_DEFINITIONS,
     ForceCoverageStatus,
@@ -166,6 +167,11 @@ class NormalizationFamily(str, Enum):
     # excess-credit thresholds but NO negative-side penalty threshold.
     one_sided_vulnerability = "one_sided_vulnerability"
     own_history = "own_history"
+    # Added by Sprint 6.14 (DEC-042 Option A): the score is the country's
+    # mid-rank percentile within a named, versioned external reference
+    # universe at the SAME period (period-specific calibration, frozen
+    # membership). Enabled per indicator via model-config entries only.
+    reference_percentile = "reference_percentile"
     cross_sectional_relative = "cross_sectional_relative"
     relative_share = "relative_share"
     contextual_deferred = "contextual_deferred"
@@ -450,6 +456,11 @@ class MomentumWindowResult:
     requested_anchor_period: str  # scoring-clock label, e.g. "2020-Q2"
     anchor_source_period: Optional[str] = None  # actual aligned source, e.g. "2019"
     change: Optional[float] = None
+    # Sprint 6.14 (DEC-042 Option C): units of `change`. "points" = signed
+    # raw provider-scale difference (WGI convention); "percent" = signed
+    # percentage change in the raw indicator value (LPPH convention). Kept
+    # as provenance so the two momentum units are never silently mixed.
+    change_unit: str = "points"
 
     def __post_init__(self) -> None:
         if self.window_years <= 0:
@@ -572,6 +583,34 @@ class OneSidedVulnerabilityConfig:
             raise ValueError(
                 f"saturated_score ({self.saturated_score}) must be <= "
                 f"no_excess_score ({self.no_excess_score})"
+            )
+
+
+# --- Reference-percentile level (Sprint 6.14: DEC-042 Option A) -----------------
+
+
+@dataclass(frozen=True)
+class ReferencePercentileConfig:
+    """Versioned MODEL PARAMETERS for one indicator's REFERENCE_PERCENTILE
+    level (DEC-042, Sprint 6.14).
+
+    The score is the mid-rank percentile of the country's observation within
+    the named external reference universe's distribution AT THE SAME
+    PERIOD. Period-specific calibration: each scoring period ranks against
+    that period's own distribution, so a country's score can move because
+    the reference population moved — that is intended (it IS a relative-
+    position measure), while frozen universe membership prevents membership
+    changes from fabricating history. minimum_sample_n gates thin periods:
+    below it, NO score is produced.
+    """
+
+    universe_code: str
+    minimum_sample_n: int  # Atlas MODEL PARAMETER, not provider truth
+
+    def __post_init__(self) -> None:
+        if self.minimum_sample_n <= 0:
+            raise ValueError(
+                f"minimum_sample_n must be positive, got {self.minimum_sample_n}"
             )
 
 
@@ -810,6 +849,30 @@ class ModelVersionConfig:
     one_sided_vulnerability_configs: dict[str, OneSidedVulnerabilityConfig] = field(
         default_factory=dict
     )
+    # Sprint 6.14 (DEC-042) — MODEL PARAMETERS: REFERENCE_PERCENTILE level is
+    # enabled per indicator by an explicit entry here; a registry
+    # REFERENCE_PERCENTILE level_family alone never auto-enables it.
+    # Currently exactly one entry: LABOUR_PRODUCTIVITY_PER_HOUR (OECD
+    # reference universe oecd_lpph_v1, period-specific mid-rank percentile,
+    # min 20 reporting members).
+    reference_percentile_configs: dict[str, ReferencePercentileConfig] = field(
+        default_factory=dict
+    )
+    # Sprint 6.14 (DEC-042 Option C) — EXECUTION GATE: percent-change
+    # OWN_HISTORY momentum is enabled per indicator by membership in this
+    # set; a registry momentum_family alone never auto-enables it.
+    # Currently exactly one member: LABOUR_PRODUCTIVITY_PER_HOUR.
+    pct_momentum_approved_indicators: frozenset[str] = field(
+        default_factory=frozenset
+    )
+    # V1 Mission 1 (delegated working-model approval) — RELATIVE_SHARE
+    # dimension gate: share of the tracked_8 universe total at the same
+    # period (e.g. "country's share of tracked-8 military expenditure").
+    # Registry relative_family alone never auto-enables it. Currently
+    # exactly one member: MILITARY_EXPENDITURE_USD.
+    relative_share_approved_indicators: frozenset[str] = field(
+        default_factory=frozenset
+    )
     # Sprint 6.4 (DEC-032) — EXPLICIT DIMENSION APPROVAL SETS for the
     # DIRECT_0_100 path. A registry level/relative/momentum family
     # declaration alone NEVER auto-enables a dimension — an indicator must
@@ -942,20 +1005,35 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
     # neither). No new approved dimension sets needed — COMPLEMENT_0_100 is
     # a level-only family with no relative/momentum path. All v0.7 WGI +
     # DSR + credit-gap + Education configuration unchanged.
-    version_id="normalization-v0.8",
-    normalization_method="sprint-6.7-wid-wealth-complement-0-100",
+    version_id="normalization-v1.4",
+    normalization_method="v1-mission2-reer-momentum",
     reference_universe_id="tracked_8",
     momentum_windows={
+        # DEC-042 Option C: 3y/5y/10y windows on annual LPPH; primary = 5y
+        # (consistent with the WGI convention). 10y is a research window —
+        # it never becomes the headline value.
+        "LABOUR_PRODUCTIVITY_PER_HOUR": (3, 5, 10),
+        # V1 Mission 1 (delegated): annual LFP momentum, same convention.
+        "LABOUR_FORCE_PARTICIPATION_RATE": (3, 5),
+        "REER_INDEX": (3, 5),
         "RULE_OF_LAW_WGI_SCORE": (3, 5),
         "CONTROL_OF_CORRUPTION_WGI_SCORE": (3, 5),
         "POLITICAL_STABILITY_WGI_SCORE": (3, 5),
     },
     momentum_primary_window_years={
+        "LABOUR_PRODUCTIVITY_PER_HOUR": 5,
+        "LABOUR_FORCE_PARTICIPATION_RATE": 5,
+        "REER_INDEX": 5,
         "RULE_OF_LAW_WGI_SCORE": 5,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 5,
         "POLITICAL_STABILITY_WGI_SCORE": 5,
     },
     momentum_anchor_tolerance_periods={
+        # Annual LPPH: at most 1 source year older than the requested anchor
+        # year (same convention as the annual WGI gate).
+        "LABOUR_PRODUCTIVITY_PER_HOUR": 1,
+        "LABOUR_FORCE_PARTICIPATION_RATE": 1,
+        "REER_INDEX": 1,
         "RULE_OF_LAW_WGI_SCORE": 1,
         "CONTROL_OF_CORRUPTION_WGI_SCORE": 1,
         "POLITICAL_STABILITY_WGI_SCORE": 1,
@@ -978,6 +1056,36 @@ CURRENT_MODEL_VERSION = ModelVersionConfig(
             saturated_score=0.0,
         ),
     },
+    reference_percentile_configs={
+        # Sprint 6.14 (DEC-042 Option A — owner approved): OECD reference
+        # percentile for labour productivity. 20 reporting members ~ a
+        # majority of the 38-member universe — an Atlas versioned MODEL
+        # PARAMETER, not an OECD threshold.
+        "LABOUR_PRODUCTIVITY_PER_HOUR": ReferencePercentileConfig(
+            universe_code="oecd_lpph_v1",
+            minimum_sample_n=20,
+        ),
+        # V1 Mission 1 (delegated): WDI universe is ~200 economies; require
+        # at least 100 reporting members for a usable distribution.
+        "LABOUR_FORCE_PARTICIPATION_RATE": ReferencePercentileConfig(
+            universe_code="wdi_lfp_v1",
+            minimum_sample_n=100,
+        ),
+    },
+    pct_momentum_approved_indicators=frozenset({
+        # DEC-042 Option C — owner approved for implementation (V1 Mission 1).
+        "LABOUR_PRODUCTIVITY_PER_HOUR",
+        # V1 Mission 1 (delegated): same annual pct-change convention.
+        "LABOUR_FORCE_PARTICIPATION_RATE",
+        # Mission 2 (delegated): REER momentum-only dimension.
+        "REER_INDEX",
+    }),
+    relative_share_approved_indicators=frozenset({
+        # Delegated working-model approval (V1 Mission 1): share of
+        # tracked_8 military expenditure = relative defence resources.
+        # INPUT measure only — never a capability score (SIPRI caveat).
+        "MILITARY_EXPENDITURE_USD",
+    }),
     # Sprint 6.4 (DEC-032): EXPLICIT dimension approval for the DIRECT_0_100
     # path. Both sets are exactly the WGI x3 — the only indicators approved
     # for direct momentum or relative scoring. Education
@@ -1010,6 +1118,9 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         "IMPORTS_GDP",
         "TRADE_BALANCE",
         "CURRENT_ACCOUNT_GDP",
+        "FDI_NET_INFLOWS_GDP",
+        "REER_INDEX",
+        "BROADBAND_PER_100",
         "GROSS_CAPITAL_FORMATION_GDP",
         "GINI_INDEX",
         "INFLATION_CPI",
@@ -1018,18 +1129,24 @@ LIVE_INDICATOR_CODES: frozenset[str] = frozenset(
         "RULE_OF_LAW_WGI_SCORE",
         "CONTROL_OF_CORRUPTION_WGI_SCORE",
         "POLITICAL_STABILITY_WGI_SCORE",
+        "GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
         # BIS (2)
         "CREDIT_TO_GDP_GAP",
         "DEBT_SERVICE_RATIO",
         # OECD (2)
         "LABOUR_PRODUCTIVITY_PER_HOUR",
         "UNIT_LABOUR_COST_GROWTH",
+        # WB (LFP lives under world_bank but is listed with OECD neighbours
+        # because it shares the REFERENCE_PERCENTILE family)
+        "LABOUR_FORCE_PARTICIPATION_RATE",
         # IMF (1)
         "GOVERNMENT_DEBT_GDP",
         # OECD education (1)
         "TERTIARY_ATTAINMENT_25_34",
         # WID (1)
         "WEALTH_SHARE_TOP_10",
+        # WB EM-DAT-derived structural hazard exposure (1)
+        "NATURAL_DISASTER_AFFECTED_PCT",
     }
 )
 
@@ -1089,6 +1206,53 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
             notes=(
                 "Deliberately unassigned. Nominal; would need PPP and likely "
                 "log transform before any use."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="REER_INDEX",
+            direction=IndicatorStrengthDirection.negative,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "Mission 2 (delegated): momentum-only dimension. WB "
+                "convention: rising REER = real appreciation = declining "
+                "price competitiveness — reported as a signed % change of "
+                "the index, NEVER a competitiveness score. Depreciation is "
+                "not automatically positive."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="BROADBAND_PER_100",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=None,
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "Mission 2: digital-infrastructure coverage context for "
+                "infrastructure_investment — subscriptions per 100, NOT "
+                "quality/speed."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="FDI_NET_INFLOWS_GDP",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "V1 Mission 1: FDI net inflows %GDP (BoP basis). Capital "
+                "attraction is NOT automatically positive (tax-haven flows, "
+                "profit-driven M&A, volatility) — no monotonic curve "
+                "invented. Supporting context for trade_capital_flows."
             ),
         ),
         NormalizationSpec(
@@ -1169,6 +1333,25 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "norms. Level RECLASSIFIED to CONTEXTUAL_DEFERRED; future "
                 "design candidate: deviation from the country's own "
                 "investment norm."
+            ),
+        ),
+        NormalizationSpec(
+            indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.reference_percentile,
+            relative_family=NormalizationFamily.cross_sectional_relative,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            notes=(
+                "V1 Mission 1 (delegated working model): level = mid-rank "
+                "percentile within the WDI country universe wdi_lfp_v1 "
+                "(ILO modeled participation, ages 15+). Interpretation is "
+                "NARROW: relative economic participation, not 'character' "
+                "or 'determination'. Higher participation is not "
+                "universally positive (income effects, informal labour) — "
+                "documented limitation."
             ),
         ),
         NormalizationSpec(
@@ -1284,6 +1467,23 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "spec is a normal DIRECT_0_100 entry. " + _WGI_NOTE
             ),
         ),
+        NormalizationSpec(
+            indicator_code="GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
+            direction=IndicatorStrengthDirection.positive,
+            level_family=NormalizationFamily.direct_0_100,
+            relative_family=NormalizationFamily.cross_sectional_relative,
+            momentum_family=NormalizationFamily.own_history,
+            momentum_windows=(3, 5),
+            freshness_class=FreshnessClass.annual,
+            absolute_comparable=True,
+            relative_comparable=True,
+            notes=(
+                "Sprint 6.21 (DEC-041): scoring proxy for leadership "
+                "capabilities (PARTIAL-capped at the force layer). Candidate "
+                "families present but NOT in the approved momentum/relative "
+                "indicator sets — level dimension only. " + _WGI_NOTE
+            ),
+        ),
         # -- BIS ---------------------------------------------------------------
         NormalizationSpec(
             indicator_code="CREDIT_TO_GDP_GAP",
@@ -1342,7 +1542,7 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
         NormalizationSpec(
             indicator_code="LABOUR_PRODUCTIVITY_PER_HOUR",
             direction=IndicatorStrengthDirection.positive,
-            level_family=NormalizationFamily.monotonic_positive,
+            level_family=NormalizationFamily.reference_percentile,
             relative_family=NormalizationFamily.cross_sectional_relative,
             momentum_family=NormalizationFamily.own_history,
             momentum_windows=(3, 5),
@@ -1354,12 +1554,13 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "comparison). Level AND own-history growth stay separable: "
                 "high level + weak growth != low level + fast improvement. "
                 "Sprint 5.9 audit (DEC-018): direction (higher PPP/hour = "
-                "stronger structural productivity) approved, but NO "
-                "absolute 0-100 mapping without an external calibration "
-                "distribution — tracked_8 min-max is explicitly rejected "
-                "(CHN/IND not covered by OECD; pooled tracked_8 range 33.5-"
-                "90.5 is not a global distribution). Level curve deferred "
-                "pending an expanded calibration universe decision."
+                "stronger structural productivity) approved; tracked_8 "
+                "min-max rejected. Sprint 6.14 (DEC-042 Option A — owner "
+                "approved): level = mid-rank percentile within the versioned "
+                "OECD reference universe oecd_lpph_v1 at the same period. "
+                "This is an OECD relative-position score, NEVER a global "
+                "percentile; CHN/IND are not OECD members and receive "
+                "unavailable, not a fabricated score."
             ),
         ),
         NormalizationSpec(
@@ -1461,6 +1662,25 @@ NORMALIZATION_REGISTRY: dict[str, NormalizationSpec] = {
                 "or values/social gaps)."
             ),
         ),
+        NormalizationSpec(
+            indicator_code="NATURAL_DISASTER_AFFECTED_PCT",
+            direction=IndicatorStrengthDirection.contextual,
+            level_family=NormalizationFamily.contextual_deferred,
+            relative_family=NormalizationFamily.contextual_deferred,
+            momentum_family=None,
+            freshness_class=FreshnessClass.irregular,
+            absolute_comparable=True,
+            notes=(
+                "Mission 4 §18: WB EN.CLC.MDAT.ZS (EM-DAT-derived) — annual "
+                "average % of population affected by droughts/floods/extreme "
+                "temperatures, averaged over 1990-2009 and published at date "
+                "2009 only. A SINGLE multi-decadal structural-exposure point: "
+                "no momentum exists (one period), relative ranking deferred "
+                "(a static exposure measure does not describe resilience). "
+                "Missing country values mean 'not published', never zero "
+                "events. Acts-of-nature context profile only."
+            ),
+        ),
     )
 }
 
@@ -1527,6 +1747,62 @@ def validate_normalization_registry() -> None:
             raise ValueError(
                 f"{indicator}: one-sided vulnerability level config but "
                 f"registry level family is {spec.level_family.value}"
+            )
+    # Reference-percentile configs (Sprint 6.14 gate): an entry for an
+    # indicator whose registry level family is not REFERENCE_PERCENTILE is a
+    # configuration mistake — fail loudly; the named universe must exist.
+    for indicator, config in CURRENT_MODEL_VERSION.reference_percentile_configs.items():
+        spec = NORMALIZATION_REGISTRY.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"reference-percentile config for an unknown indicator: "
+                f"{indicator}"
+            )
+        if spec.level_family is not NormalizationFamily.reference_percentile:
+            raise ValueError(
+                f"{indicator}: reference-percentile config but registry "
+                f"level family is {spec.level_family.value}"
+            )
+        if get_reference_universe(config.universe_code) is None:
+            raise ValueError(
+                f"{indicator}: unknown reference universe "
+                f"{config.universe_code!r}"
+            )
+    # Percent-change momentum gate (Sprint 6.14): the approved set must be
+    # consistent with the registry — indicator exists, momentum family
+    # OWN_HISTORY, windows/primary/tolerance all configured.
+    for indicator in CURRENT_MODEL_VERSION.pct_momentum_approved_indicators:
+        spec = NORMALIZATION_REGISTRY.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"pct-momentum approved unknown indicator: {indicator}"
+            )
+        if spec.momentum_family is not NormalizationFamily.own_history:
+            raise ValueError(
+                f"{indicator}: pct-momentum approved but registry momentum "
+                f"family is {spec.momentum_family.value}"
+            )
+        if (
+            indicator not in CURRENT_MODEL_VERSION.momentum_windows
+            or indicator not in CURRENT_MODEL_VERSION.momentum_primary_window_years
+            or indicator not in CURRENT_MODEL_VERSION.momentum_anchor_tolerance_periods
+        ):
+            raise ValueError(
+                f"{indicator}: pct-momentum approved but windows/primary/"
+                f"tolerance are not configured in the model version"
+            )
+    # Relative-share dimension gate (V1 Mission 1): approved indicator must
+    # exist and declare relative_family RELATIVE_SHARE.
+    for indicator in CURRENT_MODEL_VERSION.relative_share_approved_indicators:
+        spec = NORMALIZATION_REGISTRY.get(indicator)
+        if spec is None:
+            raise ValueError(
+                f"relative-share approved unknown indicator: {indicator}"
+            )
+        if spec.relative_family is not NormalizationFamily.relative_share:
+            raise ValueError(
+                f"{indicator}: relative-share approved but registry "
+                f"relative family is {spec.relative_family.value if spec.relative_family else None}"
             )
     # Sprint 6.4: explicit dimension approval sets must be consistent with
     # the registry. A registry family declaration alone NEVER enables a

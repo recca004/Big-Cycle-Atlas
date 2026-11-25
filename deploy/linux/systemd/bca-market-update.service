@@ -1,0 +1,12 @@
+[Unit]
+Description=Big Cycle Atlas incremental market data update
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=bca
+WorkingDirectory=/opt/big-cycle-atlas/apps/api
+ExecStart=/bin/sh -c '.venv/bin/python scripts/ingest_markets.py --start $(date -d "45 days ago" +%%F)'
+EnvironmentFile=-/opt/big-cycle-atlas/apps/api/.env
+# Overlap prevention: Type=oneshot + timer won't start a second instance.

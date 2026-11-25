@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DataExplorer } from "@/features/data/DataExplorer";
+---
+
+<BaseLayout title="Data">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Observations</p>
+    <h1 class="headline-lg">Data explorer</h1>
+    <p class="body-sm">
+      Inspect raw observations per country and indicator — the immutable
+      input layer of the pipeline.
+    </p>
+  </header>
+  <DataExplorer client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+</style>

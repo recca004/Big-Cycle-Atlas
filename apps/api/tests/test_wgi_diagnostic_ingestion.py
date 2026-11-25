@@ -198,9 +198,9 @@ def _normalize(iso3: str, indicator: str, scoring_period: ScoringPeriod):
 # --- Registry: exact 9 specs ------------------------------------------------------
 
 
-def test_exact_nine_diagnostic_specs():
+def test_exact_twelve_diagnostic_specs():
     validate_wgi_diagnostic_specs()
-    assert len(WGI_DIAGNOSTIC_SPECS) == 9  # 3 WGI dimensions x LB/UB/SR only
+    assert len(WGI_DIAGNOSTIC_SPECS) == 12  # 3 WGI dimensions x LB/UB/SR only
     assert all(s.provider_source_code == "3" for s in WGI_DIAGNOSTIC_SPECS)
     assert not any(s.provider_series_code.endswith(".SE") for s in WGI_DIAGNOSTIC_SPECS)
 
@@ -828,7 +828,7 @@ async def test_ingestion_creates_no_observation_or_series_rows(client):
     assert await _count(IndicatorDiagnostic) == 3
     assert await _count(Observation) == obs_before  # no Observation rows created
     assert await _count(SourceSeries) == series_before  # no SourceSeries rows created
-    assert await _count(Indicator) == indicators_before == 27  # catalog unchanged
+    assert await _count(Indicator) == indicators_before == 33  # catalog unchanged
 
 
 @pytest.mark.asyncio
@@ -879,4 +879,4 @@ async def test_wgi_dsr_credit_gap_outputs_unchanged_confidence_none(client):
 def test_model_version_stays_v0_6():
     # Sprint 5.15 imports raw auxiliary input data ONLY — no normalized
     # output changed, so no version bump.
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.8"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.4"

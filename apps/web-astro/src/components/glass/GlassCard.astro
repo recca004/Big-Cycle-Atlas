@@ -1,0 +1,54 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  class?: string;
+  interactive?: boolean;
+}
+const { title, subtitle, class: className = "", interactive = false } = Astro.props;
+---
+
+<section
+  class:list={["glass", "glass-card", { "glass-interactive": interactive }, className]}
+>
+  {
+    (title || subtitle || Astro.slots.has("actions")) && (
+      <header class="glass-card-header">
+        <div>
+          {title && <h2 class="headline-sm">{title}</h2>}
+          {subtitle && <p class="body-sm card-subtitle">{subtitle}</p>}
+        </div>
+        {Astro.slots.has("actions") && (
+          <div class="glass-card-actions">
+            <slot name="actions" />
+          </div>
+        )}
+      </header>
+    )
+  }
+  <div class="glass-card-body">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .glass-card {
+    padding: var(--space-5);
+  }
+  .glass-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .card-subtitle {
+    margin-top: var(--space-1);
+  }
+  .glass-card-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+</style>

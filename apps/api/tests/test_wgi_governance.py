@@ -122,7 +122,7 @@ async def test_wgi_source_series_seeded_idempotently(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 22
+        assert total == 33
         wgi_series = (
             await session.execute(
                 select(SourceSeries.external_code)
@@ -138,7 +138,7 @@ async def test_wgi_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        assert total == 22
+        assert total == 33
         dup = (
             await session.execute(
                 select(func.count())
@@ -256,12 +256,22 @@ async def test_wgi_coverage_is_country_scoped(client):
 
 
 async def test_global_openness_remains_missing_with_wgi_data(client):
+    """WGI data alone does not satisfy openness' live inputs (Mission 4 §16:
+    the context profile sources trade/capital/size series — defined but
+    unsourced when only governance data exists)."""
     await _persist(_wgi_dtos("CHE"))
     coverage = await coverage_by_code("CHE")
     openness = coverage["global_openness"]
-    assert openness.status == "missing"
-    assert openness.live_inputs == []
-    assert openness.candidate_inputs == []
+    assert openness.status == "defined_not_sourced"
+    assert {i.indicator_code for i in openness.live_inputs} == {
+        "EXPORTS_GDP", "IMPORTS_GDP", "TRADE_BALANCE",
+        "CURRENT_ACCOUNT_GDP", "FDI_NET_INFLOWS_GDP",
+    }
+    # size context is candidate-only — deliberately unassigned scale inputs
+    assert {i.indicator_code for i in openness.candidate_inputs} == {
+        "POPULATION", "GDP_CURRENT_USD",
+    }
+    assert all(not i.has_data for i in openness.live_inputs)
 
 
 # --- 11: no force score fields ------------------------------------------------------

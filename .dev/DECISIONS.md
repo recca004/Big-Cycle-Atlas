@@ -4632,3 +4632,618 @@ The most natural next step is **(a) Gini normalization audit** or
 **(b) the first executable derived indicator** (if an economic
 verdict approves one), as both follow the established audit-then-
 implement pattern.
+
+---
+
+## DEC-038 — First Executable Derived Computation: TRADE_OPENNESS_GDP (FORMULA_APPROVED — descriptive ratio only, NO level, NO force promotion)
+
+Date: 2026-09-10
+Sprint: 6.11
+Status: implementation — first executable DerivedAlignedValue computation; NO level score, NO force promotion, NO model-version bump
+
+### Part 1 — Objective
+
+Implement the first real derived calculation using the DEC-037 contract:
+
+    TRADE_OPENNESS_GDP = EXPORTS_GDP + IMPORTS_GDP
+
+The value is a descriptive **trade-intensity ratio** (exports + imports
+as % of GDP). It is NOT an Atlas strength score, NOT a Global Openness
+level, NOT a Trade and capital flows force score. DEC-035's
+DEFER_GLOBAL_OPENNESS_LEVEL verdict remains in force.
+
+### Part 2 — Provenance execution gap resolution
+
+DEC-037 requires each DerivedComponentProvenance to carry
+observation_id, source_series_id, and data_source_id. AlignedValue does
+NOT carry these fields.
+
+**Resolution**: refactor the alignment internals so ONE shared
+selection primitive (`_select_observation_as_of`) selects the
+Observation once, then:
+- the normal alignment path builds AlignedValue (unchanged public API)
+- the derived path builds AlignedValue plus source-identity provenance
+
+Three new internal helpers added to `alignment_service.py`:
+- `_select_observation_as_of` — shared observation-selection primitive
+- `_build_aligned_value` — builds AlignedValue from a selected Observation
+- `_resolve_country_indicator` — resolves Country and Indicator ORM objects
+
+One new public function:
+- `align_with_provenance_as_of` — returns (AlignedValue, observation_id,
+  source_series_id, data_source_id, release_date) using the SAME
+  selection primitive
+
+**The public behavior of `align_observation_as_of` is UNCHANGED.** No
+second as-of algorithm exists. No duplicate selection logic.
+
+### Part 3 — Formula identity and version
+
+- `derived_indicator_code = "TRADE_OPENNESS_GDP"`
+- `formula_id = "trade_openness_gdp"`
+- `formula_version = "trade-openness-gdp-v1"`
+
+The formula version is SEPARATE from normalization-v0.8 and
+force-aggregation-v0.3. Neither model version is bumped.
+
+### Part 4 — Component contract
+
+Required components (both must be present):
+- `EXPORTS_GDP` (WB NE.EXP.GNFS.ZS — exports of goods and services, % GDP)
+- `IMPORTS_GDP` (WB NE.IMP.GNFS.ZS — imports of goods and services, % GDP)
+
+Formula: `derived_value = exports.raw_value + imports.raw_value`
+
+### Part 5 — Period compatibility rule (formula-level)
+
+Both components may be aligned to the same quarterly scoring period
+while representing different annual source periods. A value like
+exports=2024 + imports=2023 must NOT produce one trade-openness number.
+
+For this formula, require compatible component source periods: both
+components must have the same `effective_period_end`. If the periods do
+not match:
+- `derived_value = None`
+- both components retain their provenance (both are present, just
+  incompatible)
+- never use a prior component silently to force a match
+- never interpolate, forward-fill, or zero-fill
+
+This is a FORMULA-LEVEL rule, not a new global rule for every future
+derived indicator.
+
+### Part 6 — Missingness behavior
+
+If either required component is unavailable:
+- `derived_value = None` (MISSING != ZERO)
+- the missing component's `missing_reason` explains the absence
+- the present component retains its provenance
+
+A real zero input (0.0) is a valid observation, not a missing one.
+`derived_value = 0.0 + 30.0 = 30.0` is correct.
+
+### Part 7 — Provenance behavior
+
+Each component retains INDEPENDENT provenance:
+- observation_id (the raw Observation primary key)
+- source_series_id (the SourceSeries identity)
+- data_source_id (the DataSource identity)
+- aligned_value (indicator, country, scoring period, source period,
+  raw value, age, effective period end, freshness, vintage)
+- release_date (None until Milestone 9)
+- component_backtest_safe (False until Milestone 9)
+
+Components are never collapsed into a synthetic source identity.
+
+### Part 8 — Backtest-safety behavior
+
+`backtest_safe = False` for all derived values. Release-date
+discipline is Milestone 9; until then every component is
+`component_backtest_safe = False` and the derived result is
+`backtest_safe = False`. No formula upgrades unsafe inputs.
+
+### Part 9 — Freshness
+
+No new freshness calculation is invented. Each component keeps its
+existing alignment/freshness provenance. If either required input
+cannot be used under the current component policy, `derived_value` is
+None. Freshness factors are not averaged, the trade ratio is not
+multiplied by freshness, and no numeric confidence is produced.
+
+### Part 10 — Normalization status
+
+NO 0-100 mapping is invented. The derived value is a raw descriptive
+ratio, not a level score. Values above 100 are valid and unclamped.
+The normalizer does NOT emit a numeric NormalizedSignal for this
+value. If a registry classification is needed for architectural
+completeness, the level semantics are explicitly
+`contextual_deferred`.
+
+### Part 11 — Force role
+
+NO force is promoted. Global Openness and Trade and capital flows
+remain unscored. The derived trade-intensity value is research/context
+until Sprint 6.12 completes its semantic audit.
+
+### Part 12 — Code changed
+
+**Modified:**
+- `apps/api/app/services/alignment_service.py` — refactored to extract
+  shared selection primitive (`_select_observation_as_of`), shared
+  helpers (`_build_aligned_value`, `_resolve_country_indicator`), and
+  added `align_with_provenance_as_of`. Public API of
+  `align_observation_as_of` unchanged.
+
+**New:**
+- `apps/api/app/services/derived_indicator_service.py` —
+  `derive_trade_openness_as_of` function + formula identity constants
+- `apps/api/tests/test_derived_trade_openness.py` — 23 focused tests
+- `apps/api/scripts/_sprint_6_12_trade_capital_profile.py` —
+  read-only research profile (for Sprint 6.12)
+
+### Part 13 — Verification
+
+- Focused tests: 23 passed (all offline, SQLite + seeded data, no
+  external APIs, no DB writes)
+- Full pytest: **660 passed** (637 baseline + 23 new), 0 failures
+- DB unchanged: 6814 observations / 27 indicators / 22 SourceSeries /
+  10 DataSources / 1872 indicator_diagnostics
+- No migration, no ingestion, no persistence, no model-version bump
+- No commit/push
+
+### Part 14 — Verdict
+
+**FORMULA_APPROVED — descriptive ratio only.**
+
+The TRADE_OPENNESS_GDP formula is approved as the first executable
+DerivedAlignedValue computation. The value is a descriptive trade-
+intensity ratio, NOT a strength score. No level mapping is approved.
+No force is promoted. No normalization family is added. No model-
+version bump.
+
+### Part 15 — Remaining derived-layer blockers
+
+- A normalization family for TRADE_OPENNESS_GDP (if ever needed)
+  requires its own DEC.
+- Partial-input / optional-component formulas remain deferred.
+- Derived-value persistence remains deferred.
+- Release-date-safe derivation remains deferred until Milestone 9.
+- Enriching AlignedValue with source-identity fields remains deferred
+  (the wrapper + align_with_provenance_as_of pattern is sufficient
+  for now).
+
+---
+
+## DEC-039 — Trade and Capital Flows Force Methodology Audit (DEFER_TRADE_CAPITAL_LEVEL)
+
+Date: 2026-09-10
+Sprint: 6.12
+Status: methodology/research only — NO implementation, NO model-version bump, NO force promotion
+
+### Part 1 — Exact force semantic target
+
+**Trade and capital flows** (force_definitions.py code=
+`trade_capital_flows`): "Size and balance of the country's trade and
+cross-border capital flows."
+
+This is a BROAD conceptual force covering:
+- trade size (exports, imports, trade intensity)
+- trade balance (external balance)
+- current account balance (trade + services + income + transfers)
+- capital flows (FDI, portfolio investment, capital account)
+- cross-border financial flows
+
+The force is NOT "Global openness" (which covers trade, capital,
+people, AND ideas). The force is NOT "export strength" or "trade
+intensity alone." These concepts overlap but are not identical.
+
+Current live inputs (force_definitions.py):
+- EXPORTS_GDP, IMPORTS_GDP, TRADE_BALANCE, CURRENT_ACCOUNT_GDP
+- derived TRADE_OPENNESS_GDP (Sprint 6.11, DEC-038)
+
+### Part 2 — Inputs audited
+
+| Input | Source | n (tracked_8) | Range | Latest @ 2025-Q4 |
+|---|---|---|---|---|
+| EXPORTS_GDP | WB NE.EXP.GNFS.ZS | 25-26 | 9.04–78.05% | USA 10.97, CHE 78.05 |
+| IMPORTS_GDP | WB NE.IMP.GNFS.ZS | 25-26 | 8.97–69.11% | USA 14.04, CHE 69.11 |
+| TRADE_BALANCE | WB NE.RSB.GNFS.ZS | 25-26 | -5.69 to +8.55% | USA -3.07, CHE +8.94 |
+| CURRENT_ACCOUNT_GDP | WB BN.CAB.XOKA.GD.ZS | 26 | -5.91 to +9.80% | USA -3.63, CHN +3.77 |
+| TRADE_OPENNESS_GDP (derived) | DEC-038 | 8 | 25.02–147.16% | USA 25.02, CHE 147.16 |
+
+Read-only research artifact: `scripts/_sprint_6_12_trade_capital_profile.py`
+
+### Part 3 — Trade-intensity verdict (Question A)
+
+**Can trade intensity be a LEVEL component? NO.**
+
+Empirical evidence from tracked_8 @ 2025-Q4:
+- CHE: 147.16 (highest — small open economy, re-export hub)
+- USA: 25.02 (lowest — world's largest economy, reserve currency issuer)
+- DEU: 78.51, FRA: 67.19, GBR: 62.46, IND: 46.27, JPN: 44.85, CHN: 37.96
+
+Higher trade/GDP does NOT mean "stronger":
+- Small economies naturally have higher ratios (CHE, DEU)
+- Large economies naturally have lower ratios (USA, CHN, JPN)
+- Geography dominates: landlocked/remote have lower ratios
+- Re-export hubs (CHE, NLD, SGP, HKG) have extreme ratios
+
+Lower trade/GDP does NOT mean "weaker":
+- USA has the lowest tracked_8 ratio but is the world's largest economy
+- JPN has a low ratio but is a major advanced economy
+
+This confirms DEC-035's finding: trade intensity measures INTENSITY
+not STRENGTH. It is structurally confounded by country size and
+geography. No parameter-free transformation maps it to a 0-100
+strength score. Values exceed 100 (CHE 147.16), making DIRECT_0_100
+invalid. Any cap destroys valid information. Any monotonic curve
+requires arbitrary thresholds without external justification.
+
+**Verdict: trade intensity CANNOT be a LEVEL component.**
+
+### Part 4 — Trade-balance verdict (Question B)
+
+**Can trade balance be a monotonic strength signal? NO.**
+
+Empirical evidence from tracked_8 @ 2025-Q4:
+- CHE: +8.94 (large surplus)
+- CHN: +4.19 (surplus)
+- DEU: +2.36 (surplus)
+- JPN: -0.89 (small deficit)
+- IND: -1.74 (deficit)
+- GBR: -1.26 (deficit)
+- FRA: -0.41 (small deficit)
+- USA: -3.07 (persistent deficit)
+
+A surplus is NOT universally "stronger":
+- CHE surplus reflects export competitiveness AND small economy structure
+- CHN surplus reflects an export-led growth model, which may be a
+  structural imbalance (under-consumption, currency undervaluation)
+- Extreme surplus can reflect structural distortion, not strength
+
+A deficit is NOT universally "weaker":
+- USA deficit reflects reserve currency status, capital inflows, and
+  domestic demand — the USA has run persistent deficits for decades
+  while remaining the world's largest economy
+- Reserve-currency countries can sustain deficits that would be
+  unsustainable for non-reserve countries
+- Development stage matters: developing countries may run deficits
+  during industrialization
+
+Zero is NOT clearly optimal:
+- No official source (IMF, WB, OECD) defines an "optimal" trade balance
+- The IMF explicitly avoids trade-balance thresholds in its external
+  sector assessment (EBA-lite uses a multivariate model, not a target)
+- A target band would require arbitrary thresholds
+
+**Verdict: trade balance CANNOT be a monotonic strength signal.
+No target band is defensible without arbitrary thresholds.**
+
+### Part 5 — Current-account verdict (Question B continued)
+
+**Can current account be a monotonic strength signal? NO.**
+
+The current account (CA) extends the trade balance to include
+services, income, and transfers. The same structural issues apply:
+- USA CA: -3.63 (persistent deficit, reserve currency)
+- CHN CA: +3.77 (surplus, export-led model)
+- CHE CA: +6.98 (surplus, small open economy)
+- JPN CA: +4.86 (surplus, advanced economy with overseas income)
+
+The CA surplus/deficit interpretation depends on:
+- reserve-currency status (USA can sustain deficits)
+- development stage (developing countries may borrow from abroad)
+- capital account counterpart (surplus = lending abroad, deficit =
+  borrowing from abroad — neither is universally "stronger")
+- demographic structure (aging countries may run surpluses to save
+  for retirement)
+
+No official source defines a universal "strong" CA level. The IMF's
+External Balance Assessment (EBA) uses a multivariate structural
+model, not a target threshold.
+
+**Verdict: current account CANNOT be a monotonic strength signal.
+No target band is defensible without arbitrary thresholds.**
+
+### Part 6 — Composition candidate matrix (Question C)
+
+| Candidate | Type | Parameters | Defensible? | Verdict |
+|---|---|---|---|---|
+| A. Identity from EXPORTS_GDP | LEVEL | none | NO — no defensible level mapping | REJECTED |
+| B. Identity from IMPORTS_GDP | LEVEL | none | NO — no defensible level mapping | REJECTED |
+| C. Identity from TRADE_BALANCE | LEVEL | none | NO — no monotonic strength | REJECTED |
+| D. Identity from CURRENT_ACCOUNT_GDP | LEVEL | none | NO — no monotonic strength | REJECTED |
+| E. Identity from TRADE_OPENNESS_GDP | LEVEL | none | NO — intensity not strength (DEC-035) | REJECTED |
+| F. Weighted average (any 2+) | LEVEL | weights | NO — arbitrary weights | REJECTED |
+| G. Openness/intensity + balance | LEVEL | normalization + weights | NO — mixing ratio (0-150+) with balance (-6 to +9) | REJECTED |
+| H. Gate/regime structure | LEVEL | regime definitions | NO — arbitrary regimes | REJECTED |
+| I. Own-history (any component) | MOMENTUM | window | Not a LEVEL — momentum dimension | DEFERRED (separate DEC needed) |
+| J. Cross-sectional relative | RELATIVE | universe | Not a LEVEL — relative dimension | DEFERRED (separate DEC needed) |
+| K. CONTEXTUAL_DEFERRED | none | n/a | VALID — no defensible level exists | **SELECTED** |
+
+**No composition formula is defensible.** Every candidate that
+produces a LEVEL requires arbitrary weights, thresholds, or
+normalization that is not backed by economic evidence or official
+source methodology.
+
+### Part 7 — Level verdict
+
+**DEFER_TRADE_CAPITAL_LEVEL.**
+
+No defensible Atlas 0-100 level mapping exists for any single
+component or any composition of the available trade/capital-flow
+inputs. The fundamental problems are:
+1. Trade intensity measures INTENSITY not STRENGTH (DEC-035 confirmed)
+2. Trade balance and current account have no universal monotonic
+   strength interpretation (surplus is not always stronger, deficit
+   is not always weaker)
+3. No composition formula is parameter-free or backed by an accepted
+   method
+4. Reserve-currency status and development stage change the
+   interpretation of balance/CA in ways that no fixed curve can capture
+
+### Part 8 — Relative verdict
+
+A cross-country relative score (rank within tracked_8 or a broader
+universe) is mechanically computable for any component. However:
+- A relative score is a RELATIVE dimension, not a LEVEL
+- A cross-country rank cannot fill a missing level
+- tracked_8 is NOT global and cannot be treated as such
+- A broader WB universe relative score would be a relative dimension
+  within that universe, not an absolute level
+
+**Relative verdict: DEFERRED.** A relative score for trade/capital
+flows would require its own DEC (reference universe, window,
+dimension approval). It is a candidate for a future sprint but is
+NOT approved here.
+
+### Part 9 — Momentum verdict
+
+Own-history (change vs own past) is mechanically computable for
+EXPORTS_GDP, IMPORTS_GDP, TRADE_BALANCE, CURRENT_ACCOUNT_GDP, and
+derived TRADE_OPENNESS_GDP. However:
+- Momentum is a MOMENTUM dimension, not a LEVEL
+- An own-history change cannot fill a missing level
+- Momentum for trade indicators measures growth/change in trade, not
+  trade strength
+
+**Momentum verdict: DEFERRED.** A momentum score for trade/capital
+flows would require its own DEC (window, anchor tolerance, dimension
+approval). It is a candidate for a future sprint but is NOT approved
+here.
+
+### Part 10 — Coverage / proxy-ceiling verdict
+
+Even if a narrow proxy became executable, coverage would stay
+PARTIAL:
+- The force covers "trade AND capital flows"
+- Current inputs cover trade (exports, imports, balance) and current
+  account
+- Capital flows (FDI, portfolio investment, capital account) are NOT
+  in the data
+- The current account is a flow measure, not a capital-flow-stock
+  measure
+- One or two measures cannot represent the complete force
+
+**Coverage ceiling: PARTIAL** (if any proxy is ever promoted). No
+score is promoted in this sprint, so the ceiling question is moot for
+now.
+
+### Part 11 — Implementation authorization
+
+**NO implementation authorized.** The audit finds NO defensible level
+methodology. All candidate approaches require arbitrary thresholds,
+weights, or assumptions that are not backed by economic evidence or
+official source methodology. The force remains DEFERRED_MULTI /
+unscored.
+
+### Part 12 — Code changes
+
+**None.** No production code changed. No force code changes. No
+normalization code changes. No model-version bump. No migration, no
+ingestion, no persistence.
+
+Read-only research artifact (NEW):
+- `scripts/_sprint_6_12_trade_capital_profile.py` — tracked_8
+  empirical profile for EXPORTS_GDP, IMPORTS_GDP, TRADE_BALANCE,
+  CURRENT_ACCOUNT_GDP, and derived TRADE_OPENNESS_GDP
+
+### Part 13 — Tests
+
+No new tests (methodology/research sprint). Full pytest unchanged
+at 660 passed. DB unchanged (6814/27/22/10/1872).
+
+### Part 14 — Verdict
+
+**DEFER_TRADE_CAPITAL_LEVEL.**
+
+No defensible Atlas 0-100 level mapping exists for Trade and capital
+flows. The force remains DEFERRED_MULTI / unscored. All four live
+inputs (EXPORTS_GDP, IMPORTS_GDP, TRADE_BALANCE, CURRENT_ACCOUNT_GDP)
+remain SUPPORTING_CONTEXT. The derived TRADE_OPENNESS_GDP (DEC-038)
+remains a descriptive ratio, not a scoring input.
+
+**No model-version bump.** normalization-v0.8 and
+force-aggregation-v0.3 unchanged. 5/17 forces executable, 12/17
+intentionally deferred.
+
+### Part 15 — Smallest next sprint
+
+**Sprint 6.13 — owner to choose.** Candidates:
+
+(a) **Gini normalization audit** — GINI_INDEX is SUPPORTING_CONTEXT;
+    a defensible 0-100 level curve would need its own DEC (income
+    inequality != wealth concentration; survey-concept
+    incomparability per DEC-024).
+(b) **Trade/capital relative score** — a cross-country relative rank
+    for trade intensity or trade balance within a defined universe
+    (RELATIVE dimension, not LEVEL). Requires a reference-universe
+    DEC.
+(c) **Trade/capital momentum** — own-history change for trade
+    indicators (MOMENTUM dimension, not LEVEL). Requires a window +
+    anchor DEC.
+(d) **Structural/size-adjusted trade model** — research whether a
+    gravity model can produce a defensible level (DEC-035 unblocker).
+    Requires additional data.
+(e) **Force confidence methodology** — DEC-023 deferred; needs
+    external calibration basis.
+(f) **Big Cycle phase/stage** — requires all 17 forces or explicit
+    partial-force methodology.
+(g) **Release-date discipline** — Milestone 9; backtest_safe
+    currently False everywhere.
+
+The most natural next step is **(a) Gini normalization audit**, as it
+follows the established audit-then-implement pattern and would
+promote a sixth executable force if a defensible level is found.
+
+## DEC-040 — Indebtedness force composition: CONDITION_MINUS_PENALTY (sixth executable force)
+
+Date: 2026-11-27
+Sprint: 6.13
+Status: RATIFIED 2026-11-24 (owner) — force-aggregation-v0.4 retained with all
+documented limitations (low-end compression, DSR-led composition, min-n gate,
+gov-debt context-only). Reversible by reverting `indebtedness.level_mode`
+to `deferred`.
+
+### Part 1 — Semantic target
+
+Indebtedness: "Level and trajectory of debt burdens across sectors."
+Components (unchanged roles): DEBT_SERVICE_RATIO = CORE_CONDITION,
+CREDIT_TO_GDP_GAP = VULNERABILITY_PENALTY, GOVERNMENT_DEBT_GDP =
+SUPPORTING_CONTEXT (raw level only — no approved curve; debt
+sustainability is contextual per existing registry notes).
+
+### Part 2 — Approved composition (force-aggregation-v0.4)
+
+**level_score = clamp(DSR_level + (credit_gap_level − 50), 0, 100)**
+
+Derivation from already-approved semantics (no new curve, no weights):
+- DSR level (DEC-019, OWN_HISTORY): 0–100 strength scale; 100 −
+  stress percentile, so higher = lower debt-service burden = stronger.
+- Credit-gap level (DEC-021, ONE_SIDED_VULNERABILITY): 0–50 scale;
+  +2pp-or-below gap is deliberately NEUTRAL 50, saturating to 0 at +10pp.
+- Its contribution is therefore (level − 50): a vulnerability penalty can
+  only SUBTRACT from the condition score, never add — matching the
+  VULNERABILITY_PENALTY role's design intent (DEC-029).
+- Explicitly NOT an average and NOT a multiplication: the two signals
+  occupy different semantic scales and the gap is a penalty, not a
+  second condition.
+
+### Part 3 — Missing-data rule
+
+Every numeric component must be present with a non-None level or the
+force level defers entirely. A missing credit gap is NOT treated as a
+neutral 50 — that would silently convert "no data" into "no excess",
+which is exactly the missing-vs-zero conflation the pipeline forbids.
+When the level defers, component signals are still attached as
+provenance (missing_components / deferred_components populated).
+
+### Part 4 — Deferred dimensions
+
+relative_score, momentum, confidence stay None (no composed methodology
+approved). backtest_safe = False everywhere (release-date discipline
+still pending). GOVERNMENT_DEBT_GDP stays SUPPORTING_CONTEXT — never
+numeric.
+
+### Part 5 — Implementation
+
+- New ForceDimensionMode + ForceAggregationMode: condition_minus_penalty.
+- Config validation: the mode requires exactly one eligible
+  (CORE/PROXY_CONDITION) component and ≥1 VULNERABILITY_PENALTY
+  component — fails loudly otherwise.
+- Pure aggregation in force_signal._build_condition_minus_penalty;
+  clamp [0,100], never rescales component provenance.
+- normalization_model_version unchanged (normalization-v0.8).
+
+### Part 6 — Tests
+
+6 new tests in tests/test_force_signal.py (neutral gap subtracts
+nothing; penalty only subtracts; clamp at 0 and 100; missing penalty
+defers; None component level defers) plus spec-validation updates and
+the no-equal-weight guard converted to assert 70.0 (was "must be None").
+670 tests pass.
+
+### Part 7 — Result
+
+6/17 forces executable: Rule of law, Corruption, Internal conflict
+proxy, Education, Wealth-gap (IDENTITY_SINGLE) + Indebtedness
+(CONDITION_MINUS_PENALTY). 11/17 deferred. Exposed read-only at
+GET /api/countries/{iso3}/force-scores (non-persisted, derived at
+request time).
+
+## DEC-041 — RATIFIED — Leadership capabilities: WGI Government Effectiveness proxy (seventh executable force)
+
+Date: 2026-11-24
+Sprint: 6.21
+Status: IMPLEMENTED — force-aggregation-v0.5, normalization-v0.9. Recorded for
+owner ratification; reversible by reverting the leadership aggregation spec
+to `level_mode=deferred`.
+
+### Part 1 — Semantic target
+
+"Capabilities of the country's leadership and how effectively it governs."
+Narrowed to the measurable core: **institutional state capacity** — quality
+of public services, civil service, policy formulation and implementation.
+Individual leaders are never rated (approval boundary).
+
+### Part 2 — Data
+
+- Indicator: GOVERNMENT_EFFECTIVENESS_WGI_SCORE (new, catalog #28)
+- Source: World Bank WGI `GOV_WGI_GE_SC` (2025 revision, absolute 0–100
+  score; same dataset family as the approved RL/CC/PV WGI scores)
+- Coverage: all 8 tracked countries, 1996–2024 (216 obs ingested)
+- REGULATORY_QUALITY (GOV_WGI_RQ_SC) verified available — held as a
+  candidate component, not ingested this sprint.
+
+### Part 3 — Method
+
+- Normalization: DIRECT_0_100 (identical family to approved WGI scores;
+  candidate momentum/relative families present but NOT enabled — GE is not
+  added to direct_momentum/relative_approved sets; level dimension only).
+- Force aggregation: IDENTITY_SINGLE, PROXY_CONDITION → level_score copies
+  the indicator level_score. relative/momentum/confidence DEFERRED.
+- Ceiling: coverage_ceiling=PARTIAL (one WGI dimension ≠ the whole
+  leadership-capabilities concept). Live result USA 2026-Q3: 76.7.
+
+### Part 4 — Limitations
+
+- Perception-based composite; ~2-year publication lag; biennial gaps
+  1997/1999/2001 inherit WGI structure.
+- State capacity ≠ leadership judgment; overlap with rule_of_law/
+  corruption WGI dimensions acknowledged (distinct WB aggregates but
+  correlated family) — flagged for composition-stage deduplication.
+- Score is level-only; no relative or momentum dimension until the
+  approved-dimension sets are extended by a future DEC.
+
+## DEC-042 — Productivity / output growth: level scoring remains DEFERRED (Sprint 6.14 evaluation)
+
+**Status:** DEFERRED — owner decision required
+**Sprint:** 6.14
+**Date:** 2026-03-24
+
+**Question evaluated:** Can `productivity_output_growth` become the eighth executable force by promoting OECD `LABOUR_PRODUCTIVITY_PER_HOUR` to PROXY_CONDITION?
+
+**Finding:** No — not without an owner-approved calibration method. The indicator's `NormalizationSpec` already records the Sprint 5.9 audit (DEC-018): the USD-PPP/hour level series has no defensible absolute 0-100 mapping without an external calibration distribution, and tracked-8 min-max is explicitly rejected (CHN/IND uncovered by OECD; the pooled 33.5–90.5 range is not a global distribution). Implementing `monotonic_positive` would require inventing curve parameters — prohibited.
+
+**Data state:** LPPH live for 6/8 countries (USA, DEU, FRA, GBR, JPN, CHE; 1990–2025). CHN/IND have no OECD LPPH series.
+
+**What is executable today:** nothing beyond context. `GDP_GROWTH` is contextual_deferred; ULC growth likewise (DEC-018: domestic ULC growth alone is not a competitiveness score).
+
+**Owner decision required (added to ratification package):** choose a calibration basis for productivity level scoring — (a) OECD-wide or wider external distribution percentile, (b) pooled multi-decade tracked-8 history percentile, or (c) keep level deferred and score only own-history momentum. Option (a) is methodologically cleanest; it requires importing a broader productivity universe.
+
+**Force status unchanged:** `productivity_output_growth` remains context-only on force-aggregation-v0.5.
+
+## Ratification log — 2026-03 session
+
+- **DEC-040: RATIFIED.** Indebtedness composition (CONDITION_MINUS_PENALTY, v0.4 formula preserved) is an approved versioned Atlas model assumption, with all documented limitations retained. It is not a comprehensive debt-sustainability measure nor a validated crisis predictor.
+- **DEC-041: RATIFIED.** WGI Government Effectiveness approved as a PARTIAL proxy for leadership_capabilities. Institutional government effectiveness does not capture the entire leadership concept. Overlap with rule_of_law/corruption must be reviewed before any national composite uses all three.
+- **DEC-042: IMPLEMENTED (Option A, owner-approved direction).** LPPH level = mid-rank percentile within versioned OECD reference universe `oecd_lpph_v1` (38 expected members, period-specific calibration, minimum_sample_n=20, frozen membership per version — membership changes require a new universe code). OECD relative-position score only; never a global percentile. CHN/IND non-members → unavailable, not fabricated. normalization-v1.0 / force-aggregation-v0.5→v0.6. Option C (own-history momentum) remains a separate deferred dimension pending the same momentum machinery as other forces.
+
+## DEC-042 Option C — RATIFIED FOR IMPLEMENTATION (V1 Mission 1)
+
+Own-history productivity momentum implemented as a separate dimension: signed percentage change in LPPH (USD PPP/hour) over 3y/5y/10y windows, primary 5y, anchor tolerance 1 annual period, gated by `pct_momentum_approved_indicators`. `change_unit="percent"` provenance distinguishes it from WGI-point momentum. A percentile move is not productivity growth — the dimensions stay separate. normalization-v1.1 / force-aggregation-v0.7. Delegated working-model approval under Mission 1 authority.
+
+## Delegated working-model approvals — V1 Mission 1
+
+- **MILITARY_EXPENDITURE_USD RELATIVE_SHARE dimension** (delegated, documented working model): relative_score = country's share of the tracked-8 military-expenditure total at the same period (complete-universe rule, all 8 usable or no share). INPUT measure of resources absorbed — SIPRI explicitly does not measure capability. Level stays deferred; PARTIAL ceiling kept. New `DIMENSION_ONLY` aggregation mode; relative identity_copy no longer requires level identity (the INDICATORS_WITH_APPROVED_* gates remain the guard). normalization-v1.2 / force-aggregation-v0.8. Live: USA share 55.4.
+- **FORCE_DEPENDENCY_MAP.json** generated from live registries (no shared live indicators across forces).

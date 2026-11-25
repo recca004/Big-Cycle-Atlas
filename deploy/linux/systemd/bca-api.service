@@ -1,0 +1,25 @@
+[Unit]
+Description=Big Cycle Atlas API + web (FastAPI/uvicorn, serves Astro build)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bca
+Group=bca
+WorkingDirectory=/opt/big-cycle-atlas/apps/api
+ExecStart=/opt/big-cycle-atlas/apps/api/.venv/bin/python serve.py
+Environment=BCA_HOST=127.0.0.1
+Environment=BCA_PORT=8000
+EnvironmentFile=-/opt/big-cycle-atlas/apps/api/.env
+Restart=on-failure
+RestartSec=5
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/big-cycle-atlas/apps/api
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

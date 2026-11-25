@@ -44,7 +44,7 @@ configs from intentionally unconfigured forces).
 Versioning (FORCE_AGGREGATION.md §10):
 - Indicator normalization version: normalization-v0.8 (Sprint 6.7, owned by
   app/cycle/normalization_definitions.py)
-- Force aggregation version: force-aggregation-v0.3 (this module, Sprint 6.7)
+- Force aggregation version: force-aggregation-v0.4 (this module, Sprint 6.7)
 """
 from dataclasses import dataclass
 from enum import Enum
@@ -111,6 +111,10 @@ class ForceAggregationMode(str, Enum):
     """
 
     identity_single = "identity_single"
+    # V1 Mission 1: level deferred but relative/momentum identity_copy — a
+    # type-C module publishing a dimension without an approved level.
+    dimension_only = "dimension_only"
+    condition_minus_penalty = "condition_minus_penalty"
     deferred_multi = "deferred_multi"
 
 
@@ -118,6 +122,7 @@ class ForceDimensionMode(str, Enum):
     """Per-dimension approval. 'deferred' means the dimension is None."""
 
     identity_copy = "identity_copy"
+    condition_minus_penalty = "condition_minus_penalty"
     deferred = "deferred"
 
 
@@ -136,6 +141,10 @@ INDICATORS_WITH_APPROVED_RELATIVE: frozenset[str] = frozenset(
         "RULE_OF_LAW_WGI_SCORE",
         "CONTROL_OF_CORRUPTION_WGI_SCORE",
         "POLITICAL_STABILITY_WGI_SCORE",
+        # V1 Mission 1 (delegated): MILITARY_EXPENDITURE_USD relative_share —
+        # share of tracked-8 defence expenditure (INPUT measure, SIPRI
+        # caveat — never a capability score).
+        "MILITARY_EXPENDITURE_USD",
     }
 )
 
@@ -144,6 +153,16 @@ INDICATORS_WITH_APPROVED_MOMENTUM: frozenset[str] = frozenset(
         "RULE_OF_LAW_WGI_SCORE",
         "CONTROL_OF_CORRUPTION_WGI_SCORE",
         "POLITICAL_STABILITY_WGI_SCORE",
+        # DEC-042 Option C (V1 Mission 1, owner-approved): LPPH percent-change
+        # own-history momentum — the force's momentum is the indicator's
+        # signed % change, NOT a 0-100 score and NOT comparable to WGI-point
+        # momentum.
+        "LABOUR_PRODUCTIVITY_PER_HOUR",
+        # V1 Mission 1 (delegated): LFP percent-change own-history momentum.
+        "LABOUR_FORCE_PARTICIPATION_RATE",
+        # V1 Mission 2 (delegated): REER pct momentum — signed index change,
+        # never a competitiveness score.
+        "REER_INDEX",
     }
 )
 
@@ -190,11 +209,11 @@ class ForceAggregationSpec:
     notes: str = ""
 
     def __post_init__(self) -> None:
-        # confidence_mode is always deferred in force-aggregation-v0.3.
+        # confidence_mode is always deferred in force-aggregation-v0.4.
         if self.confidence_mode is not ForceDimensionMode.deferred:
             raise ValueError(
                 f"{self.force_code}: confidence_mode must be 'deferred' in "
-                f"force-aggregation-v0.3 (got {self.confidence_mode})"
+                f"force-aggregation-v0.4 (got {self.confidence_mode})"
             )
 
         # No duplicate component indicators.
@@ -260,6 +279,23 @@ class ForceAggregationSpec:
                         f"requires coverage_ceiling=PARTIAL (got "
                         f"{force_def.coverage_ceiling})"
                     )
+        elif self.level_mode is ForceDimensionMode.condition_minus_penalty:
+            # CONDITION_MINUS_PENALTY (Sprint 6.13, DEC-040): exactly one
+            # eligible CORE_CONDITION component + at least one
+            # VULNERABILITY_PENALTY component. level = clamp(core +
+            # Σ(penalty - 50), 0, 100); every numeric component must be
+            # present or the level defers (missing != neutral).
+            if len(eligible) != 1:
+                raise ValueError(
+                    f"{self.force_code}: CONDITION_MINUS_PENALTY level "
+                    f"requires exactly one CORE_CONDITION/PROXY_CONDITION "
+                    f"component, got {len(eligible)}"
+                )
+            if not penalties:
+                raise ValueError(
+                    f"{self.force_code}: CONDITION_MINUS_PENALTY level "
+                    f"requires at least one VULNERABILITY_PENALTY component"
+                )
         elif self.level_mode is ForceDimensionMode.deferred:
             # DEFERRED_MULTI: no constraint on component count, but if there
             # are 2+ eligible components, that's the expected reason for
@@ -269,22 +305,11 @@ class ForceAggregationSpec:
 
         # relative/momentum identity_copy requires level identity_copy too
         # (you can't copy a relative/momentum that doesn't exist).
-        if (
-            self.relative_mode is ForceDimensionMode.identity_copy
-            and self.level_mode is not ForceDimensionMode.identity_copy
-        ):
-            raise ValueError(
-                f"{self.force_code}: relative identity_copy requires level "
-                f"identity_copy"
-            )
-        if (
-            self.momentum_mode is ForceDimensionMode.identity_copy
-            and self.level_mode is not ForceDimensionMode.identity_copy
-        ):
-            raise ValueError(
-                f"{self.force_code}: momentum identity_copy requires level "
-                f"identity_copy"
-            )
+        # V1 Mission 1: relative/momentum identity_copy NO LONGER requires
+        # level identity_copy — dimension-only modules (type C) may publish a
+        # relative/momentum dimension while the level stays deferred. The
+        # INDICATORS_WITH_APPROVED_* gate below remains the real guard: only
+        # indicators with an approved dimension methodology can be copied.
 
         # Part 0.6: dimension approval guard — relative/momentum identity_copy
         # must refer to an indicator whose CURRENT approved NormalizedSignal
@@ -320,6 +345,13 @@ def aggregation_mode(spec: ForceAggregationSpec) -> ForceAggregationMode:
     """
     if spec.level_mode is ForceDimensionMode.identity_copy:
         return ForceAggregationMode.identity_single
+    if spec.level_mode is ForceDimensionMode.condition_minus_penalty:
+        return ForceAggregationMode.condition_minus_penalty
+    if (
+        spec.relative_mode is ForceDimensionMode.identity_copy
+        or spec.momentum_mode is ForceDimensionMode.identity_copy
+    ):
+        return ForceAggregationMode.dimension_only
     return ForceAggregationMode.deferred_multi
 
 
@@ -338,16 +370,30 @@ _IDENTITY = ForceDimensionMode.identity_copy
 # constructing the dictionary (a dict comprehension would silently overwrite
 # duplicates).
 _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
-    # 1. Leadership capabilities — no live indicators
-    ForceAggregationSpec(
-        force_code="leadership_capabilities",
-        components=(),
-        level_mode=_DEFERRED,
-        relative_mode=_DEFERRED,
-        momentum_mode=_DEFERRED,
-        confidence_mode=_DEFERRED,
-        notes="No live indicators; requires qualitative/expert source.",
-    ),
+        # 1. Leadership capabilities — IDENTITY_SINGLE (PROXY_CONDITION),
+        # PARTIAL ceiling. Sprint 6.21 (DEC-041): WGI Government
+        # Effectiveness promoted to PROXY_CONDITION — institutional state
+        # capacity as the measurable core of "how effectively it governs".
+        # relative/momentum/confidence stay DEFERRED (level only).
+        ForceAggregationSpec(
+            force_code="leadership_capabilities",
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
+            ),
+            level_mode=_IDENTITY,
+            relative_mode=_DEFERRED,
+            momentum_mode=_DEFERRED,
+            confidence_mode=_DEFERRED,
+            notes=(
+                "Sprint 6.21 (DEC-041): identity copies the WGI GE "
+                "level_score. Institutional proxy — measures state capacity, "
+                "never individual leaders. PARTIAL ceiling: one WGI "
+                "dimension is not the whole leadership-capabilities concept."
+            ),
+        ),
         # 2. Education — IDENTITY_SINGLE (PROXY_CONDITION), PARTIAL ceiling
         # Sprint 6.4 (DEC-032): TERTIARY_ATTAINMENT_25_34 promoted to
         # PROXY_CONDITION. level_mode = identity_copy promotes Education to
@@ -377,12 +423,21 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
         # 3. Character / determination — no live indicators
         ForceAggregationSpec(
             force_code="character_determination",
-            components=(),
-            level_mode=_DEFERRED,
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
+            ),
+            level_mode=_IDENTITY,
             relative_mode=_DEFERRED,
-            momentum_mode=_DEFERRED,
+            momentum_mode=_IDENTITY,
             confidence_mode=_DEFERRED,
-            notes="No live indicators; requires qualitative assessment.",
+            notes=(
+                "PARTIAL: level = LFP percentile vs WDI universe "
+                "(wdi_lfp_v1). Narrow economic-participation proxy - not a "
+                "measure of character/determination."
+            ),
         ),
         # 4. Rule of law — IDENTITY_SINGLE (CORE_CONDITION)
         ForceAggregationSpec(
@@ -414,30 +469,17 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             confidence_mode=_DEFERRED,
             notes="Single WGI core condition; identity inherits semantics.",
         ),
-        # 6. Resource allocation efficiency — no live indicators
+        # 6. Resource allocation efficiency — context profile (Mission 4 §17).
+        # All inputs are SUPPORTING_CONTEXT: investment effort and
+        # productivity describe the input side; none measures allocation
+        # efficiency, so no numeric dimension is claimed.
         ForceAggregationSpec(
             force_code="resource_allocation_efficiency",
-            components=(),
-            level_mode=_DEFERRED,
-            relative_mode=_DEFERRED,
-            momentum_mode=_DEFERRED,
-            confidence_mode=_DEFERRED,
-            notes="No live indicators; concept definition needed first.",
-        ),
-        # 7. Global openness — no live indicators (trade data is candidate only)
-        ForceAggregationSpec(
-            force_code="global_openness",
-            components=(),
-            level_mode=_DEFERRED,
-            relative_mode=_DEFERRED,
-            momentum_mode=_DEFERRED,
-            confidence_mode=_DEFERRED,
-            notes="No live indicators; trade data is candidate context only.",
-        ),
-        # 8. Productivity / output growth — 2 SUPPORTING_CONTEXT
-        ForceAggregationSpec(
-            force_code="productivity_output_growth",
             components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="GROSS_CAPITAL_FORMATION_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
                 ForceIndicatorComponentSpec(
                     indicator_code="GDP_GROWTH",
                     role=ForceIndicatorRole.supporting_context,
@@ -451,12 +493,86 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred; 2 components.",
+            notes=(
+                "Investment & resource-allocation context only — inputs "
+                "overlap productivity/infrastructure deliberately; "
+                "investment intensity is not allocation efficiency."
+            ),
+        ),
+        # 7. Global openness — context profile (Mission 4 §16). Trade/capital
+        # and size series as SUPPORTING_CONTEXT; no composition — trade
+        # intensity is not strength (DEC-035) and people/ideas openness is
+        # unmeasured.
+        ForceAggregationSpec(
+            force_code="global_openness",
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="EXPORTS_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="IMPORTS_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="TRADE_BALANCE",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="CURRENT_ACCOUNT_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="FDI_NET_INFLOWS_GDP",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+            ),
+            level_mode=_DEFERRED,
+            relative_mode=_DEFERRED,
+            momentum_mode=_DEFERRED,
+            confidence_mode=_DEFERRED,
+            notes=(
+                "Descriptive trade/capital/size context only — overlaps "
+                "trade_capital_flows deliberately; no openness level exists."
+            ),
+        ),
+        # 8. Productivity / output growth — IDENTITY_SINGLE (PROXY_CONDITION),
+        # PARTIAL ceiling. Sprint 6.14 (DEC-042 Option A — OWNER APPROVED):
+        # OECD LPPH promoted to PROXY_CONDITION; level = mid-rank percentile
+        # within the versioned OECD universe oecd_lpph_v1 (period-specific).
+        # GDP growth stays SUPPORTING_CONTEXT. CHN/IND are not OECD members —
+        # no reference distribution applies, they defer honestly.
+        ForceAggregationSpec(
+            force_code="productivity_output_growth",
+            components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="LABOUR_PRODUCTIVITY_PER_HOUR",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="GDP_GROWTH",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+            ),
+            level_mode=_IDENTITY,
+            relative_mode=_DEFERRED,
+            momentum_mode=_IDENTITY,
+            confidence_mode=_DEFERRED,
+            notes=(
+                "Sprint 6.14 (DEC-042): level = OECD reference percentile "
+                "(Option A); momentum = own-history % change, primary 5y "
+                "window (Option C). Distinct dimensions — a percentile move "
+                "is not productivity growth."
+            ),
         ),
         # 9. Cost competitiveness — 2 SUPPORTING_CONTEXT
         ForceAggregationSpec(
             force_code="cost_competitiveness",
             components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="REER_INDEX",
+                    role=ForceIndicatorRole.proxy_condition,
+                ),
                 ForceIndicatorComponentSpec(
                     indicator_code="UNIT_LABOUR_COST_GROWTH",
                     role=ForceIndicatorRole.supporting_context,
@@ -468,9 +584,13 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             ),
             level_mode=_DEFERRED,
             relative_mode=_DEFERRED,
-            momentum_mode=_DEFERRED,
+            momentum_mode=_IDENTITY,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred; 2 components.",
+            notes=(
+                "Mission 2 (delegated): REER % momentum only — signed change "
+                "of the index (rising = real appreciation = declining price "
+                "competitiveness), NEVER a competitiveness score."
+            ),
         ),
         # 10. Trade and capital flows — 4 SUPPORTING_CONTEXT
         ForceAggregationSpec(
@@ -486,6 +606,10 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
                 ),
                 ForceIndicatorComponentSpec(
                     indicator_code="TRADE_BALANCE",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="FDI_NET_INFLOWS_GDP",
                     role=ForceIndicatorRole.supporting_context,
                 ),
                 ForceIndicatorComponentSpec(
@@ -507,6 +631,10 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
                     indicator_code="GROSS_CAPITAL_FORMATION_GDP",
                     role=ForceIndicatorRole.supporting_context,
                 ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="BROADBAND_PER_100",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
             ),
             level_mode=_DEFERRED,
             relative_mode=_DEFERRED,
@@ -514,9 +642,9 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             confidence_mode=_DEFERRED,
             notes="Level normalization deferred.",
         ),
-        # 12. Indebtedness — DEFERRED_MULTI
+        # 12. Indebtedness — CONDITION_MINUS_PENALTY (Sprint 6.13, DEC-040)
         #     DSR = CORE_CONDITION, credit gap = VULNERABILITY_PENALTY,
-        #     government debt = SUPPORTING_CONTEXT. Cannot naively average.
+        #     government debt = SUPPORTING_CONTEXT.
         ForceAggregationSpec(
             force_code="indebtedness",
             components=(
@@ -533,13 +661,17 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
                     role=ForceIndicatorRole.supporting_context,
                 ),
             ),
-            level_mode=_DEFERRED,
+            level_mode=ForceDimensionMode.condition_minus_penalty,
             relative_mode=_DEFERRED,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
             notes=(
-                "DSR + credit gap cannot be naively averaged; government debt "
-                "unscored; no composition formula approved."
+                "level = clamp(DSR + (credit_gap - 50), 0, 100): the "
+                "one-sided vulnerability curve can only subtract from the "
+                "DSR condition score; neutral gap (50) contributes nothing. "
+                "Both numeric components required — missing gap defers, it "
+                "is never treated as neutral. Government debt stays "
+                "SUPPORTING_CONTEXT (DEC-040)."
             ),
         ),
         # 13. Military strength — 2 SUPPORTING_CONTEXT, capped PARTIAL
@@ -548,7 +680,7 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             components=(
                 ForceIndicatorComponentSpec(
                     indicator_code="MILITARY_EXPENDITURE_USD",
-                    role=ForceIndicatorRole.supporting_context,
+                    role=ForceIndicatorRole.proxy_condition,
                 ),
                 ForceIndicatorComponentSpec(
                     indicator_code="MILITARY_EXPENDITURE_GDP",
@@ -556,10 +688,15 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
                 ),
             ),
             level_mode=_DEFERRED,
-            relative_mode=_DEFERRED,
+            relative_mode=_IDENTITY,
             momentum_mode=_DEFERRED,
             confidence_mode=_DEFERRED,
-            notes="Level normalization deferred; coverage capped PARTIAL.",
+            notes=(
+                "V1 Mission 1 (delegated working model): relative dimension "
+                "= share of tracked-8 defence expenditure (RELATIVE_SHARE). "
+                "Dimension-only — SIPRI expenditure is an INPUT measure of "
+                "resources absorbed, never capability; level stays deferred."
+            ),
         ),
         # 14. Wealth / opportunity / values gaps — IDENTITY_SINGLE
         # (PROXY_CONDITION), PARTIAL ceiling
@@ -625,15 +762,25 @@ _FORCE_AGGREGATION_SPECS: tuple[ForceAggregationSpec, ...] = (
             confidence_mode=_DEFERRED,
             notes="Mostly static; no time-series catalog indicator planned.",
         ),
-        # 17. Acts of nature — no live indicators
+    # 17. Acts of nature — context profile (Mission 4 §18). One verified
+    # structural-exposure indicator as SUPPORTING_CONTEXT; a single
+    # 1990-2009 average cannot score anything.
     ForceAggregationSpec(
         force_code="acts_of_nature",
-        components=(),
+        components=(
+            ForceIndicatorComponentSpec(
+                indicator_code="NATURAL_DISASTER_AFFECTED_PCT",
+                role=ForceIndicatorRole.supporting_context,
+            ),
+        ),
         level_mode=_DEFERRED,
         relative_mode=_DEFERRED,
         momentum_mode=_DEFERRED,
         confidence_mode=_DEFERRED,
-        notes="No catalog indicator; candidate sources: EM-DAT, climate indices.",
+        notes=(
+            "Structural disaster-exposure context only — a multi-decadal "
+            "average, not an annual series; missing never means zero."
+        ),
     ),
 )
 
@@ -698,4 +845,4 @@ _validate_configs()
 
 # --- Version -----------------------------------------------------------------
 
-FORCE_AGGREGATION_VERSION = "force-aggregation-v0.3"
+FORCE_AGGREGATION_VERSION = "force-aggregation-v1.0"

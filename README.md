@@ -4,113 +4,188 @@ A country-level macro cycle tracker built on a measurable Big Cycle framework.
 
 The main question the product answers: **Where are we in the Big Cycle?**
 
-For each supported country, the Atlas will collect public economic and institutional
-data, score 17 forces (0–100), determine the country's current phase and stage,
-track changes over time, and later support forecasting, market regime analysis,
-backtesting, and paper trading.
+For each supported country, the Atlas collects public economic and
+institutional data (World Bank, IMF WEO, BIS, OECD, FRED, WID.world and more)
+and measures the 17 Big Cycle forces. All 17 forces are represented through
+research modules; published numerical levels currently exist for **9 forces**,
+with **2 dimension-only forces** (component scores, no primary level) and
+**6 context profiles** (descriptive, not scores). No force is listed as
+"deferred" for lack of a score — but unavailability is always labelled, never
+substituted. It also provides market regime analysis, strategy research tools,
+a portfolio ledger, and a composable workspace of chart and data widgets.
 
-No live or simulated data is presented as real. The project is in early development.
+Big Cycle classifications and any composite cycle output are **experimental
+research results** — not validated production classifications, and no
+forecast probabilities are published (every forecast horizon is gated on
+data sufficiency and currently reports unavailable rather than fabricating a
+number). No live or simulated data is presented as real beyond its stated
+provenance — every value carries source, vintage, and retrieval metadata.
 
 ## Status
 
-Milestone 1 (Foundation) is complete: FastAPI backend, Next.js frontend, PostgreSQL
-schema, and the initial 8-country set. See `.dev/PROJECT_STATUS.md` for details.
+v1.0.0-rc.1. Live dev state: 17,141 observations, 87,872 market observations,
+7,976 reference observations, 33 indicators, 10 data sources, 8 countries,
+967 ingestion runs. Backend: ~800 tests. Frontend: vitest + Playwright suites
+including an accessibility audit.
 
 Initial countries: United States (USA), China (CHN), Switzerland (CHE), Germany
 (DEU), France (FRA), United Kingdom (GBR), Japan (JPN), India (IND).
 
 ## Tech stack
 
-- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, Apache ECharts (later)
-- **Backend:** Python, FastAPI, SQLAlchemy, Pydantic
-- **Database:** PostgreSQL (Docker Compose)
-- **Tooling:** uv, npm workspaces, pytest, Ruff
+- **Frontend:** Astro + React islands, TypeScript, Tailwind CSS v4, ECharts
+- **Backend:** Python 3.11+, FastAPI, SQLAlchemy 2.0 (async), psycopg 3, Pydantic
+- **Database:** PostgreSQL 14+ (16 in Docker)
+- **Tooling:** uv, npm workspaces, pytest, Ruff, Playwright, vitest
 
 ## Requirements
 
 - Node.js 20+
 - Python 3.11+
 - [uv](https://docs.astral.sh/uv/)
-- Docker Desktop (for PostgreSQL) — or any reachable PostgreSQL instance
+- PostgreSQL 14+ — an existing local/network instance (native), or Docker
+  (`docker compose -f docker-compose.dev.yml up -d`)
+- Optional: Docker Desktop / Compose v2 for the containerised alternative
 
 ## Local setup
 
-### 1. Database
+### Recommended — native Windows launchers
 
-```bash
-docker compose up -d
+```bat
+Setup.bat       :: one-time: deps, .env, migrations, seed
+Start-Prod.bat  :: production mode — one process on http://localhost:8000
+Start.bat       :: development mode — API :8000 + Astro dev :3000
 ```
 
-This starts PostgreSQL 16 on `localhost:5432` with user/password `postgres`/`postgres`
-and database `bigcycleatlas`.
+`Setup.bat` and the launchers handle everything below automatically; the
+manual steps are for non-Windows setups or troubleshooting.
+
+### 1. Database
+
+Option A — dev compose (PostgreSQL only):
+
+```bash
+docker compose -f docker-compose.dev.yml up -d
+```
+
+Option B — an existing PostgreSQL instance: point `DATABASE_URL` in
+`apps/api/.env` at it (see `apps/api/.env.example`). Set it once — `.env` must
+not contain multiple `DATABASE_URL` lines (the last one silently wins).
 
 ### 2. Backend (apps/api)
 
 ```bash
 cd apps/api
 uv sync
-# On Windows, set the DATABASE_URL in apps/api/.env first (see .env.example)
-uv run python -m app.db.seed     # creates tables + seeds the 8 countries
-uv run python run.py            # starts the API on http://localhost:8000
+uv run alembic upgrade head      # schema migrations
+uv run python -m app.db.seed     # seeds countries, indicators, sources
+uv run python run.py             # API on http://localhost:8000
 ```
 
 Notes:
 
 - On Windows, always start the server with `uv run python run.py` (not
-  `uvicorn app.main:app` directly). The entrypoint sets the selector event loop
-  that psycopg requires; uvicorn would otherwise default to the Proactor loop.
+  `uvicorn app.main:app` directly): the entrypoint sets the selector event
+  loop that psycopg requires.
 - `GET /health` reports API status and database connectivity.
-- `GET /api/countries` returns the database-backed country list.
+- Data ingestion is a separate step — see `apps/api/scripts/` (e.g.
+  `collect_snapshot.py`, `ingest_markets.py`).
 
-### 3. Frontend (apps/web)
+### 3. Frontend (apps/web-astro)
 
 ```bash
 # from the repo root
 npm install
-npm run dev
+npm run dev      # http://localhost:3000
 ```
 
-Opens on http://localhost:3000.
+The dev server proxies `/api` to `http://localhost:8000`. Set
+`PUBLIC_API_URL` if the API lives elsewhere.
 
-- `/` — global dashboard placeholder ("Where are we in the Big Cycle?")
-- `/countries` — country list, fetched live from the API
-
-Set `NEXT_PUBLIC_API_URL` in `apps/web/.env.local` if the API is not on
-http://localhost:8000 (see `.env.example`).
+Key surfaces: global dashboard, per-country pages (data + forces), markets,
+strategies, research lab, portfolio, and a composable workspace. Press
+**Ctrl/Cmd+K** anywhere for global search. Preferences (theme, transparency,
+motion, default country/currency) live under Settings and persist versioned
+in localStorage.
 
 ### 4. Tests
 
 ```bash
-# backend
-cd apps/api
-uv run pytest
-
-# frontend typecheck + production build
-cd ../..
-npm run build
+cd apps/api && uv run pytest          # backend suite
+npm run test                           # frontend vitest
+npm run test:e2e                       # Playwright (needs dev servers)
+npm run check                          # astro check (0 errors)
+npm run build                          # production build
 ```
+
+## Deployment — native first
+
+The supported deployment is **native, no containers**. Windows launchers live
+at the repo root (`Setup.bat`, `Start.bat`, `Start-Prod.bat`, `Stop.bat`,
+`Update.bat`, `Backup.bat`, `Restore.bat`, `Test.bat`, `Status.bat`).
+
+- `Start.bat` (dev): checks deps, PostgreSQL connectivity and config, starts
+  the API (:8000) and Astro dev server (:3000), waits for health, opens the
+  browser, and refuses duplicate instances. `Stop.bat` stops only the
+  processes BCA started.
+- `Start-Prod.bat` (prod): a single `serve.py` process on 127.0.0.1:8000
+  serves the API **and** the built frontend (`apps/web-astro/dist`) — no dev
+  server, no extra web server.
+- Scheduled collection via Windows Task Scheduler:
+  `scripts/ops/install-schedule.ps1` (dry-run unless `-Approve`).
+
+Linux (Debian/Ubuntu, e.g. Proxmox VM): native systemd deployment —
+`deploy/linux/install.sh`, units under `deploy/linux/systemd/`, optional
+nginx proxy sample. Full instructions in `docs/DEPLOYMENT.md`.
+
+Docker remains as an **optional** alternative: `docker-compose.yml`
+(`--profile scheduled` for the collector), `docker-compose.dev.yml` for a
+postgres-only dev database. Nothing requires it.
+
+## Backup & restore
+
+```powershell
+Backup.bat                    # pg_dump -Fc into .\backups\
+Restore.bat                   # pick a dump, type RESTORE to confirm overwrite
+scripts\ops\verify-restore.ps1 -TargetUrl <dsn>   # scratch-DB count check
+```
+
+`pg_dump` must be on PATH or `PG_BIN` set (e.g.
+`C:\Program Files\PostgreSQL\18\bin`). Backups are gitignored.
 
 ## Repository layout
 
 ```
 apps/
-  web/        Next.js frontend
-  api/        FastAPI backend
+  web-astro/  Astro + React frontend (the shipped UI)
+  api/        FastAPI backend, ingestion scripts, alembic migrations
 packages/
   shared/     Shared TypeScript types + canonical country data
-scripts/      Ingest / calculate / maintenance scripts (later)
+scripts/
+  ingest/     Data ingestion entry points
+  ops/        Backup / restore / dev / setup scripts (ps1 + sh)
 data/         Fixtures and mappings
 docs/         Architecture, methodology, data model, API docs
 .dev/         Development handoff system (not part of the product)
 ```
 
+## Security & limitations
+
+- No authentication or multi-user support — designed for local or
+  single-operator deployment. Do not expose the API publicly.
+- No built-in rate limiting beyond source-API politeness.
+- Docker deployment files are provided and statically reviewed; verify
+  `docker compose up -d --build` on your own host before relying on it.
+- WID.world data requires a manually downloaded bulk ZIP (opt-in).
+
 ## Development handoff system
 
 The `.dev/` folder tracks project state between development sessions:
 `HANDOFF.md`, `PROJECT_STATUS.md`, `DEVLOG.md`, `DECISIONS.md`, `ISSUES.md`,
-`BACKLOG.md`, `DATA_SOURCES.md`. Read `HANDOFF.md` first when resuming work.
-It is committed to Git but is not part of the shipped product.
+`BACKLOG.md`, `DATA_SOURCES.md`, plus per-mission acceptance reports. Read
+`HANDOFF.md` first when resuming work. Committed to Git, not part of the
+shipped product.
 
 ## License
 
-All rights reserved.
+Proprietary / private project.

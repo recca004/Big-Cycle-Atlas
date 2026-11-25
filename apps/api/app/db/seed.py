@@ -10,6 +10,7 @@ Reads the canonical country list from packages/shared/data/initial-countries.jso
 
 import asyncio
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
@@ -38,8 +39,14 @@ from app.models import (
 )
 
 
-DEFAULT_DATA_FILE = (
-    Path(__file__).resolve().parents[4] / "packages" / "shared" / "data" / "initial-countries.json"
+DEFAULT_DATA_FILE = Path(
+    os.environ.get(
+        "BCA_SEED_FILE",
+        str(
+            Path(__file__).resolve().parents[4]
+            / "packages" / "shared" / "data" / "initial-countries.json"
+        ),
+    )
 )
 
 
@@ -110,28 +117,35 @@ async def seed(data_file: Path = DEFAULT_DATA_FILE) -> None:
             {"code": "GDP_CURRENT_USD", "name": "GDP (Current USD)", "category": "Economy", "unit": "USD", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
             {"code": "GDP_PER_CAPITA", "name": "GDP Per Capita", "category": "Economy", "unit": "USD", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
             {"code": "INFLATION_CPI", "name": "Inflation (CPI)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Annual average consumer price inflation (annual %). Frequency corrected from the aspirational 'monthly' placeholder to 'annual' to match the verified World Bank series FP.CPI.TOTL.ZG (2026-09-08, Milestone 5.3)."},
-            {"code": "UNEMPLOYMENT_RATE", "name": "Unemployment Rate", "category": "Economy", "unit": "percent", "frequency": "monthly", "strength_direction": IndicatorStrengthDirection.negative},
+            {"code": "UNEMPLOYMENT_RATE", "name": "Unemployment Rate (ILO modeled)", "category": "Economy", "unit": "percent of labor force", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.negative},
             {"code": "EXPORTS_GDP", "name": "Exports (% of GDP)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
             {"code": "IMPORTS_GDP", "name": "Imports (% of GDP)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.negative},
             {"code": "TRADE_BALANCE", "name": "Trade Balance (% of GDP)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
+            {"code": "REER_INDEX", "name": "Real effective exchange rate index (2010=100)", "category": "Economy", "unit": "index", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.negative, "description": "World Bank PX.REX.REER. WB convention: RISING index = real appreciation = DECLINING price competitiveness. Appreciation is not automatically bad (productivity Balassa-Samuelson); depreciation is not automatically good. Direction is context, never auto-scored."},
+            {"code": "BROADBAND_PER_100", "name": "Fixed broadband subscriptions (per 100 people)", "category": "Infrastructure", "unit": "per 100 people", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank IT.NET.BBND.P2. Digital-infrastructure context — coverage not quality."},
+            {"code": "FDI_NET_INFLOWS_GDP", "name": "Foreign direct investment, net inflows (% of GDP)", "category": "Economy", "unit": "percent of GDP", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank BX.KLT.DINV.WD.GD.ZS: net FDI inflows as % of GDP. Capital-attraction input for the trade/capital-flows research module — not a standalone score."},
             {"code": "CURRENT_ACCOUNT_GDP", "name": "Current Account (% of GDP)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
             {"code": "GROSS_CAPITAL_FORMATION_GDP", "name": "Gross Capital Formation (% of GDP)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
             {"code": "GOVERNMENT_DEBT_GDP", "name": "Government Debt (% of GDP)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.negative},
             {"code": "POPULATION", "name": "Population", "category": "Demographics", "unit": "count", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
-            {"code": "TERTIARY_ENROLLMENT", "name": "Tertiary Enrollment (% of age 25-34)", "category": "Human Capital", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
-            {"code": "SECONDARY_ENROLLMENT", "name": "Secondary Enrollment (% of age 15-19)", "category": "Human Capital", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
+            {"code": "TERTIARY_ENROLLMENT", "name": "Tertiary Enrollment (% gross)", "category": "Human Capital", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
+            {"code": "SECONDARY_ENROLLMENT", "name": "Secondary Enrollment (% gross)", "category": "Human Capital", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
             {"code": "RND_EXPENDITURE_GDP", "name": "R&D Expenditure (% of GDP)", "category": "Human Capital", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
             {"code": "CREDIT_TO_GDP_GAP", "name": "Credit-to-GDP gap (private non-financial sector)", "category": "Debt & Credit", "unit": "percentage of GDP", "frequency": "quarterly", "strength_direction": IndicatorStrengthDirection.contextual, "description": "BIS-published gap between the private non-financial sector credit-to-GDP ratio and its long-run trend."},
             {"code": "DEBT_SERVICE_RATIO", "name": "Debt service ratio (private non-financial sector)", "category": "Debt & Credit", "unit": "per cent", "frequency": "quarterly", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Debt-service payments as a proportion of income for the private non-financial sector."},
             {"code": "LABOUR_PRODUCTIVITY_PER_HOUR", "name": "Labour productivity — GDP per hour worked", "category": "Productivity", "unit": "US dollars per hour, PPP converted", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive},
+            {"code": "NATURAL_DISASTER_AFFECTED_PCT", "name": "Population affected by natural disasters (% of population)", "category": "Natural Hazards", "unit": "percent of population", "frequency": "multi-decadal", "strength_direction": IndicatorStrengthDirection.contextual, "description": "World Bank EN.CLC.MDAT.ZS (EM-DAT-derived): annual average % of population affected by droughts, floods or extreme-temperature events, averaged over 1990-2009 and published at date 2009. A structural EXPOSURE context measure — not an annual event count, not an Atlas score."},
             {"code": "UNIT_LABOUR_COST_GROWTH", "name": "Unit labour cost growth", "category": "Cost Competitiveness", "unit": "percent per annum", "frequency": "quarterly", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Year-over-year employment-based unit labour cost growth, seasonally adjusted."},
             {"code": "RULE_OF_LAW_WGI_SCORE", "name": "Rule of Law — WGI governance score", "category": "Governance", "unit": "score 0-100", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank WGI (2025 revision) Rule of Law absolute governance score, 0-100. Perception-based composite; larger = better governance."},
             {"code": "CONTROL_OF_CORRUPTION_WGI_SCORE", "name": "Control of Corruption — WGI governance score", "category": "Governance", "unit": "score 0-100", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank WGI (2025 revision) Control of Corruption absolute governance score, 0-100. Higher = stronger control of corruption / less corruption; the raw value is never reversed."},
             {"code": "POLITICAL_STABILITY_WGI_SCORE", "name": "Political Stability — WGI governance score", "category": "Governance", "unit": "score 0-100", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank WGI (2025 revision) Political Stability and Absence of Violence/Terrorism absolute governance score, 0-100. Perception-based composite; larger = more stable."},
+            {"code": "GOVERNMENT_EFFECTIVENESS_WGI_SCORE", "name": "Government Effectiveness — WGI governance score", "category": "Governance", "unit": "score 0-100", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank WGI (2025 revision) Government Effectiveness absolute governance score, 0-100. Quality of public services, civil service, policy formulation and implementation. Perception-based composite; larger = more effective government."},
+
             {"code": "GINI_INDEX", "name": "Gini index", "category": "Inequality", "unit": "index (0-100)", "frequency": "irregular", "strength_direction": IndicatorStrengthDirection.negative, "description": "World Bank Gini index (SI.POV.GINI): extent to which the income/consumption distribution deviates from perfect equality (0 = perfect equality, 100 = perfect inequality). Published irregularly; missing years are gaps, never zeros or forward-filled. Higher = more inequality."},
             {"code": "MILITARY_EXPENDITURE_USD", "name": "Military expenditure", "category": "Military", "unit": "current US$", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Annual military expenditure in current US dollars, as published through World Bank WDI using SIPRI data (MS.MIL.XPND.CD; underlying source: SIPRI Military Expenditure Database). Input proxy for military strength, not a capability measure."},
             {"code": "MILITARY_EXPENDITURE_GDP", "name": "Military expenditure (% of GDP)", "category": "Military", "unit": "percent of GDP", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.contextual, "description": "Military expenditure as a share of GDP, as published through World Bank WDI using SIPRI data (MS.MIL.XPND.GD.ZS; underlying source: SIPRI Military Expenditure Database). Input proxy for military strength, not a capability measure."},
             {"code": "TERTIARY_ATTAINMENT_25_34", "name": "Tertiary educational attainment, age 25-34", "category": "Human Capital", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "OECD EAG LSO NEAC: percentage of 25-34 year-olds with tertiary education (ISCED 5-8). Attainment != enrollment. CHN/IND have sparse coverage."},
+            {"code": "LABOUR_FORCE_PARTICIPATION_RATE", "name": "Labour force participation rate, total (% ages 15+)", "category": "Economy", "unit": "percent", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.positive, "description": "World Bank SL.TLF.CACT.ZS (modeled ILO estimate): proportion of the population ages 15+ that is economically active. Economic participation input — not a measure of national character."},
             {"code": "WEALTH_SHARE_TOP_10", "name": "Top 10% net personal wealth share", "category": "Inequality", "unit": "share (0-1)", "frequency": "annual", "strength_direction": IndicatorStrengthDirection.negative, "description": "WID world shwealj992 p90p100: top 10% share of net personal wealth (equal-split adults, pop=j). Raw provider fraction preserved unchanged (0-1). Higher = greater wealth concentration."},
         ]
 

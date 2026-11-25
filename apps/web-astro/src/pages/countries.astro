@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { CountriesExplorer } from "@/features/country/CountriesExplorer";
+---
+
+<BaseLayout title="Countries">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Tracked countries</p>
+    <h1 class="headline-lg">Countries</h1>
+    <p class="body-sm">Eight countries tracked by the Atlas.</p>
+  </header>
+  <CountriesExplorer client:load />
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-8);
+  }
+  .page-header h1 {
+    margin-top: var(--space-2);
+  }
+  .page-header .body-sm {
+    margin-top: var(--space-2);
+  }
+</style>

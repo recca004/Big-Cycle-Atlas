@@ -11,7 +11,8 @@ from app.services import indicator_service, indicator_revision_service
 router = APIRouter(prefix="/api/indicators", tags=["indicators"])
 
 
-@router.get("/", response_model=list[IndicatorSchema])
+@router.get("", response_model=list[IndicatorSchema])
+@router.get("/", response_model=list[IndicatorSchema], include_in_schema=False)
 async def list_indicators(
     session: AsyncSession = Depends(get_session),
     category: Optional[str] = Query(None),

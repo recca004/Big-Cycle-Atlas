@@ -1,0 +1,19 @@
+---
+import StatusIndicator from "./StatusIndicator.astro";
+
+interface Props {
+  status: "available" | "partial" | "defined_not_sourced" | "missing";
+}
+const { status } = Astro.props;
+
+const MAP = {
+  available: { status: "good", label: "Available" },
+  partial: { status: "warn", label: "Partial" },
+  defined_not_sourced: { status: "neutral", label: "Defined — not sourced" },
+  missing: { status: "bad", label: "Missing" },
+} as const;
+
+const item = MAP[status] ?? MAP.missing;
+---
+
+<StatusIndicator status={item.status} label={item.label} />

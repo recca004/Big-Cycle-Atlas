@@ -149,6 +149,114 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
         ),
     ),
     WorldBankMapping(
+        indicator_code="POPULATION",
+        external_code="SP.POP.TOTL",
+        external_name="Population, total",
+        external_unit="count (persons)",
+        transform_notes=(
+            "Total mid-year population (de facto). Normalization denominator / "
+            "context input — never rescaled."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="RND_EXPENDITURE_GDP",
+        external_code="GB.XPD.RSDV.GD.ZS",
+        external_name="Research and development expenditure (% of GDP)",
+        external_unit="% of GDP",
+        transform_notes=(
+            "Gross domestic expenditure on R&D as % of GDP (UNESCO UIS "
+            "underlying). Published with multi-year lag; missing years are "
+            "gaps, not zeros."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="SECONDARY_ENROLLMENT",
+        external_code="SE.SEC.ENRR",
+        external_name="School enrollment, secondary (% gross)",
+        external_unit="% gross enrollment ratio",
+        transform_notes=(
+            "Gross enrollment ratio: total secondary enrollment regardless of "
+            "age as % of the official secondary-school-age population. Can "
+            "exceed 100. UNESCO UIS underlying; missing years are gaps."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="TERTIARY_ENROLLMENT",
+        external_code="SE.TER.ENRR",
+        external_name="School enrollment, tertiary (% gross)",
+        external_unit="% gross enrollment ratio",
+        transform_notes=(
+            "Gross enrollment ratio: total tertiary enrollment as % of the "
+            "5-year age group following secondary school. Can exceed 100. "
+            "UNESCO UIS underlying; missing years are gaps."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="UNEMPLOYMENT_RATE",
+        external_code="SL.UEM.TOTL.ZS",
+        external_name="Unemployment, total (% of total labor force) (modeled ILO estimate)",
+        external_unit="% of labor force",
+        transform_notes=(
+            "ILO modeled estimate, annual. National-definition series exist "
+            "but are not cross-country comparable — the ILO modelled series "
+            "is used deliberately."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="REER_INDEX",
+        external_code="PX.REX.REER",
+        external_name="Real effective exchange rate index (2010 = 100)",
+        external_unit="index",
+        transform_notes=(
+            "WB convention: rising index = real APPRECIATION = declining "
+            "price competitiveness (opposite-sign intuition vs a "
+            "depreciation-positive read). Annual; narrow-based index."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="BROADBAND_PER_100",
+        external_code="IT.NET.BBND.P2",
+        external_name="Fixed broadband subscriptions (per 100 people)",
+        external_unit="per 100 people",
+        transform_notes="ITU via WDI, annual; coverage proxy only.",
+    ),
+    WorldBankMapping(
+        indicator_code="FDI_NET_INFLOWS_GDP",
+        external_code="BX.KLT.DINV.WD.GD.ZS",
+        external_name="Foreign direct investment, net inflows (% of GDP)",
+        external_unit="percent of GDP",
+        transform_notes=(
+            "BoP basis, annual. Negative values = net outflows/disinvestment. "
+            "Capital-attraction input for trade_capital_flows research — "
+            "not automatically 'stronger' (tax-haven FDI distorts)."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="LABOUR_FORCE_PARTICIPATION_RATE",
+        external_code="SL.TLF.CACT.ZS",
+        external_name="Labor force participation rate, total (% of total population ages 15+) (modeled ILO estimate)",
+        external_unit="percent",
+        transform_notes=(
+            "ILO modeled estimate, annual — the modeled series is used "
+            "deliberately for cross-country comparability (national-definition "
+            "series are not comparable)."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
+        external_code="GOV_WGI_GE_SC",
+        external_name="Government Effectiveness - Governance score (0-100)",
+        external_unit="score 0-100",
+        transform_notes=(
+            "WGI 2025-revision absolute governance score (0-100) for "
+            "Government Effectiveness — quality of public services, civil "
+            "service, policy formulation and implementation, credibility of "
+            "the government's commitment to policies. Perception-based "
+            "composite with measurement uncertainty — a source indicator, "
+            "not an Atlas force score."
+        ),
+    ),
+    WorldBankMapping(
         indicator_code="POLITICAL_STABILITY_WGI_SCORE",
         external_code="GOV_WGI_PV_SC",
         external_name="Political Stability - Governance score (0-100)",
@@ -158,6 +266,21 @@ WORLD_BANK_MAPPINGS: tuple[WorldBankMapping, ...] = (
             "Stability and Absence of Violence/Terrorism; larger values = more "
             "stable. Perception-based composite with measurement uncertainty — a "
             "source indicator, not an Atlas force score."
+        ),
+    ),
+    WorldBankMapping(
+        indicator_code="NATURAL_DISASTER_AFFECTED_PCT",
+        external_code="EN.CLC.MDAT.ZS",
+        external_name=(
+            "Droughts, floods, extreme temperatures "
+            "(% of population, average 1990-2009)"
+        ),
+        external_unit="% of population affected (annual average)",
+        transform_notes=(
+            "EM-DAT-derived structural exposure measure published by the World "
+            "Bank at a single date (2009) covering the 1990-2009 average — NOT "
+            "an annual time series and not an event count. Missing country "
+            "values mean 'no published average', never 'zero events'."
         ),
     ),
 )

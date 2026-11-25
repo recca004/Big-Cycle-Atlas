@@ -92,6 +92,7 @@ def _che_full_dtos() -> list[ObservationDTO]:
     return [
         _dto("CHE", "GDP_GROWTH", WB_GDP_GROWTH, "world_bank", 1.4, date(2025, 1, 1)),
         _dto("CHE", "INFLATION_CPI", WB_CPI, "world_bank", 0.15, date(2025, 1, 1)),
+        _dto("CHE", "REER_INDEX", "PX.REX.REER", "world_bank", 105.0, date(2025, 1, 1)),
         _dto(
             "CHE",
             "LABOUR_PRODUCTIVITY_PER_HOUR",
@@ -139,6 +140,7 @@ async def test_cost_competitiveness_mapping_known(client):
     force = force_definition_by_code("cost_competitiveness")
     assert force is not None
     assert set(force.live_indicator_codes) == {
+        "REER_INDEX",
         "UNIT_LABOUR_COST_GROWTH",
         "INFLATION_CPI",
     }
@@ -161,8 +163,8 @@ async def test_che_coverage_full(client):
     await _persist(_che_full_dtos())
     coverage = await _coverage("CHE")
 
-    assert coverage["productivity_output_growth"].status == "available"
-    assert coverage["cost_competitiveness"].status == "available"
+    assert coverage["productivity_output_growth"].status == "partial"  # PARTIAL ceiling (DEC-042 proxy)
+    assert coverage["cost_competitiveness"].status == "partial"  # PARTIAL ceiling (Mission 2 REER dimension)
     # Indebtedness: 2 of 3 live inputs have data (GOVERNMENT_DEBT_GDP has no
     # observation in this fixture) → partial, not available.
     assert coverage["indebtedness"].status == "partial"
@@ -213,7 +215,8 @@ async def test_completely_missing_force_stays_missing(client):
     await _persist(_che_full_dtos())
     coverage = await _coverage("CHE")
     # no live or candidate catalog inputs defined for these forces
-    assert coverage["leadership_capabilities"].status == "missing"
+    # leadership now has a live input (GE WGI, DEC-041) but no data in fixture
+    assert coverage["leadership_capabilities"].status == "defined_not_sourced"
     assert coverage["geography"].status == "missing"
     # military_strength now has live inputs (M5.4) but no data in this fixture
     assert coverage["military_strength"].status == "defined_not_sourced"
@@ -232,8 +235,8 @@ async def test_api_returns_all_17_forces(client):
     assert [f["code"] for f in data["forces"]] == EXPECTED_17
 
     by_code = {f["code"]: f for f in data["forces"]}
-    assert by_code["productivity_output_growth"]["status"] == "available"
-    assert by_code["cost_competitiveness"]["status"] == "available"
+    assert by_code["productivity_output_growth"]["status"] == "partial"  # PARTIAL ceiling (DEC-042 proxy)
+    assert by_code["cost_competitiveness"]["status"] == "partial"  # PARTIAL ceiling
     assert by_code["indebtedness"]["status"] == "partial"
     assert by_code["education"]["status"] == "defined_not_sourced"
     assert by_code["trade_capital_flows"]["status"] == "defined_not_sourced"

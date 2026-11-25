@@ -39,6 +39,16 @@ Sprint 6.7 / force-aggregation-v0.3 (DEC-034):
   confidence stay None.
 - confidence = None everywhere; backtest_safe = False everywhere.
 - No persistence. No public API.
+
+Sprint 6.13 / force-aggregation-v0.4 (DEC-040):
+- 5 of 17 forces approved for IDENTITY_SINGLE (Rule of law, Corruption,
+  Internal conflict proxy, Education, Wealth-gap).
+- Indebtedness is the sixth executable force via CONDITION_MINUS_PENALTY:
+  level = clamp(DSR + (credit_gap - 50), 0, 100); both numeric components
+  required — a missing credit gap defers, never neutral.
+- 11 of 17 forces DEFERRED_MULTI (level/relative/momentum = None).
+- confidence = None everywhere; backtest_safe = False everywhere.
+- No persistence. GET /api/countries/{iso3}/force-scores is read-only.
 """
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -48,6 +58,7 @@ from app.cycle.force_aggregation_definitions import (
     ForceAggregationSpec,
     ForceIndicatorRole,
 )
+from app.cycle.execution_modes import ExecutionSpec
 from app.cycle.force_definitions import FORCE_DEFINITIONS, ForceCoverageStatus
 from app.cycle.force_signal import ForceSignal, aggregate_force_from_signals
 from app.cycle.normalization_definitions import NormalizedSignal, ScoringPeriod
@@ -60,6 +71,7 @@ async def build_force_signals_as_of(
     session: AsyncSession,
     country_iso3: str,
     scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
 ) -> tuple[ForceSignal, ...]:
     """Build exactly 17 ForceSignals for one country as of a scoring period.
 
@@ -116,6 +128,7 @@ async def build_force_signals_as_of(
                 country_iso3=country_iso3,
                 indicator_code=comp.indicator_code,
                 scoring_period=scoring_period,
+                execution=execution,
             )
             component_signals[comp.indicator_code] = signal
 

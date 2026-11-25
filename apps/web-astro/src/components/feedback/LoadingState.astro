@@ -1,0 +1,35 @@
+---
+interface Props {
+  label?: string;
+}
+const { label = "Loading…" } = Astro.props;
+---
+
+<div class="loading-state" role="status" aria-live="polite">
+  <span class="loading-skeleton" aria-hidden="true"></span>
+  <span class="body-sm">{label}</span>
+</div>
+
+<style>
+  .loading-state {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    color: var(--text-tertiary);
+  }
+  .loading-skeleton {
+    width: 1rem;
+    height: 1rem;
+    border-radius: var(--radius-full);
+    background: var(--surface-3);
+    animation: pulse 1.4s var(--ease-in-out) infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loading-skeleton { animation: none; opacity: 0.7; }
+  }
+</style>

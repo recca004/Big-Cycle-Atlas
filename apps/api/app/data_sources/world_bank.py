@@ -113,6 +113,56 @@ class WorldBankAdapter(BaseDataSourceAdapter):
 
         return self.parse_response(payload, country_iso3, external_series_code)
 
+    async def fetch_universe_records(
+        self,
+        external_series_code: str,
+        start_year: int | None = None,
+        end_year: int | None = None,
+    ) -> tuple[list[dict], set[str]]:
+        """Fetch ALL economies for a series (V1 Mission 1 reference ingestion).
+
+        `country=all` returns every economy including aggregates; the real
+        member set is the WB country catalog filtered to
+        region.id != "NA" (aggregate groups). Returns (raw records, valid
+        member iso3 set). The caller validates + filters — this adapter
+        never guesses country identity.
+        """
+        catalog_resp = await self._client.get(
+            f"{self.base_url}/country", params={"format": "json", "per_page": "400"}
+        )
+        if catalog_resp.status_code != 200:
+            raise DataSourceHTTPError(
+                "World Bank country catalog request failed",
+                status_code=catalog_resp.status_code,
+            )
+        catalog = catalog_resp.json()
+        members = {
+            row["id"].upper()
+            for row in catalog[1]
+            if row.get("region", {}).get("id") != "NA"
+        }
+        url = self._build_url("all", external_series_code)
+        try:
+            response = await self._client.get(
+                url,
+                params={
+                    **self._build_params(start_year, end_year),
+                    "per_page": "30000",
+                },
+            )
+        except httpx.HTTPError as exc:
+            raise DataSourceHTTPError(
+                f"Request to World Bank failed: {exc}"
+            ) from exc
+        if response.status_code != 200:
+            raise DataSourceHTTPError(
+                "World Bank universe fetch failed",
+                status_code=response.status_code,
+            )
+        payload = response.json()
+        records = payload[1] if isinstance(payload, list) and len(payload) > 1 else []
+        return (records or []), members
+
     def parse_response(
         self,
         payload: object,

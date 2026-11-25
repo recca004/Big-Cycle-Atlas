@@ -27,12 +27,15 @@ WGI_BASE_INDICATORS = (
     "RULE_OF_LAW_WGI_SCORE",
     "CONTROL_OF_CORRUPTION_WGI_SCORE",
     "POLITICAL_STABILITY_WGI_SCORE",
+    # V1 Mission 1: GE added for the leadership proxy's uncertainty reporting.
+    "GOVERNMENT_EFFECTIVENESS_WGI_SCORE",
 )
 
 _DIMENSION_SERIES_PREFIX = {
     "RULE_OF_LAW_WGI_SCORE": "GOV_WGI_RL",
     "CONTROL_OF_CORRUPTION_WGI_SCORE": "GOV_WGI_CC",
     "POLITICAL_STABILITY_WGI_SCORE": "GOV_WGI_PV",
+    "GOVERNMENT_EFFECTIVENESS_WGI_SCORE": "GOV_WGI_GE",
 }
 
 _KIND_SUFFIX = {
@@ -76,14 +79,14 @@ def get_wgi_diagnostic_specs(base_indicator_code: str) -> tuple[WgiDiagnosticSpe
 def validate_wgi_diagnostic_specs() -> None:
     """Structural invariants of the registry. Raises ValueError on violation.
 
-    - exactly 9 specs (3 base indicators x 3 kinds, LB/UB/SR only)
+    - exactly 12 specs (4 base indicators x 3 kinds, LB/UB/SR only)
     - no duplicate (base indicator, kind) identities
     - exactly one provider series per (base indicator, kind)
     - provider source identity explicit on every spec
     """
-    if len(WGI_DIAGNOSTIC_SPECS) != 9:
+    if len(WGI_DIAGNOSTIC_SPECS) != 12:
         raise ValueError(
-            f"Expected 9 WGI diagnostic specs (3 indicators x 3 kinds), "
+            f"Expected 12 WGI diagnostic specs (4 indicators x 3 kinds), "
             f"got {len(WGI_DIAGNOSTIC_SPECS)}"
         )
     seen: set[tuple[str, IndicatorDiagnosticKind]] = set()

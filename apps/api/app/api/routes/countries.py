@@ -6,16 +6,38 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 
 from app.core.config import get_settings
+from app.cycle.execution_modes import ExecutionMode, parse_execution_spec
+from app.cycle.force_definitions import FORCE_DEFINITIONS
+from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION, ScoringPeriod
 from app.db.session import get_session
 from app.models import DataSource, Indicator
 from app.schemas import CountryRead
 from app.schemas import Observation as ObservationSchema
 from app.schemas.force_coverage import ForceCoverageResponse, ForceCoverageRead, ForceInputRead
+from app.schemas.force_scores import (
+    CountryUncertaintyResponse,
+    ForceHistoryPoint,
+    ForceHistoryResponse,
+    IndicatorUncertaintyHistory,
+    UncertaintyIndicatorRead,
+    UncertaintyPoint,
+)
+from app.schemas.force_scores import ForceScoreRead, ForceScoresResponse
 from app.schemas.pagination import PaginatedResponse
-from app.services import country_service, force_coverage_service, observation_service
+from app.services import country_service, force_coverage_service, force_signal_service, observation_service
+from app.services.alignment_service import AlignmentError, parse_scoring_period
 
 
 router = APIRouter(prefix=f"{get_settings().api_prefix}/countries", tags=["countries"])
+
+
+def _latest_completed_scoring_period() -> ScoringPeriod:
+    """The most recent quarter that has fully ended (release-date discipline)."""
+    today = datetime.now(timezone.utc).date()
+    quarter = (today.month - 1) // 3 + 1
+    if quarter == 1:
+        return ScoringPeriod(today.year - 1, 4)
+    return ScoringPeriod(today.year, quarter - 1)
 
 
 def _parse_period_bound(value: str, *, is_end: bool) -> datetime:
@@ -178,3 +200,479 @@ async def get_country_force_coverage(
         for item in coverage
     ]
     return ForceCoverageResponse(country=country.iso3, forces=forces)
+
+
+_FORCE_NAMES = {d.code: d.name for d in FORCE_DEFINITIONS}
+
+
+@router.get("/{iso3}/force-scores", response_model=ForceScoresResponse)
+async def get_country_force_scores(
+    iso3: str,
+    period: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    """Derived force-level scores — read-only, never persisted.
+
+    Returns all 17 forces. Unscored forces report level/relative/momentum as
+    null with execution_status "deferred" — missing data is never a zero.
+    """
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+
+    if period is None:
+        scoring_period = _latest_completed_scoring_period()
+    else:
+        try:
+            scoring_period = parse_scoring_period(period)
+        except AlignmentError as exc:
+            raise HTTPException(status_code=422, detail=str(exc))
+
+    signals = await force_signal_service.build_force_signals_as_of(
+        session, country.iso3, scoring_period
+    )
+
+    forces = [
+        ForceScoreRead(
+            force_code=s.force_code,
+            force_name=_FORCE_NAMES.get(s.force_code, s.force_code),
+            execution_status=(
+                "scored" if s.level_score is not None
+                else "dimension_only"
+                if (s.relative_score is not None or s.momentum is not None)
+                else "deferred"
+            ),
+            level_score=s.level_score,
+            relative_score=s.relative_score,
+            momentum_score=s.momentum,
+            confidence=s.confidence,
+            coverage_status=s.coverage_status.value,
+            period=s.scoring_period,
+            model_version=s.force_model_version,
+            limitations=[
+                *(
+                    [f"missing components: {', '.join(s.missing_components)}"]
+                    if s.missing_components
+                    else []
+                ),
+                *(
+                    [
+                        "deferred components: "
+                        + ", ".join(s.deferred_components)
+                    ]
+                    if s.deferred_components
+                    else []
+                ),
+            ],
+            reasons=[
+                *(
+                    ["component observation missing or too stale"]
+                    if s.missing_components
+                    else []
+                ),
+                *(
+                    ["component normalization deferred (supporting context)"]
+                    if s.deferred_components
+                    else []
+                ),
+                *(
+                    ["force aggregation approved (identity copy)"]
+                    if s.aggregation_method.value == "identity_single"
+                    and s.level_score is not None
+                    else ["force aggregation deferred — no numeric composition approved"]
+                ),
+            ],
+            backtest_safe=s.backtest_safe,
+        )
+        for s in signals
+    ]
+
+    return ForceScoresResponse(
+        country=country.iso3,
+        normalization_version=signals[0].normalization_model_version
+        if signals
+        else "",
+        force_aggregation_version=signals[0].force_model_version if signals else "",
+        forces=forces,
+    )
+
+
+@router.get("/{iso3}/forces/{force_code}/history", response_model=ForceHistoryResponse)
+async def get_country_force_history(
+    iso3: str,
+    force_code: str,
+    start_year: int = Query(1990, ge=1960, le=2200),
+    end_year: Optional[int] = Query(None, ge=1960, le=2200),
+    execution_mode: Optional[str] = Query(
+        None,
+        description=(
+            "Information-selection mode: current_latest, "
+            "retrospective_latest_vintage (default), strict_as_of or "
+            "research_assumption. Strict/assumption require info_cutoff."
+        ),
+    ),
+    info_cutoff: Optional[date] = Query(
+        None,
+        description=(
+            "Information cutoff for strict_as_of / research_assumption — "
+            "only information published at/before this date is eligible."
+        ),
+    ),
+    session: AsyncSession = Depends(get_session),
+):
+    """Retrospective force history at annual (Q4) scoring snapshots.
+
+    RETROSPECTIVE by default — each point uses latest stored vintages; not
+    a release-date-safe backtest (backtest_safe=False). With
+    execution_mode=strict_as_of + info_cutoff, only observations with
+    verified provider release evidence published at/before the cutoff are
+    eligible; periods without eligible inputs return nulls with the same
+    shape — strict NEVER falls back to latest-vintage data. Missing inputs
+    at a period produce nulls, never zeros.
+    """
+    try:
+        execution = parse_execution_spec(execution_mode, info_cutoff)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+    if force_code not in _FORCE_NAMES:
+        raise HTTPException(
+            status_code=404, detail=f"Unknown force code '{force_code}'"
+        )
+    if end_year is None:
+        end_year = _latest_completed_scoring_period().year
+    if end_year < start_year:
+        raise HTTPException(status_code=422, detail="end_year < start_year")
+
+    latest = _latest_completed_scoring_period()
+    points: list[ForceHistoryPoint] = []
+    for year in range(start_year, end_year + 1):
+        scoring_period = ScoringPeriod(year, 4)
+        if (scoring_period.year, scoring_period.quarter) > (latest.year, latest.quarter):
+            break  # never score a future snapshot
+        signals = await force_signal_service.build_force_signals_as_of(
+            session, country.iso3, scoring_period, execution=execution
+        )
+        s = next(f for f in signals if f.force_code == force_code)
+        points.append(
+            ForceHistoryPoint(
+                period=s.scoring_period,
+                execution_status=(
+                    "scored" if s.level_score is not None
+                    else "dimension_only"
+                    if (s.relative_score is not None or s.momentum is not None)
+                    else "deferred"
+                ),
+                level_score=s.level_score,
+                relative_score=s.relative_score,
+                momentum_score=s.momentum,
+                coverage_status=s.coverage_status.value,
+                missing_components=list(s.missing_components),
+            )
+        )
+    return ForceHistoryResponse(
+        country=country.iso3,
+        force_code=force_code,
+        force_name=_FORCE_NAMES[force_code],
+        retrospective=execution.mode is not ExecutionMode.CURRENT_LATEST,
+        execution_mode=execution.mode.value,
+        info_cutoff=(
+            execution.info_cutoff.isoformat()
+            if execution.info_cutoff else None
+        ),
+        model_version=CURRENT_MODEL_VERSION.version_id,
+        points=points,
+    )
+
+
+@router.get("/{iso3}/derived/trade-openness")
+async def get_country_trade_openness(
+    iso3: str,
+    start_year: int = Query(2000, ge=1960, le=2200),
+    end_year: Optional[int] = Query(None, ge=1960, le=2200),
+    execution_mode: Optional[str] = Query(
+        None,
+        description=(
+            "Information-selection mode: retrospective_latest_vintage "
+            "(default), strict_as_of or research_assumption. "
+            "Strict/assumption require info_cutoff."
+        ),
+    ),
+    info_cutoff: Optional[date] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    """Derived TRADE_OPENNESS_GDP history (Mission 4 §16).
+
+    exports + imports as % of GDP, computed AFTER both components are
+    aligned — a descriptive trade-intensity ratio, NOT an Atlas strength
+    score and NOT the Global Openness force level. Each point carries
+    independent component provenance; missing components produce null,
+    never zero.
+    """
+    from app.services import derived_indicator_service
+
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+    try:
+        execution = parse_execution_spec(execution_mode, info_cutoff)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    latest = _latest_completed_scoring_period()
+    end_year = end_year or latest.year
+    if end_year < start_year:
+        raise HTTPException(status_code=422, detail="end_year < start_year")
+    if (end_year - start_year) > 60:
+        raise HTTPException(status_code=422, detail="range too large (max 60 years)")
+
+    points: list[dict] = []
+    for year in range(start_year, end_year + 1):
+        sp = ScoringPeriod(year, 4)
+        if (sp.year, sp.quarter) > (latest.year, latest.quarter):
+            break
+        dav = await derived_indicator_service.derive_trade_openness_as_of(
+            session, country.iso3, sp, execution=execution
+        )
+        points.append({
+            "period": f"{year}-Q4",
+            "derived_value": dav.derived_value,
+            "components": [
+                {
+                    "indicator_code": c.indicator_code,
+                    "raw_value": (
+                        c.aligned_value.raw_value
+                        if c.aligned_value else None
+                    ),
+                    "source_period": (
+                        c.aligned_value.source_period
+                        if c.aligned_value else None
+                    ),
+                    "missing_reason": c.missing_reason,
+                }
+                for c in dav.components
+            ],
+        })
+    return {
+        "country": country.iso3,
+        "derived_indicator_code": derived_indicator_service.TRADE_OPENNESS_GDP_CODE,
+        "formula_id": derived_indicator_service.TRADE_OPENNESS_GDP_FORMULA_ID,
+        "formula_version": derived_indicator_service.TRADE_OPENNESS_GDP_FORMULA_VERSION,
+        "interpretation": (
+            "descriptive trade-intensity ratio — not an Atlas strength "
+            "score, not the Global Openness force level"
+        ),
+        "execution_mode": execution.mode.value,
+        "info_cutoff": (
+            execution.info_cutoff.isoformat()
+            if execution.info_cutoff else None
+        ),
+        "retrospective": execution.mode is not ExecutionMode.CURRENT_LATEST,
+        "backtest_safe": False,
+        "points": points,
+    }
+
+
+@router.get("/{iso3}/uncertainty", response_model=CountryUncertaintyResponse)
+async def get_country_uncertainty(
+    iso3: str,
+    session: AsyncSession = Depends(get_session),
+):
+    """Published provider uncertainty diagnostics (DEC-022/023 contract).
+
+    Returns each indicator's LATEST available period's published bounds and
+    source counts. Only provider-published values are returned — no
+    computed confidence percentage exists anywhere in this contract.
+    """
+    from sqlalchemy import func as sa_func, select as sa_select
+
+    from app.models.indicator import Indicator
+    from app.models.indicator_diagnostic import (
+        IndicatorDiagnostic,
+        IndicatorDiagnosticKind,
+    )
+
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+
+    # Latest period per (indicator, kind), then the latest vintage at it.
+    latest_period = (
+        sa_select(
+            IndicatorDiagnostic.indicator_id,
+            IndicatorDiagnostic.diagnostic_kind,
+            sa_func.max(IndicatorDiagnostic.period_start).label("max_period"),
+        )
+        .where(IndicatorDiagnostic.country_id == country.id)
+        .group_by(
+            IndicatorDiagnostic.indicator_id, IndicatorDiagnostic.diagnostic_kind
+        )
+        .subquery()
+    )
+    latest_vintage = (
+        sa_select(
+            IndicatorDiagnostic.indicator_id,
+            IndicatorDiagnostic.diagnostic_kind,
+            IndicatorDiagnostic.period_start,
+            sa_func.max(IndicatorDiagnostic.vintage_number).label("max_v"),
+        )
+        .join(
+            latest_period,
+            (IndicatorDiagnostic.indicator_id == latest_period.c.indicator_id)
+            & (
+                IndicatorDiagnostic.diagnostic_kind
+                == latest_period.c.diagnostic_kind
+            )
+            & (IndicatorDiagnostic.period_start == latest_period.c.max_period),
+        )
+        .where(IndicatorDiagnostic.country_id == country.id)
+        .group_by(
+            IndicatorDiagnostic.indicator_id,
+            IndicatorDiagnostic.diagnostic_kind,
+            IndicatorDiagnostic.period_start,
+        )
+        .subquery()
+    )
+    rows = (
+        await session.execute(
+            sa_select(
+                Indicator.code,
+                IndicatorDiagnostic.diagnostic_kind,
+                IndicatorDiagnostic.period_start,
+                IndicatorDiagnostic.value,
+            )
+            .join(
+                latest_vintage,
+                (IndicatorDiagnostic.indicator_id == latest_vintage.c.indicator_id)
+                & (
+                    IndicatorDiagnostic.diagnostic_kind
+                    == latest_vintage.c.diagnostic_kind
+                )
+                & (IndicatorDiagnostic.period_start == latest_vintage.c.period_start)
+                & (
+                    IndicatorDiagnostic.vintage_number == latest_vintage.c.max_v
+                ),
+            )
+            .join(Indicator, Indicator.id == IndicatorDiagnostic.indicator_id)
+            .where(IndicatorDiagnostic.country_id == country.id)
+        )
+    ).all()
+
+    by_indicator: dict[str, dict] = {}
+    for code, kind, period_start, value in rows:
+        entry = by_indicator.setdefault(
+            code, {"source_period": period_start.date().isoformat()}
+        )
+        entry[kind if isinstance(kind, str) else kind.value] = value
+
+    return CountryUncertaintyResponse(
+        country=country.iso3,
+        indicators=[
+            UncertaintyIndicatorRead(indicator_code=code, **entry)
+            for code, entry in sorted(by_indicator.items())
+        ],
+    )
+
+
+@router.get(
+    "/{iso3}/indicators/{indicator_code}/uncertainty",
+    response_model=IndicatorUncertaintyHistory,
+)
+async def get_indicator_uncertainty_history(
+    iso3: str,
+    indicator_code: str,
+    session: AsyncSession = Depends(get_session),
+):
+    """Full published diagnostic history for one indicator (Mission 4 §9).
+
+    Returns every source period that has at least one published diagnostic
+    (latest vintage per kind/period). Periods without diagnostics are absent
+    from `points` — callers must NOT interpolate them. Score/uncertainty
+    alignment is by exact `period_start` match only.
+    """
+    from sqlalchemy import func as sa_func, select as sa_select
+
+    from app.models.indicator import Indicator
+    from app.models.indicator_diagnostic import IndicatorDiagnostic
+
+    country = await country_service.get_country(session, iso3)
+    if country is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Country with ISO3 '{iso3}' not found",
+        )
+    indicator = (
+        await session.execute(
+            sa_select(Indicator).where(Indicator.code == indicator_code.upper())
+        )
+    ).scalar_one_or_none()
+    if indicator is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Indicator '{indicator_code}' not found",
+        )
+
+    latest_vintage = (
+        sa_select(
+            IndicatorDiagnostic.period_start,
+            IndicatorDiagnostic.diagnostic_kind,
+            sa_func.max(IndicatorDiagnostic.vintage_number).label("max_v"),
+        )
+        .where(
+            IndicatorDiagnostic.country_id == country.id,
+            IndicatorDiagnostic.indicator_id == indicator.id,
+        )
+        .group_by(
+            IndicatorDiagnostic.period_start, IndicatorDiagnostic.diagnostic_kind
+        )
+        .subquery()
+    )
+    rows = (
+        await session.execute(
+            sa_select(
+                IndicatorDiagnostic.period_start,
+                IndicatorDiagnostic.diagnostic_kind,
+                IndicatorDiagnostic.value,
+            ).join(
+                latest_vintage,
+                (IndicatorDiagnostic.period_start == latest_vintage.c.period_start)
+                & (
+                    IndicatorDiagnostic.diagnostic_kind
+                    == latest_vintage.c.diagnostic_kind
+                )
+                & (IndicatorDiagnostic.vintage_number == latest_vintage.c.max_v),
+            ).where(
+                IndicatorDiagnostic.country_id == country.id,
+                IndicatorDiagnostic.indicator_id == indicator.id,
+            )
+        )
+    ).all()
+
+    by_period: dict[str, dict] = {}
+    for period_start, kind, value in rows:
+        entry = by_period.setdefault(
+            period_start.date().isoformat(),
+            {"period_start": period_start.date().isoformat()},
+        )
+        entry[kind if isinstance(kind, str) else kind.value] = value
+
+    return IndicatorUncertaintyHistory(
+        country=country.iso3,
+        indicator_code=indicator.code,
+        points=[
+            UncertaintyPoint(**by_period[p]) for p in sorted(by_period)
+        ],
+    )

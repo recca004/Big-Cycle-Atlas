@@ -175,6 +175,44 @@ class OECDAdapter(BaseDataSourceAdapter):
             and (end_year is None or obs.period <= end_year)
         ]
 
+    async def fetch_universe_csv(
+        self,
+        external_series_code: str,
+        start_year: int | None = None,
+        end_year: int | None = None,
+    ) -> str:
+        """Fetch the FULL cross-country distribution for a mapped series.
+
+        DEC-042 (Sprint 6.14): calibration reference-universe ingestion. The
+        REF_AREA segment is left empty — standard SDMX "all members of the
+        dimension" — so ONE request returns every reporting country. Per-row
+        REF_AREA identity is deliberately NOT validated here (each row
+        carries its own); the caller validates the non-country expected_dims
+        and filters to the named universe membership. Returns raw SDMX-CSV
+        text for the caller to parse.
+        """
+        mapping = get_oecd_mapping_by_external_code(external_series_code)
+        if mapping is None:
+            raise SeriesMappingError(
+                f"OECD external identity {external_series_code!r} has no canonical "
+                "Big Cycle Atlas indicator mapping"
+            )
+        key = mapping.sdmx_key_template.replace("{cc}", "")
+        url = self._build_url(mapping, key)
+        try:
+            response = await self._client.get(
+                url, params=self._build_params(mapping, start_year, end_year)
+            )
+        except httpx.HTTPError as exc:
+            raise DataSourceHTTPError(f"Request to OECD failed: {exc}") from exc
+        if response.status_code != 200:
+            raise DataSourceHTTPError(
+                f"OECD returned HTTP {response.status_code} for universe "
+                f"fetch ({external_series_code})",
+                status_code=response.status_code,
+            )
+        return response.text
+
     def _validate_row_identity(
         self, row: dict, expected_ref_area: str, mapping: OecdMapping
     ) -> None:

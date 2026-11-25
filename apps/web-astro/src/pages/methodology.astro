@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import GlassCard from "@/components/glass/GlassCard.astro";
+---
+
+<BaseLayout title="Methodology">
+  <header class="page-header">
+    <p class="label-md text-tertiary">How the Atlas works</p>
+    <h1 class="headline-lg">Methodology</h1>
+  </header>
+  <div class="grid-2">
+    <GlassCard>
+      <h2 class="headline-sm">Pipeline</h2>
+      <ol class="body-sm pipeline-list">
+        <li><strong>RAW</strong> — provider observations, immutable, versioned.</li>
+        <li><strong>NORMALIZED</strong> — aligned to quarterly scoring periods, latest-vintage only.</li>
+        <li><strong>FEATURE</strong> — indicator-level scores with provenance.</li>
+        <li><strong>FORCE SCORE</strong> — approved aggregation only (identity-copy today).</li>
+        <li><strong>CYCLE SCORE</strong> — planned; requires DEC.</li>
+        <li><strong>FORECAST</strong> — planned; requires DEC.</li>
+      </ol>
+    </GlassCard>
+    <GlassCard>
+      <h2 class="headline-sm">Research guarantees</h2>
+      <ul class="body-sm pipeline-list">
+        <li>Missing data is never a zero.</li>
+        <li>Raw observations are never mutated — derived layers only.</li>
+        <li>No score is published without an approved aggregation mode.</li>
+        <li>Confidence, coverage and freshness are distinct dimensions.</li>
+        <li><code>backtest_safe = false</code> until release-date discipline lands.</li>
+      </ul>
+    </GlassCard>
+    <GlassCard>
+      <h2 class="headline-sm">Force aggregation</h2>
+      <p class="body-sm">
+        Only <code>IDENTITY_SINGLE</code> is approved (force score = the
+        single eligible component's score). Five forces are executable:
+        rule of law, corruption, internal conflict, education, and
+        productivity/output growth (Sprint 6.11). All multi-component
+        composition is deferred pending DEC records.
+      </p>
+    </GlassCard>
+    <GlassCard>
+      <h2 class="headline-sm">Decision records</h2>
+      <p class="body-sm">
+        Model choices — weights, curves, thresholds, composition rules —
+        are recorded as DEC entries in <code>.dev/DECISIONS.md</code> and
+        require owner approval before implementation.
+      </p>
+    </GlassCard>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .grid-2 {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  }
+  .pipeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-left: var(--space-4);
+  }
+</style>

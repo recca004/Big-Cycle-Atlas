@@ -1,0 +1,259 @@
+---
+import "../styles/global.css";
+import { GlobalSearch } from "@/features/site/GlobalSearch";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const path = Astro.url.pathname;
+
+const NAV = [
+  { href: "/", label: "Overview" },
+  { href: "/countries", label: "Countries" },
+  { href: "/forces", label: "Forces" },
+  { href: "/workspace", label: "Workspace" },
+  { href: "/compare", label: "Compare" },
+  { href: "/cycle", label: "Cycle" },
+  { href: "/research", label: "Research" },
+  { href: "/forecast", label: "Forecast" },
+  { href: "/markets", label: "Markets" },
+  { href: "/strategies", label: "Strategies" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/watchlist", label: "Watchlist" },
+  { href: "/economy", label: "Economy" },
+  { href: "/debt", label: "Debt" },
+  { href: "/trade", label: "Trade" },
+  { href: "/data", label: "Data" },
+  { href: "/sources", label: "Sources" },
+  { href: "/methodology", label: "Methodology" },
+  { href: "/progress", label: "Progress" },
+];
+
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description ?? "Big Cycle Atlas — country-level macro cycle research"} />
+    <title>{title} · Big Cycle Atlas</title>
+    <script is:inline>
+      // Resolve theme before first paint: versioned prefs blob, legacy
+      // standalone keys, else system.
+      (() => {
+        try {
+          const el = document.documentElement;
+          let theme = null, transparency = null, motion = null;
+          const raw = localStorage.getItem("bca:prefs:v1");
+          if (raw) {
+            const p = JSON.parse(raw);
+            if (p?.version === 1) {
+              theme = p.theme;
+              transparency = p.reducedTransparency ? "reduced" : null;
+              motion = p.reducedMotion ? "reduced" : null;
+            }
+          }
+          if (theme !== "light" && theme !== "dark" && theme !== "system") {
+            const stored = localStorage.getItem("bca:theme");
+            theme = stored === "light" || stored === "dark" ? stored : null;
+          }
+          if (transparency === null)
+            transparency =
+              localStorage.getItem("bca:transparency") === "reduced"
+                ? "reduced"
+                : null;
+          const resolved =
+            theme === "light" || theme === "dark"
+              ? theme
+              : matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+          el.dataset.theme = resolved;
+          if (transparency === "reduced") el.dataset.transparency = "reduced";
+          if (motion === "reduced") el.dataset.motion = "reduced";
+        } catch {
+          /* localStorage unavailable — default theme stays */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header glass">
+      <a class="site-logo" href="/">Big Cycle Atlas</a>
+      <nav class="site-nav" aria-label="Primary">
+        {
+          NAV.map((item) => (
+            <a
+              href={item.href}
+              class:list={["nav-link", { "nav-link-active": isActive(item.href) }]}
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+      <div class="header-actions">
+        <GlobalSearch client:load />
+        <button
+          id="theme-toggle"
+          class="glass-button"
+          type="button"
+          aria-label="Toggle color theme"
+          title="Toggle light / dark"
+        >
+          <span id="theme-toggle-label" aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </header>
+    <div class="nav-scroll-hint" aria-hidden="true"></div>
+    <main class="site-main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p class="body-sm">
+        Research data platform · public sources only · scores are model outputs,
+        not investment advice
+      </p>
+    </footer>
+    <script is:inline>
+      (() => {
+        const btn = document.getElementById("theme-toggle");
+        const label = document.getElementById("theme-toggle-label");
+        const paint = () => {
+          if (label)
+            label.textContent =
+              document.documentElement.dataset.theme === "light" ? "☀" : "☾";
+        };
+        paint();
+        btn?.addEventListener("click", () => {
+          const next =
+            document.documentElement.dataset.theme === "light"
+              ? "dark"
+              : "light";
+          document.documentElement.classList.add("theme-animating");
+          document.documentElement.dataset.theme = next;
+          try {
+            localStorage.setItem("bca:theme", next);
+            const raw = localStorage.getItem("bca:prefs:v1");
+            const p = raw ? JSON.parse(raw) : {};
+            localStorage.setItem(
+              "bca:prefs:v1",
+              JSON.stringify({ ...p, version: 1, theme: next }),
+            );
+          } catch {}
+          paint();
+          setTimeout(
+            () => document.documentElement.classList.remove("theme-animating"),
+            300,
+          );
+        });
+      })();
+    </script>
+    <style>
+      .site-header {
+        position: sticky;
+        top: var(--space-3);
+        z-index: var(--z-sticky);
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        margin: var(--space-3) auto 0;
+        padding: var(--space-2) var(--space-4);
+        max-width: var(--content-max);
+        width: calc(100% - var(--space-6));
+      }
+      .site-logo {
+        font-weight: var(--weight-bold);
+        font-size: var(--text-base);
+        color: var(--text-primary);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .site-nav {
+        display: flex;
+        gap: var(--space-1);
+        overflow-x: auto;
+        flex: 1;
+        scrollbar-width: none;
+        -webkit-mask-image: linear-gradient(to right, #000 88%, transparent);
+        mask-image: linear-gradient(to right, #000 88%, transparent);
+      }
+      .site-nav::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-link {
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-md);
+        font-size: var(--text-sm);
+        color: var(--text-secondary);
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+          color var(--duration-fast) var(--ease-out),
+          background var(--duration-fast) var(--ease-out);
+      }
+      .nav-link:hover {
+        color: var(--text-primary);
+        background: var(--surface-2);
+      }
+      .nav-link-active {
+        color: var(--accent-text);
+        background: var(--accent-soft);
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+      .glass-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 2rem;
+        min-width: 2rem;
+        padding: 0 var(--space-2);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        background: var(--surface-1);
+        color: var(--text-primary);
+        cursor: pointer;
+        font-size: var(--text-sm);
+        transition:
+          background var(--duration-fast) var(--ease-out),
+          border-color var(--duration-fast) var(--ease-out);
+      }
+      .glass-button:hover {
+        background: var(--surface-3);
+        border-color: var(--border-default);
+      }
+      .site-main {
+        max-width: var(--content-max);
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-6) var(--space-16);
+        width: 100%;
+      }
+      .site-footer {
+        max-width: var(--content-max);
+        margin: 0 auto;
+        padding: var(--space-6);
+        border-top: 1px solid var(--border-subtle);
+      }
+      @media (max-width: 640px) {
+        .site-header {
+          top: var(--space-2);
+          width: calc(100% - var(--space-4));
+        }
+        .site-main {
+          padding: var(--space-6) var(--space-4) var(--space-12);
+        }
+      }
+    </style>
+  </body>
+</html>

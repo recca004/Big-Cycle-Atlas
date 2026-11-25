@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DomainForces } from "@/features/site/SitePanels";
+---
+
+<BaseLayout title="Economy">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Economic strength</p>
+    <h1 class="headline-lg">Economy</h1>
+    <p class="body-sm">
+      Output, productivity and competitiveness forces with their underlying
+      indicator observations.
+    </p>
+  </header>
+  <DomainForces
+    client:load
+    forceCodes={[
+      "productivity_output_growth",
+      "cost_competitiveness",
+      "resource_allocation_efficiency",
+      "economic_output" ,
+    ]}
+    indicators={["GDP_GROWTH", "GDP_PER_CAPITA", "LABOUR_PRODUCTIVITY_PER_HOUR", "UNEMPLOYMENT_RATE"]}
+  />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+</style>

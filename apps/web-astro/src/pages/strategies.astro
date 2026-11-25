@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { StrategyLab } from "@/features/strategies/StrategyLab";
+---
+
+<BaseLayout title="Strategies">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Research simulation</p>
+    <h1 class="headline-lg">Strategy Lab</h1>
+    <p class="body-sm">
+      Benchmark portfolio strategies simulated on a monthly grid with
+      next-period execution, transaction costs and explicit evaluation
+      categories. Results are research benchmarks — never achievable
+      investment results.
+    </p>
+  </header>
+  <StrategyLab client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+  .research-controls { display: flex; gap: var(--space-4); align-items: center; padding: var(--space-4); flex-wrap: wrap; }
+  .panel-title { margin-bottom: var(--space-3); }
+  .glass { margin-bottom: var(--space-5); }
+</style>

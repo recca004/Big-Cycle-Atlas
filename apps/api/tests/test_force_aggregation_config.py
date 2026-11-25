@@ -49,7 +49,9 @@ def test_force_indicator_role_values():
 def test_aggregation_mode_values():
     assert {m.value for m in ForceAggregationMode} == {
         "identity_single",
+        "condition_minus_penalty",
         "deferred_multi",
+        "dimension_only",
     }
 
 
@@ -135,10 +137,11 @@ def test_multi_eligible_forces_use_deferred_multi():
 # --- Indebtedness is DEFERRED_MULTI ------------------------------------------
 
 
-def test_indebtedness_is_deferred_multi():
+def test_indebtedness_is_condition_minus_penalty():
+    """Sprint 6.13 (DEC-040): Indebtedness is the sixth executable force."""
     spec = FORCE_AGGREGATION_CONFIGS["indebtedness"]
-    assert aggregation_mode(spec) is ForceAggregationMode.deferred_multi
-    assert spec.level_mode is ForceDimensionMode.deferred
+    assert aggregation_mode(spec) is ForceAggregationMode.condition_minus_penalty
+    assert spec.level_mode is ForceDimensionMode.condition_minus_penalty
     assert spec.relative_mode is ForceDimensionMode.deferred
     assert spec.momentum_mode is ForceDimensionMode.deferred
 
@@ -209,7 +212,8 @@ def test_relative_identity_only_on_approved_wgi_forces():
         if spec.relative_mode is ForceDimensionMode.identity_copy
     }
     assert relative_identity_forces == {
-        "rule_of_law", "corruption", "internal_conflict"
+        "rule_of_law", "corruption", "internal_conflict",
+        "military_strength",  # V1 Mission 1: dimension-only relative_share
     }
 
 
@@ -222,7 +226,10 @@ def test_momentum_identity_only_on_approved_wgi_forces():
         if spec.momentum_mode is ForceDimensionMode.identity_copy
     }
     assert momentum_identity_forces == {
-        "rule_of_law", "corruption", "internal_conflict"
+        "rule_of_law", "corruption", "internal_conflict",
+        "productivity_output_growth",  # DEC-042 Option C
+        "character_determination",  # V1 Mission 1: LFP pct momentum
+        "cost_competitiveness",  # Mission 2: REER pct momentum dimension
     }
 
 
@@ -232,7 +239,7 @@ def test_momentum_identity_only_on_approved_wgi_forces():
 def test_confidence_mode_always_deferred():
     for force_code, spec in FORCE_AGGREGATION_CONFIGS.items():
         assert spec.confidence_mode is ForceDimensionMode.deferred, (
-            f"{force_code}: confidence must be deferred in force-aggregation-v0.3"
+            f"{force_code}: confidence must be deferred in force-aggregation-v1.0"
         )
 
 
@@ -268,12 +275,12 @@ def test_no_force_persistence_or_api():
 
 
 def test_force_aggregation_version():
-    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v0.3"
+    assert FORCE_AGGREGATION_VERSION == "force-aggregation-v1.0"
 
 
 def test_normalization_version_unchanged():
     from app.cycle.normalization_definitions import CURRENT_MODEL_VERSION
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.8"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.4"
 
 
 # --- Validation raises loudly ------------------------------------------------
@@ -418,16 +425,27 @@ def test_confidence_not_deferred_raises():
         )
 
 
-def test_relative_identity_without_level_identity_raises():
+def test_relative_identity_on_unapproved_indicator_raises():
     import pytest
-    with pytest.raises(ValueError, match="relative identity_copy requires level"):
+    # V1 Mission 1: dimension-only modules may copy relative without a level,
+    # but the INDICATORS_WITH_APPROVED_RELATIVE gate still guards the copy —
+    # an unapproved indicator must fail loudly.
+    with pytest.raises(ValueError, match="not approved"):
         from app.cycle.force_aggregation_definitions import ForceAggregationSpec
         ForceAggregationSpec(
-            force_code="rule_of_law",
+            force_code="cost_competitiveness",
             components=(
                 ForceIndicatorComponentSpec(
-                    indicator_code="RULE_OF_LAW_WGI_SCORE",
+                    indicator_code="REER_INDEX",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="UNIT_LABOUR_COST_GROWTH",
                     role=ForceIndicatorRole.core_condition,
+                ),
+                ForceIndicatorComponentSpec(
+                    indicator_code="INFLATION_CPI",
+                    role=ForceIndicatorRole.supporting_context,
                 ),
             ),
             level_mode=ForceDimensionMode.deferred,
@@ -522,6 +540,10 @@ def test_relative_identity_on_unsupported_indicator_raises():
             force_code="infrastructure_investment",
             components=(
                 ForceIndicatorComponentSpec(
+                    indicator_code="BROADBAND_PER_100",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
+                ForceIndicatorComponentSpec(
                     indicator_code="GROSS_CAPITAL_FORMATION_GDP",
                     role=ForceIndicatorRole.core_condition,
                 ),
@@ -541,6 +563,10 @@ def test_momentum_identity_on_unsupported_indicator_raises():
         ForceAggregationSpec(
             force_code="infrastructure_investment",
             components=(
+                ForceIndicatorComponentSpec(
+                    indicator_code="BROADBAND_PER_100",
+                    role=ForceIndicatorRole.supporting_context,
+                ),
                 ForceIndicatorComponentSpec(
                     indicator_code="GROSS_CAPITAL_FORMATION_GDP",
                     role=ForceIndicatorRole.core_condition,

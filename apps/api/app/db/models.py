@@ -6,3 +6,4 @@ from app.models.source_series import SourceSeries
 from app.models.observation import Observation
 from app.models.indicator_revision import IndicatorRevision
 from app.models.ingestion_run import IngestionRun
+from app.models.reference_observation import ReferenceObservation

@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ComparePanel } from "@/features/compare/ComparePanel";
+---
+
+<BaseLayout title="Compare">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Cross-country</p>
+    <h1 class="headline-lg">Compare countries</h1>
+    <p class="body-sm">
+      Side-by-side force scores. Deferred forces report no number — the
+      absence of a score is information, not a zero.
+    </p>
+  </header>
+  <ComparePanel client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+</style>

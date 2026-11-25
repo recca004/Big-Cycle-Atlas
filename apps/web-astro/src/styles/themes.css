@@ -1,0 +1,125 @@
+/* Theme variables — dark (default) + light.
+   Applied via [data-theme] on <html>; "system" resolves in a tiny inline
+   script in BaseLayout before first paint to avoid theme flash. */
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces — deep navy / charcoal */
+  --bg-app: #0a0f1c;
+  --bg-glow-1: rgb(77 143 209 / 0.10);
+  --bg-glow-2: rgb(79 191 143 / 0.05);
+  --accent-contrast: #ffffff;
+  --bg-raised: #101828;
+  --bg-sunken: #070b14;
+  --surface-1: rgb(255 255 255 / 0.04);
+  --surface-2: rgb(255 255 255 / 0.07);
+  --surface-3: rgb(255 255 255 / 0.11);
+  --surface-solid: #141c2e;
+
+  /* Text */
+  --text-primary: #eef2f9;
+  --text-secondary: #a8b3c7;
+  --text-tertiary: #6b7790;
+  --text-inverse: #0a0f1c;
+
+  /* Borders */
+  --border-subtle: rgb(255 255 255 / 0.08);
+  --border-default: rgb(255 255 255 / 0.14);
+  --border-strong: rgb(255 255 255 / 0.22);
+
+  /* Accent — ocean blue */
+  --accent: #4d8fd1;
+  --accent-strong: #6ba5dd;
+  --accent-soft: rgb(77 143 209 / 0.16);
+  --accent-text: #9cc3ea;
+
+  /* Status */
+  --status-good: #4fbf8f;
+  --status-good-soft: rgb(79 191 143 / 0.15);
+  --status-warn: #d9a441;
+  --status-warn-soft: rgb(217 164 65 / 0.15);
+  --status-bad: #d16a6a;
+  --status-bad-soft: rgb(209 106 106 / 0.15);
+  --status-neutral: #6b7790;
+
+  /* Glass */
+  --glass-bg: rgb(20 28 46 / 0.62);
+  --glass-bg-strong: rgb(20 28 46 / 0.82);
+  --glass-border: rgb(255 255 255 / 0.1);
+  --glass-highlight: rgb(255 255 255 / 0.06);
+  --glass-blur: 18px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 12px 40px rgb(0 0 0 / 0.45);
+  --shadow-glass:
+    0 8px 32px rgb(0 0 0 / 0.35), inset 0 1px 0 var(--glass-highlight);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-app: #eef0f5;
+  --bg-glow-1: rgb(47 111 179 / 0.16);
+  --bg-glow-2: rgb(217 164 65 / 0.10);
+  --accent-contrast: #ffffff;
+  --bg-raised: #ffffff;
+  --bg-sunken: #e8eaef;
+  --surface-1: rgb(15 23 42 / 0.035);
+  --surface-2: rgb(15 23 42 / 0.06);
+  --surface-3: rgb(15 23 42 / 0.1);
+  --surface-solid: #ffffff;
+
+  --text-primary: #131a2b;
+  --text-secondary: #49536a;
+  --text-tertiary: #7b8499;
+  --text-inverse: #f5f7fb;
+
+  --border-subtle: rgb(15 23 42 / 0.08);
+  --border-default: rgb(15 23 42 / 0.14);
+  --border-strong: rgb(15 23 42 / 0.24);
+
+  --accent: #2f6fb3;
+  --accent-strong: #265e9a;
+  --accent-soft: rgb(47 111 179 / 0.12);
+  --accent-text: #265e9a;
+
+  --status-good: #1d8a5f;
+  --status-good-soft: rgb(29 138 95 / 0.12);
+  --status-warn: #a8731a;
+  --status-warn-soft: rgb(168 115 26 / 0.13);
+  --status-bad: #b8463f;
+  --status-bad-soft: rgb(184 70 63 / 0.12);
+  --status-neutral: #7b8499;
+
+  --glass-bg: rgb(255 255 255 / 0.72);
+  --glass-bg-strong: rgb(255 255 255 / 0.88);
+  --glass-border: rgb(15 23 42 / 0.1);
+  --glass-highlight: rgb(255 255 255 / 0.7);
+  --glass-blur: 18px;
+
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.08);
+  --shadow-md: 0 4px 16px rgb(15 23 42 / 0.1);
+  --shadow-lg: 0 12px 40px rgb(15 23 42 / 0.14);
+  --shadow-glass:
+    0 8px 32px rgb(15 23 42 / 0.1), inset 0 1px 0 var(--glass-highlight);
+}
+
+/* Reduced transparency: swap glass for solid surfaces. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-bg: var(--surface-solid);
+    --glass-bg-strong: var(--surface-solid);
+    --glass-blur: 0px;
+  }
+}
+
+/* Explicit user choice (settings page). */
+:root[data-transparency="reduced"] {
+  --glass-bg: var(--surface-solid);
+  --glass-bg-strong: var(--surface-solid);
+  --glass-blur: 0px;
+}

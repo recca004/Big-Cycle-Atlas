@@ -6,6 +6,7 @@ Synthetic DTOs persisted via the real persistence layer against seeded SQLite;
 no external World Bank calls. Coverage is data availability only — no scores.
 """
 from datetime import date, datetime, timezone
+import pytest
 
 from sqlalchemy import func, select
 
@@ -40,6 +41,17 @@ EXPECTED_WB_CODES = {
     "INFLATION_CPI": "FP.CPI.TOTL.ZG",
     "MILITARY_EXPENDITURE_USD": "MS.MIL.XPND.CD",
     "MILITARY_EXPENDITURE_GDP": "MS.MIL.XPND.GD.ZS",
+    "GOVERNMENT_EFFECTIVENESS_WGI_SCORE": "GOV_WGI_GE_SC",
+    "POPULATION": "SP.POP.TOTL",
+    "RND_EXPENDITURE_GDP": "GB.XPD.RSDV.GD.ZS",
+    "SECONDARY_ENROLLMENT": "SE.SEC.ENRR",
+    "TERTIARY_ENROLLMENT": "SE.TER.ENRR",
+    "UNEMPLOYMENT_RATE": "SL.UEM.TOTL.ZS",
+    "LABOUR_FORCE_PARTICIPATION_RATE": "SL.TLF.CACT.ZS",
+    "FDI_NET_INFLOWS_GDP": "BX.KLT.DINV.WD.GD.ZS",
+    "REER_INDEX": "PX.REX.REER",
+    "BROADBAND_PER_100": "IT.NET.BBND.P2",
+    "NATURAL_DISASTER_AFFECTED_PCT": "EN.CLC.MDAT.ZS",
 }
 
 TRADE_DTOS_SPEC = [
@@ -47,6 +59,7 @@ TRADE_DTOS_SPEC = [
     ("IMPORTS_GDP", WB_IMPORTS, 58.0),
     ("TRADE_BALANCE", WB_TRADE_BALANCE, 7.0),
     ("CURRENT_ACCOUNT_GDP", WB_CURRENT_ACCOUNT, 8.0),
+    ("FDI_NET_INFLOWS_GDP", "BX.KLT.DINV.WD.GD.ZS", 3.0),
 ]
 
 
@@ -93,7 +106,7 @@ async def coverage_by_code(iso3: str) -> dict:
 
 
 async def test_world_bank_mappings_verified_codes(client):
-    assert len(WORLD_BANK_MAPPINGS) == 15  # 3 GDP + 5 trade/investment + 3 WGI + Gini + CPI + 2 military
+    assert len(WORLD_BANK_MAPPINGS) == 26  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 6 pop/rnd/enroll/unemp/lfp + 1 EM-DAT exposure (Mission 4 §18)
     by_indicator = {m.indicator_code: m for m in WORLD_BANK_MAPPINGS}
     for indicator_code, external_code in EXPECTED_WB_CODES.items():
         mapping = by_indicator.get(indicator_code)
@@ -144,7 +157,7 @@ async def test_seed_idempotent_no_duplicate_series(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 22
+        assert total == 33
         dup = (
             await session.execute(
                 select(func.count())
@@ -194,6 +207,7 @@ async def test_trade_force_available_with_all_four_inputs(client):
         "IMPORTS_GDP",
         "TRADE_BALANCE",
         "CURRENT_ACCOUNT_GDP",
+        "FDI_NET_INFLOWS_GDP",
     }
     assert all(i.has_data for i in live.values())
     assert all(i.has_source_series for i in live.values())
@@ -212,13 +226,17 @@ async def test_trade_force_partial_when_one_input_lacks_data(client):
 
 async def test_infrastructure_force_available_with_gcf(client):
     await _persist(
-        [_dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5)]
+        [
+            _dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5),
+            _dto("CHE", "BROADBAND_PER_100", "IT.NET.BBND.P2", 42.0),
+        ]
     )
     coverage = await coverage_by_code("CHE")
     infra = coverage["infrastructure_investment"]
     assert infra.status == "available"
     assert [i.indicator_code for i in infra.live_inputs] == [
-        "GROSS_CAPITAL_FORMATION_GDP"
+        "GROSS_CAPITAL_FORMATION_GDP",
+        "BROADBAND_PER_100",
     ]
 
 
@@ -232,22 +250,30 @@ async def test_sourced_but_dataless_force_stays_defined_not_sourced(client):
     assert coverage["trade_capital_flows"].status == "defined_not_sourced"
 
 
-# --- 8: Global openness stays missing even with full trade data ----------------
+# --- 8: Global openness context profile is partial with trade data ----------------
 
 
-async def test_global_openness_stays_missing_with_trade_data(client):
+async def test_global_openness_context_profile_with_trade_data(client):
+    """Mission 4 §16: openness now has live trade/size inputs — with the five
+    trade series present (but not POPULATION/GDP_CURRENT_USD), the coverage
+    ceiling correctly reports 'partial', never 'available'."""
     dtos = [
         _dto("CHE", indicator, external, value)
         for indicator, external, value in TRADE_DTOS_SPEC
     ]
     dtos.append(_dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5))
+    dtos.append(_dto("CHE", "BROADBAND_PER_100", "IT.NET.BBND.P2", 42.0))
     await _persist(dtos)
     coverage = await coverage_by_code("CHE")
 
     openness = coverage["global_openness"]
-    assert openness.status == "missing"
-    assert openness.live_inputs == []
-    assert openness.candidate_inputs == []
+    assert openness.status == "partial"
+    live = {i.indicator_code: i for i in openness.live_inputs}
+    assert live["EXPORTS_GDP"].has_data
+    # size context sits in candidates, not live inputs
+    assert {i.indicator_code for i in openness.candidate_inputs} == {
+        "POPULATION", "GDP_CURRENT_USD",
+    }
     assert "trade" in (openness.definition.coverage_notes or "").lower()
 
 
@@ -278,6 +304,7 @@ async def test_api_trade_and_infrastructure_available_no_scores(client):
         for indicator, external, value in TRADE_DTOS_SPEC
     ]
     dtos.append(_dto("CHE", "GROSS_CAPITAL_FORMATION_GDP", WB_GCF, 26.5))
+    dtos.append(_dto("CHE", "BROADBAND_PER_100", "IT.NET.BBND.P2", 42.0))
     await _persist(dtos)
 
     response = await client.get("/api/countries/CHE/force-coverage")
@@ -287,13 +314,14 @@ async def test_api_trade_and_infrastructure_available_no_scores(client):
 
     assert by_code["trade_capital_flows"]["status"] == "available"
     assert by_code["infrastructure_investment"]["status"] == "available"
-    assert by_code["global_openness"]["status"] == "missing"
+    assert by_code["global_openness"]["status"] == "partial"
     trade_live = by_code["trade_capital_flows"]["live_inputs"]
     assert {i["indicator_code"] for i in trade_live} == {
         "EXPORTS_GDP",
         "IMPORTS_GDP",
         "TRADE_BALANCE",
         "CURRENT_ACCOUNT_GDP",
+        "FDI_NET_INFLOWS_GDP",
     }
     assert all(i["has_source_series"] and i["has_data"] for i in trade_live)
 
@@ -310,3 +338,101 @@ async def test_api_trade_and_infrastructure_available_no_scores(client):
 
     keys = _keys(data)
     assert not ({"score", "force_score", "phase", "weight"} & keys)
+
+# --- Mission 4 §16/§18: deferred-force context profiles -----------------------
+
+
+async def test_derived_trade_openness_endpoint(client):
+    """§16: TRADE_OPENNESS_GDP exposed as a derived API series — exports +
+    imports, with per-component provenance, never a strength score."""
+    dtos = [
+        _dto("CHE", "EXPORTS_GDP", WB_EXPORTS, 65.0),
+        _dto("CHE", "IMPORTS_GDP", WB_IMPORTS, 58.0),
+    ]
+    await _persist(dtos)
+
+    r = await client.get(
+        "/api/countries/CHE/derived/trade-openness"
+        "?start_year=2023&end_year=2024"
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["derived_indicator_code"] == "TRADE_OPENNESS_GDP"
+    assert body["formula_id"] == "trade_openness_gdp"
+    assert body["execution_mode"] == "retrospective_latest_vintage"
+    assert body["backtest_safe"] is False
+    assert "not an Atlas strength" in body["interpretation"]
+    pt = body["points"][-1]
+    assert pt["derived_value"] == pytest.approx(123.0)
+    codes = {c["indicator_code"] for c in pt["components"]}
+    assert codes == {"EXPORTS_GDP", "IMPORTS_GDP"}
+
+
+async def test_derived_trade_openness_missing_component_is_null(client):
+    """MISSING != ZERO: only exports present -> derived_value null."""
+    await _persist([_dto("CHE", "EXPORTS_GDP", WB_EXPORTS, 65.0)])
+    r = await client.get(
+        "/api/countries/CHE/derived/trade-openness"
+        "?start_year=2024&end_year=2024"
+    )
+    assert r.status_code == 200
+    pt = r.json()["points"][0]
+    assert pt["derived_value"] is None
+    missing = {
+        c["indicator_code"]: c["missing_reason"]
+        for c in pt["components"]
+    }
+    assert missing["IMPORTS_GDP"] is not None
+    assert missing["EXPORTS_GDP"] is None
+
+
+async def test_derived_trade_openness_strict_never_leaks(client):
+    """§25: strict_as_of with no release evidence returns nulls, not the
+    retrospective values."""
+    dtos = [
+        _dto("CHE", "EXPORTS_GDP", WB_EXPORTS, 65.0),
+        _dto("CHE", "IMPORTS_GDP", WB_IMPORTS, 58.0),
+    ]
+    await _persist(dtos)
+    r = await client.get(
+        "/api/countries/CHE/derived/trade-openness"
+        "?start_year=2024&end_year=2024"
+        "&execution_mode=strict_as_of&info_cutoff=2025-12-31"
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["execution_mode"] == "strict_as_of"
+    assert body["points"][0]["derived_value"] is None
+
+
+async def test_derived_trade_openness_strict_requires_cutoff(client):
+    r = await client.get(
+        "/api/countries/CHE/derived/trade-openness"
+        "?execution_mode=strict_as_of"
+    )
+    assert r.status_code == 422
+
+
+async def test_acts_of_nature_context_partial_with_data(client):
+    """§18: one verified structural indicator -> coverage 'partial'
+    (ceiling), never 'available' for an incomplete proxy."""
+    await _persist([
+        _dto("CHE", "NATURAL_DISASTER_AFFECTED_PCT", "EN.CLC.MDAT.ZS", 4.2)
+    ])
+    coverage = await coverage_by_code("CHE")
+    aon = coverage["acts_of_nature"]
+    assert aon.status == "partial"
+    assert [i.indicator_code for i in aon.live_inputs] == [
+        "NATURAL_DISASTER_AFFECTED_PCT"
+    ]
+    assert aon.live_inputs[0].has_data
+
+
+async def test_acts_of_nature_defined_not_sourced_without_data(client):
+    """The indicator is in the catalog but unsourced for a country without
+    data — defined_not_sourced, never 'missing' (which would pretend no
+    source exists) and never zero events."""
+    coverage = await coverage_by_code("USA")
+    aon = coverage["acts_of_nature"]
+    assert aon.status == "defined_not_sourced"
+    assert all(not i.has_data for i in aon.live_inputs)

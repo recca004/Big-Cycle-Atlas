@@ -30,18 +30,20 @@ Semantics (NORMALIZATION.md §2/§3):
   scoping only the subquery would leak rows.
 """
 import re
-from datetime import date, datetime, time, timezone
+from datetime import date, datetime, time, timedelta, timezone
 
-from sqlalchemy import extract, func, select
+from sqlalchemy import and_, extract, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.cycle.execution_modes import ExecutionMode, ExecutionSpec
 from app.cycle.normalization_definitions import (
     AlignedValue,
     FreshnessClass,
     ScoringPeriod,
     get_normalization_spec,
 )
-from app.models import Country, Indicator, Observation
+from app.models import Country, DataSource, Indicator, Observation
+from app.research.release_calendar import PROVIDER_RELEASE_METADATA
 
 _QUARTER_END_MONTH_DAY = {1: (3, 31), 2: (6, 30), 3: (9, 30), 4: (12, 31)}
 
@@ -107,6 +109,16 @@ def effective_period_end(period_start: date, freshness_class: FreshnessClass) ->
     return date(period_start.year, 12, 31)
 
 
+def _effective_end_index(freshness_class: FreshnessClass):
+    """SQL expression: quarter index of the observation's effective period end."""
+    obs_year = extract("year", Observation.period_start)
+    if freshness_class is FreshnessClass.quarterly:
+        obs_quarter = (extract("month", Observation.period_start) - 1) / 3
+        return obs_year * 4 + obs_quarter
+    # Annual and irregular periods are complete only at year end.
+    return obs_year * 4 + 3
+
+
 def _period_complete_condition(
     freshness_class: FreshnessClass, scoring_period: ScoringPeriod
 ):
@@ -117,15 +129,75 @@ def _period_complete_condition(
     the snapshot's index. Index arithmetic keeps this identical on SQLite
     (tests) and PostgreSQL (live) — no driver-specific date arithmetic.
     """
-    obs_year = extract("year", Observation.period_start)
-    if freshness_class is FreshnessClass.quarterly:
-        obs_quarter = (extract("month", Observation.period_start) - 1) / 3
-        effective_end_index = obs_year * 4 + obs_quarter
-    else:
-        # Annual and irregular periods are complete only at year end.
-        effective_end_index = obs_year * 4 + 3
+    effective_end_index = _effective_end_index(freshness_class)
     scoring_index = scoring_period.year * 4 + (scoring_period.quarter - 1)
     return effective_end_index <= scoring_index
+
+
+_QUARTER_END_MD = {(3, 31), (6, 30), (9, 30), (12, 31)}
+
+
+def _conservative_end_index(cutoff: date) -> int:
+    """Largest effective-end quarter index eligible at `cutoff`.
+
+    An observation's effective period end is always a quarter END, so it is
+    <= cutoff iff its index < index(cutoff), or == index(cutoff) when cutoff
+    is itself a quarter-end day. Expressing that as `<= conservative_index`
+    keeps the comparison exact and portable across SQLite/PostgreSQL.
+    """
+    idx = cutoff.year * 4 + (cutoff.month - 1) // 3
+    return idx if (cutoff.month, cutoff.day) in _QUARTER_END_MD else idx - 1
+
+
+def _release_availability_conditions(
+    execution: ExecutionSpec, freshness_class: FreshnessClass
+):
+    """SQL availability constraint for strict / assumption modes.
+
+    Returns a list whose elements are AND-ed into both the vintage subquery
+    and the outer query, plus whether a DataSource join is needed.
+
+    STRICT_AS_OF: positive evidence the value existed by the cutoff is
+    mandatory — provider release_date <= cutoff (true publication date)
+    OR retrieved_at <= cutoff (Atlas itself fetched this exact vintage
+    before the cutoff — "first-observed" evidence, strictly conservative:
+    it can only delay eligibility, never accelerate it). Rows lacking
+    either evidence are ineligible, and revisions without evidence at the
+    cutoff never satisfy the vintage max.
+
+    RESEARCH_ASSUMPTION: effective_period_end + assumed provider lag <=
+    cutoff, where the lag is the provider's documented estimate — a
+    research assumption, never evidence.
+    """
+    if execution.mode is ExecutionMode.STRICT_AS_OF:
+        cutoff_dt = datetime.combine(
+            execution.info_cutoff, time(23, 59, 59), tzinfo=timezone.utc
+        )
+        return [
+            or_(
+                Observation.release_date <= cutoff_dt,
+                Observation.retrieved_at <= cutoff_dt,
+            ),
+        ], False
+
+    if execution.mode is ExecutionMode.RESEARCH_ASSUMPTION:
+        effective_end_index = _effective_end_index(freshness_class)
+        per_source = []
+        for key, meta in PROVIDER_RELEASE_METADATA.items():
+            if meta.assumed_lag_days is None:
+                continue
+            effective_cutoff = execution.info_cutoff - timedelta(
+                days=meta.assumed_lag_days
+            )
+            cidx = _conservative_end_index(effective_cutoff)
+            per_source.append(
+                and_(DataSource.key == key, effective_end_index <= cidx)
+            )
+        if not per_source:
+            return [False], False
+        return [or_(*per_source)], True
+
+    return [], False
 
 
 def _source_period_label(period_start: date, freshness_class: FreshnessClass) -> str:
@@ -140,11 +212,144 @@ def _source_period_label(period_start: date, freshness_class: FreshnessClass) ->
     return f"{period_start.year}"
 
 
+async def _select_observation_as_of(
+    session: AsyncSession,
+    country: Country,
+    indicator: Indicator,
+    spec,
+    scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
+) -> Observation | None:
+    """Shared observation-selection primitive (Sprint 6.11, DEC-038).
+
+    Selects the latest latest-vintage observation whose own economic period
+    is COMPLETE by the scoring snapshot's quarter-end date. ONE authoritative
+    selection algorithm — used by both the normal AlignedValue path and the
+    derived-component provenance path. No duplicate selection logic, no
+    second as-of algorithm.
+
+    Returns the raw Observation ORM object (with id, source_series_id,
+    data_source_id, vintage_number, period_start, value) or None when no
+    eligible observation exists. The caller builds AlignedValue and/or
+    DerivedComponentProvenance from the result.
+
+    Country scoping (ISSUE-004) applies at every layer — SourceSeries rows
+    are shared across countries.
+    """
+    as_of_dt = datetime.combine(
+        quarter_end_date(scoring_period), time(23, 59, 59), tzinfo=timezone.utc
+    )
+    period_complete = _period_complete_condition(spec.freshness_class, scoring_period)
+
+    availability: list = []
+    needs_source_join = False
+    if execution is not None:
+        availability, needs_source_join = _release_availability_conditions(
+            execution, spec.freshness_class
+        )
+
+    latest_vintage_q = (
+        select(
+            Observation.source_series_id,
+            Observation.period_start,
+            func.max(Observation.vintage_number).label("max_vintage"),
+        )
+        .where(
+            Observation.country_id == country.id,
+            Observation.indicator_id == indicator.id,
+            Observation.period_start <= as_of_dt,
+            period_complete,
+            *availability,
+        )
+        .group_by(Observation.source_series_id, Observation.period_start)
+    )
+    if needs_source_join:
+        latest_vintage_q = latest_vintage_q.join(
+            DataSource, Observation.data_source_id == DataSource.id
+        )
+    latest_vintage = latest_vintage_q.subquery()
+
+    outer = (
+        select(Observation)
+        .join(
+            latest_vintage,
+            (Observation.source_series_id == latest_vintage.c.source_series_id)
+            & (Observation.period_start == latest_vintage.c.period_start)
+            & (Observation.vintage_number == latest_vintage.c.max_vintage),
+        )
+        .where(
+            Observation.country_id == country.id,
+            Observation.indicator_id == indicator.id,
+            Observation.period_start <= as_of_dt,
+            period_complete,
+            *availability,
+        )
+        .order_by(
+            Observation.period_start.desc(),
+            Observation.vintage_number.desc(),
+            Observation.id.desc(),
+        )
+        .limit(1)
+    )
+    if needs_source_join:
+        outer = outer.join(
+            DataSource, Observation.data_source_id == DataSource.id
+        )
+
+    observation = (await session.execute(outer)).scalar_one_or_none()
+
+    return observation
+
+
+def _build_aligned_value(
+    observation: Observation,
+    indicator_code: str,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    spec,
+) -> AlignedValue:
+    """Build an AlignedValue from a selected Observation (shared helper)."""
+    source_date = observation.period_start.date()
+    age_quarters = _quarter_index(quarter_end_date(scoring_period)) - _quarter_index(source_date)
+    return AlignedValue(
+        indicator_code=indicator_code,
+        country_iso3=country_iso3,
+        scoring_period=scoring_period,
+        source_period=_source_period_label(source_date, spec.freshness_class),
+        raw_value=observation.value,
+        age_periods=age_quarters,
+        effective_period_end=effective_period_end(source_date, spec.freshness_class),
+        vintage_number=observation.vintage_number,
+    )
+
+
+async def _resolve_country_indicator(
+    session: AsyncSession,
+    country_iso3: str,
+    indicator_code: str,
+):
+    """Resolve Country and Indicator ORM objects, raising AlignmentError."""
+    country = (
+        await session.execute(select(Country).where(Country.iso3 == country_iso3))
+    ).scalar_one_or_none()
+    if country is None:
+        raise AlignmentError(f"unknown country iso3: {country_iso3!r}")
+
+    indicator = (
+        await session.execute(select(Indicator).where(Indicator.code == indicator_code))
+    ).scalar_one_or_none()
+    if indicator is None:
+        raise AlignmentError(f"unknown indicator code: {indicator_code!r}")
+
+    return country, indicator
+
+
 async def align_observation_as_of(
     session: AsyncSession,
     country_iso3: str,
     indicator_code: str,
     scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
 ) -> AlignedValue | None:
     """Latest latest-vintage observation whose period is COMPLETE by the snapshot.
 
@@ -160,86 +365,66 @@ async def align_observation_as_of(
     latest-vintage subquery, AND the outer query — SourceSeries rows are
     shared across countries.
     """
-    country = (
-        await session.execute(select(Country).where(Country.iso3 == country_iso3))
-    ).scalar_one_or_none()
-    if country is None:
-        raise AlignmentError(f"unknown country iso3: {country_iso3!r}")
-
-    indicator = (
-        await session.execute(select(Indicator).where(Indicator.code == indicator_code))
-    ).scalar_one_or_none()
-    if indicator is None:
-        raise AlignmentError(f"unknown indicator code: {indicator_code!r}")
-
+    country, indicator = await _resolve_country_indicator(
+        session, country_iso3, indicator_code
+    )
     spec = get_normalization_spec(indicator_code)
-    as_of_dt = datetime.combine(
-        quarter_end_date(scoring_period), time(23, 59, 59), tzinfo=timezone.utc
+
+    observation = await _select_observation_as_of(
+        session, country, indicator, spec, scoring_period, execution
     )
-    # Period-complete eligibility (Part 0): a cheap necessary precondition
-    # (period_start <= as_of) plus the semantic effective-period-end bound.
-    period_complete = _period_complete_condition(spec.freshness_class, scoring_period)
-
-    # Latest vintage per (source series, period) within the as-of window —
-    # scoped by country and indicator like every other layer.
-    latest_vintage = (
-        select(
-            Observation.source_series_id,
-            Observation.period_start,
-            func.max(Observation.vintage_number).label("max_vintage"),
-        )
-        .where(
-            Observation.country_id == country.id,
-            Observation.indicator_id == indicator.id,
-            Observation.period_start <= as_of_dt,
-            period_complete,
-        )
-        .group_by(Observation.source_series_id, Observation.period_start)
-        .subquery()
-    )
-
-    observation = (
-        await session.execute(
-            select(Observation)
-            .join(
-                latest_vintage,
-                (Observation.source_series_id == latest_vintage.c.source_series_id)
-                & (Observation.period_start == latest_vintage.c.period_start)
-                & (Observation.vintage_number == latest_vintage.c.max_vintage),
-            )
-            .where(
-                Observation.country_id == country.id,
-                Observation.indicator_id == indicator.id,
-                Observation.period_start <= as_of_dt,
-                period_complete,
-            )
-            # Most recent eligible period first; deterministic tie-breaks.
-            .order_by(
-                Observation.period_start.desc(),
-                Observation.vintage_number.desc(),
-                Observation.id.desc(),
-            )
-            .limit(1)
-        )
-    ).scalar_one_or_none()
-
     if observation is None:
         return None
 
-    source_date = observation.period_start.date()
-    # Age on the scoring clock, in integer quarters between the observation's
-    # own quarter and the scoring quarter (e.g. 2024 annual obs at 2025-Q2 = 5).
-    age_quarters = _quarter_index(quarter_end_date(scoring_period)) - _quarter_index(source_date)
+    return _build_aligned_value(
+        observation, indicator_code, country_iso3, scoring_period, spec
+    )
 
-    return AlignedValue(
-        indicator_code=indicator_code,
-        country_iso3=country_iso3,
-        scoring_period=scoring_period,
-        source_period=_source_period_label(source_date, spec.freshness_class),
-        raw_value=observation.value,
-        age_periods=age_quarters,
-        effective_period_end=effective_period_end(source_date, spec.freshness_class),
-        vintage_number=observation.vintage_number,
+
+async def align_with_provenance_as_of(
+    session: AsyncSession,
+    country_iso3: str,
+    indicator_code: str,
+    scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
+):
+    """Align and return both AlignedValue and source-identity provenance.
+
+    Sprint 6.11 (DEC-038): the derived aligned layer needs Observation.id,
+    source_series_id, and data_source_id — fields that AlignedValue does
+    not carry. This function uses the SAME _select_observation_as_of
+    primitive as align_observation_as_of (one authoritative selection
+    algorithm, no second as-of path) and returns the additional provenance
+    fields alongside the AlignedValue.
+
+    Returns None when no eligible observation exists (MISSING != ZERO).
+
+    Returns a tuple: (AlignedValue, observation_id, source_series_id,
+    data_source_id, release_date).
+    """
+    country, indicator = await _resolve_country_indicator(
+        session, country_iso3, indicator_code
+    )
+    spec = get_normalization_spec(indicator_code)
+
+    observation = await _select_observation_as_of(
+        session, country, indicator, spec, scoring_period, execution
+    )
+    if observation is None:
+        return None
+
+    aligned = _build_aligned_value(
+        observation, indicator_code, country_iso3, scoring_period, spec
+    )
+    release_date = (
+        observation.release_date.date() if observation.release_date else None
+    )
+    return (
+        aligned,
+        observation.id,
+        observation.source_series_id,
+        observation.data_source_id,
+        release_date,
     )
 
 
@@ -248,6 +433,7 @@ async def own_history_as_of(
     country_iso3: str,
     indicator_code: str,
     scoring_period: ScoringPeriod,
+    execution: ExecutionSpec | None = None,
 ) -> list[AlignedValue]:
     """The country's OWN expanding as-of history through the snapshot (DEC-019).
 
@@ -286,7 +472,14 @@ async def own_history_as_of(
     )
     period_complete = _period_complete_condition(spec.freshness_class, scoring_period)
 
-    latest_vintage = (
+    availability: list = []
+    needs_source_join = False
+    if execution is not None:
+        availability, needs_source_join = _release_availability_conditions(
+            execution, spec.freshness_class
+        )
+
+    latest_vintage_q = (
         select(
             Observation.source_series_id,
             Observation.period_start,
@@ -297,39 +490,45 @@ async def own_history_as_of(
             Observation.indicator_id == indicator.id,
             Observation.period_start <= as_of_dt,
             period_complete,
+            *availability,
         )
         .group_by(Observation.source_series_id, Observation.period_start)
-        .subquery()
     )
-
-    observations = (
-        (
-            await session.execute(
-                select(Observation)
-                .join(
-                    latest_vintage,
-                    (Observation.source_series_id == latest_vintage.c.source_series_id)
-                    & (Observation.period_start == latest_vintage.c.period_start)
-                    & (Observation.vintage_number == latest_vintage.c.max_vintage),
-                )
-                .where(
-                    Observation.country_id == country.id,
-                    Observation.indicator_id == indicator.id,
-                    Observation.period_start <= as_of_dt,
-                    period_complete,
-                )
-                # Ascending: the calibration sample reads first-to-current; the
-                # last element IS the current aligned observation.
-                .order_by(
-                    Observation.period_start.asc(),
-                    Observation.vintage_number.desc(),
-                    Observation.id.desc(),
-                )
-            )
+    if needs_source_join:
+        latest_vintage_q = latest_vintage_q.join(
+            DataSource, Observation.data_source_id == DataSource.id
         )
-        .scalars()
-        .all()
+    latest_vintage = latest_vintage_q.subquery()
+
+    outer = (
+        select(Observation)
+        .join(
+            latest_vintage,
+            (Observation.source_series_id == latest_vintage.c.source_series_id)
+            & (Observation.period_start == latest_vintage.c.period_start)
+            & (Observation.vintage_number == latest_vintage.c.max_vintage),
+        )
+        .where(
+            Observation.country_id == country.id,
+            Observation.indicator_id == indicator.id,
+            Observation.period_start <= as_of_dt,
+            period_complete,
+            *availability,
+        )
+        # Ascending: the calibration sample reads first-to-current; the
+        # last element IS the current aligned observation.
+        .order_by(
+            Observation.period_start.asc(),
+            Observation.vintage_number.desc(),
+            Observation.id.desc(),
+        )
     )
+    if needs_source_join:
+        outer = outer.join(
+            DataSource, Observation.data_source_id == DataSource.id
+        )
+
+    observations = (await session.execute(outer)).scalars().all()
 
     scoring_index = _quarter_index(quarter_end_date(scoring_period))
     history: list[AlignedValue] = []

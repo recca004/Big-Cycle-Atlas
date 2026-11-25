@@ -100,6 +100,8 @@ period, not by historical release date (Milestone 9 owns that). Computed on
 demand; nothing is persisted.
 """
 from collections.abc import Sequence
+from datetime import timedelta
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.cycle.freshness import (
@@ -124,7 +126,11 @@ from app.cycle.normalization_definitions import (
     ScoringPeriod,
     get_normalization_spec,
 )
+from app.cycle.execution_modes import ExecutionMode, ExecutionSpec
+from app.research.release_calendar import PROVIDER_RELEASE_METADATA
+from app.cycle.reference_universes import midrank_percentile
 from app.cycle.relative import build_relative_cross_section
+from app.models.reference_observation import ReferenceObservation
 from app.services.alignment_service import (
     align_observation_as_of,
     own_history_as_of,
@@ -148,6 +154,7 @@ async def _momentum_window_result(
     window_years: int,
     anchor_tolerance_periods: int,
     current_raw: float,
+    execution: ExecutionSpec | None = None,
 ) -> MomentumWindowResult:
     """One window's signed change + provenance (DEC-016).
 
@@ -162,7 +169,7 @@ async def _momentum_window_result(
     """
     anchor_period = shift_scoring_period_years(scoring_period, window_years)
     anchor = await align_observation_as_of(
-        session, country_iso3, indicator_code, anchor_period
+        session, country_iso3, indicator_code, anchor_period, execution
     )
     if anchor is None:
         return MomentumWindowResult(
@@ -250,6 +257,59 @@ def one_sided_vulnerability_level(
     )
 
 
+async def _pct_momentum_window_result(
+    session: AsyncSession,
+    country_iso3: str,
+    indicator_code: str,
+    scoring_period: ScoringPeriod,
+    window_years: int,
+    anchor_tolerance_periods: int,
+    current_raw: float,
+    execution: ExecutionSpec | None = None,
+) -> MomentumWindowResult:
+    """Percent-change own-history momentum (DEC-042 Option C): LPPH only.
+
+    Same anchor mechanics as the WGI helper (align at the shifted scoring
+    period, same eligibility/vintage/isolation rules, versioned tolerance),
+    but the change is the SIGNED PERCENTAGE change
+    100 * (current - anchor) / anchor — percentage, not provider-scale
+    points, because LPPH raw values are USD-PPP levels, not a 0-100 score.
+    change_unit="percent" carries that provenance. A zero/negative anchor
+    makes the percentage undefined -> change None, never a fabricated value.
+    """
+    anchor_period = shift_scoring_period_years(scoring_period, window_years)
+    anchor = await align_observation_as_of(
+        session, country_iso3, indicator_code, anchor_period, execution
+    )
+    if anchor is None:
+        return MomentumWindowResult(
+            window_years=window_years,
+            requested_anchor_period=anchor_period.label,
+            anchor_source_period=None,
+            change=None,
+            change_unit="percent",
+        )
+    years_older = anchor_period.year - anchor.effective_period_end.year
+    if years_older > anchor_tolerance_periods:
+        return MomentumWindowResult(
+            window_years=window_years,
+            requested_anchor_period=anchor_period.label,
+            anchor_source_period=anchor.source_period,
+            change=None,
+            change_unit="percent",
+        )
+    change: float | None = None
+    if anchor.raw_value != 0.0:
+        change = 100.0 * (current_raw - anchor.raw_value) / abs(anchor.raw_value)
+    return MomentumWindowResult(
+        window_years=window_years,
+        requested_anchor_period=anchor_period.label,
+        anchor_source_period=anchor.source_period,
+        change=change,
+        change_unit="percent",
+    )
+
+
 async def normalize_indicator_as_of(
     session: AsyncSession,
     country_iso3: str,
@@ -257,6 +317,7 @@ async def normalize_indicator_as_of(
     scoring_period: ScoringPeriod,
     model_config: ModelVersionConfig = CURRENT_MODEL_VERSION,
     freshness_policy: FreshnessPolicy | None = None,
+    execution: ExecutionSpec | None = None,
 ) -> NormalizedSignal | None:
     """Normalize one indicator for one country as of a quarterly snapshot.
 
@@ -275,26 +336,383 @@ async def normalize_indicator_as_of(
     spec = get_normalization_spec(indicator_code)
     if spec.level_family is NormalizationFamily.direct_0_100:
         return await _normalize_direct_0_100_as_of(
-            session, spec, country_iso3, scoring_period, model_config, freshness_policy
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy, execution
         )
     if spec.level_family is NormalizationFamily.own_history:
         return await _normalize_own_history_as_of(
-            session, spec, country_iso3, scoring_period, model_config, freshness_policy
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy, execution
         )
     if spec.level_family is NormalizationFamily.one_sided_vulnerability:
         return await _normalize_one_sided_vulnerability_as_of(
-            session, spec, country_iso3, scoring_period, model_config, freshness_policy
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy, execution
         )
     if spec.level_family is NormalizationFamily.complement_0_100:
         return await _normalize_complement_0_100_as_of(
-            session, spec, country_iso3, scoring_period, model_config, freshness_policy
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy, execution
+        )
+    if spec.level_family is NormalizationFamily.contextual_deferred:
+        if (
+            spec.relative_family is NormalizationFamily.relative_share
+            and spec.indicator_code
+            in model_config.relative_share_approved_indicators
+        ):
+            return await _normalize_relative_share_only_as_of(
+                session, spec, country_iso3, scoring_period,
+                model_config, freshness_policy, execution,
+            )
+        if (
+            spec.momentum_family is NormalizationFamily.own_history
+            and spec.indicator_code
+            in model_config.pct_momentum_approved_indicators
+        ):
+            # Mission 2 (delegated): momentum-only dimension for
+            # context-level indicators (e.g. REER) — a signed % change, not
+            # a level.
+            return await _normalize_pct_momentum_only_as_of(
+                session, spec, country_iso3, scoring_period,
+                model_config, freshness_policy, execution,
+            )
+    if spec.level_family is NormalizationFamily.reference_percentile:
+        return await _normalize_reference_percentile_as_of(
+            session, spec, country_iso3, scoring_period, model_config, freshness_policy, execution
         )
     raise NormalizationNotImplementedError(
         f"{indicator_code}: level family {spec.level_family.value} is not "
         "implemented (executable: DIRECT_0_100 for the WGI x3 + "
         "TERTIARY_ATTAINMENT_25_34, OWN_HISTORY for DEBT_SERVICE_RATIO only, "
         "ONE_SIDED_VULNERABILITY for CREDIT_TO_GDP_GAP only, "
-        "COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 only)"
+        "COMPLEMENT_0_100 for WEALTH_SHARE_TOP_10 only, "
+        "REFERENCE_PERCENTILE for LABOUR_PRODUCTIVITY_PER_HOUR only)"
+    )
+
+
+async def _normalize_pct_momentum_only_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+    execution: ExecutionSpec | None = None,
+) -> NormalizedSignal | None:
+    """Momentum-only dimension (Mission 2, delegated): a context-level
+    indicator (e.g. REER) publishes a signed own-history % change with NO
+    level score. Direction is provider-convention dependent and documented
+    per indicator — the raw % change is returned, never re-scored 0-100.
+    """
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+    aligned = await align_observation_as_of(
+        session, country_iso3, spec.indicator_code, scoring_period, execution
+    )
+    if aligned is None:
+        return None
+    freshness = evaluate_freshness(
+        own_period_age(aligned.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        return None
+    windows = model_config.momentum_windows.get(
+        spec.indicator_code, spec.momentum_windows
+    )
+    primary = model_config.momentum_primary_window_years.get(spec.indicator_code)
+    tolerance = model_config.momentum_anchor_tolerance_periods.get(
+        spec.indicator_code
+    )
+    if not windows or primary is None or tolerance is None:
+        raise NormalizationNotImplementedError(
+            f"{spec.indicator_code}: pct-momentum approved but windows/"
+            "primary/tolerance not configured"
+        )
+    window_results = tuple(
+        [
+            await _pct_momentum_window_result(
+                session, country_iso3, spec.indicator_code, scoring_period,
+                w, tolerance, aligned.raw_value, execution,
+            )
+            for w in windows
+        ]
+    )
+    primary_result = next(
+        (r for r in window_results if r.window_years == primary), None
+    )
+    return NormalizedSignal(
+        indicator_code=spec.indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=aligned.raw_value,
+        source_period=aligned.source_period,
+        method=NormalizationFamily.own_history,
+        model_version=model_config.version_id,
+        level_score=None,
+        relative_score=None,
+        momentum=(primary_result.change if primary_result else None),
+        confidence=None,
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
+        momentum_window_years=primary,
+        momentum_windows=window_results,
+    )
+
+
+async def _normalize_relative_share_only_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+    execution: ExecutionSpec | None = None,
+) -> NormalizedSignal | None:
+    """RELATIVE_SHARE dimension (V1 Mission 1, delegated working model):
+    MILITARY_EXPENDITURE_USD only.
+
+    relative_score = 100 * country_value / sum(tracked_8 values) at the
+    same period — the country's share of the tracked-8 total, i.e.
+    relative defence RESOURCES among the eight tracked economies. INPUT
+    measure only (SIPRI caveat): expenditure is resources absorbed, never
+    capability. level_score stays None — no level method is defensible.
+
+    Complete-universe rule (same as DEC-017): if any tracked-8 member has
+    no usable observation the whole cross-section is unscored — a partial
+    total would misrepresent every member's share.
+    """
+    indicator_code = spec.indicator_code
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+    universe = REFERENCE_UNIVERSES["tracked_8"]
+
+    aligned_own = await align_observation_as_of(
+        session, country_iso3, indicator_code, scoring_period, execution
+    )
+    if aligned_own is None:
+        return None
+    freshness = evaluate_freshness(
+        own_period_age(aligned_own.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        return None
+
+    usable: dict[str, AlignedValue] = {}
+    for iso3 in universe.members:
+        aligned = await align_observation_as_of(
+            session, iso3, indicator_code, scoring_period, execution
+        )
+        if aligned is None:
+            continue
+        member_fresh = evaluate_freshness(
+            own_period_age(aligned.age_periods, spec.freshness_class), policy
+        )
+        if not member_fresh.is_usable:
+            continue
+        usable[iso3] = aligned
+
+    if len(usable) != len(universe.members):
+        # Partial cross-section: no member receives a share.
+        return None
+    total = sum(a.raw_value for a in usable.values())
+    if total <= 0:
+        return None
+    relative_score = 100.0 * aligned_own.raw_value / total
+
+    return NormalizedSignal(
+        indicator_code=indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=aligned_own.raw_value,
+        source_period=aligned_own.source_period,
+        method=NormalizationFamily.relative_share,
+        model_version=model_config.version_id,
+        level_score=None,  # no defensible level (dimension-only module)
+        relative_score=relative_score,
+        momentum=None,
+        confidence=None,
+        reference_universe_id=universe.id,
+        reference_universe_expected_n=len(universe.members),
+        reference_universe_usable_n=len(usable),
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
+    )
+
+
+async def _normalize_reference_percentile_as_of(
+    session: AsyncSession,
+    spec: NormalizationSpec,
+    country_iso3: str,
+    scoring_period: ScoringPeriod,
+    model_config: ModelVersionConfig,
+    freshness_policy: FreshnessPolicy | None,
+    execution: ExecutionSpec | None = None,
+) -> NormalizedSignal | None:
+    """REFERENCE_PERCENTILE level (DEC-042 Option A, Sprint 6.14): LPPH only.
+
+    Registry REFERENCE_PERCENTILE alone never enables an indicator — an
+    explicit reference_percentile_configs entry in the model version is
+    required, and v1.0 carries exactly one: LABOUR_PRODUCTIVITY_PER_HOUR.
+
+    The score is the country's mid-rank percentile within the named,
+    versioned reference universe's SAME-PERIOD distribution (period-specific
+    calibration; frozen membership — a new member set = a new universe code,
+    never silent drift). The distribution comes from the dedicated
+    reference_observations table, never from tracked-country observations.
+
+    Min-sample gate: fewer than config.minimum_sample_n reporting members at
+    the period -> NO signal (a thin distribution is unusable, never scored
+    as-if-complete). A tracked country absent from the reference population
+    (CHN/IND are not OECD members) also produces no level via this path —
+    its own observation still aligns, but if no reference row exists for it
+    it is still ranked against the same distribution; the tracked value is
+    ranked within, not required to be a member. CHN/IND simply have no own
+    observation, so they return None upstream.
+    """
+    indicator_code = spec.indicator_code
+    config = model_config.reference_percentile_configs.get(indicator_code)
+    if config is None:
+        raise NormalizationNotImplementedError(
+            f"{indicator_code}: registry REFERENCE_PERCENTILE level family, "
+            f"but no reference-percentile config exists in model version "
+            f"{model_config.version_id!r} — not auto-enabled"
+        )
+
+    policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
+    aligned = await align_observation_as_of(session, country_iso3, indicator_code, scoring_period, execution)
+    if aligned is None:
+        return None
+
+    freshness = evaluate_freshness(
+        own_period_age(aligned.age_periods, spec.freshness_class), policy
+    )
+    if not freshness.is_usable:
+        return None
+
+    # Period-specific calibration: the distribution is the universe members'
+    # observations at exactly the same period as the country's aligned
+    # observation (no interpolation, no carry-forward).
+    period_year = int(aligned.source_period[:4])
+    if execution is not None and execution.is_strict:
+        # STRICT_AS_OF requires provider release evidence on EVERY required
+        # input. ReferenceObservation rows carry no release_date field — the
+        # evidence does not exist, so the distribution is ineligible and no
+        # level may be produced. MISSING != ZERO applies to calibration too.
+        return None
+
+    dist_where = [
+        ReferenceObservation.universe_code == config.universe_code,
+        ReferenceObservation.indicator_code == indicator_code,
+        func.extract("year", ReferenceObservation.period_start) == period_year,
+    ]
+    if (
+        execution is not None
+        and execution.mode is ExecutionMode.RESEARCH_ASSUMPTION
+    ):
+        # Reference rows are annual: effective end index = year*4 + 3.
+        # Provider lag is the row's own source_key — same assumed-lag rule
+        # as tracked observations (research assumption, not evidence).
+        ref_end_index = func.extract("year", ReferenceObservation.period_start) * 4 + 3
+        per_source = []
+        for key, meta in PROVIDER_RELEASE_METADATA.items():
+            if meta.assumed_lag_days is None:
+                continue
+            effective_cutoff = execution.info_cutoff - timedelta(
+                days=meta.assumed_lag_days
+            )
+            cidx = effective_cutoff.year * 4 + (effective_cutoff.month - 1) // 3
+            if (effective_cutoff.month, effective_cutoff.day) not in (
+                (3, 31), (6, 30), (9, 30), (12, 31),
+            ):
+                cidx -= 1
+            per_source.append(
+                and_(
+                    ReferenceObservation.source_key == key,
+                    ref_end_index <= cidx,
+                )
+            )
+        if not per_source:
+            return None
+        dist_where.append(or_(*per_source))
+
+    dist_rows = (
+        await session.execute(
+            select(
+                ReferenceObservation.country_iso3,
+                ReferenceObservation.value,
+            )
+            .where(*dist_where)
+            .order_by(ReferenceObservation.country_iso3, ReferenceObservation.vintage_number.desc())
+        )
+    ).all()
+    # Latest vintage per member (rows arrive ordered iso3, vintage desc).
+    latest: dict[str, float] = {}
+    for iso3, value in dist_rows:
+        latest.setdefault(iso3, value)
+    distribution = list(latest.values())
+    if len(distribution) < config.minimum_sample_n:
+        # Thin distribution -> unusable for calibration, no signal.
+        return None
+
+    level_score = midrank_percentile(aligned.raw_value, distribution)
+
+    # Momentum (DEC-042 Option C): percent-change own-history, gated by the
+    # pct_momentum_approved_indicators set — registry family alone never
+    # enables it. Distinct from the level: a rising percentile is NOT
+    # productivity growth, and productivity growth is NOT a level position.
+    momentum: float | None = None
+    momentum_window_years: int | None = None
+    window_results: tuple = ()
+    if (
+        spec.momentum_family is NormalizationFamily.own_history
+        and indicator_code in model_config.pct_momentum_approved_indicators
+    ):
+        windows = model_config.momentum_windows.get(indicator_code, spec.momentum_windows)
+        primary_window = model_config.momentum_primary_window_years.get(indicator_code)
+        tolerance = model_config.momentum_anchor_tolerance_periods.get(indicator_code)
+        if not windows or primary_window is None or tolerance is None:
+            raise NormalizationNotImplementedError(
+                f"{indicator_code}: approved for pct momentum but "
+                f"windows/primary/tolerance are not configured in model "
+                f"version {model_config.version_id!r}"
+            )
+        window_results = tuple(
+            [
+                await _pct_momentum_window_result(
+                    session,
+                    country_iso3,
+                    indicator_code,
+                    scoring_period,
+                    window_years,
+                    tolerance,
+                    aligned.raw_value,
+                    execution,
+                )
+                for window_years in windows
+            ]
+        )
+        primary_result = next(
+            (r for r in window_results if r.window_years == primary_window), None
+        )
+        if primary_result is not None and primary_result.change is not None:
+            momentum = primary_result.change
+            momentum_window_years = primary_window
+
+    return NormalizedSignal(
+        indicator_code=indicator_code,
+        country_iso3=country_iso3,
+        as_of_period=scoring_period,
+        raw_value=aligned.raw_value,
+        source_period=aligned.source_period,
+        method=NormalizationFamily.reference_percentile,
+        model_version=model_config.version_id,
+        level_score=level_score,
+        relative_score=None,  # percentile IS the relative position; the
+        # dedicated relative dimension stays unapproved (DEC-042)
+        momentum=momentum,
+        momentum_window_years=momentum_window_years,
+        momentum_windows=window_results,
+        confidence=None,
+        reference_universe_id=config.universe_code,
+        backtest_safe=model_config.backtest_safe,
+        freshness_factor=freshness.factor,
+        is_stale=freshness.is_stale,
     )
 
 
@@ -305,6 +723,7 @@ async def _normalize_one_sided_vulnerability_as_of(
     scoring_period: ScoringPeriod,
     model_config: ModelVersionConfig,
     freshness_policy: FreshnessPolicy | None,
+    execution: ExecutionSpec | None = None,
 ) -> NormalizedSignal | None:
     """ONE_SIDED_VULNERABILITY level (DEC-021, Sprint 5.12): credit gap only.
 
@@ -325,7 +744,7 @@ async def _normalize_one_sided_vulnerability_as_of(
 
     policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
     aligned = await align_observation_as_of(
-        session, country_iso3, spec.indicator_code, scoring_period
+        session, country_iso3, spec.indicator_code, scoring_period, execution
     )
     if aligned is None:
         return None  # no eligible observation — no signal, never a zero
@@ -372,6 +791,7 @@ async def _normalize_own_history_as_of(
     scoring_period: ScoringPeriod,
     model_config: ModelVersionConfig,
     freshness_policy: FreshnessPolicy | None,
+    execution: ExecutionSpec | None = None,
 ) -> NormalizedSignal | None:
     """OWN_HISTORY level (DEC-019, Sprint 5.10): DEBT_SERVICE_RATIO only.
 
@@ -390,7 +810,7 @@ async def _normalize_own_history_as_of(
 
     policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
     history = await own_history_as_of(
-        session, country_iso3, spec.indicator_code, scoring_period
+        session, country_iso3, spec.indicator_code, scoring_period, execution
     )
     if not history:
         return None  # no eligible observation — no signal, never a zero
@@ -455,6 +875,7 @@ async def _normalize_complement_0_100_as_of(
     scoring_period: ScoringPeriod,
     model_config: ModelVersionConfig,
     freshness_policy: FreshnessPolicy | None,
+    execution: ExecutionSpec | None = None,
 ) -> NormalizedSignal | None:
     """COMPLEMENT_0_100 level (DEC-034, Sprint 6.7): WEALTH_SHARE_TOP_10 only.
 
@@ -471,7 +892,7 @@ async def _normalize_complement_0_100_as_of(
     policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
 
     aligned = await align_observation_as_of(
-        session, country_iso3, indicator_code, scoring_period
+        session, country_iso3, indicator_code, scoring_period, execution
     )
     if aligned is None:
         return None  # no eligible observation — no signal, never a zero
@@ -519,6 +940,7 @@ async def _normalize_direct_0_100_as_of(
     scoring_period: ScoringPeriod,
     model_config: ModelVersionConfig,
     freshness_policy: FreshnessPolicy | None,
+    execution: ExecutionSpec | None = None,
 ) -> NormalizedSignal | None:
     """DIRECT_0_100 path: provider's bounded absolute 0-100 scale preserved.
 
@@ -541,7 +963,7 @@ async def _normalize_direct_0_100_as_of(
     indicator_code = spec.indicator_code
     policy = freshness_policy or DEFAULT_FRESHNESS_POLICIES[spec.freshness_class]
 
-    aligned = await align_observation_as_of(session, country_iso3, indicator_code, scoring_period)
+    aligned = await align_observation_as_of(session, country_iso3, indicator_code, scoring_period, execution)
     if aligned is None:
         return None
 

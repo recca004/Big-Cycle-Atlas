@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ForcesOverview } from "@/features/site/SitePanels";
+---
+
+<BaseLayout title="Forces">
+  <header class="page-header">
+    <p class="label-md text-tertiary">The 17 Big Cycle forces</p>
+    <h1 class="headline-lg">Forces</h1>
+    <p class="body-sm">
+      Force scores are derived, never invented — a force with no approved
+      aggregation shows as "deferred" with null scores, not zero.
+    </p>
+  </header>
+  <ForcesOverview client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+</style>

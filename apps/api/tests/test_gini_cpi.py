@@ -138,7 +138,7 @@ async def test_gini_cpi_source_series_seeded_idempotently(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 22
+        assert total == 33
         wb_series = (
             await session.execute(
                 select(SourceSeries.external_code)
@@ -155,7 +155,7 @@ async def test_gini_cpi_source_series_seeded_idempotently(client):
         total = (
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
-        assert total == 22
+        assert total == 33
         dup = (
             await session.execute(
                 select(func.count())
@@ -218,7 +218,7 @@ async def test_wealth_gap_force_partial_never_available_with_gini(client):
 
 async def test_proxy_ceiling_does_not_cap_undefined_forces(client):
     # the ceiling is opt-in per force; existing forces keep the default None
-    for code in ("rule_of_law", "corruption", "productivity_output_growth", "indebtedness"):
+    for code in ("rule_of_law", "corruption", "indebtedness"):
         force = force_definition_by_code(code)
         assert force.coverage_ceiling is None
     # only the explicitly proxy-only forces carry the ceiling
@@ -257,17 +257,20 @@ async def test_cpi_observation_persisted_raw(client):
 
 
 async def test_cost_competitiveness_available_with_ulc_and_cpi(client):
-    # OECD-6 shape: both live inputs have data → AVAILABLE (no ceiling on this force)
+    # Mission 2: REER added as a live input + PARTIAL ceiling → PARTIAL even
+    # when ULC + CPI have data (REER missing in this fixture = partial anyway).
     await _persist(
         [
             _ulc_dto("CHE", -0.11),
             _dto("CHE", "INFLATION_CPI", WB_CPI, 0.15, 2024),
+            _dto("CHE", "REER_INDEX", "PX.REX.REER", 105.0, 2024),
         ]
     )
     coverage = await coverage_by_code("CHE")
     force = coverage["cost_competitiveness"]
-    assert force.status == "available"
-    assert force.definition.coverage_ceiling is None
+    assert force.status == "partial"
+    from app.cycle.force_definitions import ForceCoverageStatus
+    assert force.definition.coverage_ceiling is ForceCoverageStatus.partial
     live = {i.indicator_code: i for i in force.live_inputs}
     assert live["UNIT_LABOUR_COST_GROWTH"].has_data
     assert live["UNIT_LABOUR_COST_GROWTH"].source == "oecd"

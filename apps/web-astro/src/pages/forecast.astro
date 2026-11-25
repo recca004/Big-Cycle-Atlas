@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ForecastReadiness } from "@/features/forecast/ForecastReadiness";
+---
+
+<BaseLayout title="Forecast">
+  <header class="page-header">
+    <p class="label-md text-tertiary">Experimental engine</p>
+    <h1 class="headline-lg">Forecast Readiness</h1>
+    <p class="body-sm">
+      Stage-transition forecasts are gated on data sufficiency. Today no
+      horizon passes — this page shows exactly which gates fail and why,
+      rather than emitting a probability the data cannot support.
+    </p>
+  </header>
+  <ForecastReadiness client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); }
+  .research-controls { display: flex; gap: var(--space-4); align-items: center; padding: var(--space-4); flex-wrap: wrap; }
+  .panel-title { margin-bottom: var(--space-3); }
+  .glass { margin-bottom: var(--space-5); }
+</style>

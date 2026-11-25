@@ -63,7 +63,16 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="leadership_capabilities",
         name="Leadership capabilities",
         description="Capabilities of the country's leadership and how effectively it governs.",
-        coverage_notes="No catalog indicator exists; requires a qualitative or expert-assessment source.",
+        live_indicator_codes=("GOVERNMENT_EFFECTIVENESS_WGI_SCORE",),
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "WGI Government Effectiveness (2025 revision, 0-100) is the "
+            "institutional proxy: quality of public services, civil service, "
+            "policy formulation and implementation. It measures state "
+            "capacity, not individual leaders — no subjective leader "
+            "ratings. Capped PARTIAL: one governance dimension is not the "
+            "whole leadership-capabilities concept (Sprint 6.21, DEC-041)."
+        ),
     ),
     ForceDefinition(
         code="education",
@@ -86,7 +95,19 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="character_determination",
         name="Character / determination",
         description="Resourcefulness and determination of the population.",
-        coverage_notes="No catalog indicator exists; requires qualitative assessment.",
+        coverage_ceiling=ForceCoverageStatus.partial,
+        live_indicator_codes=("LABOUR_FORCE_PARTICIPATION_RATE",),
+        coverage_notes=(
+            "PARTIAL proxy (V1 Mission 1, delegated working model): the "
+            "executable component measures RELATIVE ECONOMIC PARTICIPATION "
+            "— labour force participation rate (ILO modeled, ages 15+) "
+            "scored as a WDI-universe percentile. This is a narrow, labeled "
+            "proxy for economic participation only; it is NOT a measurement "
+            "of national character or determination. Resourcefulness, "
+            "entrepreneurship and innovation dimensions remain unmeasured. "
+            "PARTIAL ceiling enforced; higher participation is not "
+            "universally positive (documented limitation)."
+        ),
     ),
     ForceDefinition(
         code="rule_of_law",
@@ -118,19 +139,44 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="resource_allocation_efficiency",
         name="Resource allocation efficiency",
         description="How efficiently capital, labor, and talent are allocated across the economy.",
-        coverage_notes="No catalog indicator assigned; capital-misallocation measures (e.g. credit gap vs trend) are currently mapped to Indebtedness instead.",
+        live_indicator_codes=(
+            "GROSS_CAPITAL_FORMATION_GDP",
+            "GDP_GROWTH",
+            "LABOUR_PRODUCTIVITY_PER_HOUR",
+        ),
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "Investment & resource-allocation CONTEXT profile (Mission 4 §17): "
+            "investment effort (GCF % of GDP), output growth, and labour "
+            "productivity describe the input side — none of them measures "
+            "allocation efficiency itself, and all three overlap productivity / "
+            "infrastructure inputs by design (documented, not deduplicated)."
+        ),
     ),
     ForceDefinition(
         code="global_openness",
         name="Global openness",
         description="Openness to trade, capital, people, and ideas.",
+        live_indicator_codes=(
+            "EXPORTS_GDP",
+            "IMPORTS_GDP",
+            "TRADE_BALANCE",
+            "CURRENT_ACCOUNT_GDP",
+            "FDI_NET_INFLOWS_GDP",
+        ),
+        # Size context is deliberately candidate-only: GDP_CURRENT_USD and
+        # POPULATION are unassigned scale context in the normalization
+        # registry, never force inputs.
+        candidate_indicator_codes=("POPULATION", "GDP_CURRENT_USD"),
+        coverage_ceiling=ForceCoverageStatus.partial,
         coverage_notes=(
-            "Not yet measurable as defined: the force covers openness to trade, "
-            "capital, people, AND ideas. World Bank trade data (exports, imports, "
-            "trade balance, current account) is now imported and available as a "
-            "future openness input candidate, but it deliberately does not raise "
-            "this force's status — a narrower proxy methodology needs owner "
-            "approval first."
+            "Descriptive openness CONTEXT profile (Mission 4 §16): trade "
+            "intensity (exports+imports % of GDP, exposed as derived "
+            "TRADE_OPENNESS_GDP), external balance, current account, FDI "
+            "inflows, plus population/GDP size context as candidates. Trade "
+            "intensity is NOT strength (DEC-035) and these inputs overlap "
+            "trade_capital_flows deliberately. The full force (capital, "
+            "people, ideas) remains unmeasurable — no level score is claimed."
         ),
     ),
     ForceDefinition(
@@ -139,13 +185,23 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         description="Growth of output and productivity of the economy.",
         live_indicator_codes=("GDP_GROWTH", "LABOUR_PRODUCTIVITY_PER_HOUR"),
         candidate_indicator_codes=("RND_EXPENDITURE_GDP",),
-        coverage_notes="GDP growth (level of output growth) plus labour productivity per hour. R&D expenditure is an innovation input candidate, not a direct productivity measure.",
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "OECD labour productivity per hour (6/8 countries — CHN/IND are "
+            "not OECD members and cannot receive an OECD-calibrated score). "
+            "Sprint 6.14 (DEC-042 Option A — owner approved): level = "
+            "mid-rank percentile within the versioned OECD universe "
+            "oecd_lpph_v1, period-specific. Capped PARTIAL: OECD relative "
+            "productivity position only — not the whole "
+            "productivity/output-growth force, not a global percentile."
+        ),
     ),
     ForceDefinition(
         code="cost_competitiveness",
         name="Cost competitiveness",
+        coverage_ceiling=ForceCoverageStatus.partial,
         description="Relative cost position of the country's producers versus competitors.",
-        live_indicator_codes=("UNIT_LABOUR_COST_GROWTH", "INFLATION_CPI"),
+        live_indicator_codes=("REER_INDEX", "UNIT_LABOUR_COST_GROWTH", "INFLATION_CPI"),
         coverage_notes=(
             "ULC growth is relative-cost meaningful; CPI inflation is a domestic "
             "price-pressure input. Relative international competitiveness "
@@ -163,11 +219,13 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
             "IMPORTS_GDP",
             "TRADE_BALANCE",
             "CURRENT_ACCOUNT_GDP",
+            "FDI_NET_INFLOWS_GDP",
         ),
         coverage_notes=(
             "World Bank WDI live (2000–2025, all 8 countries): exports/imports of "
             "goods and services, the published external balance (direct provider "
             "series for trade balance — not derived), and the current account. "
+            "FDI net inflows (%GDP) live 1990+ all 8 countries (V1 Mission 1). "
             "Capital-flow measures beyond the current account and bilateral flows "
             "(UN Comtrade) come later."
         ),
@@ -176,11 +234,11 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="infrastructure_investment",
         name="Infrastructure and investment",
         description="Level and quality of infrastructure and fixed investment.",
-        live_indicator_codes=("GROSS_CAPITAL_FORMATION_GDP",),
+        live_indicator_codes=("GROSS_CAPITAL_FORMATION_GDP", "BROADBAND_PER_100"),
         coverage_notes=(
-            "World Bank gross capital formation live (2000–2025, all 8 countries). "
-            "It measures investment effort, not infrastructure quality — quality "
-            "indices come later."
+            "World Bank gross capital formation live (2000–2025, all 8 countries) "
+            "+ fixed broadband per 100 (Mission 2). Investment effort + digital "
+            "coverage context — NOT infrastructure quality."
         ),
     ),
     ForceDefinition(
@@ -194,7 +252,9 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
             "input only — no monotonic 'higher debt = weaker' curve is approved; "
             "debt sustainability depends on interest cost, currency, maturity, "
             "fiscal capacity, monetary sovereignty, and growth (CONTEXTUAL_DEFERRED "
-            "in the normalization registry). No Indebtedness force score exists."
+            "in the normalization registry). Sprint 6.13 (DEC-040, ratified) "
+            "added a score: CONDITION_MINUS_PENALTY composition, level = "
+            "clamp(DSR + (credit_gap - 50), 0, 100), force-aggregation-v0.4."
         ),
     ),
     ForceDefinition(
@@ -258,7 +318,17 @@ FORCE_DEFINITIONS: tuple[ForceDefinition, ...] = (
         code="acts_of_nature",
         name="Acts of nature",
         description="Exposure to natural disasters, pandemics, and climate events.",
-        coverage_notes="No catalog indicator exists; candidate sources: EM-DAT, climate indices.",
+        live_indicator_codes=("NATURAL_DISASTER_AFFECTED_PCT",),
+        coverage_ceiling=ForceCoverageStatus.partial,
+        coverage_notes=(
+            "Verified structural exposure context (Mission 4 §18): WB "
+            "EN.CLC.MDAT.ZS, an EM-DAT-derived % of population affected by "
+            "droughts/floods/extreme temperatures averaged over 1990-2009 "
+            "(published at 2009 only — no annual series). Pandemic and "
+            "climate-change exposure have no legally accessible provider "
+            "series ingested yet; missing values mean 'not published', never "
+            "'zero events'."
+        ),
     ),
 )
 

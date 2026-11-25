@@ -43,3 +43,9 @@ next-env.d.ts
 # Database
 *.sqlite3
 *.db
+# Local archives / stray dumps
+archive/
+backups/
+*.dump
+.run/
+apps/web-astro/test-results/

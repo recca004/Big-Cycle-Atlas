@@ -1,0 +1,57 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ButtonLink from "@/components/ui/ButtonLink.astro";
+import { CountryGrid } from "@/features/country/CountryGrid";
+---
+
+<BaseLayout title="Where are we in the Big Cycle?">
+  <section class="hero">
+    <p class="label-md text-tertiary">A measurable Big Cycle framework</p>
+    <h1 class="headline-display">Where are we in the Big Cycle?</h1>
+    <p class="body-md hero-sub">
+      Big Cycle Atlas tracks the economic and institutional forces that shape
+      the rise and decline of countries — 17 forces, scored from public data,
+      placed into a transparent cycle model.
+    </p>
+    <div class="hero-actions">
+      <ButtonLink href="/countries">View countries</ButtonLink>
+      <ButtonLink href="/workspace" variant="ghost">Open workspace</ButtonLink>
+      <ButtonLink href="/methodology" variant="ghost">Methodology</ButtonLink>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <h2 class="headline-md">Tracked countries</h2>
+    <div class="home-grid">
+      <CountryGrid client:load />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: var(--space-12) 0 var(--space-16);
+  }
+  .hero h1 {
+    max-width: 48rem;
+    margin-top: var(--space-8);
+  }
+  .hero-sub {
+    max-width: 26rem;
+    margin-top: var(--space-8);
+  }
+  .hero-actions {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-10);
+    flex-wrap: wrap;
+  }
+  .home-section {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-16);
+  }
+  .home-grid {
+    margin-top: var(--space-8);
+  }
+</style>

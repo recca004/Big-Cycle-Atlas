@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ForceCoveragePanel } from "@/features/forces/ForceCoveragePanel";
+import { INITIAL_COUNTRIES } from "@big-cycle-atlas/shared";
+
+export function getStaticPaths() {
+  return INITIAL_COUNTRIES.map((c) => ({ params: { iso3: c.iso3 } }));
+}
+
+const { iso3 } = Astro.params;
+const country = INITIAL_COUNTRIES.find((c) => c.iso3 === iso3);
+---
+
+<BaseLayout title={`${country?.name ?? iso3} · Forces`}>
+  <header class="page-header">
+    <p class="label-md text-tertiary">
+      <a href={`/country/${iso3}`} class="back-link">← {country?.name ?? iso3}</a>
+    </p>
+    <h1 class="headline-lg">Force coverage</h1>
+    <p class="body-sm">
+      Which of the 17 forces the Atlas can currently measure for{" "}
+      {country?.name ?? iso3}. Coverage status describes data availability —
+      it is not a strength score.
+    </p>
+  </header>
+  <ForceCoveragePanel iso3={iso3} client:load />
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-8);
+  }
+  .page-header h1 {
+    margin-top: var(--space-2);
+  }
+  .page-header .body-sm {
+    margin-top: var(--space-2);
+    max-width: 44rem;
+  }
+  .back-link {
+    color: var(--accent-text);
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: var(--text-sm);
+  }
+</style>

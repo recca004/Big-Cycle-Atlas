@@ -170,7 +170,7 @@ async def test_internal_conflict_stays_partial(client):
 
 
 @pytest.mark.asyncio
-async def test_indebtedness_force_level_none(client):
+async def test_indebtedness_level_none_when_components_missing(client):
     signals = await _build_signals("CHE", ScoringPeriod(2025, 2))
     debt = next(s for s in signals if s.force_code == "indebtedness")
     assert debt.level_score is None
@@ -238,8 +238,8 @@ async def test_backtest_safe_false_on_all_signals(client):
 async def test_versions_on_all_signals(client):
     signals = await _build_signals("CHE", ScoringPeriod(2025, 2))
     for s in signals:
-        assert s.force_model_version == "force-aggregation-v0.3"
-        assert s.normalization_model_version == "normalization-v0.8"
+        assert s.force_model_version == "force-aggregation-v1.0"
+        assert s.normalization_model_version == "normalization-v1.4"
 
 
 # --- Country isolation ---------------------------------------------------------

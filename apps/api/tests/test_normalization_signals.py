@@ -437,7 +437,7 @@ def test_sprint_5_9_audit_level_families_exact():
         # negative-side penalty NOT supported.
         "CREDIT_TO_GDP_GAP": NormalizationFamily.one_sided_vulnerability,
         "DEBT_SERVICE_RATIO": NormalizationFamily.own_history,
-        "LABOUR_PRODUCTIVITY_PER_HOUR": NormalizationFamily.monotonic_positive,
+        "LABOUR_PRODUCTIVITY_PER_HOUR": NormalizationFamily.reference_percentile,
     }
     for indicator, family in expected.items():
         spec = get_normalization_spec(indicator)
@@ -712,10 +712,10 @@ def test_shift_scoring_period_years_moves_year_keeps_quarter():
 
 
 def test_current_model_version_is_v0_7_education_direct_explicit_gates():
-    assert CURRENT_MODEL_VERSION.version_id == "normalization-v0.8"
+    assert CURRENT_MODEL_VERSION.version_id == "normalization-v1.4"
     assert (
         CURRENT_MODEL_VERSION.normalization_method
-        == "sprint-6.7-wid-wealth-complement-0-100"
+        == "v1-mission2-reer-momentum"
     )
     # Sprint 5.10 (unchanged by 5.12/6.4): OWN_HISTORY level for EXACTLY
     # DEBT_SERVICE_RATIO.

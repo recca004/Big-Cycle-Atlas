@@ -31,7 +31,8 @@ class SearchResponse(BaseModel):
     instruments: list[SearchHit]
 
 
-@router.get("/", response_model=SearchResponse)
+@router.get("", response_model=SearchResponse)
+@router.get("/", response_model=SearchResponse, include_in_schema=False)
 async def search(
     q: str = Query(..., min_length=1, max_length=80),
     limit: int = Query(8, ge=1, le=25),

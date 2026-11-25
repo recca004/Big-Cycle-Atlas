@@ -21,3 +21,13 @@ async def test_health(client):
     assert body["status"] == "ok"
     assert body["database"] == "connected"
     assert "version" in body
+
+
+@pytest.mark.asyncio
+async def test_bare_collection_routes(client):
+    """Collection endpoints must respond at the bare path (no trailing slash).
+    Regression: the StaticFiles mount swallows Starlette's slash-redirect, so
+    '/api/indicators' must match a real route, not redirect."""
+    for path in ["/api/indicators", "/api/search?q=gdp", "/api/countries"]:
+        response = await client.get(path)
+        assert response.status_code == 200, f"{path} -> {response.status_code}"

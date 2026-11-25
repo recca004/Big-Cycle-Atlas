@@ -1,4 +1,4 @@
-# Big Cycle Atlas — run all regression suites (Windows).
+﻿# Big Cycle Atlas — run all regression suites (Windows).
 #   powershell -File scripts\ops\test.ps1 [-E2E]
 param([switch]$E2E)
 $ErrorActionPreference = "Stop"

@@ -1,4 +1,4 @@
-# Big Cycle Atlas — first-time environment setup + validation (Windows).
+﻿# Big Cycle Atlas — first-time environment setup + validation (Windows).
 # Checks tools, installs deps, applies migrations, seeds the catalog.
 #   powershell -File scripts\ops\setup.ps1
 $ErrorActionPreference = "Stop"

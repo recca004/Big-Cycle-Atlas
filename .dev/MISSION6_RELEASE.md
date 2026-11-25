@@ -82,10 +82,30 @@ Docker is an optional, unverified alternative. All automated gates pass.
 - **CI** — `.github/workflows/ci.yml`: backend pytest + frontend
   check/test/build on push/PR.
 
-## Evidence
+## Closeout evidence (native deployment verified end-to-end)
 
-Screenshots in `.dev/release-screenshots/` (dashboard, country, workspace).
-Backup verified: 1.5MB `pg_dump -Fc` → scratch DB, identical row counts.
+- **Prod verification**: all 21 routes via Start-Prod serve (307→200),
+  deep refresh `/country/USA/` 200, hashed asset 200, `/api/*` misses →
+  JSON 404, unknown pages → 404; restart cycle clean; prod needs no
+  Node.js (single python process); binding `127.0.0.1` confirmed.
+- **Compression**: GZipMiddleware added — EChart chunk 541KB → 180KB.
+- **Latency/memory (prod)**: /health 3ms, /api/countries 31ms,
+  /api/search 4ms, country page 12KB/5ms, ~4MB RSS.
+- **Backup drill**: `bca-20261125-095922.dump` (1.5MB) restored into
+  isolated `bca_verify_test`; all 14 tables identical (17,141 obs /
+  87,872 market / 7,976 ref / 1 portfolio+txn / 35 instruments /
+  2,520 diagnostics / 2,776 revisions); USA obs aggregate identical;
+  API served the restored DB (health+countries+page OK); invalid file
+  → loud failure; restore requires typed `RESTORE`.
+- **Launchers**: start dev+prod, status, stop (repo-verified kill),
+  duplicate-instance guard, stale-PID cleanup, busy-port error,
+  missing-.env error — all verified; update.ps1 full cycle OK.
+- **Security**: npm audit + pip-audit clean; no tracked secrets; no
+  f-string SQL; mutations Pydantic-validated + CORS-restricted;
+  traversal handled by StaticFiles; docs/SECURITY.md records the model.
+- **Regression**: Test.bat = 798 pytest + astro check (0) + 43 vitest;
+  Playwright 44/44 incl. a11y — all green post-gzip/static changes.
+- Screenshots: `.dev/release-screenshots/prod-*.png` (prod-served).
 
 ## Release acceptance (native criteria)
 

@@ -1,4 +1,4 @@
-# Big Cycle Atlas — PostgreSQL backup (Windows).
+﻿# Big Cycle Atlas — PostgreSQL backup (Windows).
 # Creates a timestamped pg_dump custom-format archive under .\backups\
 # (outside Git). Usage:
 #   powershell -File scripts\ops\backup.ps1 [-DatabaseUrl <dsn>] [-OutDir <dir>]

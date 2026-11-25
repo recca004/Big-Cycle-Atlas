@@ -1,4 +1,4 @@
-# Big Cycle Atlas — post-restore integrity check (Windows).
+﻿# Big Cycle Atlas — post-restore integrity check (Windows).
 #   powershell -File scripts\ops\verify-restore.ps1 -TargetUrl postgresql://.../bca_restore_test
 param([Parameter(Mandatory=$true)][string]$TargetUrl)
 

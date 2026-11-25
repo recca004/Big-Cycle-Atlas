@@ -1,4 +1,4 @@
-# Big Cycle Atlas — start local development services (Windows).
+﻿# Big Cycle Atlas — start local development services (Windows).
 # API on :8000 + Astro dev on :3000, each in its own window.
 #   powershell -File scripts\ops\dev.ps1
 $repo = Resolve-Path (Join-Path $PSScriptRoot "..\..")

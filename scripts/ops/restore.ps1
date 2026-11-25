@@ -1,4 +1,4 @@
-# Big Cycle Atlas — restore a backup into a TARGET database (Windows).
+﻿# Big Cycle Atlas — restore a backup into a TARGET database (Windows).
 # NEVER restores over the dev DB by default — requires -TargetUrl.
 # Usage:
 #   powershell -File scripts\ops\restore.ps1 -File backups\bca-*.dump -TargetUrl postgresql://.../bca_restore_test

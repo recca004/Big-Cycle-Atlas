@@ -55,7 +55,7 @@ if (Test-Path $envFile) {
 
 # --- 4. PostgreSQL connectivity ---
 Push-Location (Join-Path $repo "apps\api")
-& $py -c "import sys;sys.path.insert(0,'.');from app.core.config import get_settings;import psycopg;u=get_settings().database_url.replace('postgresql+psycopg://','postgresql://');psycopg.connect(u,connect_timeout=5).close()" 2>$null
+& $py -c "import sys;sys.path.insert(0,'.');from app.core.config import get_settings;import psycopg;u=get_settings().database_url.replace('postgresql+psycopg://','postgresql://');psycopg.connect(u,connect_timeout=5).close()" 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Pop-Location; Fail "Cannot connect to PostgreSQL — check DATABASE_URL in apps/api/.env and that the server is up" }
 Pop-Location
 Write-Host "PostgreSQL: connected"

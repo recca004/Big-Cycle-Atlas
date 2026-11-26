@@ -144,12 +144,40 @@ dataset rights, research timescales and the standard Atlas manifests.
 Generated under `.dev/reports/export/` and summarized by
 `.dev/reports/research_manifest.json`.
 
-## Verification — 2026-11-25
+## Verification — 2026-11-26
 
-- Backend pytest: **834 passed**
+- Backend pytest: **837 passed**
 - Vitest: **54 passed**
 - Astro check: **0 errors / 0 warnings / 0 hints**
-- Production build: **37 pages built**
-- Playwright against native production server: **55 passed**
-- Native API production check: `/health` connected and research-foundation endpoints returned 7 theories, 4 protocols, 88 crisis events and 2 evaluations
-- `Update.bat -Status`, daily/full/macro/market/reference/recalculate/historical dry runs: verified
+- Production build: **38 pages built**
+- Playwright against native production server: **57 passed**
+- Native API production check: `/health` connected and validation endpoints returned 50 questions plus the Q11 detail with related H01 protocols/evaluations
+- Previous verification retained: 834 backend checks, 55 Playwright checks and provider/update dry runs on 2026-11-25
+
+## Validation question registry — 2026-11-26
+
+A canonical immutable question registry now extends this foundation without
+creating a second research engine.
+
+- Registry version: `validation-questions-v1.0`
+- Questions: **50**
+- Categories: core theory `10`, debt and money `15`, internal conflict `10`, external rivalry `10`, technology and shocks `5`
+- Implementation recount: `data_available` 13, `evaluation_implemented` 2, `not_implemented` 4, `partially_implemented` 26, `research_method_implemented` 5
+- Scientific-status recount: `currently_untestable` 26, `evidence_inconsistent_with_registered_claim` 3, `exploratory_findings` 1, `insufficient_evidence` 5, `untested` 15
+- Database table: `validation_questions` (Alembic `b48ac2e91f01`), versioned by `(question_code, registry_version)` and content-checksummed
+- API: `/api/research/foundation/validation/questions`, `/validation/questions/{code}`, `/validation/summary`
+- Interface: `/research/validation`; homepage research-evidence summary; workspace widgets `validation-coverage` and `validation-questions`
+- Exports: `validation_questions.json`, `question_evidence_matrix.{json,csv}`, `dataset_dependency_matrix.csv`, `missing_data_inventory.{json,csv}`, `validation_summary.json`
+- Canonical registry copy: `.dev/VALIDATION_QUESTION_REGISTRY.json`
+- Per-question assessment: `.dev/THEORY_VALIDATION_50.md`
+
+Because the original supplied question wording was absent from the repository,
+the registry explicitly records `wording_origin: atlas_derived_v1`. It is a
+canonical Atlas wording v1, not a recovered legacy source text. The prior
+assessment only preserved aggregate counts (5 implemented, 23 partially
+addressed, 22 missing), so the current recount uses actual registry/database
+statuses rather than inventing per-question previous statuses.
+
+The UI states implementation coverage and scientific status separately. A
+registered dataset, chart or endpoint does not mark a question as scientifically
+answered; missing datasets and contradictory evidence remain visible.

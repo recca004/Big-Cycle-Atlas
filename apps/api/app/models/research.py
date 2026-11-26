@@ -297,6 +297,49 @@ class EvidenceStatusEntry(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class ValidationQuestion(Base):
+    """Versioned canonical Big Cycle validation question."""
+
+    __tablename__ = "validation_questions"
+    __table_args__ = (
+        UniqueConstraint("question_code", "registry_version", name="uq_validation_question_version"),
+        Index("ix_validation_questions_category_status", "category", "implementation_status", "research_validation_status"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    question_code: Mapped[str] = mapped_column(String(12), index=True)
+    registry_version: Mapped[str] = mapped_column(String(40), index=True)
+    category: Mapped[str] = mapped_column(String(60), index=True)
+    original_question: Mapped[str] = mapped_column(Text)
+    short_title: Mapped[str] = mapped_column(String(120), index=True)
+    theory_claims: Mapped[dict] = mapped_column(JSON)
+    related_forces: Mapped[dict] = mapped_column(JSON)
+    related_power_measures: Mapped[dict] = mapped_column(JSON)
+    required_datasets: Mapped[dict] = mapped_column(JSON)
+    available_datasets: Mapped[dict] = mapped_column(JSON)
+    missing_datasets: Mapped[dict] = mapped_column(JSON)
+    historical_coverage: Mapped[dict] = mapped_column(JSON)
+    country_coverage: Mapped[dict] = mapped_column(JSON)
+    existing_research_methods: Mapped[dict] = mapped_column(JSON)
+    supporting_evidence: Mapped[dict] = mapped_column(JSON)
+    contradictory_evidence: Mapped[dict] = mapped_column(JSON)
+    alternative_explanations: Mapped[dict] = mapped_column(JSON)
+    falsification_criteria: Mapped[str] = mapped_column(Text)
+    scientific_limitations: Mapped[dict] = mapped_column(JSON)
+    source_references: Mapped[dict] = mapped_column(JSON)
+    implementation_status: Mapped[str] = mapped_column(String(80), index=True)
+    research_validation_status: Mapped[str] = mapped_column(String(100), index=True)
+    current_answer: Mapped[str] = mapped_column(Text)
+    related_hypotheses: Mapped[dict] = mapped_column(JSON)
+    chart: Mapped[Optional[dict]] = mapped_column(JSON)
+    previous_implementation_status: Mapped[str] = mapped_column(String(80), default="unavailable_prior_assessment")
+    last_reviewed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    methodology_version: Mapped[str] = mapped_column(String(80))
+    content_checksum: Mapped[str] = mapped_column(String(64), index=True)
+    raw_payload: Mapped[Optional[dict]] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 @event.listens_for(PredictionLedgerEntry, "before_update", propagate=True)
 def _reject_prediction_update(mapper, connection, target):  # pragma: no cover
     raise ValueError("prediction_ledger is append-only; record a new prediction instead")
@@ -345,3 +388,13 @@ def _reject_protocol_delete(mapper, connection, target):  # pragma: no cover
 @event.listens_for(TheoryRegistryEntry, "before_delete", propagate=True)
 def _reject_theory_delete(mapper, connection, target):  # pragma: no cover
     raise ValueError("theory registry versions are immutable")
+
+
+@event.listens_for(ValidationQuestion, "before_update", propagate=True)
+def _reject_validation_question_update(mapper, connection, target):  # pragma: no cover
+    raise ValueError("validation question versions are immutable; register a new version")
+
+
+@event.listens_for(ValidationQuestion, "before_delete", propagate=True)
+def _reject_validation_question_delete(mapper, connection, target):  # pragma: no cover
+    raise ValueError("validation question versions are immutable")

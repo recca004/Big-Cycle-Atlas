@@ -1,0 +1,4838 @@
+{
+  "registry_version": "validation-questions-v1.0",
+  "methodology_status": "experimental",
+  "wording_origin": "atlas_derived_v1",
+  "count": 50,
+  "questions": [
+    {
+      "question_code": "Q01",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "What is the original Big Cycle theory, which claims does it make, and which claims can Atlas operationalise?",
+      "short_title": "Original theory scope",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "current_answer": "Atlas now records the theory and operational differences; it does not claim the theory is proven.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "theory_registry",
+          "dataset": "primary-source registry",
+          "role": "claim definition"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "theory_registry",
+          "dataset": "theory-registry-v1.0",
+          "role": "seven versioned claim/framework entries"
+        }
+      ],
+      "missing_datasets": [],
+      "historical_coverage": {
+        "status": "not_data_bound",
+        "note": "Theory-definition question"
+      },
+      "country_coverage": {
+        "status": "not_data_bound"
+      },
+      "existing_research_methods": [
+        "versioned theory registry",
+        "explicit Atlas/original-framework separation"
+      ],
+      "supporting_evidence": [
+        "The registry separates Dalio concepts from Atlas's 17-force and eight-stage operational frameworks."
+      ],
+      "contradictory_evidence": [],
+      "alternative_explanations": [
+        "Narrative theories can be useful without a unique measurable representation."
+      ],
+      "falsification_criteria": "The registry is adequate only if a reviewer can distinguish original claims, Atlas interpretations and unsupported operational assumptions.",
+      "scientific_limitations": [
+        "The source text is a narrative synthesis rather than a statistical specification."
+      ],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "7d394ebaaf270d0211ce5e78f1e4da698914d26d95301d8e628a172a4c90ae6b"
+    },
+    {
+      "question_code": "Q02",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "How long is the proposed Big Cycle, and is the approximately 75-year claim supported across independently dated historical cycles?",
+      "short_title": "Cycle duration",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Currently untestable; no Atlas countdown or stage advancement uses the duration claim.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "historical_entities",
+          "dataset": "multi-century boundary-stable entity panel",
+          "role": "duration estimation"
+        },
+        {
+          "source_key": "independent_order_transitions",
+          "dataset": "dated cycle boundaries",
+          "role": "outcome labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "maddison",
+          "dataset": "historical GDP",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "historical_order_transitions",
+          "dataset": "dated order transitions",
+          "reason": "no verified chronology"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST 1870-2020",
+        "required": "multiple complete cycles / centuries"
+      },
+      "country_coverage": {
+        "achieved": "18 JST entities",
+        "required": "independent historical entities and modern countries"
+      },
+      "existing_research_methods": [
+        "registered candidate duration claim",
+        "three-timescale separation"
+      ],
+      "supporting_evidence": [
+        "The duration claim is registered as a hypothesis candidate rather than a constant."
+      ],
+      "contradictory_evidence": [
+        "JST covers roughly 1.5 centuries for selected advanced economies and no complete boundary-stable order-transition sample."
+      ],
+      "alternative_explanations": [
+        "Different debt, internal-order and external-order clocks may have different durations."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [
+        "No independent full-cycle onset/boundary chronology.",
+        "Entity boundaries and modern GDP definitions change."
+      ],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        },
+        {
+          "label": "Jord\u00e0-Schularick-Taylor Macrohistory Database R6",
+          "url": "https://www.macrohistory.net/database/"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "63759ad7703249ace7b8e18d7e19b2ba42c828df952053928b8a268a64c1eb9a"
+    },
+    {
+      "question_code": "Q03",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "What stages does the original framework describe, and how do those stages differ from the eight Atlas operational stages?",
+      "short_title": "Original vs Atlas stages",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "current_answer": "The frameworks are separated, but a validated original-stage mapping is not established.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "theory_registry",
+          "dataset": "edition-level source mapping",
+          "role": "framework comparison"
+        },
+        {
+          "source_key": "cycle_model",
+          "dataset": "Atlas stage definitions",
+          "role": "operational comparison"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "theory_registry",
+          "dataset": "theory-registry-v1.0",
+          "role": "stage separation"
+        },
+        {
+          "source_key": "atlas_cycle_model",
+          "dataset": "experimental classifier",
+          "role": "current operational stages"
+        }
+      ],
+      "missing_datasets": [],
+      "historical_coverage": {
+        "status": "model_metadata"
+      },
+      "country_coverage": {
+        "status": "not_data_bound"
+      },
+      "existing_research_methods": [
+        "theory registry",
+        "experimental classifier labelled as Atlas operational framework"
+      ],
+      "supporting_evidence": [
+        "The eight Atlas stages are explicitly marked Atlas-operational rather than Dalio-original."
+      ],
+      "contradictory_evidence": [
+        "No edition-level mapping establishes a one-to-one stage structure."
+      ],
+      "alternative_explanations": [
+        "Stage labels may be heuristic states rather than historical facts."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [
+        "Atlas model labels are retrospective and not validated long-cycle stages."
+      ],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "5f2d7d5a5eefc0e2aa0888586fb3fbdad1703b1b24845d0422a695172dd57ac1"
+    },
+    {
+      "question_code": "Q04",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "What evidence marks transitions from one proposed stage to another rather than ordinary short-cycle changes?",
+      "short_title": "Stage transition evidence",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "independent_stage_transitions",
+          "dataset": "source-defined transitions",
+          "role": "outcomes"
+        },
+        {
+          "source_key": "long_historical_panel",
+          "dataset": "multi-century predictors",
+          "role": "transition features"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "atlas_cycle_model",
+          "dataset": "experimental national-condition models",
+          "role": "candidate transition classifications"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "historical_order_transitions",
+          "dataset": "independent stage/onset chronology",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST 1870-2020",
+        "limitation": "no independent stage labels"
+      },
+      "country_coverage": {
+        "achieved": "18 JST entities",
+        "primary": "8 Observatory countries"
+      },
+      "existing_research_methods": [
+        "timescale separation",
+        "leakage-aware prediction ledger",
+        "candidate cycle transition diagnostics"
+      ],
+      "supporting_evidence": [
+        "The prediction/outcome ledger can preserve candidate transition evidence separately from model labels."
+      ],
+      "contradictory_evidence": [
+        "Atlas stage labels come from the model under study and are not independent outcomes."
+      ],
+      "alternative_explanations": [
+        "Transitions may reflect common shocks, data revisions or model thresholds rather than cycle stages."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [
+        "No independent stage-transition registry.",
+        "No strict release-safe historical predictors."
+      ],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "b1d942bcc4c8e42e5410961c38fd773c5dbf2e291a1f209189bfebd4642cdde0"
+    },
+    {
+      "question_code": "Q05",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "Can countries move backward, skip, repeat, or remain on a plateau within the proposed cycle?",
+      "short_title": "Reversals and plateaus",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "independent_stage_transitions",
+          "dataset": "reversal/plateau outcomes",
+          "role": "labels"
+        },
+        {
+          "source_key": "long_historical_panel",
+          "dataset": "long-run predictors",
+          "role": "evidence"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "independent_stage_transitions",
+          "dataset": "source-defined stage labels",
+          "reason": "no verified dataset"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "annual JST predictors",
+        "missing": "independent stage state sequence"
+      },
+      "country_coverage": {
+        "achieved": "18 JST entities"
+      },
+      "existing_research_methods": [
+        "separate onset/ongoing outcome states",
+        "candidate timescales"
+      ],
+      "supporting_evidence": [
+        "The crisis registry demonstrates onset and coverage can be represented independently."
+      ],
+      "contradictory_evidence": [
+        "No verified stage sequence exists to test reversals or plateaus."
+      ],
+      "alternative_explanations": [
+        "Apparent reversals may be data revisions, boundary changes or model noise."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "09addaba1917c4366abda4eb570213ed9ea7968aedf4ba2b56995d80d30cb522"
+    },
+    {
+      "question_code": "Q06",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "Do the claimed monetary, internal-order and external-order cycles interact in a measurable sequence?",
+      "short_title": "Three-cycle interaction",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01",
+        "H02",
+        "H03",
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle",
+        "dalio_internal_order_cycle",
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "multi_timescale_panel",
+          "dataset": "debt+institutional+external predictors",
+          "role": "features"
+        },
+        {
+          "source_key": "independent_order_transitions",
+          "dataset": "outcome chronology",
+          "role": "validation"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "current WDI import",
+          "role": "primary Observatory indicators"
+        },
+        {
+          "source_key": "imf",
+          "dataset": "current WEO import",
+          "role": "primary Observatory indicators"
+        },
+        {
+          "source_key": "bis",
+          "dataset": "current BIS import",
+          "role": "debt-service and credit-gap indicators"
+        },
+        {
+          "source_key": "oecd",
+          "dataset": "current OECD import",
+          "role": "productivity, education and labour-cost indicators"
+        },
+        {
+          "source_key": "wid",
+          "dataset": "current WID import",
+          "role": "wealth inequality indicators"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "vdem",
+          "dataset": "institutional histories",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "cow",
+          "dataset": "conflict/order outcomes",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "imf_cofer",
+          "dataset": "reserve shares",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST 1870-2020 plus modern 1960-2025 panel"
+      },
+      "country_coverage": {
+        "achieved": "8 primary + 18 JST entities"
+      },
+      "existing_research_methods": [
+        "three registered timescales",
+        "separate H01-H04 protocols"
+      ],
+      "supporting_evidence": [
+        "Debt, internal-order and external-order hypotheses are separately registered."
+      ],
+      "contradictory_evidence": [
+        "No joint sequence test or independent long-order outcome exists yet."
+      ],
+      "alternative_explanations": [
+        "The sub-cycles may interact without a fixed ordering or may be driven by common shocks."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "943c6d1b9326c32fc01facdb7c22c2b9dea807b434737835993b865f4aa7b036"
+    },
+    {
+      "question_code": "Q07",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "Does the theory apply to all countries, only major powers, or only specific institutional and economic regimes?",
+      "short_title": "Country applicability",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "global_reference_population",
+          "dataset": "eligibility rules",
+          "role": "population"
+        },
+        {
+          "source_key": "historical_entities",
+          "dataset": "boundary-aware panel",
+          "role": "scope"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "primary_observatory_v1",
+          "dataset": "8 countries",
+          "role": "interface population"
+        },
+        {
+          "source_key": "jst_extended_research_v1",
+          "dataset": "18 advanced economies",
+          "role": "historical research panel"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "global_reference_population",
+          "dataset": "30-40 country eligible panel",
+          "reason": "target not reached"
+        },
+        {
+          "source_key": "historical_entities",
+          "dataset": "pre-modern entities",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST advanced economies only"
+      },
+      "country_coverage": {
+        "achieved": "26 memberships across two populations"
+      },
+      "existing_research_methods": [
+        "versioned population registry",
+        "documented eligibility statuses"
+      ],
+      "supporting_evidence": [
+        "Primary and extended populations are not conflated."
+      ],
+      "contradictory_evidence": [
+        "Current evidence is concentrated in eight modern countries and 18 advanced JST economies."
+      ],
+      "alternative_explanations": [
+        "Mechanisms may differ across development level, reserve status, regime and geography."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "9aa11479874b2dd770654786da6c2b96abbe6399b5e288ce042e8fdd3d8290d2"
+    },
+    {
+      "question_code": "Q08",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "Which observations would support the theory and which observations would falsify or weaken it?",
+      "short_title": "Support and falsification",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "exploratory_findings",
+      "current_answer": "The falsification machinery exists, but only H01 has an evaluated result.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01",
+        "H02",
+        "H03",
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "hypothesis_protocols",
+          "dataset": "registered falsification rules",
+          "role": "protocol"
+        },
+        {
+          "source_key": "independent_outcomes",
+          "dataset": "outcome registry",
+          "role": "test labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "hypothesis_protocols",
+          "dataset": "H01-H04",
+          "role": "protocol registry"
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "JST banking crises",
+          "role": "one independent outcome family"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "independent_order_transitions",
+          "dataset": "long-cycle outcomes",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "institutional_outcomes",
+          "dataset": "persistent deterioration labels",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "status": "protocol_metadata"
+      },
+      "country_coverage": {
+        "status": "population_dependent"
+      },
+      "existing_research_methods": [
+        "versioned hypotheses",
+        "explicit falsification criteria",
+        "negative-result states"
+      ],
+      "supporting_evidence": [
+        "H01 already preserves a negative evaluation instead of reclassifying it as success."
+      ],
+      "contradictory_evidence": [
+        "Only one outcome family is populated, so broad theory falsification is impossible."
+      ],
+      "alternative_explanations": [
+        "Failure of one predictor does not falsify the full narrative theory."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "e8b6eed78b6f5f7961efa3ab44b5bd9d67497bb28221fd962ea697caa0f90647"
+    },
+    {
+      "question_code": "Q09",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "Are the Atlas force scores and experimental stage classifications suitable evidence for the historical Big Cycle claim?",
+      "short_title": "Atlas models as evidence",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [],
+      "related_forces": [
+        "all_17_forces"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "force_methodology",
+          "dataset": "approved measurement methods",
+          "role": "features"
+        },
+        {
+          "source_key": "independent_outcomes",
+          "dataset": "external validation",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "atlas_force_engine",
+          "dataset": "17-force methodology",
+          "role": "national-condition inputs"
+        },
+        {
+          "source_key": "atlas_cycle_model",
+          "dataset": "experimental classifications",
+          "role": "model outputs"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "independent_stage_transitions",
+          "dataset": "external stage labels",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "strict_historical_vintages",
+          "dataset": "provider release evidence",
+          "reason": "mostly unavailable"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern mixed-frequency Atlas panel",
+        "limitation": "not long-cycle validated"
+      },
+      "country_coverage": {
+        "achieved": "8 primary Observatory countries"
+      },
+      "existing_research_methods": [
+        "evidence-status registry",
+        "methodology/version separation",
+        "retrospective-only labels"
+      ],
+      "supporting_evidence": [
+        "The system labels outputs experimental and keeps them out of the research-outcome registry."
+      ],
+      "contradictory_evidence": [
+        "Using model-generated stages as evidence for the same stage theory would be circular."
+      ],
+      "alternative_explanations": [
+        "Atlas scores can be predictors for independent outcomes but not truth labels."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "85fc4187d1c57ac5903b9e5d5fcbbb7d8b8415d19d18f6290e216d50902d1752"
+    },
+    {
+      "question_code": "Q10",
+      "registry_version": "validation-questions-v1.0",
+      "category": "core_theory",
+      "original_question": "How much historical depth, entity continuity and independent outcome coverage is required before the theory can be tested?",
+      "short_title": "Required historical depth",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "multi_century_panel",
+          "dataset": "boundary-aware entities",
+          "role": "coverage"
+        },
+        {
+          "source_key": "independent_order_transitions",
+          "dataset": "multiple complete transitions",
+          "role": "outcomes"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "research_population",
+          "dataset": "26 memberships",
+          "role": "coverage registry"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "maddison",
+          "dataset": "pre-1900 GDP",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "historical_entities",
+          "dataset": "boundary-stable entity registry",
+          "reason": "not populated"
+        },
+        {
+          "source_key": "independent_order_transitions",
+          "dataset": "long-cycle outcomes",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "1870-2020",
+        "required": "multiple centuries and multiple transitions"
+      },
+      "country_coverage": {
+        "achieved": "18 JST advanced economies",
+        "required": "documented eligibility across entity types"
+      },
+      "existing_research_methods": [
+        "historical coverage reporting",
+        "three-timescale architecture"
+      ],
+      "supporting_evidence": [
+        "The registry now states achieved coverage instead of claiming adequate long-cycle depth."
+      ],
+      "contradictory_evidence": [
+        "JST depth is useful but does not cover enough independent complete cycles."
+      ],
+      "alternative_explanations": [
+        "Proxy depth may support sub-cycle tests even when the complete Big Cycle remains untestable."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "6cdc2ce9ac281afdab08185fe6fd672c33e680dbf0afe2a5015d382dd9174f22"
+    },
+    {
+      "question_code": "Q11",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Do rising debt burdens increase the probability of a subsequent systemic banking crisis?",
+      "short_title": "Debt burdens and crises",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evidence_inconsistent_with_registered_claim",
+      "current_answer": "The first registered test found no evidence of improved predictive value; this does not disprove every debt mechanism.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "debt_panel",
+          "dataset": "public/private debt predictors",
+          "role": "features"
+        },
+        {
+          "source_key": "independent_crisis_outcomes",
+          "dataset": "banking-crisis onsets",
+          "role": "outcome"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "88 JST systemic banking onsets",
+          "role": "independent outcomes"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "imf_laeven_valencia_banking_crises",
+          "dataset": "WP-2026-094",
+          "reason": "official ZIP 404; no local bundle"
+        },
+        {
+          "source_key": "alfred_fred",
+          "dataset": "historical vintages",
+          "reason": "BCA_FRED_API_KEY required"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "1870-2020 retrospective R6",
+        "release_safety": "dataset-level only"
+      },
+      "country_coverage": {
+        "achieved": "18 JST advanced economies"
+      },
+      "existing_research_methods": [
+        "H01-P1.0 chronological holdout",
+        "1/2/5-year onset horizons",
+        "base-rate and AUC benchmarks",
+        "append-only prediction ledger"
+      ],
+      "supporting_evidence": [
+        "A complete leakage-aware protocol was registered and executed."
+      ],
+      "contradictory_evidence": [
+        "Held-out AUC was below random ordering and top-quintile precision was below the base rate."
+      ],
+      "alternative_explanations": [
+        "Debt changes may be proxies for common global shocks or source composition rather than country-level vulnerability."
+      ],
+      "falsification_criteria": "No improvement over the unconditional base rate or discrimination near/below random ordering is evidence inconsistent with predictive value.",
+      "scientific_limitations": [
+        "Retrospective latest dataset rather than real-time vintages.",
+        "Advanced-economy JST population only.",
+        "Annual events and correlated global crises."
+      ],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        },
+        {
+          "label": "Jord\u00e0-Schularick-Taylor Macrohistory Database R6",
+          "url": "https://www.macrohistory.net/database/"
+        },
+        {
+          "label": "IMF systemic banking-crises publication",
+          "url": "https://www.imf.org/en/publications/wp/issues/2026/05/14/systemic-banking-crises-database-1970-2025-576036"
+        },
+        {
+          "label": "ALFRED/FRED vintage documentation",
+          "url": "https://fred.stlouisfed.org/docs/api/fred/alfred.html"
+        }
+      ],
+      "chart": {
+        "kind": "research_observation",
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6",
+        "variable_code": "debtgdp",
+        "entity_code": "USA",
+        "label": "JST private credit / GDP \u2014 USA"
+      },
+      "content_checksum": "16932d88dd2460e1061ed2724170b10b1884e33c8062a3173fee03a4b2b6eef7"
+    },
+    {
+      "question_code": "Q12",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Do public, private non-financial, household and corporate debt measures provide different warning signals?",
+      "short_title": "Debt composition",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "sectoral_debt_panel",
+          "dataset": "public/household/corporate debt",
+          "role": "features"
+        },
+        {
+          "source_key": "independent_crisis_outcomes",
+          "dataset": "crisis outcomes",
+          "role": "evaluation"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "imf",
+          "dataset": "government debt",
+          "role": "public debt"
+        },
+        {
+          "source_key": "bis",
+          "dataset": "private-sector DSR/credit gap",
+          "role": "private burden"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "bis_sector_credit",
+          "dataset": "household/corporate splits",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "debt_ownership",
+          "dataset": "holder composition",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST 1870-2020; modern BIS/IMF panel"
+      },
+      "country_coverage": {
+        "achieved": "8 modern + 18 JST entities"
+      },
+      "existing_research_methods": [
+        "separate source-versioned observations",
+        "debt measures kept distinct"
+      ],
+      "supporting_evidence": [
+        "JST includes broad debt/credit variables and BIS/IMF provide modern complements."
+      ],
+      "contradictory_evidence": [
+        "No sector-decomposition evaluation has been run."
+      ],
+      "alternative_explanations": [
+        "Different sectors may transmit stress through different policy and banking channels."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "a2c6fa4f1b604c3ace92c02646c6985edbfb7adc64f64f8a9433d95a6820a4dd"
+    },
+    {
+      "question_code": "Q13",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Do debt-service burdens predict financial crises better than debt-to-GDP levels?",
+      "short_title": "Debt-service burden",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "bis_dsr",
+          "dataset": "sectoral DSR",
+          "role": "predictors"
+        },
+        {
+          "source_key": "independent_crisis_outcomes",
+          "dataset": "crisis onsets",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "bis",
+          "dataset": "DEBT_SERVICE_RATIO",
+          "role": "925 rows, 8 countries, 1999-2026"
+        },
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "debtgdp and loans",
+          "role": "long retrospective proxies"
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "88 banking onsets",
+          "role": "outcomes"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "bis_dsr_extended_panel",
+          "dataset": "30-40 country DSR",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "real_time_dsr_vintages",
+          "dataset": "release-time DSR",
+          "reason": "not available"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "BIS 1999-2026; JST retrospective proxy to 1870"
+      },
+      "country_coverage": {
+        "achieved": "8 modern countries"
+      },
+      "existing_research_methods": [
+        "BIS indicator import",
+        "own-history debt-condition methodology",
+        "H01 debt benchmark on JST"
+      ],
+      "supporting_evidence": [
+        "Modern DSR coverage exists and is separate from levels."
+      ],
+      "contradictory_evidence": [
+        "No crisis comparison has tested DSR against debt-to-GDP directly."
+      ],
+      "alternative_explanations": [
+        "DSR may reflect interest-rate cycles and credit composition rather than long-cycle vulnerability."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        },
+        {
+          "label": "Jord\u00e0-Schularick-Taylor Macrohistory Database R6",
+          "url": "https://www.macrohistory.net/database/"
+        },
+        {
+          "label": "BIS debt-service and credit-gap statistics",
+          "url": "https://data.bis.org/"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "c9acbdbf4e21cffa432205660169a5b46585d81ed426d160e2a61025da39d96c"
+    },
+    {
+      "question_code": "Q14",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Is there a reproducible debt-to-GDP threshold associated with later crises?",
+      "short_title": "Debt threshold",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "evidence_inconsistent_with_registered_claim",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "debt_threshold_panel",
+          "dataset": "pre-registered candidate thresholds",
+          "role": "features"
+        },
+        {
+          "source_key": "independent_crisis_outcomes",
+          "dataset": "crisis onsets",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "imf",
+          "dataset": "government debt",
+          "role": "public debt"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "domestic private credit",
+          "role": "private debt"
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "banking onsets",
+          "role": "outcomes"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "threshold_protocol",
+          "dataset": "registered threshold search",
+          "reason": "not implemented"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST 1870-2020; modern IMF/WB"
+      },
+      "country_coverage": {
+        "achieved": "18 JST + 8 primary"
+      },
+      "existing_research_methods": [
+        "H01 univariate benchmark",
+        "base-rate comparison"
+      ],
+      "supporting_evidence": [
+        "The negative H01 result warns against assuming a simple threshold."
+      ],
+      "contradictory_evidence": [
+        "No pre-registered threshold validation exists; ex-post thresholds would be vulnerable to selection bias."
+      ],
+      "alternative_explanations": [
+        "Thresholds may vary with growth, rates, currency denomination and institutions."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "611a2bb06b765f2a53f97006804f48ec6421ef019e6d611f32963e4c9d5604d5"
+    },
+    {
+      "question_code": "Q15",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Do external debt and foreign-currency debt create vulnerability beyond domestic debt?",
+      "short_title": "External and FX debt",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness",
+        "trade_capital_flows"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "external_debt",
+          "dataset": "external/FX debt",
+          "role": "predictors"
+        },
+        {
+          "source_key": "currency_debt_outcomes",
+          "dataset": "currency and sovereign outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "current-account and trade indicators",
+          "role": "external-position proxies"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "bis_international_banking",
+          "dataset": "locational/consolidated banking",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "external_debt",
+          "dataset": "external and FX debt stocks",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "currency_sovereign_crises",
+          "dataset": "verified outcomes",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST external proxies; missing direct FX debt"
+      },
+      "country_coverage": {
+        "achieved": "18 JST entities"
+      },
+      "existing_research_methods": [
+        "source-defined variable registry"
+      ],
+      "supporting_evidence": [
+        "JST contains current-account and exchange-rate variables."
+      ],
+      "contradictory_evidence": [
+        "Direct external/FX debt stocks and outcomes are absent."
+      ],
+      "alternative_explanations": [
+        "Reserve-currency issuers may face different constraints than borrowers in foreign currency."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "b0cfa607ea917389e2447dc0fddadfea98dc242659074c84c477dc87ad673d56"
+    },
+    {
+      "question_code": "Q16",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Does rapid monetary expansion precede inflation, currency pressure or financial instability?",
+      "short_title": "Monetary expansion",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness",
+        "trade_capital_flows"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "money_panel",
+          "dataset": "money growth",
+          "role": "predictors"
+        },
+        {
+          "source_key": "independent_currency_inflation_outcomes",
+          "dataset": "outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "BROAD_MONEY_GDP and INFLATION_CPI",
+          "role": "modern money/inflation indicators"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "currency_crisis_registry",
+          "dataset": "independent currency onsets",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "inflation_regime_outcomes",
+          "dataset": "independent high-inflation episodes",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "alfred_fred",
+          "dataset": "money vintages",
+          "reason": "API key required"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST money 1870-2020; WDI modern"
+      },
+      "country_coverage": {
+        "achieved": "18 JST + 8 primary"
+      },
+      "existing_research_methods": [
+        "source-versioned research observations"
+      ],
+      "supporting_evidence": [
+        "JST `money` and WDI broad-money/inflation series exist."
+      ],
+      "contradictory_evidence": [
+        "No registered outcome evaluation has been run."
+      ],
+      "alternative_explanations": [
+        "Money growth can follow credit demand, policy regime or financial deepening rather than cause instability."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "1259ce7479cc26e1028f5c78cffd83b35a9b58ba7c55402dbf8bc67942d87852"
+    },
+    {
+      "question_code": "Q17",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Does rapid private credit expansion precede financial crises independently of income growth?",
+      "short_title": "Credit expansion",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evidence_inconsistent_with_registered_claim",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "credit_panel",
+          "dataset": "private credit",
+          "role": "predictors"
+        },
+        {
+          "source_key": "independent_crisis_outcomes",
+          "dataset": "crisis onsets",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "DOMESTIC_CREDIT_PRIVATE_GDP",
+          "role": "modern credit"
+        },
+        {
+          "source_key": "bis",
+          "dataset": "CREDIT_TO_GDP_GAP",
+          "role": "modern gap"
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "JST banking onsets",
+          "role": "outcomes"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "real_time_credit_vintages",
+          "dataset": "release-safe credit revisions",
+          "reason": "not available"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST 1870-2020; BIS 1957-2026"
+      },
+      "country_coverage": {
+        "achieved": "18 JST + 8 modern"
+      },
+      "existing_research_methods": [
+        "H01 debt-growth benchmark",
+        "BIS credit-gap import"
+      ],
+      "supporting_evidence": [
+        "Credit variables and crisis onsets coexist in JST and modern sources."
+      ],
+      "contradictory_evidence": [
+        "H01's simple debt-change benchmark did not improve prediction; richer credit models remain unevaluated."
+      ],
+      "alternative_explanations": [
+        "Credit growth can reflect productive deepening, measurement changes or denominator movements."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "117680af12d40b190e3e88a98ef8f9427d8a47501f155a0d36a4fcfd6a14c705"
+    },
+    {
+      "question_code": "Q18",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Do changes in short- and long-term interest rates predict debt stress or crisis onset?",
+      "short_title": "Interest-rate stress",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "rate_panel",
+          "dataset": "short/long rates",
+          "role": "predictors"
+        },
+        {
+          "source_key": "independent_crisis_outcomes",
+          "dataset": "crisis onsets",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "JST banking onsets",
+          "role": "outcomes"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "policy_rate_vintages",
+          "dataset": "release-safe central-bank rates",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "debt_stress_outcomes",
+          "dataset": "non-crisis debt stress labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST rates 1870-2020"
+      },
+      "country_coverage": {
+        "achieved": "18 JST entities"
+      },
+      "existing_research_methods": [
+        "source-versioned historical rates"
+      ],
+      "supporting_evidence": [
+        "JST `stir`, `ltrate`, `bill_rate` and `bond_rate` provide long series."
+      ],
+      "contradictory_evidence": [
+        "No registered interest-rate protocol or evaluation exists."
+      ],
+      "alternative_explanations": [
+        "Rate changes can be policy responses to stress rather than independent predictors."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "2bad7b13e187f765784b9ca4ea1ac27bdf7b7e8d6999755d400cef639a4d5367"
+    },
+    {
+      "question_code": "Q19",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Does reserve-currency status reduce debt vulnerability or delay adjustment?",
+      "short_title": "Reserve-currency status",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01",
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "reserve_currency_status"
+      ],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle",
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "imf_cofer",
+          "dataset": "reserve currency shares",
+          "role": "status"
+        },
+        {
+          "source_key": "debt_crisis_panel",
+          "dataset": "debt/crisis outcomes",
+          "role": "evaluation"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "currency_research_entities",
+          "dataset": "currency-area registry",
+          "role": "entity model"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "imf_cofer",
+          "dataset": "official reserve shares",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "bis_triennial",
+          "dataset": "FX turnover shares",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "reserve_issuer_outcomes",
+          "dataset": "issuer-specific adjustments",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "status": "missing"
+      },
+      "country_coverage": {
+        "status": "currency_area_required"
+      },
+      "existing_research_methods": [
+        "currency-area entity registry"
+      ],
+      "supporting_evidence": [
+        "Atlas treats reserve status as currency-level evidence rather than a country score."
+      ],
+      "contradictory_evidence": [
+        "No reserve-share observations are imported."
+      ],
+      "alternative_explanations": [
+        "Demand for safe assets, institutional credibility and network effects may confound reserve status."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "b5d9791dedc145a26bc17678b395573281a34128d6758e068e350257b3a14132"
+    },
+    {
+      "question_code": "Q20",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Does financial-market depth amplify or absorb debt and credit shocks?",
+      "short_title": "Financial depth",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [
+        "financial_centre_strength"
+      ],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "financial_depth",
+          "dataset": "market/banking depth",
+          "role": "predictors"
+        },
+        {
+          "source_key": "crisis_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "stock-market capitalisation/private credit/broad money",
+          "role": "financial-depth proxies"
+        },
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "international_banking",
+          "dataset": "cross-border intermediation",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "financial_stress_outcomes",
+          "dataset": "non-crisis stress labels",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern 1980-2025 plus JST financial variables"
+      },
+      "country_coverage": {
+        "achieved": "8 primary + 18 JST"
+      },
+      "existing_research_methods": [
+        "separate financial-centre measures"
+      ],
+      "supporting_evidence": [
+        "Financial-depth proxies are tracked separately from reserve status."
+      ],
+      "contradictory_evidence": [
+        "No test distinguishes shock absorption from amplification."
+      ],
+      "alternative_explanations": [
+        "Depth can support resilience or enable greater leverage depending on institutions and regulation."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "d09f767fff9a579a995fa0ffbdb09492af9cb932fa346d56c2f08e60b4d1958d"
+    },
+    {
+      "question_code": "Q21",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Does debt ownership structure change the probability or severity of crises?",
+      "short_title": "Debt ownership",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "debt_ownership",
+          "dataset": "domestic/foreign/public/private holders",
+          "role": "predictors"
+        },
+        {
+          "source_key": "crisis_outcomes",
+          "dataset": "crisis outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "imf",
+          "dataset": "government debt stock",
+          "role": "debt level only"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "debt_ownership",
+          "dataset": "holder composition",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "sovereign_bondholder_data",
+          "dataset": "ownership shares",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "status": "missing"
+      },
+      "country_coverage": {
+        "status": "missing"
+      },
+      "existing_research_methods": [
+        "missing-data registry"
+      ],
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        "No holder-composition observations are imported."
+      ],
+      "alternative_explanations": [
+        "Domestic ownership may stabilize funding while concentrating losses domestically."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "5d10b8274a452ba5b8f3d8e8d320fd85a0bd166fda430a0ab496ceb15574a37e"
+    },
+    {
+      "question_code": "Q22",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Are currency crises preceded by distinct external, monetary or reserve pressures?",
+      "short_title": "Currency crises",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "trade_capital_flows"
+      ],
+      "related_power_measures": [
+        "reserve_currency_status"
+      ],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "currency_crisis_outcomes",
+          "dataset": "independent currency onsets",
+          "role": "labels"
+        },
+        {
+          "source_key": "external_monetary_panel",
+          "dataset": "external/reserve predictors",
+          "role": "features"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "REER/current-account/trade series",
+          "role": "external proxies"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "currency_crisis_registry",
+          "dataset": "verified currency-crisis chronology",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "fx_reserves",
+          "dataset": "reserve adequacy",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "imf_cofer",
+          "dataset": "reserve shares",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST exchange-rate and current-account variables",
+        "missing": "currency outcomes"
+      },
+      "country_coverage": {
+        "achieved": "18 JST entities"
+      },
+      "existing_research_methods": [
+        "separate crisis-type registry"
+      ],
+      "supporting_evidence": [
+        "The outcome registry supports currency-crisis event types."
+      ],
+      "contradictory_evidence": [
+        "No currency-crisis events are imported."
+      ],
+      "alternative_explanations": [
+        "Exchange-rate regimes and capital controls may dominate domestic debt signals."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "dc5c3229d9277a590d4f7d2820d2ee5258f94dcae0281b3bb0b86d68fa36983b"
+    },
+    {
+      "question_code": "Q23",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Are sovereign debt crises preceded by measurable fiscal and external vulnerabilities?",
+      "short_title": "Sovereign debt crises",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "sovereign_crisis_outcomes",
+          "dataset": "sovereign default/debt crises",
+          "role": "labels"
+        },
+        {
+          "source_key": "fiscal_external_panel",
+          "dataset": "debt/revenue/external predictors",
+          "role": "features"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "imf",
+          "dataset": "government debt",
+          "role": "public debt"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "sovereign_crisis_registry",
+          "dataset": "verified sovereign-crisis chronology",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "sovereign_defaults",
+          "dataset": "default/restructuring data",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "JST fiscal/debt variables",
+        "missing": "sovereign outcomes"
+      },
+      "country_coverage": {
+        "achieved": "18 JST entities"
+      },
+      "existing_research_methods": [
+        "separate crisis-type registry"
+      ],
+      "supporting_evidence": [
+        "JST includes debt, expenditure, revenue and external variables."
+      ],
+      "contradictory_evidence": [
+        "No sovereign-crisis outcome labels are populated."
+      ],
+      "alternative_explanations": [
+        "Sovereign crises can depend on debt currency, maturity, political choice and access to official support."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "679a4cda5a70b3aa7d08969fa633024c82ffb7e894d7e75402dcb196cef74dd9"
+    },
+    {
+      "question_code": "Q24",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Do debt restructurings and defaults follow identifiable debt and repayment patterns?",
+      "short_title": "Restructurings and defaults",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01"
+      ],
+      "related_forces": [
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "restructuring_defaults",
+          "dataset": "independent default/restructuring events",
+          "role": "labels"
+        },
+        {
+          "source_key": "debt_service_panel",
+          "dataset": "repayment burden",
+          "role": "features"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "bis",
+          "dataset": "DSR and credit gap",
+          "role": "repayment-burden predictors"
+        },
+        {
+          "source_key": "imf",
+          "dataset": "government debt",
+          "role": "stock proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "sovereign_defaults",
+          "dataset": "default/restructuring chronology",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "private_debt_restructuring",
+          "dataset": "corporate/household restructuring",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern predictors only",
+        "missing": "outcomes"
+      },
+      "country_coverage": {
+        "achieved": "8 modern countries"
+      },
+      "existing_research_methods": [
+        "outcome-registry event types reserved"
+      ],
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        "No default/restructuring events are imported."
+      ],
+      "alternative_explanations": [
+        "Defaults can be strategic or politically constrained, not only mechanically driven by burdens."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "09f16d3773349cf791a344053d703d098d3282f3855cf2d422cb4b31959a9095"
+    },
+    {
+      "question_code": "Q25",
+      "registry_version": "validation-questions-v1.0",
+      "category": "debt_money",
+      "original_question": "Does debt vulnerability depend on growth, inflation, institutional quality and external conditions rather than a universal threshold?",
+      "short_title": "Conditional debt vulnerability",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H01",
+        "H02"
+      ],
+      "related_forces": [
+        "indebtedness",
+        "rule_of_law",
+        "productivity_output_growth"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle",
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "multivariate_debt_panel",
+          "dataset": "debt+growth+institutions+external conditions",
+          "role": "features"
+        },
+        {
+          "source_key": "independent_crisis_outcomes",
+          "dataset": "crisis outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "current WDI import",
+          "role": "primary Observatory indicators"
+        },
+        {
+          "source_key": "imf",
+          "dataset": "current WEO import",
+          "role": "primary Observatory indicators"
+        },
+        {
+          "source_key": "bis",
+          "dataset": "current BIS import",
+          "role": "debt-service and credit-gap indicators"
+        },
+        {
+          "source_key": "oecd",
+          "dataset": "current OECD import",
+          "role": "productivity, education and labour-cost indicators"
+        },
+        {
+          "source_key": "wid",
+          "dataset": "current WID import",
+          "role": "wealth inequality indicators"
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "JST banking crises",
+          "role": "outcomes"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "multivariate_h01_protocol",
+          "dataset": "pre-registered conditional model",
+          "reason": "not implemented"
+        },
+        {
+          "source_key": "currency_sovereign_outcomes",
+          "dataset": "other crisis labels",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "long JST panel plus modern indicators"
+      },
+      "country_coverage": {
+        "achieved": "18 JST + 8 primary"
+      },
+      "existing_research_methods": [
+        "registered simple benchmark",
+        "candidate multivariate protocol fields"
+      ],
+      "supporting_evidence": [
+        "JST/WB/OECD/IMF/BIS variables can support a conditional design."
+      ],
+      "contradictory_evidence": [
+        "The univariate result argues against universal-threshold claims, but the conditional hypothesis remains untested."
+      ],
+      "alternative_explanations": [
+        "Conditional relationships may reflect policy response or selection of which countries borrow."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "0ecd69bee4921d789125b76fce2fd779efe235171439a015be9a9c3879005774"
+    },
+    {
+      "question_code": "Q26",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Does institutional deterioration predict later weakness in investment or productivity?",
+      "short_title": "Institutions and productivity",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "rule_of_law",
+        "corruption",
+        "leadership_capabilities",
+        "productivity_output_growth"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "institutional_panel",
+          "dataset": "institutional measures",
+          "role": "predictors"
+        },
+        {
+          "source_key": "persistent_weakness_outcomes",
+          "dataset": "investment/productivity weakness labels",
+          "role": "outcomes"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "WGI + investment series",
+          "role": "predictors"
+        },
+        {
+          "source_key": "oecd",
+          "dataset": "productivity series",
+          "role": "candidate outcome proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "persistent_weakness_registry",
+          "dataset": "independent productivity/investment deterioration labels",
+          "reason": "not defined"
+        },
+        {
+          "source_key": "vdem",
+          "dataset": "institutional histories",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "WGI 1996-2025; OECD productivity 1970-2025"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "H02-P0.1 exploratory protocol"
+      ],
+      "supporting_evidence": [
+        "Predictors and candidate outcome variables exist."
+      ],
+      "contradictory_evidence": [
+        "No independent outcome registry or held-out evaluation exists."
+      ],
+      "alternative_explanations": [
+        "Productivity weakness may cause institutional deterioration rather than follow it."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        },
+        {
+          "label": "World Bank World Development Indicators",
+          "url": "https://databank.worldbank.org/source/world-development-indicators"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "275dfac28776e2000311b9c36fc40a084ea1694134b0cd25e484f83215769e34"
+    },
+    {
+      "question_code": "Q27",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Do income and wealth inequality predict later political instability or weaker economic performance?",
+      "short_title": "Inequality and instability",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "wealth_opportunity_values_gaps",
+        "internal_conflict"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "inequality_panel",
+          "dataset": "income/wealth distribution",
+          "role": "predictors"
+        },
+        {
+          "source_key": "instability_growth_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "GINI_INDEX",
+          "role": "income inequality"
+        },
+        {
+          "source_key": "wid",
+          "dataset": "WEALTH_SHARE_TOP_10",
+          "role": "wealth inequality"
+        },
+        {
+          "source_key": "oecd",
+          "dataset": "productivity",
+          "role": "economic outcome proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "protest_conflict_outcomes",
+          "dataset": "verified instability events",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "persistent_weakness_registry",
+          "dataset": "economic weakness labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "wealth share to 1800 for selected series; Gini irregular"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "separate inequality source definitions"
+      ],
+      "supporting_evidence": [
+        "Income and wealth measures are preserved separately."
+      ],
+      "contradictory_evidence": [
+        "No independent instability outcome evaluation exists."
+      ],
+      "alternative_explanations": [
+        "Instability and inequality can be jointly caused by shocks, institutions or elite conflict."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "d2c76c2c5dbcf58bbd5b3fd7c8003afa3d2ac0d6b65d4d73b238bdc02e8a7d5c"
+    },
+    {
+      "question_code": "Q28",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Does political polarisation precede internal conflict, institutional breakdown or policy instability?",
+      "short_title": "Political polarisation",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "internal_conflict",
+        "leadership_capabilities"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "polarisation_panel",
+          "dataset": "polarisation measures",
+          "role": "predictors"
+        },
+        {
+          "source_key": "internal_conflict_outcomes",
+          "dataset": "verified conflict/breakdown outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "POLITICAL_STABILITY_WGI_SCORE",
+          "role": "perception proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "vdem",
+          "dataset": "polarisation/institutional measures",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "ucdp_acled",
+          "dataset": "event outcomes",
+          "reason": "access/licensing not resolved"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "WGI 1996-2025 only"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "source-definition separation"
+      ],
+      "supporting_evidence": [
+        "A perception-based stability proxy is tracked."
+      ],
+      "contradictory_evidence": [
+        "WGI perception scores are not counts of protests or breakdown events."
+      ],
+      "alternative_explanations": [
+        "Polarisation can be a symptom of underlying economic or institutional stress."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "13e6c313f5e70e88f0f0a5127e2352c2d62683782418bd060589bb5749bcbb21"
+    },
+    {
+      "question_code": "Q29",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Do regime characteristics predict how countries manage debt, shocks or economic transitions?",
+      "short_title": "Regime characteristics",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "rule_of_law",
+        "leadership_capabilities"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "regime_panel",
+          "dataset": "regime/institutional classifications",
+          "role": "features"
+        },
+        {
+          "source_key": "debt_shock_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "WGI governance scores",
+          "role": "partial institutional proxies"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "vdem",
+          "dataset": "regime and institutional characteristics",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "policy_response_outcomes",
+          "dataset": "shock-management labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "WGI 1996-2025"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "hypothesis fields reserved for institutional predictors"
+      ],
+      "supporting_evidence": [
+        "Governance proxies are tracked without assuming regime superiority."
+      ],
+      "contradictory_evidence": [
+        "No regime outcome test is possible with current evidence."
+      ],
+      "alternative_explanations": [
+        "Economic structure, external constraints and geopolitical support may dominate regime labels."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "0ff456af7d31863831650d92ec7f0e64591cdfa7f8b2be52f2b8f155e4c69712"
+    },
+    {
+      "question_code": "Q30",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Do independently recorded protests, unrest or civil conflict provide useful internal-order outcomes?",
+      "short_title": "Recorded unrest outcomes",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "internal_conflict"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "ucdp_acled",
+          "dataset": "event-level unrest/conflict",
+          "role": "outcomes"
+        },
+        {
+          "source_key": "internal_order_predictors",
+          "dataset": "institutional/economic predictors",
+          "role": "features"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "crisis_registry",
+          "dataset": "event/coverage schema",
+          "role": "reusable outcome contract"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "ucdp",
+          "dataset": "conflict events",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "acled",
+          "dataset": "protest/conflict events",
+          "reason": "not imported; licensing/access review needed"
+        }
+      ],
+      "historical_coverage": {
+        "status": "schema only"
+      },
+      "country_coverage": {
+        "status": "schema only"
+      },
+      "existing_research_methods": [
+        "independent outcome registry supports non-crisis event types"
+      ],
+      "supporting_evidence": [
+        "The registry is reusable beyond banking crises."
+      ],
+      "contradictory_evidence": [
+        "No unrest/conflict outcomes are populated."
+      ],
+      "alternative_explanations": [
+        "Recorded unrest depends on reporting coverage and state repression as well as underlying grievance."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "5ac96e93ce3cb27db6cfaa247847a8c4dc9f89a4db6e48cdec4c890e7f64ee3b"
+    },
+    {
+      "question_code": "Q31",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Do widening wealth and opportunity gaps precede internal-order deterioration?",
+      "short_title": "Wealth and opportunity gaps",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "wealth_opportunity_values_gaps",
+        "education"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "distribution_panel",
+          "dataset": "wealth/opportunity measures",
+          "role": "predictors"
+        },
+        {
+          "source_key": "internal_order_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "wid",
+          "dataset": "WEALTH_SHARE_TOP_10",
+          "role": "wealth concentration"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "GINI and education",
+          "role": "income/opportunity proxies"
+        },
+        {
+          "source_key": "oecd",
+          "dataset": "attainment",
+          "role": "opportunity proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "internal_order_outcomes",
+          "dataset": "verified deterioration events",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "opportunity_mobility",
+          "dataset": "intergenerational mobility",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "WID wealth history plus modern WDI/OECD"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "source-defined inequality measures"
+      ],
+      "supporting_evidence": [
+        "Long WID wealth-share history exists."
+      ],
+      "contradictory_evidence": [
+        "No internal-order outcome labels are available for evaluation."
+      ],
+      "alternative_explanations": [
+        "Opportunity gaps may persist without observed instability; political response mediates outcomes."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "774a7136b427cb96b070ee9e16aecffcd4b5f95c0042071788605b63d35b12e9"
+    },
+    {
+      "question_code": "Q32",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Do education and human-capital changes predict resilience to internal or economic stress?",
+      "short_title": "Human-capital resilience",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "education",
+        "productivity_output_growth"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "education_panel",
+          "dataset": "attainment/enrollment/researchers",
+          "role": "predictors"
+        },
+        {
+          "source_key": "stress_resilience_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "oecd",
+          "dataset": "tertiary attainment",
+          "role": "education stock"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "enrollment/researchers",
+          "role": "education inputs"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "barro_lee",
+          "dataset": "long education attainment",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "stress_resilience_registry",
+          "dataset": "recovery/resilience labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "1970-2025 modern coverage with sparse CHN/IND"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "coverage-aware education measures"
+      ],
+      "supporting_evidence": [
+        "Education inputs and attainment are imported separately."
+      ],
+      "contradictory_evidence": [
+        "No resilience outcome evaluation exists."
+      ],
+      "alternative_explanations": [
+        "Education may proxy broader development rather than directly produce resilience."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "f3f1eaa64c0389155d25edcbb4c58faa41d30c3ef19f37fabb7c65c3014a85df"
+    },
+    {
+      "question_code": "Q33",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Do declining investment and productivity precede broader institutional deterioration?",
+      "short_title": "Investment and productivity decline",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "productivity_output_growth",
+        "infrastructure_investment",
+        "resource_allocation_efficiency"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "investment_productivity_panel",
+          "dataset": "predictors/outcomes",
+          "role": "features"
+        },
+        {
+          "source_key": "institutional_outcomes",
+          "dataset": "independent deterioration labels",
+          "role": "outcomes"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "GROSS_CAPITAL_FORMATION_GDP",
+          "role": "investment"
+        },
+        {
+          "source_key": "oecd",
+          "dataset": "LABOUR_PRODUCTIVITY_PER_HOUR",
+          "role": "productivity"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "WGI",
+          "role": "institutional proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "institutional_deterioration_registry",
+          "dataset": "independent outcome labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "investment 1960-2025; productivity 1970-2025"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "H02 candidate predictor/outcome fields"
+      ],
+      "supporting_evidence": [
+        "Investment and productivity series exist."
+      ],
+      "contradictory_evidence": [
+        "No independent institutional deterioration chronology exists; reverse causality is plausible."
+      ],
+      "alternative_explanations": [
+        "Economic decline may cause institutional stress rather than precede it."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "eefd6f31341a7fac1345172a66b50b1a45493e8c4dd513d8050ea2e0426ef359"
+    },
+    {
+      "question_code": "Q34",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Are some political systems systematically better at managing debt burdens and economic shocks?",
+      "short_title": "Political systems and stress",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "leadership_capabilities",
+        "rule_of_law",
+        "indebtedness"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "regime_panel",
+          "dataset": "political-system measures",
+          "role": "features"
+        },
+        {
+          "source_key": "debt_shock_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "WGI proxies",
+          "role": "partial governance measures"
+        },
+        {
+          "source_key": "bis",
+          "dataset": "DSR/credit gap",
+          "role": "debt burden"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "vdem",
+          "dataset": "regime characteristics",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "policy_response_outcomes",
+          "dataset": "shock/debt-management outcomes",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern WGI/BIS only"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "non-normative source registry"
+      ],
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        "No evidence supports a universal political-system claim."
+      ],
+      "alternative_explanations": [
+        "Outcomes may reflect income, external position, institutions or luck rather than regime type."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "19e278aacd86e276f1f20a5018347ebb66cfd5f1b96dfb7f23f0235e0e40d9c7"
+    },
+    {
+      "question_code": "Q35",
+      "registry_version": "validation-questions-v1.0",
+      "category": "internal_conflict",
+      "original_question": "Can internal conflict be distinguished from ordinary political competition using reproducible outcome definitions?",
+      "short_title": "Internal conflict definition",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02"
+      ],
+      "related_forces": [
+        "internal_conflict"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "conflict_outcome_definitions",
+          "dataset": "event typology and thresholds",
+          "role": "labels"
+        },
+        {
+          "source_key": "event_sources",
+          "dataset": "UCDP/ACLED or equivalent",
+          "role": "evidence"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "crisis_registry",
+          "dataset": "event-state/coverage model",
+          "role": "reusable schema"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "POLITICAL_STABILITY_WGI_SCORE",
+          "role": "perception proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "ucdp_acled",
+          "dataset": "verified conflict/protest event data",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "status": "schema only"
+      },
+      "country_coverage": {
+        "status": "schema only"
+      },
+      "existing_research_methods": [
+        "event onset/state/coverage separation"
+      ],
+      "supporting_evidence": [
+        "Unknown coverage and non-events are represented explicitly."
+      ],
+      "contradictory_evidence": [
+        "Perception scores cannot substitute for recorded conflict events."
+      ],
+      "alternative_explanations": [
+        "Election disputes and peaceful competition must remain outside crisis labels unless source definitions say otherwise."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "ae24e950e0ff93564753046ee9e52d3918f92a05ca79e857e506a884d0bc9659"
+    },
+    {
+      "question_code": "Q36",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Does convergence in relative international power precede rivalry, conflict or crisis risk?",
+      "short_title": "Power convergence and rivalry",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "economic_output",
+        "international_trade",
+        "military_strength",
+        "financial_centre_strength"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "relative_power_panel",
+          "dataset": "separated power measures",
+          "role": "features"
+        },
+        {
+          "source_key": "rivalry_conflict_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "GDP/trade/military/financial proxies",
+          "role": "power measures"
+        },
+        {
+          "source_key": "power_registry",
+          "dataset": "measure definitions",
+          "role": "methodology"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "cow",
+          "dataset": "rivalry/conflict outcomes",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "imf_cofer",
+          "dataset": "reserve shares",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "historical_power_transitions",
+          "dataset": "transition outcomes",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern power proxies; no long-run complete panel"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries plus global denominators"
+      },
+      "existing_research_methods": [
+        "H03-P0.1 exploratory protocol",
+        "separated power-measure registry"
+      ],
+      "supporting_evidence": [
+        "Power dimensions are not collapsed into a universal score."
+      ],
+      "contradictory_evidence": [
+        "No independent rivalry or transition outcomes exist."
+      ],
+      "alternative_explanations": [
+        "Rivalry may be triggered by security commitments, ideology or shocks rather than power convergence alone."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "9e2fb0474b26d4523ba1604ceff26db519d23e86145a903ce708987c608948db"
+    },
+    {
+      "question_code": "Q37",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Do changes in global economic-output shares predict changes in international influence?",
+      "short_title": "Output shares and influence",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "economic_output"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "global_output_shares",
+          "dataset": "denominator-safe shares",
+          "role": "features"
+        },
+        {
+          "source_key": "influence_outcomes",
+          "dataset": "independent influence/order outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "GDP current/PPP/real + global denominators",
+          "role": "output shares"
+        },
+        {
+          "source_key": "power_registry",
+          "dataset": "economic_output definitions",
+          "role": "methodology"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "influence_outcomes",
+          "dataset": "independent influence/order transitions",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "maddison",
+          "dataset": "historical output shares",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern output shares 1960/1980/1990-2025"
+      },
+      "country_coverage": {
+        "achieved": "8 primary + world denominators"
+      },
+      "existing_research_methods": [
+        "denominator-safe global-share calculations"
+      ],
+      "supporting_evidence": [
+        "Multiple output definitions are preserved separately."
+      ],
+      "contradictory_evidence": [
+        "Output shares alone do not establish political or institutional influence."
+      ],
+      "alternative_explanations": [
+        "Trade, finance, institutions and alliances may mediate economic scale."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": {
+        "kind": "indicator",
+        "indicator_code": "GDP_PPP_CURRENT_INTL",
+        "entity_code": "USA",
+        "label": "PPP GDP \u2014 USA"
+      },
+      "content_checksum": "2899e9722ea29e64d75da508bba537bae64cbc5a2f74d46dcafbd09dc2a2eeee"
+    },
+    {
+      "question_code": "Q38",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Do global trade shares and bilateral dependence predict rivalry or cooperation?",
+      "short_title": "Trade shares and dependence",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [
+        "trade_capital_flows",
+        "global_openness"
+      ],
+      "related_power_measures": [
+        "international_trade"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "trade_share_panel",
+          "dataset": "global and bilateral trade",
+          "role": "features"
+        },
+        {
+          "source_key": "rivalry_cooperation_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "merchandise/services exports and imports",
+          "role": "global trade shares"
+        },
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "exports/imports",
+          "role": "historical trade proxies"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "un_comtrade",
+          "dataset": "bilateral trade",
+          "reason": "planned provider not imported"
+        },
+        {
+          "source_key": "rivalry_outcomes",
+          "dataset": "independent rivalry/cooperation labels",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern 1980-2025; JST historical proxy"
+      },
+      "country_coverage": {
+        "achieved": "8 primary + 18 JST"
+      },
+      "existing_research_methods": [
+        "denominator-safe trade-share measures"
+      ],
+      "supporting_evidence": [
+        "Global trade-share inputs exist for the primary panel."
+      ],
+      "contradictory_evidence": [
+        "Bilateral dependence and outcomes are missing."
+      ],
+      "alternative_explanations": [
+        "Trade can restrain conflict or create leverage and vulnerability; direction is not assumed."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "edefdceced851af29620b4d2d42a798428dbeedb7842026d7525c8d8ec1600b8"
+    },
+    {
+      "question_code": "Q39",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Do reserve-currency shares predict monetary influence and adjustment capacity?",
+      "short_title": "Reserve shares and influence",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "reserve_currency_status"
+      ],
+      "theory_claims": [
+        "dalio_money_credit_debt_cycle",
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "imf_cofer",
+          "dataset": "reserve currency shares",
+          "role": "features"
+        },
+        {
+          "source_key": "monetary_influence_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "currency_research_entities",
+          "dataset": "currency-area definitions",
+          "role": "schema"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "imf_cofer",
+          "dataset": "official reserve shares",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "bis_triennial",
+          "dataset": "FX turnover",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "monetary_transition_outcomes",
+          "dataset": "independent labels",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "status": "missing"
+      },
+      "country_coverage": {
+        "status": "currency areas required"
+      },
+      "existing_research_methods": [
+        "currency-area separation"
+      ],
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        "No reserve-share observations exist."
+      ],
+      "alternative_explanations": [
+        "Reserve status may lag real economic influence and reflect institutional network effects."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "532bf8ce37f1868da9e955aae08f23c7cc462720f54fb5a148fc524c76a05578"
+    },
+    {
+      "question_code": "Q40",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Do military resource measures predict external-order transitions better than military expenditure alone?",
+      "short_title": "Military resources",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [
+        "military_strength"
+      ],
+      "related_power_measures": [
+        "military_strength"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "military_capability_panel",
+          "dataset": "personnel/material/expenditure",
+          "role": "features"
+        },
+        {
+          "source_key": "external_transition_outcomes",
+          "dataset": "order-transition outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "SIPRI-derived military expenditure",
+          "role": "resource proxy"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "cow_nmc",
+          "dataset": "Correlates of War capabilities",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "sipri_full",
+          "dataset": "direct military resource data",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "external_order_transitions",
+          "dataset": "independent outcomes",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern military expenditure 1960-2025"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "expenditure kept separate from capability"
+      ],
+      "supporting_evidence": [
+        "Military spending is explicitly labelled a resource proxy, not capability."
+      ],
+      "contradictory_evidence": [
+        "No capability or transition outcomes exist for evaluation."
+      ],
+      "alternative_explanations": [
+        "Technology, alliances, geography and readiness can dominate spending."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "69a1732b8bbaff92ded0e5cd77e1fad38a8559f3980eef67947fe94cb465cbc9"
+    },
+    {
+      "question_code": "Q41",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Do international banking and financial-centre activity predict monetary or financial influence?",
+      "short_title": "Financial-centre activity",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "financial_centre_strength",
+        "reserve_currency_status"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "international_banking",
+          "dataset": "cross-border claims and centre activity",
+          "role": "features"
+        },
+        {
+          "source_key": "financial_influence_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "listed-market capitalisation, private credit, broad money",
+          "role": "domestic depth proxies"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "bis_international_banking",
+          "dataset": "cross-border banking statistics",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "fx_turnover",
+          "dataset": "BIS triennial turnover",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "financial_influence_outcomes",
+          "dataset": "independent labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern domestic-depth proxies only"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "domestic/international finance distinction"
+      ],
+      "supporting_evidence": [
+        "Domestic market depth is not mislabelled as global centre strength."
+      ],
+      "contradictory_evidence": [
+        "Cross-border financial evidence is missing."
+      ],
+      "alternative_explanations": [
+        "Financial influence may depend on regulation, currency networks and geopolitical trust."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "74c960dd47459a644f04440ea3a131aeab092200867d91a61dbab45c0d62655b"
+    },
+    {
+      "question_code": "Q42",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Do alliances and bloc formation change the probability of rivalry or conflict?",
+      "short_title": "Alliances and blocs",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "alliance_panel",
+          "dataset": "alliance/bloc histories",
+          "role": "features"
+        },
+        {
+          "source_key": "conflict_outcomes",
+          "dataset": "independent rivalry/conflict outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [],
+      "missing_datasets": [
+        {
+          "source_key": "cow_alliances",
+          "dataset": "alliance histories",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "ucdp_cow",
+          "dataset": "conflict outcomes",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "status": "missing"
+      },
+      "country_coverage": {
+        "status": "missing"
+      },
+      "existing_research_methods": [
+        "external-order hypothesis registered without outcome evidence"
+      ],
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        "No alliance or conflict observations are imported."
+      ],
+      "alternative_explanations": [
+        "Alliances may deter conflict, provoke balancing, or merely reflect pre-existing alignment."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "27febfe1b0eb48d57b269ebe1a5a882d66bc0f61e31be5647b4e885a48f40bb4"
+    },
+    {
+      "question_code": "Q43",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Are historical power transitions associated with identifiable economic, financial and military sequences?",
+      "short_title": "Historical power transitions",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03",
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "economic_output",
+        "international_trade",
+        "military_strength",
+        "financial_centre_strength",
+        "reserve_currency_status"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle",
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "historical_power_panel",
+          "dataset": "multi-century power measures",
+          "role": "features"
+        },
+        {
+          "source_key": "power_transition_outcomes",
+          "dataset": "independent transitions",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "R6",
+          "role": "long historical research panel",
+          "variables": [
+            "debtgdp",
+            "tloans",
+            "ca",
+            "money",
+            "stir",
+            "ltrate",
+            "crisisJST"
+          ]
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "modern power proxies",
+          "role": "post-1960 evidence"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "maddison",
+          "dataset": "historical output",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "cow_nmc",
+          "dataset": "historical capabilities",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "historical_order_transitions",
+          "dataset": "dated transitions",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "1870-2020 selected advanced economies; modern power proxies"
+      },
+      "country_coverage": {
+        "achieved": "18 JST + 8 modern"
+      },
+      "existing_research_methods": [
+        "separate long-cycle research layer"
+      ],
+      "supporting_evidence": [
+        "Long JST predictors provide a starting point."
+      ],
+      "contradictory_evidence": [
+        "No independently dated transition outcomes or complete historical power panel exists."
+      ],
+      "alternative_explanations": [
+        "Sequences may differ across monetary, industrial and military eras."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "9febc5461583efdaf2b80ecb21b3b09068caa4773c87dfbcefb99f17719fec5a"
+    },
+    {
+      "question_code": "Q44",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Can concentration or multipolarity in power measures be quantified without a universal national power score?",
+      "short_title": "Power concentration",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "economic_output",
+        "international_trade",
+        "military_strength",
+        "financial_centre_strength",
+        "innovation_technology"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "compatible_reference_population",
+          "dataset": "global denominators",
+          "role": "features"
+        },
+        {
+          "source_key": "power_measure_registry",
+          "dataset": "separated dimensions",
+          "role": "methodology"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "power_registry",
+          "dataset": "separated measure definitions",
+          "role": "methodology"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "global denominator series",
+          "role": "share calculations"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "concentration_metric_protocol",
+          "dataset": "registered HHI/shares method",
+          "reason": "not implemented"
+        },
+        {
+          "source_key": "complete_power_panel",
+          "dataset": "all dimensions",
+          "reason": "missing reserve/international banking"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern denominator-safe subsets"
+      },
+      "country_coverage": {
+        "achieved": "8 primary + world denominators"
+      },
+      "existing_research_methods": [
+        "separate dimensions",
+        "no universal power composite"
+      ],
+      "supporting_evidence": [
+        "The design explicitly avoids a manufactured national power score."
+      ],
+      "contradictory_evidence": [
+        "No concentration measure has been evaluated across all intended dimensions."
+      ],
+      "alternative_explanations": [
+        "Different dimensions may imply different concentration patterns and should not be forced into one rank."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "31c7ce486162ee11495a43ba700e26cd6bff099af5979fb51c90ff28f9e2b226"
+    },
+    {
+      "question_code": "Q45",
+      "registry_version": "validation-questions-v1.0",
+      "category": "external_rivalry",
+      "original_question": "Can shared international leadership or distributed influence persist without a single hegemonic transition?",
+      "short_title": "Shared leadership",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03",
+        "H04"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "economic_output",
+        "international_trade",
+        "financial_centre_strength",
+        "reserve_currency_status"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle",
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "distributed_power_panel",
+          "dataset": "multi-dimensional shares",
+          "role": "features"
+        },
+        {
+          "source_key": "leadership_outcomes",
+          "dataset": "independent order/leadership labels",
+          "role": "outcomes"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "power_registry",
+          "dataset": "separated measures",
+          "role": "methodology"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "modern shares",
+          "role": "partial predictors"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "leadership_transition_outcomes",
+          "dataset": "independent order labels",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "institutional_influence",
+          "dataset": "international institutional roles",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "status": "modern partial panel"
+      },
+      "country_coverage": {
+        "status": "requires global reference population"
+      },
+      "existing_research_methods": [
+        "distributed measures rather than a single score"
+      ],
+      "supporting_evidence": [
+        "The schema allows distributed influence and unclassified states."
+      ],
+      "contradictory_evidence": [
+        "No outcome chronology can test hegemonic versus shared leadership."
+      ],
+      "alternative_explanations": [
+        "Institutional delegation and regional blocs can sustain shared influence."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "38b1d9c3d278aaa87b22e64690bb32c964c8d74d14ca0d5f4f37d890239aa25e"
+    },
+    {
+      "question_code": "Q46",
+      "registry_version": "validation-questions-v1.0",
+      "category": "technology_shocks",
+      "original_question": "Do R&D expenditure, patent activity and research capacity predict durable technological advantage?",
+      "short_title": "Innovation inputs and outputs",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [
+        "education",
+        "infrastructure_investment"
+      ],
+      "related_power_measures": [
+        "innovation_technology"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "innovation_panel",
+          "dataset": "R&D/patents/researchers",
+          "role": "features"
+        },
+        {
+          "source_key": "technology_outcomes",
+          "dataset": "durable advantage labels",
+          "role": "outcomes"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "R&D, patents, researchers, high-tech exports",
+          "role": "innovation proxies"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "wipo_full",
+          "dataset": "patent quality/family data",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "technology_advantage_outcomes",
+          "dataset": "independent leadership labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "modern innovation coverage; high-tech exports only 2007-2024"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "separated innovation input/output measures"
+      ],
+      "supporting_evidence": [
+        "Input, output and trade proxies are tracked separately."
+      ],
+      "contradictory_evidence": [
+        "No durable-advantage outcome or long-run evaluation exists."
+      ],
+      "alternative_explanations": [
+        "Patent counts and R&D intensity may not capture diffusion, quality or state-led capability."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "33598d4f45c922af56efe5feb5fb52d4494d383f0cea8ef945623e3be24b0aeb"
+    },
+    {
+      "question_code": "Q47",
+      "registry_version": "validation-questions-v1.0",
+      "category": "technology_shocks",
+      "original_question": "Do productivity and human-capital measures predict long-run economic resilience?",
+      "short_title": "Productivity and human capital",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H02",
+        "H03"
+      ],
+      "related_forces": [
+        "productivity_output_growth",
+        "education"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_internal_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "productivity_human_capital",
+          "dataset": "productivity/attainment/research",
+          "role": "features"
+        },
+        {
+          "source_key": "resilience_outcomes",
+          "dataset": "independent resilience labels",
+          "role": "outcomes"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "oecd",
+          "dataset": "labour productivity and tertiary attainment",
+          "role": "human-capital/productivity"
+        },
+        {
+          "source_key": "world_bank",
+          "dataset": "education and researchers",
+          "role": "human-capital inputs"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "tfp",
+          "dataset": "total-factor productivity",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "penn_world_table",
+          "dataset": "PWT productivity/capital",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "resilience_outcomes",
+          "dataset": "independent labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "productivity 1970-2025; education 1970-2025 with gaps"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "separate productivity and education inputs"
+      ],
+      "supporting_evidence": [
+        "Modern productivity and human-capital measures exist."
+      ],
+      "contradictory_evidence": [
+        "No long-run resilience outcome test exists."
+      ],
+      "alternative_explanations": [
+        "Resilience may reflect macro buffers, institutions or external demand rather than measured human capital alone."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "62042b02a9680198e7ceaa9eec00aadfa830346f22793a074ca4957735c1d91b"
+    },
+    {
+      "question_code": "Q48",
+      "registry_version": "validation-questions-v1.0",
+      "category": "technology_shocks",
+      "original_question": "Can AI adoption be measured separately from general technology indicators and does it change power or productivity outcomes?",
+      "short_title": "AI adoption",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03"
+      ],
+      "related_forces": [],
+      "related_power_measures": [
+        "innovation_technology"
+      ],
+      "theory_claims": [
+        "dalio_external_order_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "ai_adoption",
+          "dataset": "comparable AI adoption measures",
+          "role": "features"
+        },
+        {
+          "source_key": "productivity_power_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [],
+      "missing_datasets": [
+        {
+          "source_key": "ai_adoption",
+          "dataset": "comparable AI usage/capability data",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "ai_histories",
+          "dataset": "long-run AI data",
+          "reason": "not available before actual observations"
+        }
+      ],
+      "historical_coverage": {
+        "status": "missing",
+        "constraint": "no invented pre-observation AI history"
+      },
+      "country_coverage": {
+        "status": "missing"
+      },
+      "existing_research_methods": [
+        "separate AI/general-technology rule"
+      ],
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        "No comparable AI observations are imported."
+      ],
+      "alternative_explanations": [
+        "AI may diffuse unevenly and affect sectors differently; aggregate power effects are not assumed."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "f795421ec59ceb21a9c28fe5c7492d77c3b58574afe1e77128b93649ba25d7fb"
+    },
+    {
+      "question_code": "Q49",
+      "registry_version": "validation-questions-v1.0",
+      "category": "technology_shocks",
+      "original_question": "Do energy production, consumption and dependence constrain economic and external power?",
+      "short_title": "Energy constraint",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H03",
+        "H04"
+      ],
+      "related_forces": [
+        "resource_allocation_efficiency",
+        "geography"
+      ],
+      "related_power_measures": [
+        "economic_output"
+      ],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "energy_panel",
+          "dataset": "production/consumption/dependence",
+          "role": "features"
+        },
+        {
+          "source_key": "power_growth_outcomes",
+          "dataset": "independent outcomes",
+          "role": "labels"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "jst_macrohistory",
+          "dataset": "long-run economic variables",
+          "role": "indirect context"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "energy_balances",
+          "dataset": "IEA/WB energy production/consumption/imports",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "resource_outcomes",
+          "dataset": "independent constraint/shock labels",
+          "reason": "not defined"
+        }
+      ],
+      "historical_coverage": {
+        "status": "missing direct energy data"
+      },
+      "country_coverage": {
+        "status": "missing"
+      },
+      "existing_research_methods": [
+        "resource constraints kept separate from general economic output"
+      ],
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        "No direct energy balance series are imported."
+      ],
+      "alternative_explanations": [
+        "Energy constraints depend on technology, substitution, trade access and prices."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "1fe7fbf36bf11adfa04143c95c40bba0bb2bcca3e2391d53cd927a9e570f211d"
+    },
+    {
+      "question_code": "Q50",
+      "registry_version": "validation-questions-v1.0",
+      "category": "technology_shocks",
+      "original_question": "Do pandemics, natural disasters and resource shocks alter short-, medium- or long-cycle trajectories?",
+      "short_title": "Pandemics and shocks",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "current_answer": "Unanswered with the current Atlas evidence.",
+      "previous_implementation_status": "unavailable_prior_assessment",
+      "last_reviewed_at": "2026-11-26",
+      "methodology_version": "validation-methodology-v1.0",
+      "related_hypotheses": [
+        "H04"
+      ],
+      "related_forces": [
+        "acts_of_nature",
+        "geography"
+      ],
+      "related_power_measures": [],
+      "theory_claims": [
+        "dalio_big_cycle"
+      ],
+      "required_datasets": [
+        {
+          "source_key": "shock_outcomes",
+          "dataset": "EM-DAT/UCDP/pandemic/resource events",
+          "role": "outcomes"
+        },
+        {
+          "source_key": "cycle_panel",
+          "dataset": "pre/post shock predictors",
+          "role": "features"
+        }
+      ],
+      "available_datasets": [
+        {
+          "source_key": "world_bank",
+          "dataset": "NATURAL_DISASTER_AFFECTED_PCT",
+          "role": "1990-2009 average exposure context"
+        },
+        {
+          "source_key": "crisis_registry",
+          "dataset": "event/coverage schema",
+          "role": "reusable outcome contract"
+        }
+      ],
+      "missing_datasets": [
+        {
+          "source_key": "em_dat",
+          "dataset": "annual disaster events",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "pandemic_outcomes",
+          "dataset": "comparable pandemic histories",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "resource_shocks",
+          "dataset": "independent shock labels",
+          "reason": "not imported"
+        }
+      ],
+      "historical_coverage": {
+        "achieved": "one structural exposure value per country",
+        "missing": "event chronology"
+      },
+      "country_coverage": {
+        "achieved": "8 primary countries"
+      },
+      "existing_research_methods": [
+        "separate timescales and event registry"
+      ],
+      "supporting_evidence": [
+        "Natural-disaster exposure is labelled a context measure, not a score."
+      ],
+      "contradictory_evidence": [
+        "No shock-event outcomes or causal trajectory evaluation exists."
+      ],
+      "alternative_explanations": [
+        "Shock effects depend on resilience, policy response and global spillovers."
+      ],
+      "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
+      "scientific_limitations": [],
+      "source_references": [
+        {
+          "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
+          "url": "https://www.principles.com/the-changing-world-order"
+        },
+        {
+          "label": "Atlas theory registry",
+          "url": "/api/research/foundation/theory-registry"
+        }
+      ],
+      "chart": null,
+      "content_checksum": "7c5665f242f3f0597d94b5300ba718d783e07d5eb542f4b4324e3eba3819dc3b"
+    }
+  ]
+}

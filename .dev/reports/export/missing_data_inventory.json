@@ -1,0 +1,932 @@
+{
+  "count": 103,
+  "rows": [
+    {
+      "question_code": "Q02",
+      "short_title": "Cycle duration",
+      "source_key": "maddison",
+      "dataset": "historical GDP",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q02",
+      "short_title": "Cycle duration",
+      "source_key": "historical_order_transitions",
+      "dataset": "dated order transitions",
+      "reason": "no verified chronology",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q04",
+      "short_title": "Stage transition evidence",
+      "source_key": "historical_order_transitions",
+      "dataset": "independent stage/onset chronology",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q05",
+      "short_title": "Reversals and plateaus",
+      "source_key": "independent_stage_transitions",
+      "dataset": "source-defined stage labels",
+      "reason": "no verified dataset",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q06",
+      "short_title": "Three-cycle interaction",
+      "source_key": "vdem",
+      "dataset": "institutional histories",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q06",
+      "short_title": "Three-cycle interaction",
+      "source_key": "cow",
+      "dataset": "conflict/order outcomes",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q06",
+      "short_title": "Three-cycle interaction",
+      "source_key": "imf_cofer",
+      "dataset": "reserve shares",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q07",
+      "short_title": "Country applicability",
+      "source_key": "global_reference_population",
+      "dataset": "30-40 country eligible panel",
+      "reason": "target not reached",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence"
+    },
+    {
+      "question_code": "Q07",
+      "short_title": "Country applicability",
+      "source_key": "historical_entities",
+      "dataset": "pre-modern entities",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence"
+    },
+    {
+      "question_code": "Q08",
+      "short_title": "Support and falsification",
+      "source_key": "independent_order_transitions",
+      "dataset": "long-cycle outcomes",
+      "reason": "not imported",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "exploratory_findings"
+    },
+    {
+      "question_code": "Q08",
+      "short_title": "Support and falsification",
+      "source_key": "institutional_outcomes",
+      "dataset": "persistent deterioration labels",
+      "reason": "not imported",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "exploratory_findings"
+    },
+    {
+      "question_code": "Q09",
+      "short_title": "Atlas models as evidence",
+      "source_key": "independent_stage_transitions",
+      "dataset": "external stage labels",
+      "reason": "not imported",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "insufficient_evidence"
+    },
+    {
+      "question_code": "Q09",
+      "short_title": "Atlas models as evidence",
+      "source_key": "strict_historical_vintages",
+      "dataset": "provider release evidence",
+      "reason": "mostly unavailable",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "insufficient_evidence"
+    },
+    {
+      "question_code": "Q10",
+      "short_title": "Required historical depth",
+      "source_key": "maddison",
+      "dataset": "pre-1900 GDP",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q10",
+      "short_title": "Required historical depth",
+      "source_key": "historical_entities",
+      "dataset": "boundary-stable entity registry",
+      "reason": "not populated",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q10",
+      "short_title": "Required historical depth",
+      "source_key": "independent_order_transitions",
+      "dataset": "long-cycle outcomes",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q11",
+      "short_title": "Debt burdens and crises",
+      "source_key": "imf_laeven_valencia_banking_crises",
+      "dataset": "WP-2026-094",
+      "reason": "official ZIP 404; no local bundle",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+    },
+    {
+      "question_code": "Q11",
+      "short_title": "Debt burdens and crises",
+      "source_key": "alfred_fred",
+      "dataset": "historical vintages",
+      "reason": "BCA_FRED_API_KEY required",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+    },
+    {
+      "question_code": "Q12",
+      "short_title": "Debt composition",
+      "source_key": "bis_sector_credit",
+      "dataset": "household/corporate splits",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence"
+    },
+    {
+      "question_code": "Q12",
+      "short_title": "Debt composition",
+      "source_key": "debt_ownership",
+      "dataset": "holder composition",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence"
+    },
+    {
+      "question_code": "Q13",
+      "short_title": "Debt-service burden",
+      "source_key": "bis_dsr_extended_panel",
+      "dataset": "30-40 country DSR",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q13",
+      "short_title": "Debt-service burden",
+      "source_key": "real_time_dsr_vintages",
+      "dataset": "release-time DSR",
+      "reason": "not available",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q14",
+      "short_title": "Debt threshold",
+      "source_key": "threshold_protocol",
+      "dataset": "registered threshold search",
+      "reason": "not implemented",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+    },
+    {
+      "question_code": "Q15",
+      "short_title": "External and FX debt",
+      "source_key": "bis_international_banking",
+      "dataset": "locational/consolidated banking",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q15",
+      "short_title": "External and FX debt",
+      "source_key": "external_debt",
+      "dataset": "external and FX debt stocks",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q15",
+      "short_title": "External and FX debt",
+      "source_key": "currency_sovereign_crises",
+      "dataset": "verified outcomes",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q16",
+      "short_title": "Monetary expansion",
+      "source_key": "currency_crisis_registry",
+      "dataset": "independent currency onsets",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q16",
+      "short_title": "Monetary expansion",
+      "source_key": "inflation_regime_outcomes",
+      "dataset": "independent high-inflation episodes",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q16",
+      "short_title": "Monetary expansion",
+      "source_key": "alfred_fred",
+      "dataset": "money vintages",
+      "reason": "API key required",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q17",
+      "short_title": "Credit expansion",
+      "source_key": "real_time_credit_vintages",
+      "dataset": "release-safe credit revisions",
+      "reason": "not available",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+    },
+    {
+      "question_code": "Q18",
+      "short_title": "Interest-rate stress",
+      "source_key": "policy_rate_vintages",
+      "dataset": "release-safe central-bank rates",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q18",
+      "short_title": "Interest-rate stress",
+      "source_key": "debt_stress_outcomes",
+      "dataset": "non-crisis debt stress labels",
+      "reason": "not defined",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q19",
+      "short_title": "Reserve-currency status",
+      "source_key": "imf_cofer",
+      "dataset": "official reserve shares",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q19",
+      "short_title": "Reserve-currency status",
+      "source_key": "bis_triennial",
+      "dataset": "FX turnover shares",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q19",
+      "short_title": "Reserve-currency status",
+      "source_key": "reserve_issuer_outcomes",
+      "dataset": "issuer-specific adjustments",
+      "reason": "not defined",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q20",
+      "short_title": "Financial depth",
+      "source_key": "international_banking",
+      "dataset": "cross-border intermediation",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q20",
+      "short_title": "Financial depth",
+      "source_key": "financial_stress_outcomes",
+      "dataset": "non-crisis stress labels",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q21",
+      "short_title": "Debt ownership",
+      "source_key": "debt_ownership",
+      "dataset": "holder composition",
+      "reason": "not imported",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q21",
+      "short_title": "Debt ownership",
+      "source_key": "sovereign_bondholder_data",
+      "dataset": "ownership shares",
+      "reason": "not imported",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q22",
+      "short_title": "Currency crises",
+      "source_key": "currency_crisis_registry",
+      "dataset": "verified currency-crisis chronology",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q22",
+      "short_title": "Currency crises",
+      "source_key": "fx_reserves",
+      "dataset": "reserve adequacy",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q22",
+      "short_title": "Currency crises",
+      "source_key": "imf_cofer",
+      "dataset": "reserve shares",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q23",
+      "short_title": "Sovereign debt crises",
+      "source_key": "sovereign_crisis_registry",
+      "dataset": "verified sovereign-crisis chronology",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q23",
+      "short_title": "Sovereign debt crises",
+      "source_key": "sovereign_defaults",
+      "dataset": "default/restructuring data",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q24",
+      "short_title": "Restructurings and defaults",
+      "source_key": "sovereign_defaults",
+      "dataset": "default/restructuring chronology",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q24",
+      "short_title": "Restructurings and defaults",
+      "source_key": "private_debt_restructuring",
+      "dataset": "corporate/household restructuring",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q25",
+      "short_title": "Conditional debt vulnerability",
+      "source_key": "multivariate_h01_protocol",
+      "dataset": "pre-registered conditional model",
+      "reason": "not implemented",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q25",
+      "short_title": "Conditional debt vulnerability",
+      "source_key": "currency_sovereign_outcomes",
+      "dataset": "other crisis labels",
+      "reason": "not imported",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q26",
+      "short_title": "Institutions and productivity",
+      "source_key": "persistent_weakness_registry",
+      "dataset": "independent productivity/investment deterioration labels",
+      "reason": "not defined",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q26",
+      "short_title": "Institutions and productivity",
+      "source_key": "vdem",
+      "dataset": "institutional histories",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q27",
+      "short_title": "Inequality and instability",
+      "source_key": "protest_conflict_outcomes",
+      "dataset": "verified instability events",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q27",
+      "short_title": "Inequality and instability",
+      "source_key": "persistent_weakness_registry",
+      "dataset": "economic weakness labels",
+      "reason": "not defined",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q28",
+      "short_title": "Political polarisation",
+      "source_key": "vdem",
+      "dataset": "polarisation/institutional measures",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q28",
+      "short_title": "Political polarisation",
+      "source_key": "ucdp_acled",
+      "dataset": "event outcomes",
+      "reason": "access/licensing not resolved",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q29",
+      "short_title": "Regime characteristics",
+      "source_key": "vdem",
+      "dataset": "regime and institutional characteristics",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q29",
+      "short_title": "Regime characteristics",
+      "source_key": "policy_response_outcomes",
+      "dataset": "shock-management labels",
+      "reason": "not defined",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q30",
+      "short_title": "Recorded unrest outcomes",
+      "source_key": "ucdp",
+      "dataset": "conflict events",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q30",
+      "short_title": "Recorded unrest outcomes",
+      "source_key": "acled",
+      "dataset": "protest/conflict events",
+      "reason": "not imported; licensing/access review needed",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q31",
+      "short_title": "Wealth and opportunity gaps",
+      "source_key": "internal_order_outcomes",
+      "dataset": "verified deterioration events",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q31",
+      "short_title": "Wealth and opportunity gaps",
+      "source_key": "opportunity_mobility",
+      "dataset": "intergenerational mobility",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q32",
+      "short_title": "Human-capital resilience",
+      "source_key": "barro_lee",
+      "dataset": "long education attainment",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q32",
+      "short_title": "Human-capital resilience",
+      "source_key": "stress_resilience_registry",
+      "dataset": "recovery/resilience labels",
+      "reason": "not defined",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q33",
+      "short_title": "Investment and productivity decline",
+      "source_key": "institutional_deterioration_registry",
+      "dataset": "independent outcome labels",
+      "reason": "not defined",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q34",
+      "short_title": "Political systems and stress",
+      "source_key": "vdem",
+      "dataset": "regime characteristics",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q34",
+      "short_title": "Political systems and stress",
+      "source_key": "policy_response_outcomes",
+      "dataset": "shock/debt-management outcomes",
+      "reason": "not defined",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q35",
+      "short_title": "Internal conflict definition",
+      "source_key": "ucdp_acled",
+      "dataset": "verified conflict/protest event data",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q36",
+      "short_title": "Power convergence and rivalry",
+      "source_key": "cow",
+      "dataset": "rivalry/conflict outcomes",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q36",
+      "short_title": "Power convergence and rivalry",
+      "source_key": "imf_cofer",
+      "dataset": "reserve shares",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q36",
+      "short_title": "Power convergence and rivalry",
+      "source_key": "historical_power_transitions",
+      "dataset": "transition outcomes",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q37",
+      "short_title": "Output shares and influence",
+      "source_key": "influence_outcomes",
+      "dataset": "independent influence/order transitions",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q37",
+      "short_title": "Output shares and influence",
+      "source_key": "maddison",
+      "dataset": "historical output shares",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q38",
+      "short_title": "Trade shares and dependence",
+      "source_key": "un_comtrade",
+      "dataset": "bilateral trade",
+      "reason": "planned provider not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q38",
+      "short_title": "Trade shares and dependence",
+      "source_key": "rivalry_outcomes",
+      "dataset": "independent rivalry/cooperation labels",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q39",
+      "short_title": "Reserve shares and influence",
+      "source_key": "imf_cofer",
+      "dataset": "official reserve shares",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q39",
+      "short_title": "Reserve shares and influence",
+      "source_key": "bis_triennial",
+      "dataset": "FX turnover",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q39",
+      "short_title": "Reserve shares and influence",
+      "source_key": "monetary_transition_outcomes",
+      "dataset": "independent labels",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q40",
+      "short_title": "Military resources",
+      "source_key": "cow_nmc",
+      "dataset": "Correlates of War capabilities",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q40",
+      "short_title": "Military resources",
+      "source_key": "sipri_full",
+      "dataset": "direct military resource data",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q40",
+      "short_title": "Military resources",
+      "source_key": "external_order_transitions",
+      "dataset": "independent outcomes",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q41",
+      "short_title": "Financial-centre activity",
+      "source_key": "bis_international_banking",
+      "dataset": "cross-border banking statistics",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q41",
+      "short_title": "Financial-centre activity",
+      "source_key": "fx_turnover",
+      "dataset": "BIS triennial turnover",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q41",
+      "short_title": "Financial-centre activity",
+      "source_key": "financial_influence_outcomes",
+      "dataset": "independent labels",
+      "reason": "not defined",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q42",
+      "short_title": "Alliances and blocs",
+      "source_key": "cow_alliances",
+      "dataset": "alliance histories",
+      "reason": "not imported",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q42",
+      "short_title": "Alliances and blocs",
+      "source_key": "ucdp_cow",
+      "dataset": "conflict outcomes",
+      "reason": "not imported",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q43",
+      "short_title": "Historical power transitions",
+      "source_key": "maddison",
+      "dataset": "historical output",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q43",
+      "short_title": "Historical power transitions",
+      "source_key": "cow_nmc",
+      "dataset": "historical capabilities",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q43",
+      "short_title": "Historical power transitions",
+      "source_key": "historical_order_transitions",
+      "dataset": "dated transitions",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q44",
+      "short_title": "Power concentration",
+      "source_key": "concentration_metric_protocol",
+      "dataset": "registered HHI/shares method",
+      "reason": "not implemented",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q44",
+      "short_title": "Power concentration",
+      "source_key": "complete_power_panel",
+      "dataset": "all dimensions",
+      "reason": "missing reserve/international banking",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q45",
+      "short_title": "Shared leadership",
+      "source_key": "leadership_transition_outcomes",
+      "dataset": "independent order labels",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q45",
+      "short_title": "Shared leadership",
+      "source_key": "institutional_influence",
+      "dataset": "international institutional roles",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q46",
+      "short_title": "Innovation inputs and outputs",
+      "source_key": "wipo_full",
+      "dataset": "patent quality/family data",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q46",
+      "short_title": "Innovation inputs and outputs",
+      "source_key": "technology_advantage_outcomes",
+      "dataset": "independent leadership labels",
+      "reason": "not defined",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q47",
+      "short_title": "Productivity and human capital",
+      "source_key": "tfp",
+      "dataset": "total-factor productivity",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q47",
+      "short_title": "Productivity and human capital",
+      "source_key": "penn_world_table",
+      "dataset": "PWT productivity/capital",
+      "reason": "not imported",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q47",
+      "short_title": "Productivity and human capital",
+      "source_key": "resilience_outcomes",
+      "dataset": "independent labels",
+      "reason": "not defined",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested"
+    },
+    {
+      "question_code": "Q48",
+      "short_title": "AI adoption",
+      "source_key": "ai_adoption",
+      "dataset": "comparable AI usage/capability data",
+      "reason": "not imported",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q48",
+      "short_title": "AI adoption",
+      "source_key": "ai_histories",
+      "dataset": "long-run AI data",
+      "reason": "not available before actual observations",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q49",
+      "short_title": "Energy constraint",
+      "source_key": "energy_balances",
+      "dataset": "IEA/WB energy production/consumption/imports",
+      "reason": "not imported",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q49",
+      "short_title": "Energy constraint",
+      "source_key": "resource_outcomes",
+      "dataset": "independent constraint/shock labels",
+      "reason": "not defined",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q50",
+      "short_title": "Pandemics and shocks",
+      "source_key": "em_dat",
+      "dataset": "annual disaster events",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q50",
+      "short_title": "Pandemics and shocks",
+      "source_key": "pandemic_outcomes",
+      "dataset": "comparable pandemic histories",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q50",
+      "short_title": "Pandemics and shocks",
+      "source_key": "resource_shocks",
+      "dataset": "independent shock labels",
+      "reason": "not imported",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable"
+    }
+  ]
+}

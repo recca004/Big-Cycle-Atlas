@@ -1,7 +1,7 @@
 # Big Cycle Atlas — economic research handover, 1980–present
 
-Generated: 2026-11-25T22:27:21.020278Z
-Base commit: `71d3e0589d10f4c412549fcd56b8701d45a69b60`
+Generated: 2026-11-26T00:16:56.338747Z
+Base commit: `9720659680fb10a0a3bc751fef04d9bc1a70a074`
 Methodology: `normalization-v1.4`, `force-aggregation-v1.0`, experimental cycle classifier v1
 
 ## 1. Executive economic summary
@@ -36,6 +36,7 @@ Largest tracked economy: **USA**; second: **CHN**. Highest domestic-condition sc
 | `population_memberships` | 26 |
 | `dataset_rights` | 3 |
 | `evidence_status_entries` | 6 |
+| `validation_questions` | 50 |
 | `distinct_observation_identities` | 18402 |
 | `latest_vintage_rows` | 18402 |
 

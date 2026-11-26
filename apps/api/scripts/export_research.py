@@ -49,6 +49,7 @@ from app.models import (
     ResearchObservation,
     ResearchPopulationMembership,
     TheoryRegistryEntry,
+    ValidationQuestion,
 )
 from app.research.composite import COMPOSITE_MODELS, run_composite
 from app.research.model_diagnostics import (
@@ -72,6 +73,9 @@ from app.research.power_registry import (
 )
 from app.research.scientific_registry import TIMESCALES
 from app.services import force_signal_service
+from app.services.validation_questions import (
+    actual_evidence, question_payload, question_summary,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / ".dev" / "reports"
@@ -201,6 +205,7 @@ async def main() -> None:
         "population_memberships": (await session.execute(select(func.count(ResearchPopulationMembership.id)))).scalar(),
         "dataset_rights": (await session.execute(select(func.count(DatasetRightsRegistry.id)))).scalar(),
         "evidence_status_entries": (await session.execute(select(func.count(EvidenceStatusEntry.id)))).scalar(),
+        "validation_questions": (await session.execute(select(func.count(ValidationQuestion.id)))).scalar(),
     }
     inventory["distinct_observation_identities"] = (
         await session.execute(
@@ -899,6 +904,69 @@ async def main() -> None:
         "count": len(evidence_rows),
         "entries": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in evidence_rows],
     })
+
+    question_rows = (await session.execute(select(ValidationQuestion).order_by(ValidationQuestion.question_code))).scalars().all()
+    validation_registry = {
+        "registry_version": question_rows[0].registry_version if question_rows else None,
+        "methodology_status": "experimental",
+        "wording_origin": "atlas_derived_v1",
+        "count": len(question_rows),
+        "questions": [question_payload(r) for r in question_rows],
+    }
+    write_json(EXPORT / "validation_questions.json", validation_registry)
+    write_json(ROOT / ".dev" / "VALIDATION_QUESTION_REGISTRY.json", validation_registry)
+    evidence_matrix = []
+    dependency_matrix = []
+    missing_inventory = []
+    for row in question_rows:
+        observed = await actual_evidence(session, row)
+        observed_count = sum(len(item["observed"]) for item in observed)
+        evidence_matrix.append({
+            "question_code": row.question_code,
+            "category": row.category,
+            "implementation_status": row.implementation_status,
+            "research_validation_status": row.research_validation_status,
+            "available_dataset_count": len(row.available_datasets),
+            "observed_evidence_rows": observed_count,
+            "missing_dataset_count": len(row.missing_datasets),
+            "related_hypotheses": ";".join(row.related_hypotheses),
+        })
+        for dataset in row.required_datasets:
+            dependency_matrix.append({
+                "question_code": row.question_code,
+                "dependency": dataset.get("dataset") or dataset.get("source_key"),
+                "source_key": dataset.get("source_key"),
+                "role": dataset.get("role"),
+                "available": any(
+                    (d.get("dataset") == dataset.get("dataset") or d.get("source_key") == dataset.get("source_key"))
+                    for d in row.available_datasets
+                ),
+            })
+        for dataset in row.missing_datasets:
+            missing_inventory.append({
+                "question_code": row.question_code,
+                "short_title": row.short_title,
+                "source_key": dataset.get("source_key"),
+                "dataset": dataset.get("dataset"),
+                "reason": dataset.get("reason"),
+                "implementation_status": row.implementation_status,
+                "research_validation_status": row.research_validation_status,
+            })
+    write_csv(
+        EXPORT / "question_evidence_matrix.csv", evidence_matrix,
+        ["question_code", "category", "implementation_status", "research_validation_status", "available_dataset_count", "observed_evidence_rows", "missing_dataset_count", "related_hypotheses"],
+    )
+    write_json(EXPORT / "question_evidence_matrix.json", {"count": len(evidence_matrix), "rows": evidence_matrix})
+    write_csv(
+        EXPORT / "dataset_dependency_matrix.csv", dependency_matrix,
+        ["question_code", "dependency", "source_key", "role", "available"],
+    )
+    write_csv(
+        EXPORT / "missing_data_inventory.csv", missing_inventory,
+        ["question_code", "short_title", "source_key", "dataset", "reason", "implementation_status", "research_validation_status"],
+    )
+    write_json(EXPORT / "missing_data_inventory.json", {"count": len(missing_inventory), "rows": missing_inventory})
+    write_json(EXPORT / "validation_summary.json", await question_summary(session))
     write_json(EXPORT / "research_timescales.json", {"timescales": TIMESCALES})
 
     generated_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -942,6 +1010,11 @@ async def main() -> None:
             "research_populations": sorted({r.population_code for r in population_rows}),
             "prediction_ledger_append_only": True,
             "latest_evaluation_state": eval_rows[-1].result_state if eval_rows else None,
+            "validation_questions": {
+                "count": len(question_rows),
+                "registry_version": question_rows[0].registry_version if question_rows else None,
+                "wording_origin": "atlas_derived_v1",
+            },
             "timescales": TIMESCALES,
         },
         "generated_exports": sorted(path.name for path in EXPORT.iterdir() if path.is_file()),

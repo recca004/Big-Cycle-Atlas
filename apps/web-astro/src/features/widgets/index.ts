@@ -4,6 +4,8 @@
 import {
   CycleHistoryWidget,
   ForceHistoryWidget,
+  ValidationCoverageWidget,
+  ValidationQuestionsWidget,
 } from "./ResearchWidgets";
 import {
   registerWidget,
@@ -597,6 +599,50 @@ registerWidget({
     "GET /api/research/countries/{iso3}/availability + /api/research/execution-modes",
   configVersion: 1,
   component: HistoricalValidationWidget,
+});
+
+/* Scientific foundation — canonical validation registry */
+registerWidget({
+  typeId: "validation-coverage",
+  displayName: "Validation coverage",
+  description:
+    "Implementation coverage across the canonical 50-question scientific validation registry.",
+  category: "research",
+  defaultSize: { w: 4, h: 3 },
+  minSize: { w: 3, h: 2 },
+  configFields: [titleField],
+  dataRequirement: "GET /api/research/foundation/validation/summary",
+  configVersion: 1,
+  component: ValidationCoverageWidget,
+});
+registerWidget({
+  typeId: "validation-questions",
+  displayName: "Validation questions",
+  description:
+    "Question list with implementation and scientific-status links into the validation registry.",
+  category: "research",
+  defaultSize: { w: 5, h: 5 },
+  minSize: { w: 4, h: 3 },
+  configFields: [
+    {
+      key: "category",
+      label: "Category",
+      type: "text",
+      default: "all",
+      options: [
+        { value: "all", label: "All categories" },
+        { value: "core_theory", label: "Core theory" },
+        { value: "debt_money", label: "Debt & money" },
+        { value: "internal_conflict", label: "Internal conflict" },
+        { value: "external_rivalry", label: "External rivalry" },
+        { value: "technology_shocks", label: "Technology & shocks" },
+      ],
+    },
+    titleField,
+  ],
+  dataRequirement: "GET /api/research/foundation/validation/questions",
+  configVersion: 1,
+  component: ValidationQuestionsWidget,
 });
 
 /* Great Power Observatory — Big Cycle clock widget */

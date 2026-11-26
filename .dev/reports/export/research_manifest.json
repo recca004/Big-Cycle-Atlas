@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-25T22:27:21.020278Z",
-  "information_cutoff": "2026-11-25T22:27:21.020278Z",
+  "generated_at": "2026-11-26T00:16:56.338747Z",
+  "information_cutoff": "2026-11-26T00:16:56.338747Z",
   "execution_mode": "retrospective_latest_vintage",
-  "git_commit": "71d3e0589d10f4c412549fcd56b8701d45a69b60",
+  "git_commit": "9720659680fb10a0a3bc751fef04d9bc1a70a074",
   "database": {
     "countries": 8,
     "indicators": 46,
@@ -26,6 +26,7 @@
     "population_memberships": 26,
     "dataset_rights": 3,
     "evidence_status_entries": 6,
+    "validation_questions": 50,
     "distinct_observation_identities": 18402,
     "latest_vintage_rows": 18402
   },
@@ -1013,6 +1014,11 @@
     ],
     "prediction_ledger_append_only": true,
     "latest_evaluation_state": "no_evidence_of_improved_predictive_value",
+    "validation_questions": {
+      "count": 50,
+      "registry_version": "validation-questions-v1.0",
+      "wording_origin": "atlas_derived_v1"
+    },
     "timescales": [
       {
         "timescale_code": "short_economic_financial",
@@ -1094,6 +1100,7 @@
     "cycle_transitions.csv",
     "data_quality_findings.csv",
     "database_inventory.json",
+    "dataset_dependency_matrix.csv",
     "dataset_rights.json",
     "evaluation_results.json",
     "evidence_status.json",
@@ -1108,6 +1115,8 @@
     "historical_vintage_inventory.csv",
     "hypothesis_protocols.json",
     "indicator_coverage.csv",
+    "missing_data_inventory.csv",
+    "missing_data_inventory.json",
     "model_comparison.csv",
     "model_effective_weights.csv",
     "model_equivalence_report.json",
@@ -1119,12 +1128,16 @@
     "prediction_outcomes.json",
     "productivity_comparison.csv",
     "provider_status.csv",
+    "question_evidence_matrix.csv",
+    "question_evidence_matrix.json",
     "research_manifest.json",
     "research_population.json",
     "research_timescales.json",
     "stage_disagreement.csv",
     "strict_historical_availability.json",
-    "theory_registry.json"
+    "theory_registry.json",
+    "validation_questions.json",
+    "validation_summary.json"
   ],
   "limitations": [
     "Retrospective history uses latest available vintages, not only information published at each historical date.",

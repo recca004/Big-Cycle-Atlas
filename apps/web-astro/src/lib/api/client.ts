@@ -2,6 +2,12 @@
  *  Cancellable, retry-limited (network errors only), timeout-guarded. */
 
 import type {
+  FoundationEvaluationsResponse,
+  ValidationQuestionResponse,
+  ValidationQuestionsResponse,
+  ValidationSummaryResponse,
+} from "@/types/validation";
+import type {
   Country,
   ObservationPage,
   ForceCoverageData,
@@ -379,6 +385,42 @@ export function fetchResearchProgress(
   opts?: FetchOptions,
 ): Promise<ResearchProgress> {
   return request<ResearchProgress>("/api/research/progress", opts);
+}
+
+export function fetchValidationQuestions(
+  opts?: FetchOptions,
+): Promise<ValidationQuestionsResponse> {
+  return request<ValidationQuestionsResponse>(
+    "/api/research/foundation/validation/questions", opts,
+  );
+}
+
+export function fetchValidationSummary(
+  opts?: FetchOptions,
+): Promise<ValidationSummaryResponse> {
+  return request<ValidationSummaryResponse>(
+    "/api/research/foundation/validation/summary", opts,
+  );
+}
+
+export function fetchValidationQuestion(
+  questionCode: string,
+  entity?: string,
+  opts?: FetchOptions,
+): Promise<ValidationQuestionResponse> {
+  const q = entity ? `?entity=${encodeURIComponent(entity)}` : "";
+  return request<ValidationQuestionResponse>(
+    `/api/research/foundation/validation/questions/${encodeURIComponent(questionCode)}${q}`,
+    opts,
+  );
+}
+
+export function fetchFoundationEvaluations(
+  opts?: FetchOptions,
+): Promise<FoundationEvaluationsResponse> {
+  return request<FoundationEvaluationsResponse>(
+    "/api/research/foundation/evaluations", opts,
+  );
 }
 
 export function fetchIndicatorUncertaintyHistory(

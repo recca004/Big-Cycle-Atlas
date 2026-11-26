@@ -27,6 +27,7 @@ const ROUTES = [
   "/sources",
   "/methodology",
   "/progress",
+  "/research/validation",
   "/settings",
 ];
 
@@ -58,6 +59,13 @@ test.describe("live API data", () => {
     await expect(
       page.locator(".status-pill", { hasText: /available/i }).first(),
     ).toBeVisible();
+  });
+
+  test("validation registry renders a stable question URL", async ({ page }) => {
+    await page.goto("/research/validation?question=Q11");
+    await expect(page.getByRole("heading", { name: "Theory Validation" })).toBeVisible();
+    await expect(page.locator("article")).toContainText("Q11");
+    await expect(page.locator("article")).toContainText(/Evaluation implemented/i);
   });
 
   test("compare page renders cross-country bars", async ({ page }) => {

@@ -11,10 +11,13 @@ from app.data_sources.base import DataSourceCredentialError
 from app.data_sources.jst_macrohistory import iter_jst_rows
 from app.models import (
     DatasetRightsRegistry, EvidenceStatusEntry, HypothesisProtocol,
-    PredictionLedgerEntry, TheoryRegistryEntry,
+    PredictionLedgerEntry, TheoryRegistryEntry, ValidationQuestion,
 )
 from app.research.h01 import build_samples
 from app.research.scientific_registry import THEORY_ENTRIES, TIMESCALES
+from app.research.validation_questions import (
+    IMPLEMENTATION_STATUSES, VALIDATION_QUESTIONS, VALIDATION_STATUSES,
+)
 
 
 def _tiny_xlsx(path: Path) -> Path:
@@ -129,3 +132,48 @@ async def test_foundation_api_and_alfred_blocker(client):
     assert any(p["hypothesis_code"] == "H01" for p in response.json()["protocols"])
     with pytest.raises(DataSourceCredentialError):
         await AlfredAdapter(api_key=None).vintage_dates("GDP")
+
+
+async def test_validation_question_registry_is_complete_and_versioned(client):
+    async with session_module._sessionmaker() as session:
+        rows = (await session.execute(select(ValidationQuestion))).scalars().all()
+    assert len(rows) == 50
+    assert [q.question_code for q in VALIDATION_QUESTIONS] == [f"Q{i:02d}" for i in range(1, 51)]
+    assert {q.category for q in VALIDATION_QUESTIONS} == {
+        "core_theory", "debt_money", "internal_conflict", "external_rivalry", "technology_shocks"
+    }
+    assert all(q.implementation_status in IMPLEMENTATION_STATUSES for q in VALIDATION_QUESTIONS)
+    assert all(q.research_validation_status in VALIDATION_STATUSES for q in VALIDATION_QUESTIONS)
+    assert all(q.original_question.endswith("?") for q in VALIDATION_QUESTIONS)
+    assert all(len(q.content_checksum) == 64 for q in rows)
+
+
+async def test_validation_question_immutability(client):
+    async with session_module._sessionmaker() as session:
+        row = (await session.execute(select(ValidationQuestion).where(
+            ValidationQuestion.question_code == "Q01"
+        ))).scalar_one()
+        row.short_title = "changed"
+        with pytest.raises(ValueError):
+            await session.flush()
+        await session.rollback()
+
+
+async def test_validation_question_api(client):
+    response = await client.get("/api/research/foundation/validation/questions")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["count"] == 50
+    assert payload["questions"][0]["question_code"] == "Q01"
+    response = await client.get("/api/research/foundation/validation/summary")
+    assert response.status_code == 200
+    summary = response.json()
+    assert summary["count"] == 50
+    assert summary["by_category"]["debt_money"] == 15
+    assert summary["by_category"]["technology_shocks"] == 5
+    response = await client.get("/api/research/foundation/validation/questions/Q11")
+    assert response.status_code == 200
+    detail = response.json()
+    assert detail["question"]["original_question"].endswith("?")
+    assert detail["stable_url"] == "/research/validation?question=Q11"
+    assert "H01" in detail["question"]["related_hypotheses"]

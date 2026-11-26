@@ -1,6 +1,6 @@
 # Widget Registry
 
-Generated from `src/features/widgets/index.ts` — 55 registered widget types.
+Generated from `src/features/widgets/index.ts` — 57 registered widget types.
 
 | ID | Name | Category | Default | Min | Data requirement |
 |---|---|---|---|---|---|
@@ -58,6 +58,8 @@ Generated from `src/features/widgets/index.ts` — 55 registered widget types.
 | `cycle-history` | Big Cycle history (experimental) | research | 8×4 | 5×3 | GET /api/research/countries/{iso3}/cycle/history |
 | `force-history` | Force history | research | 6×4 | 4×3 | GET /api/countries/{iso3}/forces/{force}/history |
 | `historical-validation` | Historical validation | research | 5×4 | 4×3 | GET /api/research/countries/{iso3}/availability + /api/research/execution-modes |
+| `validation-coverage` | Validation coverage | research | 4×3 | 3×2 | GET /api/research/foundation/validation/summary |
+| `validation-questions` | Validation questions | research | 5×5 | 4×3 | GET /api/research/foundation/validation/questions |
 | `big-cycle-clock` | Big Cycle clock | research | 6×5 | 4×4 | GET /api/observatory/overview |
 
 ## Config fields per widget
@@ -469,6 +471,19 @@ Historical force level / relative / momentum dimensions — retrospective latest
 Availability evidence per country: strict eligibility, provider publication and atlas retrieval evidence, missing evidence, latest period.
 
 - `country` (country) — default `"USA"`
+- `title` (text)
+
+### `validation-coverage` — Validation coverage
+
+Implementation coverage across the canonical 50-question scientific validation registry.
+
+- `title` (text)
+
+### `validation-questions` — Validation questions
+
+Question list with implementation and scientific-status links into the validation registry.
+
+- `category` (text) — default `"all"`
 - `title` (text)
 
 ### `big-cycle-clock` — Big Cycle clock

@@ -1,7 +1,7 @@
 """Scientific-foundation read API."""
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,10 +11,13 @@ from app.models import (
     CrisisCoverage, CrisisEvent, DatasetRightsRegistry,
     EvaluationResult, EvidenceStatusEntry, HypothesisProtocol,
     PredictionLedgerEntry, ResearchObservation,
-    ResearchPopulationMembership, TheoryRegistryEntry,
+    ResearchPopulationMembership, TheoryRegistryEntry, ValidationQuestion,
 )
 from app.research.h01 import evaluate_h01
 from app.research.scientific_registry import TIMESCALES
+from app.services.validation_questions import (
+    actual_evidence, chart_points, question_payload, question_summary,
+)
 
 router = APIRouter(prefix=f"{get_settings().api_prefix}/research/foundation", tags=["research-foundation"])
 
@@ -51,6 +54,75 @@ async def research_timescales():
         "methodology_status": "candidate_definitions_not_natural_laws",
         "timescales": TIMESCALES,
         "note": "The production national-condition models remain short/medium experimental research models; no long-clock stage position is asserted.",
+    }
+
+
+@router.get("/validation/questions")
+async def validation_questions(
+    category: Optional[str] = Query(None),
+    implementation_status: Optional[str] = Query(None),
+    validation_status: Optional[str] = Query(None),
+    search: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    stmt = select(ValidationQuestion).order_by(ValidationQuestion.question_code)
+    if category:
+        stmt = stmt.where(ValidationQuestion.category == category)
+    if implementation_status:
+        stmt = stmt.where(ValidationQuestion.implementation_status == implementation_status)
+    if validation_status:
+        stmt = stmt.where(ValidationQuestion.research_validation_status == validation_status)
+    if search:
+        needle = f"%{search.lower()}%"
+        stmt = stmt.where(func.lower(ValidationQuestion.original_question + " " + ValidationQuestion.short_title).like(needle))
+    rows = (await session.execute(stmt)).scalars().all()
+    return {
+        "methodology_status": "experimental",
+        "count": len(rows),
+        "questions": [question_payload(r, details=False) for r in rows],
+    }
+
+
+@router.get("/validation/summary")
+async def validation_summary(session: AsyncSession = Depends(get_session)):
+    return await question_summary(session)
+
+
+@router.get("/validation/questions/{question_code}")
+async def validation_question_detail(
+    question_code: str,
+    entity: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    row = (await session.execute(select(ValidationQuestion).where(
+        ValidationQuestion.question_code == question_code.upper(),
+    ).order_by(ValidationQuestion.registry_version.desc()))).scalars().first()
+    if row is None:
+        raise HTTPException(404, f"unknown validation question {question_code!r}")
+    hypothesis_codes = row.related_hypotheses or []
+    protocols = []
+    evaluations = []
+    if hypothesis_codes:
+        protocols = (await session.execute(select(HypothesisProtocol).where(
+            HypothesisProtocol.hypothesis_code.in_(hypothesis_codes),
+        ).order_by(HypothesisProtocol.hypothesis_code))).scalars().all()
+        evaluations = (await session.execute(select(EvaluationResult).where(
+            EvaluationResult.hypothesis_code.in_(hypothesis_codes),
+        ).order_by(EvaluationResult.started_at))).scalars().all()
+    return {
+        "methodology_status": "experimental",
+        "question": question_payload(row),
+        "actual_evidence": await actual_evidence(session, row),
+        "chart": await chart_points(session, row, entity),
+        "related_protocols": [
+            {c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"}
+            for r in protocols
+        ],
+        "related_evaluations": [
+            {c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"}
+            for r in evaluations
+        ],
+        "stable_url": f"/research/validation?question={row.question_code}",
     }
 
 

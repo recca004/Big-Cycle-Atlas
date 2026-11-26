@@ -8,16 +8,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import (
     Country, DatasetRightsRegistry, EvidenceStatusEntry,
     HypothesisProtocol, ResearchPopulationMembership, TheoryRegistryEntry,
+    ValidationQuestion,
 )
 from app.research.scientific_registry import (
     DATASET_RIGHTS, HYPOTHESIS_PROTOCOLS, THEORY_ENTRIES,
     THEORY_REGISTRY_VERSION, canonical_checksum,
 )
+from app.research.validation_questions import (
+    VALIDATION_QUESTIONS, VALIDATION_REGISTRY_VERSION,
+)
 
 
 async def seed_scientific_foundation(session: AsyncSession) -> dict[str, int]:
     now = datetime.now(timezone.utc)
-    inserted = {"theory": 0, "protocols": 0, "populations": 0, "rights": 0, "evidence": 0}
+    inserted = {"theory": 0, "protocols": 0, "questions": 0, "populations": 0, "rights": 0, "evidence": 0}
 
     existing_theory = {
         (r.theory_code, r.version)
@@ -50,6 +54,24 @@ async def seed_scientific_foundation(session: AsyncSession) -> dict[str, int]:
         fields.update(registered_at=now, content_checksum=canonical_checksum(payload))
         session.add(HypothesisProtocol(**fields))
         inserted["protocols"] += 1
+
+    existing_questions = {
+        (r.question_code, r.registry_version)
+        for r in (await session.execute(select(ValidationQuestion))).scalars()
+    }
+    for question in VALIDATION_QUESTIONS:
+        key = (question.question_code, VALIDATION_REGISTRY_VERSION)
+        if key in existing_questions:
+            continue
+        payload = question.payload()
+        fields = {k: v for k, v in payload.items() if k in ValidationQuestion.__table__.columns}
+        fields.update(
+            last_reviewed_at=now,
+            content_checksum=canonical_checksum(payload),
+            raw_payload={"registry_seed": True, "wording_origin": "atlas_derived_v1"},
+        )
+        session.add(ValidationQuestion(**fields))
+        inserted["questions"] += 1
 
     countries = (await session.execute(select(Country).order_by(Country.iso3))).scalars().all()
     existing_members = {

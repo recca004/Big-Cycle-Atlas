@@ -21,6 +21,7 @@
   "population_memberships": 26,
   "dataset_rights": 3,
   "evidence_status_entries": 6,
+  "validation_questions": 50,
   "distinct_observation_identities": 18402,
   "latest_vintage_rows": 18402
 }

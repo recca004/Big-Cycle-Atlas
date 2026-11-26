@@ -1,8 +1,17 @@
-import { fetchCycleHistory, fetchForceHistory } from "@/lib/api/client";
+import {
+  fetchCycleHistory,
+  fetchForceHistory,
+  fetchValidationQuestions,
+  fetchValidationSummary,
+} from "@/lib/api/client";
 import type {
   CycleHistoryResponse,
   ForceHistoryResponse,
 } from "@/types/research";
+import type {
+  ValidationQuestionsResponse,
+  ValidationSummaryResponse,
+} from "@/types/validation";
 import { EChart } from "@/lib/charts/EChart";
 import { cycleHistoryOption } from "@/lib/charts/cycleChart";
 import { forceHistoryOption } from "@/lib/charts/forceChart";
@@ -50,5 +59,60 @@ export function ForceHistoryWidget({ config }: WidgetProps) {
   return (
     <EChart option={forceHistoryOption(h.data)}
             ariaLabel={`Force history ${force} ${iso3}`} />
+  );
+}
+
+/** 50-question registry implementation/scientific status — real registry data. */
+export function ValidationCoverageWidget() {
+  const h = useFetch<ValidationSummaryResponse>(
+    (c) => fetchValidationSummary({ signal: c.signal }), [],
+  );
+  if (h.kind === "loading") return <WidgetLoading />;
+  if (h.kind === "error") return <WidgetError detail={h.error} />;
+  const top = Object.entries(h.data.by_implementation_status)
+    .sort((a, b) => b[1] - a[1]).slice(0, 4);
+  return (
+    <div className="flex h-full flex-col justify-between gap-3">
+      <div>
+        <div className="text-3xl font-semibold">{h.data.count}</div>
+        <div className="mt-1 text-sm text-[var(--text-secondary)]">canonical validation questions</div>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {top.map(([key, value]) => (
+          <span key={key} className="badge badge-info">{value} {key.replaceAll("_", " ")}</span>
+        ))}
+      </div>
+      <a href="/research/validation" className="text-xs text-[var(--accent)]">Open validation registry</a>
+    </div>
+  );
+}
+
+/** Registry-list workspace widget. */
+export function ValidationQuestionsWidget({ config }: WidgetProps) {
+  const category = String(config.category ?? "all");
+  const h = useFetch<ValidationQuestionsResponse>(
+    (c) => fetchValidationQuestions({ signal: c.signal }), [],
+  );
+  if (h.kind === "loading") return <WidgetLoading />;
+  if (h.kind === "error") return <WidgetError detail={h.error} />;
+  const questions = h.data.questions
+    .filter((question) => category === "all" || question.category === category)
+    .slice(0, 12);
+  return (
+    <div className="h-full space-y-2 overflow-y-auto pr-1">
+      {questions.map((question) => (
+        <a
+          key={question.question_code}
+          href={`/research/validation?question=${question.question_code}`}
+          className="block rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-1)] p-2 hover:bg-[var(--surface-2)]"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <span className="source-badge">{question.question_code}</span>
+            <span className="badge badge-warn">{question.research_validation_status.replaceAll("_", " ")}</span>
+          </div>
+          <div className="mt-1 line-clamp-2 text-sm font-medium">{question.short_title}</div>
+        </a>
+      ))}
+    </div>
   );
 }

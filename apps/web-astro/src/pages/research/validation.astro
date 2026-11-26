@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ValidationExplorer } from "@/features/research/ValidationExplorer";
+---
+
+<BaseLayout
+  title="Theory Validation"
+  description="Canonical 50-question scientific validation registry for Big Cycle Atlas"
+  fullWidth
+>
+  <header class="page-header">
+    <p class="label-md text-tertiary">Scientific roadmap</p>
+    <h1 class="headline-lg">Theory Validation</h1>
+    <p class="body-sm">
+      Fifty versioned research questions separated into implementation coverage
+      and scientific validation status. A chart or dataset never counts as a
+      proven claim; unanswered and untestable questions remain explicit.
+    </p>
+  </header>
+  <ValidationExplorer client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); max-width: 54rem; }
+</style>

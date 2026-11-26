@@ -89,7 +89,7 @@
       "dataset": "long-cycle outcomes",
       "reason": "not imported",
       "implementation_status": "research_method_implemented",
-      "research_validation_status": "exploratory_findings"
+      "research_validation_status": "insufficient_evidence"
     },
     {
       "question_code": "Q08",
@@ -98,7 +98,7 @@
       "dataset": "persistent deterioration labels",
       "reason": "not imported",
       "implementation_status": "research_method_implemented",
-      "research_validation_status": "exploratory_findings"
+      "research_validation_status": "insufficient_evidence"
     },
     {
       "question_code": "Q09",
@@ -143,7 +143,7 @@
       "dataset": "WP-2026-094",
       "reason": "official ZIP HTTP 403/404; local-file importer ready",
       "implementation_status": "evaluation_implemented",
-      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+      "research_validation_status": "evaluated_with_no_clear_conclusion"
     },
     {
       "question_code": "Q11",
@@ -152,7 +152,7 @@
       "dataset": "historical vintages",
       "reason": "BCA_FRED_API_KEY required",
       "implementation_status": "evaluation_implemented",
-      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+      "research_validation_status": "evaluated_with_no_clear_conclusion"
     },
     {
       "question_code": "Q12",
@@ -184,11 +184,11 @@
     {
       "question_code": "Q14",
       "short_title": "Debt threshold",
-      "source_key": "threshold_protocol",
-      "dataset": "registered threshold search",
-      "reason": "not implemented",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+      "source_key": "untouched_threshold_holdout",
+      "dataset": "post-inspection confirmatory sample",
+      "reason": "1990-2020 already used for diagnostics",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evaluated_with_no_clear_conclusion"
     },
     {
       "question_code": "Q15",
@@ -242,7 +242,7 @@
       "dataset": "release-safe credit revisions",
       "reason": "not available",
       "implementation_status": "evaluation_implemented",
-      "research_validation_status": "evidence_inconsistent_with_registered_claim"
+      "research_validation_status": "exploratory_findings"
     },
     {
       "question_code": "Q18",

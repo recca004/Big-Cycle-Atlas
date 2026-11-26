@@ -1,0 +1,169 @@
+{
+  "evaluation_key": "H01T-P1.0:retrospective_threshold_diagnostic:1990:jst-r6:v1",
+  "hypothesis_code": "H01T",
+  "protocol_version": "H01T-P1.0",
+  "evaluation_type": "retrospective_threshold_diagnostic",
+  "metrics": {
+    "hypothesis_code": "H01T",
+    "protocol_version": "H01T-P1.0",
+    "model_id": "debt_level_threshold_heterogeneity",
+    "model_version": "v1",
+    "evaluation_type": "retrospective_threshold_diagnostic",
+    "split_year": 1990,
+    "public_debtgdp_level": {
+      "horizon_years": 1,
+      "train_n": 1914,
+      "test_n": 557,
+      "test_events": 19,
+      "universal_threshold": {
+        "pooled_train_p80_value": 0.7236190000000001,
+        "auc": 0.36538837800821755,
+        "warning_share": 0.35547576301615796
+      },
+      "within_country_thresholds": {
+        "country_p80_values": {
+          "AUS": 0.612051,
+          "BEL": 0.757945,
+          "CAN": 0.7144908373457096,
+          "CHE": 0.3942409531301706,
+          "DEU": 0.48,
+          "DNK": 0.23629999999999998,
+          "ESP": 0.8257428912412611,
+          "FIN": 0.1831,
+          "FRA": 1.1393,
+          "GBR": 1.7019473687834177,
+          "IRL": 0.5863444586696357,
+          "ITA": 1.0492892858849618,
+          "JPN": 0.6088186404673394,
+          "NLD": 0.9644419999999999,
+          "NOR": 0.325,
+          "PRT": 0.6504424778761062,
+          "SWE": 0.27804388191034113,
+          "USA": 0.46799999999999997
+        },
+        "dispersion": {
+          "n_countries": 18,
+          "min_p80": 0.1831,
+          "median_p80": 0.612051,
+          "max_p80": 1.7019473687834177,
+          "coefficient_of_variation": 0.5505029859565023,
+          "interpretation": "p80 level thresholds vary materially by country \u2014 a single universal cutoff is not portable"
+        },
+        "within_flag_precision": 0.026239067055393587,
+        "within_flag_rate": 0.6157989228007181
+      },
+      "regime_split": {
+        "pegged_fx": {
+          "n": 310,
+          "events": 12,
+          "auc": 0.30453020134228187
+        },
+        "non_pegged": {
+          "n": 247,
+          "events": 7,
+          "auc": 0.4398809523809524
+        }
+      },
+      "era_split": {
+        "pre_1914_gold": {
+          "n": 632,
+          "events": 30,
+          "auc": 0.5034330011074197
+        },
+        "interwar_1914_1944": {
+          "n": 502,
+          "events": 27,
+          "auc": 0.46682261208577
+        },
+        "bretton_woods_1945_1971": {
+          "n": 458,
+          "events": 0,
+          "auc": null
+        },
+        "fiat_1972_2020": {
+          "n": 879,
+          "events": 25,
+          "auc": 0.433864168618267
+        }
+      }
+    },
+    "private_tloans_gdp_level": {
+      "horizon_years": 1,
+      "train_n": 1872,
+      "test_n": 556,
+      "test_events": 19,
+      "universal_threshold": {
+        "pooled_train_p80_value": 0.67631769820869,
+        "auc": 0.6234440850730177,
+        "warning_share": 0.8201438848920863
+      },
+      "within_country_thresholds": {
+        "country_p80_values": {
+          "AUS": 0.3576988746604579,
+          "BEL": 0.5705698672911788,
+          "CAN": 0.4521488919256611,
+          "CHE": 1.2164179693702326,
+          "DEU": 0.7852618280673472,
+          "DNK": 1.2552719085555941,
+          "ESP": 0.6123439269555774,
+          "FIN": 0.44714629787222887,
+          "FRA": 0.6034150284255808,
+          "GBR": 0.32341490358450503,
+          "IRL": 0.6274817157653876,
+          "ITA": 0.47522510313636324,
+          "JPN": 0.6323941406881421,
+          "NLD": 0.6119498918924906,
+          "NOR": 0.83005503284218,
+          "PRT": 0.48074492809015085,
+          "SWE": 0.6796046161489206,
+          "USA": 0.48646520594064785
+        },
+        "dispersion": {
+          "n_countries": 18,
+          "min_p80": 0.32341490358450503,
+          "median_p80": 0.6119498918924906,
+          "max_p80": 1.2552719085555941,
+          "coefficient_of_variation": 0.38971365693431387,
+          "interpretation": "p80 level thresholds vary materially by country \u2014 a single universal cutoff is not portable"
+        },
+        "within_flag_precision": 0.03696498054474708,
+        "within_flag_rate": 0.9244604316546763
+      },
+      "regime_split": {
+        "pegged_fx": {
+          "n": 311,
+          "events": 12,
+          "auc": 0.6411649944258639
+        },
+        "non_pegged": {
+          "n": 245,
+          "events": 7,
+          "auc": 0.5900360144057623
+        }
+      },
+      "era_split": {
+        "pre_1914_gold": {
+          "n": 591,
+          "events": 26,
+          "auc": 0.510211027910143
+        },
+        "interwar_1914_1944": {
+          "n": 489,
+          "events": 25,
+          "auc": 0.46956896551724137
+        },
+        "bretton_woods_1945_1971": {
+          "n": 468,
+          "events": 0,
+          "auc": null
+        },
+        "fiat_1972_2020": {
+          "n": 880,
+          "events": 25,
+          "auc": 0.6327953216374269
+        }
+      }
+    },
+    "conclusion": "No reproducible universal debt-to-GDP crisis threshold: pooled p80 levels discriminate at or below chance held out, and country-specific p80 values differ by an order of magnitude across entities. Conditional heterogeneity (regime, era, country) \u2014 not a single threshold \u2014 is the supported research direction."
+  }
+}

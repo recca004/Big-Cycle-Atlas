@@ -8,24 +8,24 @@ Q06,Three-cycle interaction,cow,conflict/order outcomes,not imported,partially_i
 Q06,Three-cycle interaction,independent_order_transitions,order-transition chronology,not imported,partially_implemented,currently_untestable
 Q07,Country applicability,global_reference_population,30-40 country eligible panel,target not reached,partially_implemented,insufficient_evidence
 Q07,Country applicability,historical_entities,pre-modern entities,not imported,partially_implemented,insufficient_evidence
-Q08,Support and falsification,independent_order_transitions,long-cycle outcomes,not imported,research_method_implemented,exploratory_findings
-Q08,Support and falsification,institutional_outcomes,persistent deterioration labels,not imported,research_method_implemented,exploratory_findings
+Q08,Support and falsification,independent_order_transitions,long-cycle outcomes,not imported,research_method_implemented,insufficient_evidence
+Q08,Support and falsification,institutional_outcomes,persistent deterioration labels,not imported,research_method_implemented,insufficient_evidence
 Q09,Atlas models as evidence,independent_stage_transitions,external stage labels,not imported,research_method_implemented,insufficient_evidence
 Q09,Atlas models as evidence,strict_historical_vintages,provider release evidence,mostly unavailable,research_method_implemented,insufficient_evidence
 Q10,Required historical depth,historical_entities,boundary-stable entity registry,not populated,partially_implemented,currently_untestable
 Q10,Required historical depth,independent_order_transitions,long-cycle outcomes,not imported,partially_implemented,currently_untestable
-Q11,Debt burdens and crises,imf_laeven_valencia_banking_crises,WP-2026-094,official ZIP HTTP 403/404; local-file importer ready,evaluation_implemented,evidence_inconsistent_with_registered_claim
-Q11,Debt burdens and crises,alfred_fred,historical vintages,BCA_FRED_API_KEY required,evaluation_implemented,evidence_inconsistent_with_registered_claim
+Q11,Debt burdens and crises,imf_laeven_valencia_banking_crises,WP-2026-094,official ZIP HTTP 403/404; local-file importer ready,evaluation_implemented,evaluated_with_no_clear_conclusion
+Q11,Debt burdens and crises,alfred_fred,historical vintages,BCA_FRED_API_KEY required,evaluation_implemented,evaluated_with_no_clear_conclusion
 Q12,Debt composition,debt_ownership,holder composition,not imported,data_available,insufficient_evidence
 Q13,Debt-service burden,bis_dsr_extended_panel,30-40 country DSR,not imported,data_available,untested
 Q13,Debt-service burden,real_time_dsr_vintages,release-time DSR,not available,data_available,untested
-Q14,Debt threshold,threshold_protocol,registered threshold search,not implemented,partially_implemented,evidence_inconsistent_with_registered_claim
+Q14,Debt threshold,untouched_threshold_holdout,post-inspection confirmatory sample,1990-2020 already used for diagnostics,evaluation_implemented,evaluated_with_no_clear_conclusion
 Q15,External and FX debt,external_debt,borrower external and FX debt stocks,not imported,partially_implemented,currently_untestable
 Q15,External and FX debt,currency_sovereign_crises,verified outcomes,not imported,partially_implemented,currently_untestable
 Q16,Monetary expansion,currency_crisis_registry,independent currency onsets,not imported,data_available,untested
 Q16,Monetary expansion,inflation_regime_outcomes,independent high-inflation episodes,not imported,data_available,untested
 Q16,Monetary expansion,alfred_fred,money vintages,API key required,data_available,untested
-Q17,Credit expansion,real_time_credit_vintages,release-safe credit revisions,not available,evaluation_implemented,evidence_inconsistent_with_registered_claim
+Q17,Credit expansion,real_time_credit_vintages,release-safe credit revisions,not available,evaluation_implemented,exploratory_findings
 Q18,Interest-rate stress,policy_rate_vintages,release-safe central-bank rate vintages,not imported,data_available,untested
 Q18,Interest-rate stress,debt_stress_outcomes,non-crisis debt stress labels,not defined,data_available,untested
 Q19,Reserve-currency status,pre_1995_reserve_shares,long-run pre-1995 official reserve currency composition,not imported,data_available,insufficient_evidence

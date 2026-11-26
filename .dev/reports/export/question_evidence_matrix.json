@@ -75,11 +75,11 @@
       "question_code": "Q08",
       "category": "core_theory",
       "implementation_status": "research_method_implemented",
-      "research_validation_status": "exploratory_findings",
+      "research_validation_status": "insufficient_evidence",
       "available_dataset_count": 2,
       "observed_evidence_rows": 3,
       "missing_dataset_count": 2,
-      "related_hypotheses": "H01;H02;H03;H04"
+      "related_hypotheses": "H01;H01B;H02;H03;H04"
     },
     {
       "question_code": "Q09",
@@ -105,11 +105,11 @@
       "question_code": "Q11",
       "category": "debt_money",
       "implementation_status": "evaluation_implemented",
-      "research_validation_status": "evidence_inconsistent_with_registered_claim",
+      "research_validation_status": "evaluated_with_no_clear_conclusion",
       "available_dataset_count": 3,
       "observed_evidence_rows": 20,
       "missing_dataset_count": 2,
-      "related_hypotheses": "H01"
+      "related_hypotheses": "H01;H01B"
     },
     {
       "question_code": "Q12",
@@ -134,12 +134,12 @@
     {
       "question_code": "Q14",
       "category": "debt_money",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "evidence_inconsistent_with_registered_claim",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evaluated_with_no_clear_conclusion",
       "available_dataset_count": 5,
       "observed_evidence_rows": 60,
       "missing_dataset_count": 1,
-      "related_hypotheses": "H01"
+      "related_hypotheses": "H01;H01T"
     },
     {
       "question_code": "Q15",
@@ -165,11 +165,11 @@
       "question_code": "Q17",
       "category": "debt_money",
       "implementation_status": "evaluation_implemented",
-      "research_validation_status": "evidence_inconsistent_with_registered_claim",
+      "research_validation_status": "exploratory_findings",
       "available_dataset_count": 5,
       "observed_evidence_rows": 61,
       "missing_dataset_count": 1,
-      "related_hypotheses": "H01"
+      "related_hypotheses": "H01;H01B"
     },
     {
       "question_code": "Q18",

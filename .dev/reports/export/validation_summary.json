@@ -1,9 +1,10 @@
 {
   "count": 50,
-  "registry_version": "validation-questions-v1.1",
+  "registry_version": "validation-questions-v1.2",
   "preserved_registry_versions": [
     "validation-questions-v1.0",
-    "validation-questions-v1.1"
+    "validation-questions-v1.1",
+    "validation-questions-v1.2"
   ],
   "methodology_status": "experimental",
   "by_category": {
@@ -15,16 +16,16 @@
   },
   "by_implementation_status": {
     "data_available": 17,
-    "evaluation_implemented": 2,
+    "evaluation_implemented": 3,
     "not_implemented": 4,
-    "partially_implemented": 22,
+    "partially_implemented": 21,
     "research_method_implemented": 5
   },
   "by_research_validation_status": {
     "currently_untestable": 25,
-    "evidence_inconsistent_with_registered_claim": 3,
+    "evaluated_with_no_clear_conclusion": 2,
     "exploratory_findings": 1,
-    "insufficient_evidence": 6,
+    "insufficient_evidence": 7,
     "untested": 15
   },
   "available_dataset_mentions": {
@@ -112,11 +113,11 @@
     "stress_resilience_registry": 1,
     "strict_historical_vintages": 1,
     "technology_advantage_outcomes": 1,
-    "threshold_protocol": 1,
     "ucdp": 1,
     "ucdp_acled": 2,
     "ucdp_cow": 1,
     "un_comtrade": 1,
+    "untouched_threshold_holdout": 1,
     "vdem": 5,
     "wipo_full": 1
   },

@@ -1,8 +1,8 @@
 # Big Cycle Atlas — 50-Question Scientific Validation Research Report
 
-- Generated: `2026-11-26T09:05:19.352324Z`
-- Verified source-code commit: `ef0c039f9c0c005366d45c0813c164bdc4290b79`
-- Active registry version: `validation-questions-v1.1` (preserved versions: `validation-questions-v1.0, validation-questions-v1.1`)
+- Generated: `2026-11-26T09:57:59.064572Z`
+- Verified source-code commit: `b92788c1593299b57268182f294d9fd48a2bfe46`
+- Active registry version: `validation-questions-v1.2` (preserved versions: `validation-questions-v1.0, validation-questions-v1.1, validation-questions-v1.2`)
 - Wording provenance: `atlas_derived_v1` — Atlas-authored canonical wording v1 (never represented as original verbatim Ray Dalio wording)
 
 ## 1. Executive Summary & Scientific Boundaries
@@ -14,14 +14,14 @@ Big Cycle Atlas separates **engineering/data implementation coverage** from **em
 | Axis | Status | Questions |
 |---|---|---:|
 | Implementation | `data_available` | 17 |
-| Implementation | `evaluation_implemented` | 2 |
+| Implementation | `evaluation_implemented` | 3 |
 | Implementation | `not_implemented` | 4 |
-| Implementation | `partially_implemented` | 22 |
+| Implementation | `partially_implemented` | 21 |
 | Implementation | `research_method_implemented` | 5 |
 | Scientific validation | `currently_untestable` | 25 |
-| Scientific validation | `evidence_inconsistent_with_registered_claim` | 3 |
+| Scientific validation | `evaluated_with_no_clear_conclusion` | 2 |
 | Scientific validation | `exploratory_findings` | 1 |
-| Scientific validation | `insufficient_evidence` | 6 |
+| Scientific validation | `insufficient_evidence` | 7 |
 | Scientific validation | `untested` | 15 |
 
 ## 2. Investigation of the Three Contradictory Findings (`evidence_inconsistent_with_registered_claim`)
@@ -114,6 +114,22 @@ Following Workstream B imports (`imf_cofer`, `bis_fx_turnover`, `bis_lbs`, `bis_
 - **Horizons:** `{"years": [1, 2, 5], "event": "onset only; ongoing-crisis state is separate"}` · **Cutoff rules:** `{"execution_mode": "retrospective_latest_vintage", "strict_release_safety": false, "leakage_guard": "predictor period < outcome year; dataset-version fixed to JST R6"}`
 - **Falsification criteria:** No out-of-sample discrimination above base rate or an exploratory-only result is evidence inconsistent with predictive value.
 
+### `H01B` (`H01B-P1.0`) — Private-credit expansion and subsequent systemic banking crises
+- **Status:** `exploratory` (`retrospective_research_protocol`)
+- **Definition:** Private non-financial credit expansion (distinct from public debt) is associated with higher later systemic-banking-crisis onset risk.
+- **Target outcome:** source-defined systemic banking crisis onset (JST crisisJST=1), same registry as H01-P1.0
+- **Predictors:** `{"primary": ["tloans/gdp five-year change"], "candidates": ["tloans/gdp level", "thh/gdp five-year change", "tbus/gdp five-year change", "tmort/gdp five-year change", "credit-to-GDP gap vs trailing 10y trend", "debt-service proxy (tloans/gdp x stir)", "real house-price 3y growth", "real long-term rate"], "controls": ["debtgdp five-year change (H01-P1.0 reference)", "public interest burden proxy", "income-residualised credit growth"], "transformation": "lagged level and changes measured strictly before outcome year; source units preserved"}`
+- **Horizons:** `{"years": [1, 2, 5], "event": "onset only"}` · **Cutoff rules:** `{"execution_mode": "retrospective_latest_vintage", "strict_release_safety": false, "leakage_guard": "predictor period < outcome year; dataset-version fixed to JST R6", "holdout_integrity_disclosure": "The 1990-2020 holdout was already used for exploratory private-credit predictor inspection during the H01-P1.0 forensic audit; it is NOT an untouched confirmatory holdout for predictor selection. All results are retrospective diagnostics."}`
+- **Falsification criteria:** No out-of-sample discrimination above the public-debt control or base rate is evidence inconsistent with private-credit predictive value; positive retrospective discrimination remains exploratory, not confirmatory.
+
+### `H01T` (`H01T-P1.0`) — Debt/GDP level thresholds and crisis heterogeneity
+- **Status:** `exploratory` (`retrospective_research_protocol`)
+- **Definition:** Dedicated research into whether debt-to-GDP LEVEL thresholds (public or private) carry reproducible crisis information — across countries, eras, monetary regimes and debt type — instead of the H01-P1.0 change-based test.
+- **Target outcome:** source-defined systemic banking crisis onset (JST crisisJST=1)
+- **Predictors:** `{"candidates": ["debtgdp level", "tloans/gdp level"], "transformation": "lagged level at origin; pooled train p80 vs per-country p80 thresholds; regime and era splits"}`
+- **Horizons:** `{"years": [1]}` · **Cutoff rules:** `{"execution_mode": "retrospective_latest_vintage", "strict_release_safety": false, "leakage_guard": "thresholds estimated on pre-1990 train only; no threshold fitted to maximise test performance"}`
+- **Falsification criteria:** If no level threshold reproduces above-chance discrimination out of sample and per-country thresholds are not portable, the universal-threshold claim is unsupported; conditional heterogeneity then defines the open research question rather than a falsified result.
+
 ### `H02` (`H02-P0.1`) — Institutional deterioration and later investment/productivity weakness
 - **Status:** `untestable_with_current_evidence` (`exploratory_analysis`)
 - **Definition:** WGI deterioration and inequality/institutional proxies are candidates for predicting later investment or productivity weakness.
@@ -144,6 +160,8 @@ Following Workstream B imports (`imf_cofer`, `bis_fx_turnover`, `bis_lbs`, `bis_
 |---|---|---|---|
 | `H01-P1.0:retrospective_chronological_holdout:1990:jst-r6` | `H01` (`H01-P1.0`) | `debtgdp_5y_change_univariate` `v1` | `exploratory_association` |
 | `H01-P1.0:retrospective_chronological_holdout:1990:jst-r6:v2` | `H01` (`H01-P1.0`) | `debtgdp_5y_change_univariate` `v1` | `no_evidence_of_improved_predictive_value` |
+| `H01B-P1.0:retrospective_clustered_diagnostic:1990:jst-r6:v1` | `H01B` (`H01B-P1.0`) | `private_credit_family_univariate` `v1` | `exploratory_association_retrospective_diagnostic` |
+| `H01T-P1.0:retrospective_threshold_diagnostic:1990:jst-r6:v1` | `H01T` (`H01T-P1.0`) | `debt_level_threshold_heterogeneity` `v1` | `diagnostic` |
 
 ## 6. Recommended Next Pre-Registered Experiments
 
@@ -163,16 +181,16 @@ Following Workstream B imports (`imf_cofer`, `bis_fx_turnover`, `bis_lbs`, `bis_
 | Q05 | `core_theory` | `partially_implemented` | `currently_untestable` | 12 | 1 | H04 |
 | Q06 | `core_theory` | `partially_implemented` | `currently_untestable` | 63 | 3 | H01;H02;H03;H04 |
 | Q07 | `core_theory` | `partially_implemented` | `insufficient_evidence` | 2 | 2 | — |
-| Q08 | `core_theory` | `research_method_implemented` | `exploratory_findings` | 3 | 2 | H01;H02;H03;H04 |
+| Q08 | `core_theory` | `research_method_implemented` | `insufficient_evidence` | 3 | 2 | H01;H01B;H02;H03;H04 |
 | Q09 | `core_theory` | `research_method_implemented` | `insufficient_evidence` | 2 | 2 | — |
 | Q10 | `core_theory` | `partially_implemented` | `currently_untestable` | 27 | 2 | H04 |
-| Q11 | `debt_money` | `evaluation_implemented` | `evidence_inconsistent_with_registered_claim` | 20 | 2 | H01 |
+| Q11 | `debt_money` | `evaluation_implemented` | `evaluated_with_no_clear_conclusion` | 20 | 2 | H01;H01B |
 | Q12 | `debt_money` | `data_available` | `insufficient_evidence` | 21 | 1 | H01 |
 | Q13 | `debt_money` | `data_available` | `untested` | 4 | 2 | H01 |
-| Q14 | `debt_money` | `partially_implemented` | `evidence_inconsistent_with_registered_claim` | 60 | 1 | H01 |
+| Q14 | `debt_money` | `evaluation_implemented` | `evaluated_with_no_clear_conclusion` | 60 | 1 | H01;H01T |
 | Q15 | `debt_money` | `partially_implemented` | `currently_untestable` | 55 | 2 | H01 |
 | Q16 | `debt_money` | `data_available` | `untested` | 51 | 3 | H01 |
-| Q17 | `debt_money` | `evaluation_implemented` | `evidence_inconsistent_with_registered_claim` | 61 | 1 | H01 |
+| Q17 | `debt_money` | `evaluation_implemented` | `exploratory_findings` | 61 | 1 | H01;H01B |
 | Q18 | `debt_money` | `data_available` | `untested` | 20 | 2 | H01 |
 | Q19 | `debt_money` | `data_available` | `insufficient_evidence` | 10 | 2 | H01;H03 |
 | Q20 | `debt_money` | `data_available` | `untested` | 55 | 1 | H01 |
@@ -324,9 +342,9 @@ Following Workstream B imports (`imf_cofer`, `bis_fx_turnover`, `bis_lbs`, `bis_
 ### Q08 — Support and falsification
 - **Exact registered wording (`atlas_derived_v1`):** Which observations would support the theory and which observations would falsify or weaken it?
 - **Theory category:** `core_theory` · **Registered claims:** `dalio_big_cycle`
-- **Testable hypotheses:** `H01, H02, H03, H04`
-- **Implementation status:** `research_method_implemented` · **Scientific status:** `exploratory_findings`
-- **Current documented answer:** The falsification machinery exists, but only H01 has an evaluated result.
+- **Testable hypotheses:** `H01, H01B, H02, H03, H04`
+- **Implementation status:** `research_method_implemented` · **Scientific status:** `insufficient_evidence`
+- **Current documented answer:** Research method is implemented (registered falsification criteria, append-only evaluations preserving negative results); H01-P1.0 and H01B-P1.0 have been executed. But a scientific answer to WHICH observations support or falsify the theory requires populated independent outcome registries beyond one banking-crisis family — operational machinery alone is not an empirical finding.
 - **Research methods:** versioned hypotheses; explicit falsification criteria; negative-result states
 - **Required datasets:** `hypothesis_protocols` (registered falsification rules: protocol); `independent_outcomes` (outcome registry: test labels)
 - **Available datasets (3 observed evidence summary rows):** `hypothesis_protocols` (H01-H04: protocol registry); `crisis_registry` (JST banking crises: one independent outcome family)
@@ -372,9 +390,9 @@ Following Workstream B imports (`imf_cofer`, `bis_fx_turnover`, `bis_lbs`, `bis_
 ### Q11 — Debt burdens and crises
 - **Exact registered wording (`atlas_derived_v1`):** Do rising debt burdens increase the probability of a subsequent systemic banking crisis?
 - **Theory category:** `debt_money` · **Registered claims:** `dalio_money_credit_debt_cycle`
-- **Testable hypotheses:** `H01`
-- **Implementation status:** `evaluation_implemented` · **Scientific status:** `evidence_inconsistent_with_registered_claim`
-- **Current documented answer:** H01-P1.0 found no predictive value in 5-year public-debt/GDP growth before banking crises (AUC 0.30-0.38); public and private debt behave differently around banking crises.
+- **Testable hypotheses:** `H01, H01B`
+- **Implementation status:** `evaluation_implemented` · **Scientific status:** `evaluated_with_no_clear_conclusion`
+- **Current documented answer:** Scoped correction (v1.2): the registered H01-P1.0 test contradicted one specific operationalized proposition — 5-year PUBLIC debt/GDP change as a crisis predictor (AUC 0.363/0.381/0.296). That negative result does not falsify the broader debt-cycle claim: H01B-P1.0 found positive retrospective discrimination for PRIVATE credit expansion (tloans/gdp 5y change AUC 0.719, income-residualised 0.717), and public debt characteristically surges AFTER crises via bailouts and automatic stabilisers. The broad registered claim remains only partially tested.
 - **Research methods:** H01-P1.0 chronological holdout; 1/2/5-year onset horizons; base-rate and AUC benchmarks; append-only prediction ledger
 - **Required datasets:** `debt_panel` (public/private debt predictors: features); `independent_crisis_outcomes` (banking-crisis onsets: outcome)
 - **Available datasets (20 observed evidence summary rows):** `jst_macrohistory` (R6: long historical research panel); `bis_credit_policy` (WS_TC_CBPOL: BIS sectoral credit (govt, private, household, corporate) & policy rates); `crisis_registry` (88 JST systemic banking onsets: independent outcomes)
@@ -420,18 +438,18 @@ Following Workstream B imports (`imf_cofer`, `bis_fx_turnover`, `bis_lbs`, `bis_
 ### Q14 — Debt threshold
 - **Exact registered wording (`atlas_derived_v1`):** Is there a reproducible debt-to-GDP threshold associated with later crises?
 - **Theory category:** `debt_money` · **Registered claims:** `dalio_big_cycle`
-- **Testable hypotheses:** `H01`
-- **Implementation status:** `partially_implemented` · **Scientific status:** `evidence_inconsistent_with_registered_claim`
-- **Current documented answer:** Neither public-debt changes nor historical debt-to-GDP level percentiles provide a reproducible out-of-sample crisis threshold.
-- **Research methods:** H01 univariate benchmark; level-percentile diagnostic check; base-rate comparison
+- **Testable hypotheses:** `H01, H01T`
+- **Implementation status:** `evaluation_implemented` · **Scientific status:** `evaluated_with_no_clear_conclusion`
+- **Current documented answer:** H01T-P1.0 evaluated level thresholds directly: no reproducible UNIVERSAL debt-to-GDP crisis threshold exists — pooled p80 levels discriminate at/below chance for public debt and over-flag for private credit, while per-country thresholds differ by ~5x. Thresholds appear conditional on country, era and monetary regime; that heterogeneity, not a single cutoff, is the supported research direction.
+- **Research methods:** H01T-P1.0 dedicated threshold heterogeneity protocol; pooled vs within-country train-p80 level thresholds; peg/non-peg regime split; gold/interwar/Bretton-Woods/fiat era split; no ex-post threshold mining
 - **Required datasets:** `debt_threshold_panel` (pre-registered candidate thresholds: features); `independent_crisis_outcomes` (crisis onsets: labels)
 - **Available datasets (60 observed evidence summary rows):** `jst_macrohistory` (R6: long historical research panel); `bis_credit_policy` (WS_TC_CBPOL: BIS sectoral credit (govt, private, household, corporate) & policy rates); `imf` (government debt: public debt); `world_bank` (domestic private credit: private debt); `crisis_registry` (banking onsets: outcomes)
-- **Missing datasets:** `threshold_protocol` (registered threshold search: not implemented)
-- **Supporting evidence:** Both H01 change benchmarks and level diagnostics warn against universal crisis cutoffs.
-- **Contradictory evidence:** Public debtgdp level held-out AUC is 0.365 (1y), 0.394 (2y), 0.440 (5y); private loan/GDP level 5y AUC is 0.502 and 82% of post-1990 observations exceed the pre-1990 80th percentile due to financial deepening.
-- **Alternative explanations:** Vulnerability varies with growth, interest rates, currency denomination, debt ownership and institutional capacity.
+- **Missing datasets:** `untouched_threshold_holdout` (post-inspection confirmatory sample: 1990-2020 already used for diagnostics)
+- **Supporting evidence:** H01T-P1.0 ran dedicated level-threshold diagnostics instead of reusing change-based results.
+- **Contradictory evidence:** Public debtgdp level held-out AUC is 0.365 with 35.5% of test years flagged above the pooled pre-1990 p80 (0.72); private tloans/gdp pooled p80 (0.68) flags 82.0% of test years at AUC 0.623; country-specific p80 values span 0.18-1.70 (public, CV 0.55) and 0.32-1.26 (private, CV 0.39), so no single level is portable.
+- **Alternative explanations:** Vulnerability varies with growth, interest rates, currency denomination, debt ownership, monetary regime and financial development.
 - **Falsification criteria:** A registered test must fail to outperform its declared baseline or produce no independent evidence.
-- **Remaining limitations:** H01-P1.0 formally tested 5-year changes rather than fixed level cutoffs.; Ex-post threshold mining would introduce severe selection bias.
+- **Remaining limitations:** H01-P1.0 formally tested 5-year changes rather than fixed level cutoffs.; Level thresholds are non-stationary across monetary eras (fiat-era tloans/gdp AUC 0.633 vs interwar 0.470).; No untouched confirmatory holdout remains in JST R6.
 
 ### Q15 — External and FX debt
 - **Exact registered wording (`atlas_derived_v1`):** Do external debt and foreign-currency debt create vulnerability beyond domestic debt?
@@ -468,18 +486,18 @@ Following Workstream B imports (`imf_cofer`, `bis_fx_turnover`, `bis_lbs`, `bis_
 ### Q17 — Credit expansion
 - **Exact registered wording (`atlas_derived_v1`):** Does rapid private credit expansion precede financial crises independently of income growth?
 - **Theory category:** `debt_money` · **Registered claims:** `dalio_big_cycle`
-- **Testable hypotheses:** `H01`
-- **Implementation status:** `evaluation_implemented` · **Scientific status:** `evidence_inconsistent_with_registered_claim`
-- **Current documented answer:** Preserved contradictory H01-P1.0 benchmark reflects a variable mismatch (public debtgdp was tested instead of private tloans/gdp); exploratory tloans/gdp shows positive retrospective association but awaits an independent pre-registered protocol.
-- **Research methods:** H01 debt-growth benchmark; JST tloans/gdp diagnostic check; BIS credit-gap import
+- **Testable hypotheses:** `H01, H01B`
+- **Implementation status:** `evaluation_implemented` · **Scientific status:** `exploratory_findings`
+- **Current documented answer:** Attribution corrected: H01-P1.0's negative result applies only to public debt. Under dedicated protocol H01B-P1.0, private-credit expansion shows positive retrospective association with banking-crisis onset that survives income-growth residualisation and clustered diagnostics — classified exploratory because the holdout is no longer untouched and only 3 independent episodes remain.
+- **Research methods:** H01B-P1.0 dedicated private-credit protocol; clustered diagnostics (LOEO/LOCO/time-blocks/ex-2007-08/year-block bootstrap); income-growth residualisation; BIS credit-gap import
 - **Required datasets:** `credit_panel` (private credit: predictors); `independent_crisis_outcomes` (crisis onsets: labels)
 - **Available datasets (61 observed evidence summary rows):** `jst_macrohistory` (R6: long historical research panel); `bis_credit_policy` (WS_TC_CBPOL: BIS sectoral credit (govt, private, household, corporate) & policy rates); `world_bank` (DOMESTIC_CREDIT_PRIVATE_GDP: modern credit); `bis` (CREDIT_TO_GDP_GAP: modern gap); `crisis_registry` (JST banking onsets: outcomes)
 - **Missing datasets:** `real_time_credit_vintages` (release-safe credit revisions: not available)
-- **Supporting evidence:** In diagnostic inspection on the 1990-2020 JST holdout, 5-year private bank-loan/GDP change (tloans/gdp) yields retrospective AUC 0.721 (1y), 0.702 (2y), 0.590 (5y).
-- **Contradictory evidence:** The sole pre-registered evaluation (H01-P1.0) tested public debtgdp 5-year change rather than private tloans/gdp and failed (AUC 0.363/0.381/0.296); no separate private-credit protocol controlling for income growth and global crisis clustering has been pre-registered.
-- **Alternative explanations:** Credit growth can reflect financial deepening, denominator contractions or synchronized global credit waves (13/19 test crises occurred in 2007-2008).
+- **Supporting evidence:** H01B-P1.0 evaluated the tloans/gdp 5y change on the 1990-2020 holdout: AUC 0.719 (1y, year-block bootstrap CI 0.52-0.85), 0.702 (2y), 0.591 (5y); residualising on 5y real income growth leaves AUC 0.717, so the association is not merely an income-growth reflection. Household (0.723), corporate (0.677), mortgage (0.696) credit growth and the derived debt-service proxy (0.767) show consistent positive discrimination.
+- **Contradictory evidence:** The pre-registered H01-P1.0 evaluation tested public debtgdp 5-year change rather than private tloans/gdp and failed (AUC 0.363/0.381/0.296) — that negative result belongs to public debt only. The 1990-2020 holdout was already used for predictor inspection, so H01B results are retrospective diagnostics, not confirmatory; only 3 independent post-1990 crisis episodes exist (1984-91, 1997, 2007-08).
+- **Alternative explanations:** Credit growth can reflect financial deepening, denominator contractions or synchronized global credit waves (13/19 test crises occurred in 2007-2008); ex-2007-08 and leave-one-episode-out diagnostics quantify this dependence.
 - **Falsification criteria:** A registered test must fail to outperform its declared baseline or produce no independent evidence.
-- **Remaining limitations:** Contradictory status is preserved from H01-P1.0 because H01-P1.0 may not be rewritten ex-post; a dedicated private-credit protocol must be registered separately and tested against independent post-cutoff data.
+- **Remaining limitations:** Attribution audit (v1.2): the prior contradictory status was inherited from a public-debt protocol — an attribution defect now corrected. The public-debt experiment (H01-P1.0) stands unchanged; the private-credit exploratory diagnostic and the dedicated H01B-P1.0 retrospective evaluation are reported separately. Confirmatory status requires an untouched outcome sample (post-2020 or an independent registry such as IMF WP-2026-094).
 
 ### Q18 — Interest-rate stress
 - **Exact registered wording (`atlas_derived_v1`):** Do changes in short- and long-term interest rates predict debt stress or crisis onset?

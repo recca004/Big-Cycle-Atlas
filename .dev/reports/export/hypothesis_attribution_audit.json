@@ -1,0 +1,93 @@
+{
+  "purpose": "Attribution correction audit: preserves v1.1 registered records alongside v1.2 corrected assessments",
+  "corrections": {
+    "Q08": "v1.1 classified operational falsification machinery as 'exploratory_findings' (an empirical status); v1.2 separates research-method implementation from scientific findings -> insufficient_evidence",
+    "Q11": "v1.1 labelled the broad debt-burden claim inconsistent based on one public-debt operationalization; v1.2 scopes the negative result to the tested proposition (5y public debtgdp change) -> evaluated_with_no_clear_conclusion",
+    "Q14": "v1.1 status inherited from a change-based protocol that never tested level thresholds; v1.2 uses dedicated H01T-P1.0 level-threshold diagnostics -> evaluated_with_no_clear_conclusion",
+    "Q17": "v1.1 inherited contradictory status from a PUBLIC-debt protocol (attribution defect); v1.2 separates the public-debt experiment from the private-credit H01B-P1.0 exploratory diagnostic -> exploratory_findings"
+  },
+  "question_versions": {
+    "Q08": {
+      "validation-questions-v1.1": {
+        "validation_status": "exploratory_findings",
+        "implementation_status": "research_method_implemented",
+        "current_answer": "The falsification machinery exists, but only H01 has an evaluated result.",
+        "related_hypotheses": [
+          "H01",
+          "H02",
+          "H03",
+          "H04"
+        ]
+      },
+      "validation-questions-v1.2": {
+        "validation_status": "insufficient_evidence",
+        "implementation_status": "research_method_implemented",
+        "current_answer": "Research method is implemented (registered falsification criteria, append-only evaluations preserving negative results); H01-P1.0 and H01B-P1.0 have been executed. But a scientific answer to WHICH observations support or falsify the theory requires populated independent outcome registries beyond one banking-crisis family \u2014 operational machinery alone is not an empirical finding.",
+        "related_hypotheses": [
+          "H01",
+          "H01B",
+          "H02",
+          "H03",
+          "H04"
+        ]
+      }
+    },
+    "Q11": {
+      "validation-questions-v1.1": {
+        "validation_status": "evidence_inconsistent_with_registered_claim",
+        "implementation_status": "evaluation_implemented",
+        "current_answer": "H01-P1.0 found no predictive value in 5-year public-debt/GDP growth before banking crises (AUC 0.30-0.38); public and private debt behave differently around banking crises.",
+        "related_hypotheses": [
+          "H01"
+        ]
+      },
+      "validation-questions-v1.2": {
+        "validation_status": "evaluated_with_no_clear_conclusion",
+        "implementation_status": "evaluation_implemented",
+        "current_answer": "Scoped correction (v1.2): the registered H01-P1.0 test contradicted one specific operationalized proposition \u2014 5-year PUBLIC debt/GDP change as a crisis predictor (AUC 0.363/0.381/0.296). That negative result does not falsify the broader debt-cycle claim: H01B-P1.0 found positive retrospective discrimination for PRIVATE credit expansion (tloans/gdp 5y change AUC 0.719, income-residualised 0.717), and public debt characteristically surges AFTER crises via bailouts and automatic stabilisers. The broad registered claim remains only partially tested.",
+        "related_hypotheses": [
+          "H01",
+          "H01B"
+        ]
+      }
+    },
+    "Q14": {
+      "validation-questions-v1.1": {
+        "validation_status": "evidence_inconsistent_with_registered_claim",
+        "implementation_status": "partially_implemented",
+        "current_answer": "Neither public-debt changes nor historical debt-to-GDP level percentiles provide a reproducible out-of-sample crisis threshold.",
+        "related_hypotheses": [
+          "H01"
+        ]
+      },
+      "validation-questions-v1.2": {
+        "validation_status": "evaluated_with_no_clear_conclusion",
+        "implementation_status": "evaluation_implemented",
+        "current_answer": "H01T-P1.0 evaluated level thresholds directly: no reproducible UNIVERSAL debt-to-GDP crisis threshold exists \u2014 pooled p80 levels discriminate at/below chance for public debt and over-flag for private credit, while per-country thresholds differ by ~5x. Thresholds appear conditional on country, era and monetary regime; that heterogeneity, not a single cutoff, is the supported research direction.",
+        "related_hypotheses": [
+          "H01",
+          "H01T"
+        ]
+      }
+    },
+    "Q17": {
+      "validation-questions-v1.1": {
+        "validation_status": "evidence_inconsistent_with_registered_claim",
+        "implementation_status": "evaluation_implemented",
+        "current_answer": "Preserved contradictory H01-P1.0 benchmark reflects a variable mismatch (public debtgdp was tested instead of private tloans/gdp); exploratory tloans/gdp shows positive retrospective association but awaits an independent pre-registered protocol.",
+        "related_hypotheses": [
+          "H01"
+        ]
+      },
+      "validation-questions-v1.2": {
+        "validation_status": "exploratory_findings",
+        "implementation_status": "evaluation_implemented",
+        "current_answer": "Attribution corrected: H01-P1.0's negative result applies only to public debt. Under dedicated protocol H01B-P1.0, private-credit expansion shows positive retrospective association with banking-crisis onset that survives income-growth residualisation and clustered diagnostics \u2014 classified exploratory because the holdout is no longer untouched and only 3 independent episodes remain.",
+        "related_hypotheses": [
+          "H01",
+          "H01B"
+        ]
+      }
+    }
+  }
+}

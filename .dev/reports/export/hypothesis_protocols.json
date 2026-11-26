@@ -1,5 +1,5 @@
 {
-  "count": 4,
+  "count": 6,
   "protocols": [
     {
       "hypothesis_code": "H01",
@@ -80,6 +80,172 @@
       "registered_at": "2026-11-25T22:05:41.559433+00:00",
       "content_checksum": "2b60a8a2fa61584002779ab09c811eee647282ce7b5fe0823410f7665f4c941b",
       "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "hypothesis_code": "H01B",
+      "protocol_version": "H01B-P1.0",
+      "protocol_type": "retrospective_research_protocol",
+      "title": "Private-credit expansion and subsequent systemic banking crises",
+      "definition": "Private non-financial credit expansion (distinct from public debt) is associated with higher later systemic-banking-crisis onset risk.",
+      "scientific_rationale": "Long debt-cycle mechanisms emphasise private-sector leverage accumulation; the registered H01-P1.0 public-debt protocol cannot stand in as a test of private credit.",
+      "target_outcome": "source-defined systemic banking crisis onset (JST crisisJST=1), same registry as H01-P1.0",
+      "research_population": {
+        "population_code": "jst_extended_research_v1",
+        "entity_type": "country",
+        "selection_rule": "predefined JST R6 source coverage; identical panel as H01-P1.0 for comparability"
+      },
+      "predictor_variables": {
+        "primary": [
+          "tloans/gdp five-year change"
+        ],
+        "candidates": [
+          "tloans/gdp level",
+          "thh/gdp five-year change",
+          "tbus/gdp five-year change",
+          "tmort/gdp five-year change",
+          "credit-to-GDP gap vs trailing 10y trend",
+          "debt-service proxy (tloans/gdp x stir)",
+          "real house-price 3y growth",
+          "real long-term rate"
+        ],
+        "controls": [
+          "debtgdp five-year change (H01-P1.0 reference)",
+          "public interest burden proxy",
+          "income-residualised credit growth"
+        ],
+        "transformation": "lagged level and changes measured strictly before outcome year; source units preserved"
+      },
+      "information_cutoff_rules": {
+        "execution_mode": "retrospective_latest_vintage",
+        "strict_release_safety": false,
+        "leakage_guard": "predictor period < outcome year; dataset-version fixed to JST R6",
+        "holdout_integrity_disclosure": "The 1990-2020 holdout was already used for exploratory private-credit predictor inspection during the H01-P1.0 forensic audit; it is NOT an untouched confirmatory holdout for predictor selection. All results are retrospective diagnostics."
+      },
+      "forecast_horizons": {
+        "years": [
+          1,
+          2,
+          5
+        ],
+        "event": "onset only"
+      },
+      "measurement_method": {
+        "model": "univariate percentile-score benchmark per predictor",
+        "benchmark": "unconditional country-year base rate + public-debt control",
+        "split": "chronological train/test at 1990",
+        "cluster_handling": "crisis episodes grouped from globally co-moving onset years (max gap 3y); leave-one-episode-out, leave-one-country-out, decade time-blocks, ex-2007-2008 sensitivity, year-block bootstrap intervals"
+      },
+      "training_periods": {
+        "start": 1870,
+        "end": 1989
+      },
+      "validation_periods": {
+        "type": "held_out_chronological_test_previously_inspected",
+        "start": 1990,
+        "end": 2020
+      },
+      "test_population": {
+        "included_entities": "JST R6 covered countries",
+        "minimum_entity_years": 20
+      },
+      "evaluation_metrics": [
+        "roc_auc",
+        "pr_auc",
+        "base_rate",
+        "precision",
+        "recall",
+        "false_positive_rate",
+        "warning_frequency",
+        "n",
+        "distinct_episodes",
+        "independent_countries",
+        "bootstrap_intervals"
+      ],
+      "minimum_evidence": {
+        "minimum_test_events": 10,
+        "minimum_entities": 10,
+        "minimum_independent_episodes": 3
+      },
+      "falsification_criteria": "No out-of-sample discrimination above the public-debt control or base rate is evidence inconsistent with private-credit predictive value; positive retrospective discrimination remains exploratory, not confirmatory.",
+      "known_limitations": [
+        "retrospective dataset, not real-time vintages",
+        "annual onset only; 13 of 19 held-out events in 2007-2008 and 4 in 1991 form just 3 independent episodes",
+        "predictor family partially pre-screened on the same holdout; no untouched confirmatory sample remains in JST R6",
+        "debt-service and credit-gap measures are derived proxies, not official BIS DSR/gap series",
+        "JST covers advanced economies only"
+      ],
+      "protocol_status": "exploratory",
+      "registered_at": "2026-11-26T09:33:49.899472+00:00",
+      "content_checksum": "92363ae24f639d76c9615c36e60a610a6872e5fa64ce63442cda2141d0ad403a",
+      "created_at": "2026-11-26T09:33:49.982754+00:00"
+    },
+    {
+      "hypothesis_code": "H01T",
+      "protocol_version": "H01T-P1.0",
+      "protocol_type": "retrospective_research_protocol",
+      "title": "Debt/GDP level thresholds and crisis heterogeneity",
+      "definition": "Dedicated research into whether debt-to-GDP LEVEL thresholds (public or private) carry reproducible crisis information \u2014 across countries, eras, monetary regimes and debt type \u2014 instead of the H01-P1.0 change-based test.",
+      "scientific_rationale": "Q14 asks for a reproducible threshold; the change-based H01-P1.0 protocol never tested levels and could not answer it.",
+      "target_outcome": "source-defined systemic banking crisis onset (JST crisisJST=1)",
+      "research_population": {
+        "population_code": "jst_extended_research_v1",
+        "entity_type": "country",
+        "selection_rule": "predefined JST R6 coverage"
+      },
+      "predictor_variables": {
+        "candidates": [
+          "debtgdp level",
+          "tloans/gdp level"
+        ],
+        "transformation": "lagged level at origin; pooled train p80 vs per-country p80 thresholds; regime and era splits"
+      },
+      "information_cutoff_rules": {
+        "execution_mode": "retrospective_latest_vintage",
+        "strict_release_safety": false,
+        "leakage_guard": "thresholds estimated on pre-1990 train only; no threshold fitted to maximise test performance"
+      },
+      "forecast_horizons": {
+        "years": [
+          1
+        ]
+      },
+      "measurement_method": {
+        "model": "pooled vs within-country train-percentile level thresholds; pegged/non-pegged regime split; gold/interwar/Bretton-Woods/fiat era split",
+        "benchmark": "country-year base rate",
+        "split": "chronological train/test at 1990"
+      },
+      "training_periods": {
+        "start": 1870,
+        "end": 1989
+      },
+      "validation_periods": {
+        "type": "held_out_chronological_test_previously_inspected",
+        "start": 1990,
+        "end": 2020
+      },
+      "test_population": {
+        "included_entities": "JST R6 covered countries"
+      },
+      "evaluation_metrics": [
+        "auc",
+        "threshold_dispersion_across_countries",
+        "warning_share",
+        "regime_era_conditional_auc"
+      ],
+      "minimum_evidence": {
+        "minimum_test_events": 10,
+        "minimum_entities": 10
+      },
+      "falsification_criteria": "If no level threshold reproduces above-chance discrimination out of sample and per-country thresholds are not portable, the universal-threshold claim is unsupported; conditional heterogeneity then defines the open research question rather than a falsified result.",
+      "known_limitations": [
+        "retrospective dataset",
+        "threshold concepts differ across debt types and eras",
+        "financial development trends make level thresholds non-stationary"
+      ],
+      "protocol_status": "exploratory",
+      "registered_at": "2026-11-26T09:33:49.899472+00:00",
+      "content_checksum": "2a409898cf1b72a8dfd32369de510dcf625763286d3bfee0d7d73fac18a5dde1",
+      "created_at": "2026-11-26T09:33:49.982754+00:00"
     },
     {
       "hypothesis_code": "H02",

@@ -1,7 +1,7 @@
 # Big Cycle Atlas — compact ChatGPT handover
 
-Generated: 2026-11-26T09:05:19.352324Z
-Base commit: `ef0c039f9c0c005366d45c0813c164bdc4290b79`
+Generated: 2026-11-26T09:57:59.064572Z
+Base commit: `b92788c1593299b57268182f294d9fd48a2bfe46`
 
 This package contains the actual database inventory, latest-vintage raw histories, approved force evidence, four-model experimental cycle results, international-power measurements and forecast-gate evidence.
 

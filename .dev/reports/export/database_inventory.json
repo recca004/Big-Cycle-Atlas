@@ -14,15 +14,15 @@
   "crisis_events": 88,
   "crisis_coverage_rows": 2668,
   "theory_registry_entries": 7,
-  "hypothesis_protocols": 4,
+  "hypothesis_protocols": 6,
   "prediction_ledger_entries": 1666,
   "prediction_outcomes": 1666,
-  "evaluation_results": 2,
+  "evaluation_results": 4,
   "population_memberships": 26,
   "dataset_rights": 9,
   "evidence_status_entries": 12,
   "validation_questions": 50,
-  "validation_question_versions_stored": 100,
+  "validation_question_versions_stored": 150,
   "distinct_observation_identities": 18402,
   "latest_vintage_rows": 18402
 }

@@ -189,24 +189,91 @@ Mappings are seeded idempotently into the `source_series` table.
   `scripts/ingest_alfred.py`
 - Official evidence model: FRED `vintagedates`,
   `realtime_start`/`realtime_end`, and vintage observations
-- Priority series registered: GDP, CPIAUCSL, UNRATE, FEDFUNDS, TOTALSL,
-  BAMLH0A0HYM2, USREC
+- Priority series registered: `GDP`, `CPIAUCSL`, `UNRATE`, `FEDFUNDS`,
+  `TOTALSL`, `BAMLH0A0HYM2`, `USREC`
 - Importer contract: `--vintages N` requests the most recent N official
   `vintage_dates` per series (`-1` for all); default scheduled depth is 5.
-- Precise blocker: the official API requires a registered 32-character
-  API key. `BCA_FRED_API_KEY` is not configured; no credential is stored.
-- Status: implemented but not live-imported.
+- Exact local setup process (never commit credentials):
+  1. Request a free 32-character FRED API key at
+     `https://fredaccount.stlouisfed.org/apikeys`.
+  2. Add `BCA_FRED_API_KEY=<your_32_char_key>` to `apps/api/.env`
+     (gitignored; template documented in `apps/api/.env.example`) or set
+     `$env:BCA_FRED_API_KEY` in the active PowerShell session.
+  3. From `apps/api`, run:
+     `.venv\Scripts\python.exe scripts\ingest_alfred.py --vintages 5 GDP CPIAUCSL UNRATE USREC`
+     or run `Update.bat -Historical`.
+  4. Verify historical cutoff queries against `research_observations` where
+     `source_key='alfred_fred'` and `vintage_date <= cutoff_date`.
+- Relevant validation questions: Q09, Q11, Q16.
+- Status: implemented and verified against unit tests; live import blocked
+  only by absence of `BCA_FRED_API_KEY`.
 
-## IMF Systemic Banking Crises WP/2026/94 — Phase 1 importer, source-blocked
+## IMF Systemic Banking Crises WP/2026/094 — Phase 1 importer, source-blocked
 
-- Importer: `scripts/import_imf_banking_crises.py`
-- Intended official bundle:
+- Verified paper identity: Luc Laeven & Fabian Valencia, *"Systemic Banking
+  Crises Database: 1970-2025"*, IMF Working Paper No. 2026/094
+  (Stock No. `WPIEA2026094`, ISBN `9798229045971`, DOI
+  `10.5089/9798229045971.001`, published May 15, 2026; 47 pages; documents
+  164 systemic and borderline banking crises across 1970–2025).
+- Importer: `apps/api/scripts/import_imf_banking_crises.py`
+- Missing file: `wp2694.zip` (or extracted CSV inside that supplemental archive)
+- Advertised official URL:
   `https://www.imf.org/-/media/files/publications/wp/2026/datasets/wp2694.zip`
-- Verification result: official URL returned HTTP 404 during implementation;
-  alternative official paths were not accepted without verification.
-- Local execution path: `--file` accepts an official ZIP or CSV once
-  obtained; it preserves annual dating precision and does not invent months.
-- Status: blocked, no fabricated crisis rows.
+- Verification result: automated retrieval returned HTTP 404/403 from the
+  IMF CDN; no unrelated substitute crisis dataset was imported.
+- Expected format: ZIP archive containing one or more UTF-8 CSV tables with
+  columns matching country name (`country` / `economy`), optional ISO3 code
+  (`iso` / `iso3`), `start` / `crisis start` year, and optional `end` /
+  `crisis end` year. Annual precision is preserved verbatim; months are
+  never invented.
+- Required local path: `.dev\tmp\wp2694.zip` (gitignored)
+- Import commands:
+  - `cd apps\api && .venv\Scripts\python.exe scripts\import_imf_banking_crises.py --file ..\..\.dev\tmp\wp2694.zip`
+  - or `Update.bat -Historical -ImfCrisisFile .dev\tmp\wp2694.zip`
+- Relevant validation questions: Q08, Q11, Q12, Q13, Q14, Q17, Q18, Q20, Q25.
+- Status: blocked pending local official file; 88 JST banking-crisis onsets
+  remain the active verified crisis registry.
+
+## Workstream B Research Panels — Imported into `research_observations` (2026-11-26)
+
+Implemented in `apps/api/app/data_sources/research_panels.py` and imported
+idempotently via `apps/api/scripts/import_economic_evidence.py`:
+
+1. **IMF COFER (`imf_cofer` / `COFER-SDMX-2.1`)** — **1,922 rows**, 14 currency
+   entities (`USD, EUR, CNY, GBP, JPY, CHF, AUD, CAD, DEM, FRF, ECU, NLG,
+   OTHC, ALL_CURRENCIES`), 1995–1998 annual + 1999Q1–2026Q2 quarterly.
+   Preserves IMF `PUBLICATION_DATE` (`2026-09-30T13:00:00Z`) and records all
+   six COFER methodology breaks (1999 Euro introduction, 2012Q4 AUD/CAD split,
+   2015Q3 reporter disclosure, 2016Q4 CNY split, Dec 2025 imputation of
+   unallocated reserves back to 2000Q1 + `TFXRA_IMP`). `INR` is not separately
+   identified in COFER and is never zero-imputed; `EUR` belongs to the shared
+   Eurosystem currency area and is never assigned to Germany or France.
+2. **BIS Triennial FX Survey (`bis_fx_turnover` / `WS_DER_OTC_TOV`)** —
+   **191 rows**, 10 currency entities (`USD, EUR, JPY, GBP, CNY, CHF, INR,
+   DEM, FRF, ALL_CURRENCIES`), triennial survey years 1989–2025 (non-survey
+   `NaN` years skipped). Directly measures `INR` (`0.09%` in 1998 to `1.95%`
+   in 2025, two-sided 200%-sum convention).
+3. **BIS Locational Banking Statistics (`bis_lbs` / `WS_LBS_D_PUB`)** —
+   **4,964 rows**, 15 currency and jurisdiction entities, 1977Q4–2026Q2.
+   Separates currency denomination of cross-border claims from financial-centre
+   booking location (`GBR` 14.3%, `FRA` 13.5%, `JPN` 10.5%, `DEU` 9.9%,
+   `USA` 9.4%, `CHN` 4.3%, `CHE` 2.1%, `IND` 0.17% of BIS reporting total in
+   2026Q2).
+4. **BIS Total Credit & Policy Rates (`bis_credit_policy` / `WS_TC_CBPOL`)** —
+   **9,478 rows**, 9 entities (`8 primary powers + EUR`), 1945–2026. Keeps
+   general government (market & nominal valuation), private non-financial,
+   household, and non-financial corporate credit (% of GDP) strictly separate,
+   plus central-bank policy rates (preserving the 1999 `DEU`/`FRA` -> `EUR`
+   transition).
+5. **Penn World Table 11.0 (`pwt` / `11.0`, DOI `10.34894/FABVLR`, CC BY 4.0)** —
+   **16,056 rows**, 20 countries, 11 variables (`rgdpo`, `rgdpna`, `emp`,
+   `avh`, `hc`, `cn`, `rnna`, `ctfp`, `rtfpna`, derived `gdp_per_worker` and
+   `gdp_per_hour`), 1950–2023. Uses 2021 PPP / 2021 national-accounts prices;
+   never combined with OECD indices or 2011 PPP series.
+6. **Maddison Project Database 2023 (`maddison` / `2023`, DOI `10.34894/INZBF2`,
+   CC BY 4.0)** — **9,956 rows**, 20 countries (>=12-country subset rule
+   honoured), 2 variables (`MPD_GDPPC_2011INTL` in 2011 international dollars
+   and `MPD_POP_THOUSANDS`), 1500–2022.
 
 Planned sources and their adapter files:
 

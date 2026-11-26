@@ -144,32 +144,33 @@ dataset rights, research timescales and the standard Atlas manifests.
 Generated under `.dev/reports/export/` and summarized by
 `.dev/reports/research_manifest.json`.
 
-## Verification — 2026-11-26
+## Verification — 2026-11-26 (Observatory V3 & Economic Evidence Expansion)
 
-- Backend pytest: **837 passed**
+- Backend pytest: **838 passed**
 - Vitest: **54 passed**
 - Astro check: **0 errors / 0 warnings / 0 hints**
 - Production build: **38 pages built**
-- Playwright against native production server: **57 passed**
-- Native API production check: `/health` connected and validation endpoints returned 50 questions plus the Q11 detail with related H01 protocols/evaluations
-- Previous verification retained: 834 backend checks, 55 Playwright checks and provider/update dry runs on 2026-11-25
+- Playwright + Accessibility against native production server: **59 passed**
+- Visual verification across `2560, 1920, 1440, 1024, 768, 390` in both dark and light themes: `0px` unused gap beneath central clock on wide desktop (`2560`/`1920`), `24px` at `1440`, `overflowX = false` across all viewports
+- Newly imported `research_observations`: `+42,567` verified rows (`imf_cofer` 1,922; `bis_fx_turnover` 191; `bis_lbs` 4,964; `bis_credit_policy` 9,478; `pwt` 16,056; `maddison` 9,956), bringing total `research_observations` from `111,546` to **`154,113`**
 
-## Validation question registry — 2026-11-26
+## Validation question registry — 2026-11-26 (`v1.1` active, `v1.0` preserved)
 
 A canonical immutable question registry now extends this foundation without
 creating a second research engine.
 
-- Registry version: `validation-questions-v1.0`
+- Active registry version: `validation-questions-v1.1` (`validation-questions-v1.0` preserved intact in PostgreSQL; 100 stored rows across 2 versions)
 - Questions: **50**
 - Categories: core theory `10`, debt and money `15`, internal conflict `10`, external rivalry `10`, technology and shocks `5`
-- Implementation recount: `data_available` 13, `evaluation_implemented` 2, `not_implemented` 4, `partially_implemented` 26, `research_method_implemented` 5
-- Scientific-status recount: `currently_untestable` 26, `evidence_inconsistent_with_registered_claim` 3, `exploratory_findings` 1, `insufficient_evidence` 5, `untested` 15
+- Implementation recount (`v1.1`): `data_available` 17, `evaluation_implemented` 2, `not_implemented` 4, `partially_implemented` 22, `research_method_implemented` 5
+- Scientific-status recount (`v1.1`): `currently_untestable` 25, `evidence_inconsistent_with_registered_claim` 3, `exploratory_findings` 1, `insufficient_evidence` 6, `untested` 15
 - Database table: `validation_questions` (Alembic `b48ac2e91f01`), versioned by `(question_code, registry_version)` and content-checksummed
 - API: `/api/research/foundation/validation/questions`, `/validation/questions/{code}`, `/validation/summary`
-- Interface: `/research/validation`; homepage research-evidence summary; workspace widgets `validation-coverage` and `validation-questions`
-- Exports: `validation_questions.json`, `question_evidence_matrix.{json,csv}`, `dataset_dependency_matrix.csv`, `missing_data_inventory.{json,csv}`, `validation_summary.json`
+- Interface: `/research/validation`; Observatory V3 `Theory validation` tab; workspace widgets `validation-coverage` and `validation-questions`
+- Exports: `validation_questions.json`, `question_evidence_matrix.{json,csv}`, `dataset_dependency_matrix.csv`, `missing_data_inventory.{json,csv}`, `validation_summary.json`, `reserve_currency_history.csv`, `sectoral_debt_and_policy_rates.csv`, `historical_productivity_pwt_maddison.csv`, `usa_chn_ind_gap_dynamics.{json,csv}`
 - Canonical registry copy: `.dev/VALIDATION_QUESTION_REGISTRY.json`
-- Per-question assessment: `.dev/THEORY_VALIDATION_50.md`
+- Full validation research report: `.dev/reports/THEORY_VALIDATION_RESEARCH.md` & `.dev/THEORY_VALIDATION_50.md`
+- Self-contained review package: `.dev/packages/BigCycleAtlas_ChatGPT_Review_V3.zip`
 
 Because the original supplied question wording was absent from the repository,
 the registry explicitly records `wording_origin: atlas_derived_v1`. It is a

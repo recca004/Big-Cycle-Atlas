@@ -28,7 +28,10 @@ from app.models import (
     MarketInstrument,
     MarketObservation,
     Observation,
+    ReferenceObservation,
+    ResearchObservation,
 )
+from app.data_sources.research_panels import COFER_METHODOLOGY_BREAKS
 from app.research import service as research_service
 from app.research.composite import COMPOSITE_MODELS
 from app.research.power_registry import POWER_MEASURES_BY_INDICATOR
@@ -42,7 +45,7 @@ from app.services.update_lock import update_lock, update_lock_status
 
 ZURICH_TZ = ZoneInfo("Europe/Zurich")
 REPO_ROOT = Path(__file__).resolve().parents[4]
-OBSERVATORY_PAYLOAD_SCHEMA = "observatory-v2-power-measures"
+OBSERVATORY_PAYLOAD_SCHEMA = "observatory-v3-currency-power"
 _FORCE_NAMES = {d.code: d.name for d in FORCE_DEFINITIONS}
 
 CURRENCY_ROLES: dict[str, dict[str, str]] = {
@@ -108,7 +111,8 @@ POWER_INDICATORS = (
     }
 )
 
-_MEM_CACHE: dict[tuple[str, str, int], dict[str, Any]] = {}
+_MEM_CACHE: dict[tuple[str, str, int, str], dict[str, Any]] = {}
+_COMPUTE_LOCKS: dict[tuple[str, int], asyncio.Lock] = {}
 _REFRESH_LOCK = asyncio.Lock()
 _REFRESH_JOB: dict[str, Any] = {
     "running": False,
@@ -178,14 +182,128 @@ async def db_fingerprint(session: AsyncSession) -> str:
     cnt_countries = (
         await session.execute(select(func.count(Country.id)))
     ).scalar() or 0
+    cnt_ref = (
+        await session.execute(select(func.count(ReferenceObservation.id)))
+    ).scalar() or 0
+    cnt_res = (
+        await session.execute(select(func.count(ResearchObservation.id)))
+    ).scalar() or 0
     url_tag = hashlib.sha1(
         str(getattr(session.bind, "url", "mem")).encode("utf-8")
     ).hexdigest()[:10]
     sp = latest_completed_scoring_period()
     return (
         f"{url_tag}:c{cnt_countries}:o{obs_row[0]}-{obs_row[1] or 0}:"
-        f"r{rev_row[0]}-{rev_row[1] or 0}:{sp.year}-Q{sp.quarter}"
+        f"r{rev_row[0]}-{rev_row[1] or 0}:ref{cnt_ref}:res{cnt_res}:{sp.year}-Q{sp.quarter}"
     )
+
+
+async def _world_denominators(session: AsyncSession) -> dict[tuple[str, int], float]:
+    rows = (
+        await session.execute(
+            select(
+                ReferenceObservation.indicator_code,
+                ReferenceObservation.period_start,
+                ReferenceObservation.value,
+                ReferenceObservation.vintage_number,
+            )
+            .where(ReferenceObservation.universe_code == "world_wdi_denominator_v1")
+            .where(ReferenceObservation.country_iso3 == "WLD")
+            .order_by(
+                ReferenceObservation.indicator_code,
+                ReferenceObservation.period_start.asc(),
+                ReferenceObservation.vintage_number.asc(),
+            )
+        )
+    ).all()
+    out: dict[tuple[str, int], float] = {}
+    for ind_code, p_start, val, _v in rows:
+        if p_start and val and val > 0:
+            out[(ind_code, p_start.year)] = float(val)
+    return out
+
+
+async def _currency_and_banking_snapshot(session: AsyncSession) -> dict[str, Any]:
+    rows = (
+        await session.execute(
+            select(
+                ResearchObservation.source_key,
+                ResearchObservation.entity_code,
+                ResearchObservation.entity_type,
+                ResearchObservation.variable_code,
+                ResearchObservation.period_start,
+                ResearchObservation.value,
+                ResearchObservation.raw_payload,
+            )
+            .where(
+                ResearchObservation.source_key.in_(["imf_cofer", "bis_fx_turnover", "bis_lbs"]),
+                ResearchObservation.variable_code.in_([
+                    "COFER_RESERVE_SHARE_PCT",
+                    "COFER_IMPUTED_SHARE_PCT",
+                    "FX_TURNOVER_SHARE_200PCT",
+                    "LBS_CROSS_BORDER_CLAIMS_SHARE_PCT",
+                    "LBS_REPORTING_CLAIMS_SHARE_PCT",
+                    "LBS_REPORTING_CLAIMS_USD_MN",
+                ]),
+            )
+            .order_by(ResearchObservation.period_start.asc())
+        )
+    ).all()
+    latest_by_var_ent: dict[tuple[str, str], dict[str, Any]] = {}
+    series_by_var_ent: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for src, ent, ent_type, var, p_start, val, raw in rows:
+        if p_start is None or val is None:
+            continue
+        tp = (raw or {}).get("time_period") or str(p_start.year)
+        pt = {
+            "period": str(tp),
+            "year": p_start.year,
+            "value": round(float(val), 4),
+            "source_key": src,
+            "entity_type": ent_type,
+        }
+        latest_by_var_ent[(var, ent)] = pt
+        series_by_var_ent.setdefault((var, ent), []).append(pt)
+    currencies = ["USD", "EUR", "CNY", "GBP", "JPY", "CHF", "INR", "DEM", "FRF"]
+    summary_rows = []
+    for ccy in currencies:
+        cofer = latest_by_var_ent.get(("COFER_RESERVE_SHARE_PCT", ccy))
+        fx = latest_by_var_ent.get(("FX_TURNOVER_SHARE_200PCT", ccy))
+        lbs = latest_by_var_ent.get(("LBS_CROSS_BORDER_CLAIMS_SHARE_PCT", ccy))
+        summary_rows.append({
+            "currency_code": ccy,
+            "entity_type": (
+                "currency_area" if ccy == "EUR"
+                else ("historical_currency" if ccy in {"DEM", "FRF"} else "currency")
+            ),
+            "cofer_reserve_share_pct": cofer["value"] if cofer else None,
+            "cofer_period": cofer["period"] if cofer else None,
+            "fx_turnover_share_200pct": fx["value"] if fx else None,
+            "fx_turnover_period": fx["period"] if fx else None,
+            "lbs_claims_share_pct": lbs["value"] if lbs else None,
+            "lbs_period": lbs["period"] if lbs else None,
+            "note": (
+                "INR is not separately identified in IMF COFER (grouped in Other currencies; never zero-imputed), "
+                "but is separately measured in the BIS Triennial FX Survey."
+                if ccy == "INR"
+                else (
+                    "EUR is a shared Eurosystem currency; never assigned as an individual national share to DEU or FRA."
+                    if ccy == "EUR"
+                    else (
+                        "Legacy European national currency prior to 1999 Euro launch."
+                        if ccy in {"DEM", "FRF"}
+                        else None
+                    )
+                )
+            ),
+        })
+    return {
+        "latest": latest_by_var_ent,
+        "series": series_by_var_ent,
+        "currencies": summary_rows,
+        "imputed_reserve_share": latest_by_var_ent.get(("COFER_IMPUTED_SHARE_PCT", "ALL_CURRENCIES")),
+        "methodology_breaks": list(COFER_METHODOLOGY_BREAKS),
+    }
 
 
 async def _latest_indicator_series(
@@ -447,6 +565,8 @@ async def compute_core_observatory(
     latest_sp = latest_completed_scoring_period()
     ind_series = await _latest_indicator_series(session, country_ids)
     yields_by_iso = await _latest_yields(session)
+    world_denoms = await _world_denominators(session)
+    ccy_bank = await _currency_and_banking_snapshot(session)
 
     dialect = getattr(getattr(session, "bind", None), "dialect", None)
     is_sqlite = getattr(dialect, "name", "") == "sqlite"
@@ -466,18 +586,20 @@ async def compute_core_observatory(
         ]
     else:
         sm = get_sessionmaker()
+        sem = asyncio.Semaphore(4)
 
         async def _run_one(c: Country) -> dict[str, Any]:
-            async with sm() as s:
-                return await _compute_country_block(
-                    s,
-                    c.iso3,
-                    c.name,
-                    getattr(c, "region", None),
-                    model_id,
-                    start_year,
-                    latest_sp,
-                )
+            async with sem:
+                async with sm() as s:
+                    return await _compute_country_block(
+                        s,
+                        c.iso3,
+                        c.name,
+                        getattr(c, "region", None),
+                        model_id,
+                        start_year,
+                        latest_sp,
+                    )
 
         blocks = list(
             await asyncio.gather(*[_run_one(c) for c in country_rows])
@@ -580,7 +702,41 @@ async def compute_core_observatory(
         rnd_vol = rnd_usd_by_iso.get(iso3)
         yld = yields_by_iso.get(iso3)
 
+        ccy_code = ccy_meta["currency_code"]
+        is_euro_member = ccy_code == "EUR"
+        cofer_pt = ccy_bank["latest"].get(("COFER_RESERVE_SHARE_PCT", ccy_code))
+        fx_pt = ccy_bank["latest"].get(("FX_TURNOVER_SHARE_200PCT", ccy_code))
+        lbs_ccy_pt = ccy_bank["latest"].get(("LBS_CROSS_BORDER_CLAIMS_SHARE_PCT", ccy_code))
+        lbs_cty_share = ccy_bank["latest"].get(("LBS_REPORTING_CLAIMS_SHARE_PCT", iso3))
+        lbs_cty_usd = ccy_bank["latest"].get(("LBS_REPORTING_CLAIMS_USD_MN", iso3))
+
+        def _world_share(pt: dict[str, Any] | None, ind_code: str) -> dict[str, Any]:
+            if not pt:
+                return {"share_pct": None, "value": None, "period": None, "source": None}
+            denom = world_denoms.get((ind_code, pt["year"]))
+            return {
+                "share_pct": round(pt["value"] / denom * 100.0, 2) if denom else None,
+                "value": pt["value"],
+                "period": pt["period"],
+                "source": pt["source"],
+            }
+
         b["international_power"] = {
+            "global_shares": {
+                "nominal_gdp": _world_share(gdp, "GDP_CURRENT_USD"),
+                "ppp_gdp": _world_share(gdp_ppp, "GDP_PPP_CURRENT_INTL"),
+                "merchandise_exports": _world_share(merch_exp, "MERCHANDISE_EXPORTS_USD"),
+                "service_exports": _world_share(svc_exp, "COMMERCIAL_SERVICE_EXPORTS_USD"),
+                "military_expenditure": _world_share(mil_usd, "MILITARY_EXPENDITURE_USD"),
+                "high_tech_exports": _world_share(hightech, "HIGH_TECHNOLOGY_EXPORTS_USD"),
+                "resident_patents": _world_share(patents, "PATENT_APPLICATIONS_RESIDENT"),
+                "cross_border_banking": {
+                    "share_pct": round(lbs_cty_share["value"], 2) if lbs_cty_share else None,
+                    "value": lbs_cty_usd["value"] * 1_000_000.0 if lbs_cty_usd else None,
+                    "period": lbs_cty_share["period"] if lbs_cty_share else None,
+                    "source": "BIS Locational Banking Statistics",
+                },
+            },
             "economic_size": {
                 "indicator_code": "GDP_CURRENT_USD",
                 "value_usd": gdp["value"] if gdp else None,
@@ -665,17 +821,30 @@ async def compute_core_observatory(
                 "semantics": "financial depth measures, not an international-centre score",
             },
             "monetary_influence": {
-                "currency_code": ccy_meta["currency_code"],
+                "currency_code": ccy_code,
+                "is_shared_currency_area": is_euro_member,
                 "reserve_anchor_role": ccy_meta["role"],
+                "cofer_reserve_share_pct": None if is_euro_member else (round(cofer_pt["value"], 2) if cofer_pt else None),
+                "cofer_period": cofer_pt["period"] if cofer_pt else None,
+                "currency_area_cofer_share_pct": round(cofer_pt["value"], 2) if (is_euro_member and cofer_pt) else None,
+                "fx_turnover_share_200pct": None if is_euro_member else (round(fx_pt["value"], 2) if fx_pt else None),
+                "fx_turnover_period": fx_pt["period"] if fx_pt else None,
+                "currency_area_fx_turnover_share_200pct": round(fx_pt["value"], 2) if (is_euro_member and fx_pt) else None,
+                "lbs_currency_claims_share_pct": None if is_euro_member else (round(lbs_ccy_pt["value"], 2) if lbs_ccy_pt else None),
+                "lbs_currency_period": lbs_ccy_pt["period"] if lbs_ccy_pt else None,
                 "reer_index": reer["value"] if reer else None,
                 "reer_period": reer["period"] if reer else None,
                 "gov_10y_yield": yld["value"] if yld else None,
                 "gov_10y_period": yld["period"] if yld else None,
-                "source": reer["source"] if reer else (yld["source"] if yld else None),
+                "source": "IMF COFER / BIS Triennial / BIS LBS" if (cofer_pt or fx_pt) else (reer["source"] if reer else (yld["source"] if yld else None)),
                 "scope_note": (
-                    "IMF COFER reserve-share series is not yet ingested; "
-                    "monetary influence reports currency role alongside BIS REER "
-                    "and sovereign 10Y yield data."
+                    "EUR reserve and FX-turnover shares belong to the shared Eurosystem currency area and are never assigned to Germany or France individually."
+                    if is_euro_member
+                    else (
+                        "INR is not separately reported in IMF COFER (included in Other currencies; never zero-imputed), while BIS Triennial FX turnover measures INR directly."
+                        if ccy_code == "INR"
+                        else "Official IMF COFER reserve shares, BIS Triennial FX turnover (200% two-sided sum) and BIS cross-border banking shares are currency-level measurements."
+                    )
                 ),
             },
         }
@@ -744,6 +913,23 @@ async def compute_core_observatory(
         "scoring_period": f"{latest_sp.year}-Q{latest_sp.quarter}",
         "available_periods": all_periods,
         "countries": blocks,
+        "currency_evidence": {
+            "currencies": ccy_bank["currencies"],
+            "imputed_reserve_share": ccy_bank["imputed_reserve_share"],
+            "methodology_breaks": ccy_bank["methodology_breaks"],
+            "series": {
+                "cofer_reserve_share_pct": {
+                    ccy: pts
+                    for (var, ccy), pts in ccy_bank["series"].items()
+                    if var == "COFER_RESERVE_SHARE_PCT" and ccy != "ALL_CURRENCIES"
+                },
+                "fx_turnover_share_200pct": {
+                    ccy: pts
+                    for (var, ccy), pts in ccy_bank["series"].items()
+                    if var == "FX_TURNOVER_SHARE_200PCT" and ccy != "ALL_CURRENCIES"
+                },
+            },
+        },
         "power_summary": {
             "largest_economy_iso3": by_gdp[0]["iso3"] if by_gdp else None,
             "second_economy_iso3": (

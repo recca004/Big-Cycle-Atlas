@@ -72,6 +72,7 @@ from app.research.power_registry import (
     POWER_MEASURES_BY_INDICATOR,
 )
 from app.research.scientific_registry import TIMESCALES
+from app.research.validation_questions import VALIDATION_REGISTRY_VERSION
 from app.services import force_signal_service
 from app.services.validation_questions import (
     actual_evidence, question_payload, question_summary,
@@ -170,8 +171,14 @@ async def main() -> None:
         default=1980,
         help="Historical baseline used for trend summaries and Observatory research (default: 1980).",
     )
+    parser.add_argument(
+        "--source-commit",
+        default=None,
+        help="Explicit verified source-code Git SHA (distinguished from subsequent report-only commits).",
+    )
     args = parser.parse_args()
     from_year = args.from_year
+    source_code_commit = args.source_commit or _git_commit()
 
     OUT.mkdir(parents=True, exist_ok=True)
     EXPORT.mkdir(parents=True, exist_ok=True)
@@ -205,7 +212,8 @@ async def main() -> None:
         "population_memberships": (await session.execute(select(func.count(ResearchPopulationMembership.id)))).scalar(),
         "dataset_rights": (await session.execute(select(func.count(DatasetRightsRegistry.id)))).scalar(),
         "evidence_status_entries": (await session.execute(select(func.count(EvidenceStatusEntry.id)))).scalar(),
-        "validation_questions": (await session.execute(select(func.count(ValidationQuestion.id)))).scalar(),
+        "validation_questions": (await session.execute(select(func.count(ValidationQuestion.id)).where(ValidationQuestion.registry_version == VALIDATION_REGISTRY_VERSION))).scalar(),
+        "validation_question_versions_stored": (await session.execute(select(func.count(ValidationQuestion.id)))).scalar(),
     }
     inventory["distinct_observation_identities"] = (
         await session.execute(
@@ -594,15 +602,25 @@ async def main() -> None:
                 "exact_stage_share": comparison.exact_stage_share,
                 "exact_equivalent_under_current_data": comparison.equivalent,
                 "equivalent_under_current_data": comparison.materially_equivalent,
-                "independent_evidence": not comparison.materially_equivalent,
+                "distinct_weighting_method": True,
+                "distinct_outputs_under_current_data": not comparison.materially_equivalent,
+                "shared_input_datasets": True,
+                "independent_evidence": False,
+                "terminology_note": (
+                    "Distinct weighting methods applied to shared underlying observation "
+                    "tables measure model specification sensitivity, never statistically "
+                    "independent empirical evidence."
+                ),
             }
     write_json(
         EXPORT / "model_equivalence_report.json",
         {
             "interpretation": (
-                "Equivalence is measured across the exported retrospective "
-                "history; identical results do not count as independent model "
-                "evidence."
+                "All four composite models aggregate shared underlying observation datasets. "
+                "None of the pairwise comparisons constitute statistically independent empirical "
+                "evidence; differing stage outputs measure model specification sensitivity, while "
+                "materially equivalent models (Domain-balanced vs Overlap-adjusted) reflect "
+                "mathematically identical effective domain weights under currently populated forces."
             ),
             "pairs": pair_reports,
         },
@@ -905,9 +923,23 @@ async def main() -> None:
         "entries": [{c.name: getattr(r, c.name) for c in r.__table__.columns if c.name != "id"} for r in evidence_rows],
     })
 
-    question_rows = (await session.execute(select(ValidationQuestion).order_by(ValidationQuestion.question_code))).scalars().all()
+    question_rows = (
+        await session.execute(
+            select(ValidationQuestion)
+            .where(ValidationQuestion.registry_version == VALIDATION_REGISTRY_VERSION)
+            .order_by(ValidationQuestion.question_code)
+        )
+    ).scalars().all()
+    preserved_versions = sorted(
+        r[0]
+        for r in (
+            await session.execute(select(func.distinct(ValidationQuestion.registry_version)))
+        ).all()
+        if r[0]
+    )
     validation_registry = {
-        "registry_version": question_rows[0].registry_version if question_rows else None,
+        "registry_version": question_rows[0].registry_version if question_rows else VALIDATION_REGISTRY_VERSION,
+        "preserved_registry_versions": preserved_versions,
         "methodology_status": "experimental",
         "wording_origin": "atlas_derived_v1",
         "count": len(question_rows),
@@ -969,12 +1001,198 @@ async def main() -> None:
     write_json(EXPORT / "validation_summary.json", await question_summary(session))
     write_json(EXPORT / "research_timescales.json", {"timescales": TIMESCALES})
 
+    # Workstream B machine-readable research exports (permitted attribution sources).
+    ccy_obs = (
+        await session.execute(
+            select(ResearchObservation)
+            .where(ResearchObservation.source_key.in_(["imf_cofer", "bis_fx_turnover", "bis_lbs"]))
+            .order_by(
+                ResearchObservation.source_key,
+                ResearchObservation.variable_code,
+                ResearchObservation.entity_code,
+                ResearchObservation.period_start,
+            )
+        )
+    ).scalars().all()
+    write_csv(
+        EXPORT / "reserve_currency_history.csv",
+        [
+            {
+                "source_key": r.source_key,
+                "dataset_version": r.dataset_version,
+                "entity_code": r.entity_code,
+                "entity_type": r.entity_type,
+                "variable_code": r.variable_code,
+                "period": (r.raw_payload or {}).get("time_period") or _period(r.period_start),
+                "period_start": _period(r.period_start),
+                "value": r.value,
+                "unit": r.unit,
+                "release_date": _period(r.release_date),
+            }
+            for r in ccy_obs
+        ],
+        ["source_key", "dataset_version", "entity_code", "entity_type", "variable_code", "period", "period_start", "value", "unit", "release_date"],
+    )
+
+    debt_obs = (
+        await session.execute(
+            select(ResearchObservation)
+            .where(ResearchObservation.source_key == "bis_credit_policy")
+            .order_by(
+                ResearchObservation.variable_code,
+                ResearchObservation.entity_code,
+                ResearchObservation.period_start,
+            )
+        )
+    ).scalars().all()
+    write_csv(
+        EXPORT / "sectoral_debt_and_policy_rates.csv",
+        [
+            {
+                "source_key": r.source_key,
+                "dataset_version": r.dataset_version,
+                "entity_code": r.entity_code,
+                "entity_type": r.entity_type,
+                "variable_code": r.variable_code,
+                "period": (r.raw_payload or {}).get("time_period") or _period(r.period_start),
+                "period_start": _period(r.period_start),
+                "value": r.value,
+                "unit": r.unit,
+            }
+            for r in debt_obs
+        ],
+        ["source_key", "dataset_version", "entity_code", "entity_type", "variable_code", "period", "period_start", "value", "unit"],
+    )
+
+    prod_obs = (
+        await session.execute(
+            select(ResearchObservation)
+            .where(ResearchObservation.source_key.in_(["pwt", "maddison"]))
+            .order_by(
+                ResearchObservation.source_key,
+                ResearchObservation.entity_code,
+                ResearchObservation.variable_code,
+                ResearchObservation.period_start,
+            )
+        )
+    ).scalars().all()
+    write_csv(
+        EXPORT / "historical_productivity_pwt_maddison.csv",
+        [
+            {
+                "source_key": r.source_key,
+                "dataset_version": r.dataset_version,
+                "entity_code": r.entity_code,
+                "variable_code": r.variable_code,
+                "year": _year(r.period_start),
+                "value": r.value,
+                "unit": r.unit,
+                "license_code": r.license_code,
+            }
+            for r in prod_obs
+        ],
+        ["source_key", "dataset_version", "entity_code", "variable_code", "year", "value", "unit", "license_code"],
+    )
+
+    # USA–CHN–IND common-period gap & ratio convergence/divergence dynamics (§15).
+    gap_windows = [
+        ("1980-1990", 1980, 1990),
+        ("1990-2000", 1990, 2000),
+        ("2000-2010", 2000, 2010),
+        ("2010-2020", 2010, 2020),
+        ("2020-latest", 2020, 9999),
+        ("recent_1y", None, 1),
+        ("recent_3y", None, 3),
+        ("recent_5y", None, 5),
+        ("recent_10y", None, 10),
+    ]
+    gap_codes = [
+        "GDP_CURRENT_USD", "GDP_PPP_CURRENT_INTL", "GDP_REAL_CONSTANT_USD",
+        "GDP_PER_CAPITA", "MERCHANDISE_EXPORTS_USD", "COMMERCIAL_SERVICE_EXPORTS_USD",
+        "MILITARY_EXPENDITURE_USD", "RND_EXPENDITURE_GDP",
+        "PATENT_APPLICATIONS_RESIDENT", "HIGH_TECHNOLOGY_EXPORTS_USD",
+        "STOCK_MARKET_CAP_GDP", "GOVERNMENT_DEBT_GDP",
+    ]
+    gap_rows: list[dict[str, Any]] = []
+    for challenger_iso in ("CHN", "IND"):
+        for code in gap_codes:
+            u_map = {p["year"]: p for p in by_country_indicator.get(("USA", code), [])}
+            c_map = {p["year"]: p for p in by_country_indicator.get((challenger_iso, code), [])}
+            common = sorted(set(u_map) & set(c_map))
+            if len(common) < 2:
+                continue
+            latest_common = common[-1]
+            for label, w_start, w_end in gap_windows:
+                if w_start is None:
+                    target = latest_common - w_end
+                    cands = [y for y in common if y <= target]
+                    if not cands:
+                        continue
+                    y0, y1 = cands[-1], latest_common
+                else:
+                    sub = [y for y in common if w_start <= y <= w_end]
+                    if len(sub) < 2:
+                        continue
+                    y0, y1 = sub[0], sub[-1]
+                if y0 == y1:
+                    continue
+                u0, u1 = u_map[y0]["value"], u_map[y1]["value"]
+                c0, c1 = c_map[y0]["value"], c_map[y1]["value"]
+                if u0 in (0, None) or u1 in (0, None):
+                    continue
+                r0 = c0 / u0
+                r1 = c1 / u1
+                dist0 = abs(1.0 - r0)
+                dist1 = abs(1.0 - r1)
+                if dist0 - dist1 > 0.015:
+                    gap_state = "narrowing"
+                elif dist1 - dist0 > 0.015:
+                    gap_state = "widening"
+                else:
+                    gap_state = "stable"
+                gap_rows.append({
+                    "incumbent": "USA",
+                    "challenger": challenger_iso,
+                    "indicator": code,
+                    "window": label,
+                    "common_start_year": y0,
+                    "common_end_year": y1,
+                    "usa_start": u0,
+                    "usa_end": u1,
+                    "challenger_start": c0,
+                    "challenger_end": c1,
+                    "challenger_to_usa_ratio_start": round(r0, 4),
+                    "challenger_to_usa_ratio_end": round(r1, 4),
+                    "ratio_change": round(r1 - r0, 4),
+                    "gap_direction": gap_state,
+                    "unit": u_map[y1]["unit"],
+                })
+    write_csv(
+        EXPORT / "usa_chn_ind_gap_dynamics.csv",
+        gap_rows,
+        [
+            "incumbent", "challenger", "indicator", "window",
+            "common_start_year", "common_end_year", "usa_start", "usa_end",
+            "challenger_start", "challenger_end",
+            "challenger_to_usa_ratio_start", "challenger_to_usa_ratio_end",
+            "ratio_change", "gap_direction", "unit",
+        ],
+    )
+    write_json(EXPORT / "usa_chn_ind_gap_dynamics.json", {"count": len(gap_rows), "rows": gap_rows})
+
     generated_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    head_commit = _git_commit()
     manifest = {
         "generated_at": generated_at,
         "information_cutoff": generated_at,
         "execution_mode": "retrospective_latest_vintage",
-        "git_commit": _git_commit(),
+        "git_commit": head_commit,
+        "source_code_commit": source_code_commit,
+        "commit_provenance_note": (
+            "source_code_commit identifies the verified application and exporter revision "
+            "that produced these calculations; any subsequent report-only commit updates "
+            "generated Markdown/JSON artifacts without altering code or database rows."
+        ),
         "database": inventory,
         "latest_vintage_rule": "maximum vintage_number per country + source_series + period_start",
         "historical_execution_mode": "retrospective_latest_vintage; not a release-date-safe backtest",
@@ -1013,6 +1231,7 @@ async def main() -> None:
             "validation_questions": {
                 "count": len(question_rows),
                 "registry_version": question_rows[0].registry_version if question_rows else None,
+                "preserved_registry_versions": preserved_versions,
                 "wording_origin": "atlas_derived_v1",
             },
             "timescales": TIMESCALES,
@@ -1020,13 +1239,17 @@ async def main() -> None:
         "generated_exports": sorted(path.name for path in EXPORT.iterdir() if path.is_file()),
         "limitations": [
             "Retrospective history uses latest available vintages, not only information published at each historical date.",
-            "Composite and stage labels are experimental and coverage-gated.",
-            "Tracked-universe shares are not global shares.",
+            "Composite and stage labels are experimental domestic-condition outputs and are coverage-gated.",
+            "All four composite models share the same underlying observation tables; none provide statistically independent empirical confirmation.",
+            "Tracked-universe shares are not global shares; global shares use explicit World/COFER/BIS denominators.",
+            "EUR reserve and FX-turnover shares belong to the shared Eurosystem currency area and are never assigned nationally to DEU or FRA.",
+            "INR is not separately reported in IMF COFER (grouped in Other currencies) and is never zero-imputed; INR is measured directly in the BIS Triennial FX Survey.",
+            "PWT 11.0 (2021 PPP) and Maddison 2023 (2011 international $) are preserved separately from OECD productivity percentiles and WDI series.",
             "Military expenditure measures resources, not complete capability.",
             "Missing observations remain missing and are never interpolated.",
-            "JST research rows carry dataset-release evidence, not per-observation historical publication evidence.",
-            "ALFRED historical vintages require an unconfigured FRED API credential and are not imported.",
-            "The advertised IMF WP-2026-94 supplemental ZIP returned HTTP 404; no substitute crisis rows were fabricated.",
+            "JST, PWT and Maddison carry dataset-release evidence, not per-observation historical publication evidence.",
+            "ALFRED historical vintages require an unconfigured FRED API credential (BCA_FRED_API_KEY) and are not imported.",
+            "The advertised IMF WP-2026-94 supplemental ZIP returned HTTP 403/404; no substitute crisis rows were fabricated.",
         ],
     }
     write_json(EXPORT / "research_manifest.json", manifest)
@@ -1344,7 +1567,7 @@ See `export/power_measure_registry.json`, `export/global_power_shares.csv`, `exp
 |---|---|---:|---:|
 {chr(10).join(global_latest_lines)}
 
-Global shares use provider world aggregates (`WLD`) as denominators and are distinct from the eight-country tracked shares shown above. Reserve-currency records are registered but remain unavailable because verified COFER/BIS currency observations have not yet been imported; unreported currencies are never set to zero.
+Global shares use provider world aggregates (`WLD`) as denominators and are distinct from the eight-country tracked shares shown above. Currency-level official reserve shares (`IMF COFER`), FX turnover shares (`BIS Triennial Survey`, including `INR` at 1.95% in 2025) and cross-border banking shares (`BIS Locational Banking Statistics`) are exported in `export/reserve_currency_history.csv`; `EUR` shares remain on the shared Eurosystem currency area and `INR` is never zero-imputed in COFER.
 
 ## 7. USA–China–India measured comparison
 
@@ -1354,7 +1577,7 @@ Global shares use provider world aggregates (`WLD`) as denominators and are dist
 
 Ratios are direct raw-measurement ratios on common observation years and are only meaningful for compatible units and reference populations. A change in ratio indicates convergence/divergence in that measurement, not a complete leadership transition.
 
-Decade and recent 1/3/5/10-year changes for USA, China and India are exported in `export/historical_period_comparison.csv`. India is therefore compared on the same measurement definitions rather than forced into a cycle-stage narrative.
+Decade and recent 1/3/5/10-year changes for USA, China and India are exported in `export/historical_period_comparison.csv`, and common-period ratio & gap convergence/divergence classifications (`narrowing`, `widening`, `stable`) are exported in `export/usa_chn_ind_gap_dynamics.csv`. India is therefore compared on the same measurement definitions rather than forced into a cycle-stage narrative.
 
 ## 8. Four-model experimental domestic-condition comparison
 
@@ -1399,17 +1622,17 @@ See `export/data_quality_findings.csv`. Material gaps are reported as gaps, not 
 - Historical calculations use latest-vintage observations and are retrospective research, not release-date-safe backtests.
 - Raw scale measures may extend to 1960, but the cycle engine remains constrained by coverage, minimum observations and hysteresis.
 - Military spending is an input resource, not full military capability.
-- OECD productivity percentiles are explicitly OECD-reference measurements and are not global percentiles.
-- Financial-centre and reserve-currency dimensions remain materially incomplete.
+- OECD productivity percentiles are explicitly OECD-reference measurements and are not global percentiles; Penn World Table 11.0 (2021 PPP) and Maddison 2023 (2011 international $) are exported separately in `export/historical_productivity_pwt_maddison.csv`.
+- Official reserve-currency shares (IMF COFER 1995–2026Q2), BIS FX turnover (1989–2025) and BIS cross-border banking claims (1977Q4–2026Q2) are currency/centre measurements with documented methodology breaks, not national strength scores.
 - Boundary metadata distinguishes current Germany from provider-labelled pre-1991 history and mainland-China coverage; provider definitions still limit historical joins.
 
 ## 12. Recommended next research priorities
 
-1. Add Maddison/PWT real-output and capital history as separate labelled historical methods.
-2. Add SIPRI direct military expenditure records for provenance and global-share denominators.
-3. Add verified financial-centre/capital-market and reserve-currency reference series.
-4. Extend boundary metadata beyond the implemented Germany/China records as new territorial-history providers are integrated.
-5. Preserve evidence gates before attempting any leadership-transition forecast.
+1. Pre-register `H01B` testing private-sector credit growth (`JST tloans/gdp` and `BIS CREDIT_PRIVATE_NF_GDP`) with multi-country crisis-wave clustering controls.
+2. Pre-register `H02` persistent productivity slowdown outcomes using PWT 11.0 `rtfpna` and WGI governance series.
+3. Configure `BCA_FRED_API_KEY` locally to populate genuine ALFRED real-time vintage histories and unlock strict `as_of` cutoff tests.
+4. Import official IMF WP/2026/094 (`wp2694.zip`) once accessible to expand banking-crisis coverage beyond the 18 JST economies.
+5. Evaluate V-Dem, UCDP and Correlates of War licensing/access to address the 25+ untestable internal-conflict and external-rivalry questions.
 """
     (OUT / "ATLAS_RESEARCH_1980_PRESENT.md").write_text(main_report, encoding="utf-8")
 

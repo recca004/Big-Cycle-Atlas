@@ -23,6 +23,13 @@ export interface DialCountry {
   period: string | null;
 }
 
+export interface DialModelGhost {
+  modelId: string;
+  modelLabel: string;
+  stage: string;
+  score: number | null;
+}
+
 interface Props {
   countries: DialCountry[];
   selectedIso3: string | null;
@@ -32,6 +39,8 @@ interface Props {
   /** Animate marker entrance (skipped under reduced motion). */
   animate?: boolean;
   compact?: boolean;
+  /** Optional all-model comparison markers for the selected power. */
+  allModelGhosts?: DialModelGhost[];
 }
 
 const CX = 320;
@@ -44,6 +53,7 @@ export function CycleDial({
   decorative = false,
   animate = true,
   compact = false,
+  allModelGhosts = [],
 }: Props) {
   const [hover, setHover] = useState<string | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -111,7 +121,7 @@ export function CycleDial({
   return (
     <svg
       ref={svgRef}
-      viewBox="0 0 640 600"
+      viewBox="-36 0 712 600"
       role="img"
       aria-label="Big Cycle Clock — experimental model positions"
       className={compact ? "clock-svg compact" : "clock-svg"}
@@ -170,11 +180,15 @@ export function CycleDial({
         );
       })}
 
-      {/* Stage ring — fixed, readable */}
+      {/* Stage ring — fixed, readable, radially anchored outside the rim */}
       {Object.entries(STAGE_HOURS).map(([stage, hour]) => {
-        const p1 = polar(hour, 216);
+        const p1 = polar(hour, 214);
         const p2 = polar(hour, 238);
-        const lp = polar(hour, 268);
+        const isRight = hour > 0.5 && hour < 5.5;
+        const isLeft = hour > 6.5 && hour < 11.5;
+        const labelRadius = isRight || isLeft ? 250 : 262;
+        const lp = polar(hour, labelRadius);
+        const anchor = isRight ? "start" : isLeft ? "end" : "middle";
         const occupied = byStage.has(stage);
         const count = byStage.get(stage)?.length ?? 0;
         return (
@@ -189,8 +203,8 @@ export function CycleDial({
             <text
               x={lp.x}
               y={lp.y}
-              className="clock-stage-label"
-              textAnchor="middle"
+              className={occupied ? "clock-stage-label occupied" : "clock-stage-label"}
+              textAnchor={anchor}
               dominantBaseline="middle"
             >
               {STAGE_LABELS[stage]}
@@ -200,15 +214,33 @@ export function CycleDial({
         );
       })}
 
+      {/* Optional all-model comparison markers for the selected country */}
+      {allModelGhosts.map((ghost, idx) => {
+        const baseHour = STAGE_HOURS[ghost.stage as Stage];
+        if (baseHour === undefined) return null;
+        const offset = (idx - (allModelGhosts.length - 1) / 2) * 0.16;
+        const gm = polar(baseHour + offset, 152);
+        return (
+          <g key={ghost.modelId} className="clock-model-ghost" aria-label={`${selectedIso3} ${ghost.modelLabel}: ${stageLabel(ghost.stage)}`}>
+            <circle cx={gm.x} cy={gm.y} r="5.5" className="clock-ghost-dot" />
+            <text x={gm.x} y={gm.y - 10} textAnchor="middle" className="clock-ghost-label">
+              {ghost.modelLabel}
+            </text>
+            <title>{`${selectedIso3 ?? ""} — ${ghost.modelLabel}: ${stageLabel(ghost.stage)}${ghost.score !== null ? ` (${ghost.score.toFixed(1)})` : ""}`}</title>
+          </g>
+        );
+      })}
+
       {/* Country markers — positioned at stage anchors, fanned within
           stage groups so siblings don't stack. */}
       {placed.map((c) => {
         const l = layouts.get(c.iso3);
         if (!l) return null;
-        const r = 196 - l.ringIndex * 26;
+        const r = 196 - l.ringIndex * 28;
         const m = polar(l.hour, r);
         const isSel = c.iso3 === selectedIso3;
         const rising = (c.momentum ?? 0) > 0;
+        const labelY = m.y + (isSel ? 26 : 22);
         return (
           <g
             key={c.iso3}
@@ -218,7 +250,7 @@ export function CycleDial({
             tabIndex={0}
             aria-label={`${c.name} — ${stageLabel(c.stage)}${
               c.score !== null ? `, score ${c.score.toFixed(1)}` : ""
-            }, ${rising ? "improving" : "softening"} demonstration momentum`}
+            }, ${rising ? "improving" : "softening"} experimental momentum`}
             onClick={() => onSelect(c.iso3)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -234,7 +266,7 @@ export function CycleDial({
             <circle
               cx={m.x}
               cy={m.y}
-              r="18"
+              r="20"
               className="clock-marker-hit"
               aria-hidden="true"
             />
@@ -242,21 +274,30 @@ export function CycleDial({
               <circle
                 cx={m.x}
                 cy={m.y}
-                r="14"
+                r="16"
                 className="clock-marker-halo"
               />
             )}
             <circle
               cx={m.x}
               cy={m.y}
-              r={isSel ? 9 : 6.5}
+              r={isSel ? 10.5 : 8}
               className={
                 isSel ? "clock-marker selected" : "clock-marker"
               }
             />
+            <rect
+              x={m.x - 21}
+              y={labelY - 10}
+              width="42"
+              height="14"
+              rx="4"
+              className={isSel ? "clock-iso-pill selected" : "clock-iso-pill"}
+              aria-hidden="true"
+            />
             <text
               x={m.x}
-              y={m.y + (isSel ? 26 : 21)}
+              y={labelY}
               className={isSel ? "clock-iso selected" : "clock-iso"}
               textAnchor="middle"
             >

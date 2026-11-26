@@ -14,6 +14,12 @@ EXPECTED_SOURCE_KEYS = {
     "alfred_fred",
     "imf_laeven_valencia_banking_crises",
     "jst_macrohistory",
+    "imf_cofer",
+    "bis_fx_turnover",
+    "bis_lbs",
+    "bis_credit_policy",
+    "pwt",
+    "maddison",
 }
 
 

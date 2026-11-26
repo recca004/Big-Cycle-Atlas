@@ -373,6 +373,7 @@ export function ValidationExplorer() {
             <input
               className="w-full rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2 text-sm"
               type="search"
+              aria-label="Search validation questions"
               placeholder="Search all 50 questions…"
               value={search}
               onChange={(event) => setSearch(event.target.value)}

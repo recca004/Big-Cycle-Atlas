@@ -156,6 +156,9 @@ class TestObservatoryRoutes:
         assert body["countries"][0]["models"]["model_b_domain"]["stage"] == "Rise"
         assert body["equivalence"]["model_b_domain__model_c_overlap"]["equivalent_under_current_data"] is True
         assert body["equivalence"]["model_b_domain__model_c_overlap"]["independent_evidence"] is False
+        assert body["equivalence"]["model_a_equal__model_b_domain"]["independent_evidence"] is False
+        assert body["equivalence"]["model_a_equal__model_b_domain"]["shared_input_datasets"] is True
+        assert body["equivalence"]["model_a_equal__model_b_domain"]["distinct_weighting_method"] is True
 
 
 # --- v1.1 refinement regressions ---------------------------------------------

@@ -6,6 +6,7 @@ interface Props {
   countries: ObservatoryCountry[];
   selectedIso3: string | null;
   onSelect: (iso3: string) => void;
+  rangeStart?: number;
   demo?: boolean;
 }
 
@@ -50,13 +51,13 @@ function segmentsFromHistory(history: ObservatoryHistoryPoint[]): Segment[] {
 
 const stageClass = (stage: string) => `stage-${stage.toLowerCase().replaceAll("_", "-")}`;
 
-export function HistoricalCycleComparison({ countries, selectedIso3, onSelect, demo = false }: Props) {
+export function HistoricalCycleComparison({ countries, selectedIso3, onSelect, rangeStart = 1980, demo = false }: Props) {
   const rows = useMemo(
     () => countries.map((country) => ({ country, segments: segmentsFromHistory(country.history) })),
     [countries],
   );
   const positions = rows.flatMap((row) => row.segments.flatMap((segment) => [segment.from, segment.to]));
-  const minYear = Math.floor(Math.min(...positions, 2000));
+  const minYear = Math.floor(Math.min(rangeStart, ...positions));
   const maxYear = Math.ceil(Math.max(...positions, minYear + 1));
   const plotWidth = WIDTH - LEFT - RIGHT;
   const height = TOP + rows.length * LANE + AXIS_H;

@@ -16,7 +16,7 @@ from app.models import (
 from app.research.h01 import build_samples
 from app.research.scientific_registry import THEORY_ENTRIES, TIMESCALES
 from app.research.validation_questions import (
-    IMPLEMENTATION_STATUSES, VALIDATION_QUESTIONS, VALIDATION_STATUSES,
+    IMPLEMENTATION_STATUSES, VALIDATION_QUESTIONS, VALIDATION_REGISTRY_VERSION, VALIDATION_STATUSES,
 )
 
 
@@ -136,7 +136,9 @@ async def test_foundation_api_and_alfred_blocker(client):
 
 async def test_validation_question_registry_is_complete_and_versioned(client):
     async with session_module._sessionmaker() as session:
-        rows = (await session.execute(select(ValidationQuestion))).scalars().all()
+        rows = (await session.execute(select(ValidationQuestion).where(
+            ValidationQuestion.registry_version == VALIDATION_REGISTRY_VERSION
+        ))).scalars().all()
     assert len(rows) == 50
     assert [q.question_code for q in VALIDATION_QUESTIONS] == [f"Q{i:02d}" for i in range(1, 51)]
     assert {q.category for q in VALIDATION_QUESTIONS} == {
@@ -151,7 +153,8 @@ async def test_validation_question_registry_is_complete_and_versioned(client):
 async def test_validation_question_immutability(client):
     async with session_module._sessionmaker() as session:
         row = (await session.execute(select(ValidationQuestion).where(
-            ValidationQuestion.question_code == "Q01"
+            ValidationQuestion.question_code == "Q01",
+            ValidationQuestion.registry_version == VALIDATION_REGISTRY_VERSION,
         ))).scalar_one()
         row.short_title = "changed"
         with pytest.raises(ValueError):
@@ -177,3 +180,38 @@ async def test_validation_question_api(client):
     assert detail["question"]["original_question"].endswith("?")
     assert detail["stable_url"] == "/research/validation?question=Q11"
     assert "H01" in detail["question"]["related_hypotheses"]
+
+
+def test_cofer_and_bis_fx_parsers_preserve_currency_scope_and_skip_nan():
+    from app.data_sources.research_panels import parse_bis_fx_turnover_csv, parse_cofer_csv
+
+    now = datetime(2026, 11, 26, tzinfo=timezone.utc)
+    cofer_csv = (
+        "DATAFLOW,COUNTRY,INDICATOR,FXR_CURRENCY,TYPE_OF_TRANSFORMATION,FREQUENCY,TIME_PERIOD,OBS_VALUE,PUBLICATION_DATE\n"
+        "IMF.STA:COFER,G001,AFXRA,CI_USD,SHRO_PT,Q,2026-Q2,56.7047,2026-09-30T13:00:00Z\n"
+        "IMF.STA:COFER,G001,AFXRA,CI_EUR,SHRO_PT,Q,2026-Q2,20.6017,2026-09-30T13:00:00Z\n"
+        "IMF.STA:COFER,G001,AFXRA,CI_INR,SHRO_PT,Q,2026-Q2,,2026-09-30T13:00:00Z\n"
+    )
+    rows = parse_cofer_csv(cofer_csv, annual_pre_1999_only=False, retrieved_at=now)
+    by_ccy = {r["entity_code"]: r for r in rows}
+    assert "USD" in by_ccy and by_ccy["USD"]["entity_type"] == "currency"
+    assert "EUR" in by_ccy and by_ccy["EUR"]["entity_type"] == "currency_area"
+    # Unreported INR must never be zero-imputed
+    assert "INR" not in by_ccy
+
+    fx_csv = (
+        "DER_TYPE,DER_INSTR,DER_RISK,DER_REP_CTY,DER_SECTOR_CPY,DER_CPC,DER_CURR_LEG1,DER_CURR_LEG2,DER_EX_METHOD,DER_BASIS,TIME_PERIOD,OBS_VALUE\n"
+        "U,A,B,5J,A,5J,TO1,TO1,3,C,2024,NaN\n"
+        "U,A,B,5J,A,5J,INR,TO1,3,C,2024,NaN\n"
+        "U,A,B,5J,A,5J,TO1,TO1,3,C,2025,9510000\n"
+        "U,A,B,5J,A,5J,INR,TO1,3,C,2025,185445\n"
+    )
+    fx_rows = parse_bis_fx_turnover_csv(fx_csv, retrieved_at=now)
+    # Non-survey 2024 NaN rows skipped; 2025 INR turnover + 200%-sum share preserved
+    assert all(r["period_start"].year == 2025 for r in fx_rows)
+    inr_share = next(
+        r for r in fx_rows
+        if r["entity_code"] == "INR" and r["variable_code"] == "FX_TURNOVER_SHARE_200PCT"
+    )
+    assert pytest.approx(inr_share["value"], rel=1e-4) == 1.95
+

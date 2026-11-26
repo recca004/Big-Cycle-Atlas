@@ -1,25 +1,21 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { ObservatoryApp } from "@/features/observatory/ObservatoryApp";
-import { ResearchEvidenceSummary } from "@/features/research/ResearchEvidenceSummary";
-
 ---
 
 <BaseLayout title="Great Power Observatory" fullWidth>
   <header class="obs-hero">
-    <div>
-      <p class="wordmark-name obs-hero-kicker">Big Cycle Atlas · Observatory</p>
+    <div class="obs-hero-main">
       <h1 class="headline-display">Where does each power sit on the Big Cycle?</h1>
     </div>
-    <p class="body-md obs-hero-sub">
-      A full-width observatory instrument for the rise → peak → decline
-      cycle, historical playback and the 17 Atlas forces — powered by
-      production PostgreSQL observations by default, with an explicit
-      ?demo=1 fixture isolated for interface review.
+    <p class="body-sm obs-hero-sub">
+      Experimental domestic-condition classifications, verified global power
+      shares, currency reserve composition and the 50-question scientific
+      validation registry — served from PostgreSQL observations with an
+      isolated <code>?demo=1</code> interface fixture.
     </p>
   </header>
   <ObservatoryApp client:load />
-  <ResearchEvidenceSummary client:load />
 </BaseLayout>
 
 <style>
@@ -27,21 +23,37 @@ import { ResearchEvidenceSummary } from "@/features/research/ResearchEvidenceSum
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: var(--space-10);
-    padding: var(--space-8) 0 var(--space-8);
+    gap: var(--space-6);
+    padding: var(--space-2) 0 var(--space-4);
     flex-wrap: wrap;
   }
-  .obs-hero-kicker {
-    font-size: 0.7rem;
-    margin-bottom: var(--space-4);
+  .obs-hero-main {
+    max-width: 40rem;
   }
   .obs-hero h1 {
     margin: 0;
-    max-width: 38rem;
+  }
+  @media (max-width: 640px) {
+    .obs-hero {
+      gap: var(--space-2);
+      padding: var(--space-1) 0 var(--space-3);
+    }
+    .obs-hero h1 {
+      font-size: clamp(1.55rem, 6.4vw, 2.05rem);
+      line-height: 1.12;
+    }
+    .obs-hero-sub {
+      font-size: var(--text-xs);
+      line-height: 1.4;
+    }
   }
   .obs-hero-sub {
-    max-width: 30rem;
+    max-width: 32rem;
     color: var(--text-secondary);
     margin: 0;
+  }
+  .obs-hero-sub code {
+    font-size: 0.85em;
+    color: var(--accent-text);
   }
 </style>

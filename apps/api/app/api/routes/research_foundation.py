@@ -15,6 +15,7 @@ from app.models import (
 )
 from app.research.h01 import evaluate_h01
 from app.research.scientific_registry import TIMESCALES
+from app.research.validation_questions import VALIDATION_REGISTRY_VERSION
 from app.services.validation_questions import (
     actual_evidence, chart_points, question_payload, question_summary,
 )
@@ -63,9 +64,15 @@ async def validation_questions(
     implementation_status: Optional[str] = Query(None),
     validation_status: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
+    registry_version: Optional[str] = Query(None),
     session: AsyncSession = Depends(get_session),
 ):
-    stmt = select(ValidationQuestion).order_by(ValidationQuestion.question_code)
+    target_version = registry_version or VALIDATION_REGISTRY_VERSION
+    stmt = (
+        select(ValidationQuestion)
+        .where(ValidationQuestion.registry_version == target_version)
+        .order_by(ValidationQuestion.question_code)
+    )
     if category:
         stmt = stmt.where(ValidationQuestion.category == category)
     if implementation_status:
@@ -78,14 +85,18 @@ async def validation_questions(
     rows = (await session.execute(stmt)).scalars().all()
     return {
         "methodology_status": "experimental",
+        "registry_version": target_version,
         "count": len(rows),
         "questions": [question_payload(r, details=False) for r in rows],
     }
 
 
 @router.get("/validation/summary")
-async def validation_summary(session: AsyncSession = Depends(get_session)):
-    return await question_summary(session)
+async def validation_summary(
+    registry_version: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    return await question_summary(session, registry_version=registry_version)
 
 
 @router.get("/validation/questions/{question_code}")

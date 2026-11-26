@@ -242,7 +242,7 @@ $steps = @(switch ($mode) {
   "macro-only" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Observatory recalculation and snapshot diff") }
   "markets-only" { @("Incremental market update ($MarketLookbackDays days)", "Observatory recalculation and snapshot diff") }
   "references-only" { @("Reference universes and international power expansion", "Observatory recalculation and snapshot diff") }
-  "historical" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes from $HistoricalStartYear and international power expansion", "JST historical bulk import", "Optional ALFRED/IMF historical imports", "H01 evaluation registration", "Observatory recalculation and snapshot diff") }
+  "historical" { @("Provider snapshot collection", "Governance uncertainty diagnostics", "Reference universes from $HistoricalStartYear and international power expansion", "JST historical bulk import", "Currency, sectoral debt and historical productivity research panels", "Optional ALFRED/IMF historical imports", "H01 evaluation registration", "Observatory recalculation and snapshot diff") }
   "recalculate-only" { @("Observatory recalculation and snapshot diff") }
 })
 if ($SkipMarkets) { $steps = $steps | Where-Object { $_ -notmatch "market" }; $steps += "Market update skipped" }
@@ -282,6 +282,7 @@ try {
     }
     if ($mode -eq "historical") {
       Invoke-Step "JST historical bulk import" $jstArgs @(2) | Out-Null
+      Invoke-Step "Currency, sectoral debt and historical productivity research panels" @("scripts\import_economic_evidence.py") @(1, 2) | Out-Null
       if ($env:BCA_FRED_API_KEY) {
         Invoke-Step "ALFRED historical vintage import" $alfredArgs @(1, 2) | Out-Null
       } else {

@@ -1,51 +1,70 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Great Power Observatory homepage — production", () => {
+test.describe("Great Power Observatory homepage V3 — production", () => {
   test.setTimeout(180_000);
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator(".obs-app[data-hydrated=\"true\"]")).toBeVisible({ timeout: 90_000 });
+    await expect(page.locator('.obs-app[data-hydrated="true"]')).toBeVisible({ timeout: 90_000 });
   });
 
-  test("dial renders all eight stages and country markers", async ({ page }) => {
+  test("dial renders all eight stages, country markers and balanced 3-column hero without dead space", async ({ page }) => {
     const svg = page.locator(".obs-clock-dial svg");
     for (const label of ["Early rise", "Rise", "Late rise", "Peak", "Late peak", "Early decline", "Decline", "Reset"]) {
       await expect(svg.locator("text", { hasText: new RegExp(`^${label}`) })).toBeVisible();
     }
     await expect(page.locator(".clock-marker-g[role='button']")).toHaveCount(8);
+    await expect(page.locator(".obs-clock-scope-badge")).toHaveText("Experimental domestic-condition cycle");
+
+    // Verify balanced 3-column desktop hero: no large unused gap beneath the central clock
+    const metrics = await page.evaluate(() => {
+      const grid = document.querySelector(".obs-grid")?.getBoundingClientRect();
+      const center = document.querySelector(".obs-col-center")?.getBoundingClientRect();
+      return grid && center ? { gridBottom: grid.bottom, centerBottom: center.bottom } : null;
+    });
+    expect(metrics).not.toBeNull();
+    expect(metrics!.gridBottom - metrics!.centerBottom).toBeLessThan(90);
   });
 
-  test("marker and dropdown selection update the focus panel", async ({ page }) => {
-    const marker = page.locator(".clock-marker-g[role='button']").first();
-    await marker.click();
-    await expect(page.locator(".obs-col-left .obs-panel-title")).not.toBeEmpty();
+  test("incumbent, challenger, country strip and 17-force inspection update research focus", async ({ page }) => {
+    await expect(page.locator("#obs-incumbent-select")).toHaveValue("USA");
+    await expect(page.locator("#obs-challenger-select")).toHaveValue("CHN");
+    await expect(page.locator(".obs-country-strip .obs-strip-item")).toHaveCount(8);
+
     await page.selectOption("#obs-country-select", "CHN");
-    await expect(page.locator(".obs-col-left .obs-panel-title")).toContainText("China");
+    await page.locator("#obs-tab-forces").click();
+    await expect(page.locator("#forces-heading")).toContainText("China");
     await expect(page.locator(".obs-di-card.domestic")).toBeVisible();
     await expect(page.locator(".obs-di-card.international")).toBeVisible();
+    await expect(page.locator(".force-row")).toHaveCount(17);
   });
 
-  test("power transition monitor reports production evidence gates", async ({ page }) => {
-    const monitor = page.locator(".obs-monitor");
+  test("compact transition monitor reports Not estimable and opens detailed comparison", async ({ page }) => {
+    const monitor = page.locator(".obs-monitor-compact");
     await expect(monitor).toContainText("Incumbent under study");
     await expect(monitor).toContainText("Challenger under study");
     await expect(monitor).toContainText("Transition window status");
     await expect(monitor).toContainText(/No window issued|Not estimable|insufficient/i);
+
+    await monitor.locator(".obs-open-comparison-btn").click();
+    await expect(page.locator("#transition-comparison-detail .obs-mrow").first()).toBeVisible();
   });
 
-  test("freshness shows production Zurich metadata and revision state", async ({ page }) => {
+  test("daily changes tab shows production Zurich metadata and revision state", async ({ page }) => {
+    await page.locator("#obs-tab-changes").click();
     const fresh = page.locator(".obs-fresh");
     await expect(fresh.locator(".obs-panel-title")).toHaveText("Data freshness");
-    await expect(fresh).toContainText("CET");
+    await expect(fresh).toContainText(/CET|CEST/);
     await expect(fresh.locator(".obs-status")).toBeVisible();
     await expect(fresh).toContainText("Production collection workflow");
+    await expect(page.locator("section[aria-label='What has changed']")).toBeVisible();
   });
 
-  test("historical playback scrubs real classified periods", async ({ page }) => {
+  test("unified historical playback shows unclassified early years and resets to latest", async ({ page }) => {
     const slider = page.locator(".obs-slider");
     await slider.fill("0");
-    await expect(page.locator(".obs-period-label")).toContainText(/2000|historical/);
+    await expect(page.locator(".obs-period-label")).toContainText(/1980.*historical/);
+    await expect(page.locator(".obs-unclassified-note")).toBeVisible();
     await expect(page.locator(".obs-clock-hist-badge")).toBeVisible();
     await page.locator("button:has-text('Latest')").click();
     await expect(page.locator(".obs-clock-hist-badge")).toBeHidden();
@@ -62,27 +81,40 @@ test.describe("Great Power Observatory homepage — production", () => {
     await expect(page.locator(".clock-marker-g[role='button']")).toHaveCount(8);
   });
 
-  test("full-width sections render real powers, measures, forces and history", async ({ page }) => {
-    await expect(page.locator("section[aria-labelledby='powers-heading'] .obs-powers tbody tr")).toHaveCount(8);
-    await expect(page.locator("section[aria-label='What has changed']")).toBeVisible();
+  test("research tabs expose international power, currency shares, validation and historical charts", async ({ page }) => {
+    // International power tab (default)
     await expect(page.locator(".measure-matrix tbody tr")).toHaveCount(16);
-    await expect(page.locator(".force-row")).toHaveCount(17);
+    await expect(page.locator(".obs-currency-table tbody tr")).toHaveCount(9);
+
+    // Theory validation tab
+    await page.locator("#obs-tab-validation").click();
+    await expect(page.locator("#obs-tabpanel-validation")).toContainText("50");
+    await expect(page.locator("#obs-tabpanel-validation")).toContainText("Contradictory findings");
+
+    // Historical research tab
+    await page.locator("#obs-tab-history").click();
+    await expect(page.locator(".measure-echart-host")).toBeVisible();
     await expect(page.locator(".history-chart")).toBeVisible();
     await expect(page.locator(".history-legend-item")).toHaveCount(8);
+
+    // Data coverage tab
+    await page.locator("#obs-tab-coverage").click();
+    await expect(page.locator(".obs-coverage")).toBeVisible();
   });
 
-  test("model selector and all-model markers expose equivalence honestly", async ({ page }) => {
+  test("model selector uses human-readable labels and exposes equivalence honestly", async ({ page }) => {
     const picker = page.locator(".obs-model-picker select");
     await expect(picker).toBeVisible();
     await expect(picker.locator("option")).toHaveCount(4);
+    await expect(picker).toContainText("Equal-weight");
+    await expect(picker).toContainText("Domain-balanced");
     await picker.selectOption("model_a_equal");
-    await expect(page.locator("section[aria-labelledby='powers-heading']")).toBeVisible({ timeout: 90_000 });
 
-    const section = page.locator("section[aria-labelledby='model-comparison-heading']");
-    await expect(section).toBeVisible({ timeout: 120_000 });
-    await expect(section.locator("tbody tr")).toHaveCount(8);
+    await page.locator("#obs-tab-models").click();
+    const section = page.locator("#obs-tabpanel-models");
+    await expect(section.locator(".obs-model-comparison tbody tr")).toHaveCount(8);
     await expect(section).toContainText("materially equivalent");
-    await expect(section).toContainText("experimental domestic-condition");
+    await expect(section).toContainText("independent_evidence = false");
   });
 
   test("homepage requests the production overview", async ({ page }) => {
@@ -91,7 +123,7 @@ test.describe("Great Power Observatory homepage — production", () => {
       if (new URL(request.url()).pathname === "/api/observatory/overview") requests.push(request.url());
     });
     await page.reload();
-    await expect(page.locator(".obs-app[data-source=\"production\"]")).toBeVisible({ timeout: 90_000 });
+    await expect(page.locator('.obs-app[data-source="production"]')).toBeVisible({ timeout: 90_000 });
     expect(requests.length).toBeGreaterThan(0);
   });
 
@@ -110,9 +142,12 @@ test.describe("Great Power Observatory homepage — explicit demo", () => {
       if (new URL(request.url()).pathname.startsWith("/api/")) apiRequests.push(request.url());
     });
     await page.goto("/?demo=1");
-    await expect(page.locator(".obs-app[data-source=\"demo\"]")).toBeVisible();
+    await expect(page.locator('.obs-app[data-source="demo"]')).toBeVisible();
     await expect(page.locator(".obs-demo-banner")).toContainText("Demonstration fixture");
+    await page.locator("#obs-tab-forces").click();
     await expect(page.locator(".force-row")).toHaveCount(17);
+    await page.locator("#obs-tab-validation").click();
+    await expect(page.locator("#obs-tabpanel-validation")).toContainText("Demonstration fixture");
     expect(apiRequests).toEqual([]);
   });
 });

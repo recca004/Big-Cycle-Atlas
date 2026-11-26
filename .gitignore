@@ -52,4 +52,5 @@ apps/web-astro/test-results/
 
 # Local downloaded research bundles (licensed sources; do not redistribute)
 .dev/tmp/
+.dev/packages/
 apps/.dev/

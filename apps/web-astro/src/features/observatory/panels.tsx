@@ -31,7 +31,266 @@ export function fmtMeasure(v: number, unit: string): string {
   return v.toLocaleString("en-CH", { maximumFractionDigits: 0 });
 }
 
-/* ---------- CountryFocusPanel (left column) ---------- */
+/* ---------- PowerStudyCard (balanced first-screen incumbent/challenger panels) ---------- */
+
+function formatCurrencySummary(country: ObservatoryCountry, demo: boolean): { text: string; period: string } {
+  const m = country.international_power.monetary_influence;
+  if (!m) return { text: "Unavailable", period: "—" };
+  if (demo) {
+    return {
+      text: `${m.currency_code ?? country.iso3} · demo fixture`,
+      period: "2026 demo",
+    };
+  }
+  const ccy = m.currency_code ?? "—";
+  if (m.is_shared_currency_area) {
+    const areaShare =
+      m.currency_area_cofer_share_pct != null
+        ? `${m.currency_area_cofer_share_pct.toFixed(1)}% COFER`
+        : "COFER n/a";
+    return {
+      text: `${ccy} shared area (${areaShare} · not national)`,
+      period: m.cofer_period ?? m.fx_turnover_period ?? "—",
+    };
+  }
+  const parts: string[] = [ccy];
+  if (m.cofer_reserve_share_pct != null) {
+    parts.push(`${m.cofer_reserve_share_pct.toFixed(1)}% reserves`);
+  } else {
+    parts.push("COFER n/a");
+  }
+  if (m.fx_turnover_share_200pct != null) {
+    parts.push(`${m.fx_turnover_share_200pct.toFixed(1)}% FX`);
+  }
+  return {
+    text: parts.join(" · "),
+    period: [m.cofer_period, m.fx_turnover_period].filter(Boolean).join(" / ") || "—",
+  };
+}
+
+export function PowerStudyCard({
+  role,
+  selectId,
+  country,
+  countries,
+  disabledIso3,
+  playbackPeriod,
+  isFocused,
+  demo = false,
+  onChangeCountry,
+  onInspectDetails,
+}: {
+  role: "Incumbent" | "Challenger";
+  selectId: string;
+  country: ObservatoryCountry | null;
+  countries: ObservatoryCountry[];
+  disabledIso3: string;
+  playbackPeriod: string | null;
+  isFocused: boolean;
+  demo?: boolean;
+  onChangeCountry: (iso3: string) => void;
+  onInspectDetails: (iso3: string) => void;
+}) {
+  if (!country) return null;
+
+  const histPoint = playbackPeriod
+    ? country.history.find((pt) => pt.period === playbackPeriod)
+    : null;
+  const activeStage = playbackPeriod ? (histPoint?.stage ?? null) : country.stage;
+  const activeScore = playbackPeriod ? (histPoint?.score ?? null) : country.domestic_condition_score;
+  const activePeriodLabel = playbackPeriod ?? country.period ?? "latest";
+
+  const gs = country.international_power.global_shares;
+  const econ = country.international_power.economic_size;
+  const trade = country.international_power.international_trade;
+  const mil = country.international_power.military_resources;
+  const ccy = formatCurrencySummary(country, demo);
+
+  const shareRow = (
+    label: string,
+    worldPct: number | null | undefined,
+    worldPeriod: string | null | undefined,
+    fallbackPct?: number | null,
+    fallbackPeriod?: string | null,
+    fallbackSuffix = "tracked",
+  ) => {
+    const pct = worldPct ?? (demo ? (fallbackPct ?? null) : null);
+    const rawPeriod = worldPct != null ? worldPeriod : fallbackPeriod;
+    const periodNote = rawPeriod
+      ? playbackPeriod
+        ? `latest ${rawPeriod}`
+        : rawPeriod
+      : "—";
+    return (
+      <div className="obs-study-row" key={label}>
+        <dt>{label}</dt>
+        <dd>
+          <span className="obs-study-val">
+            {pct != null ? `${pct.toFixed(1)}%` : "Unavailable"}
+            {worldPct == null && pct != null ? ` (${fallbackSuffix})` : ""}
+          </span>
+          <span className="obs-study-period">{periodNote}</span>
+        </dd>
+      </div>
+    );
+  };
+
+  return (
+    <section
+      className={isFocused ? "obs-panel glass obs-study-card focused" : "obs-panel glass obs-study-card"}
+      aria-label={`${role} country under study — ${country.name}`}
+    >
+      <div className="obs-study-head">
+        <label htmlFor={selectId} className="obs-study-picker">
+          <span className="obs-study-role">{role} under study</span>
+          <select
+            id={selectId}
+            className="glass-button"
+            value={country.iso3}
+            onChange={(e) => onChangeCountry(e.target.value)}
+          >
+            {countries.map((c) => (
+              <option key={c.iso3} value={c.iso3} disabled={c.iso3 === disabledIso3}>
+                {c.name} ({c.iso3})
+              </option>
+            ))}
+          </select>
+        </label>
+        <span className="obs-chip">{country.iso3}</span>
+      </div>
+
+      <div className="obs-study-stage">
+        <div>
+          <span className="obs-muted">
+            Experimental domestic stage ({activePeriodLabel})
+          </span>
+          <strong>
+            {activeStage ? stageLabel(activeStage) : `Unclassified in ${activePeriodLabel}`}
+          </strong>
+        </div>
+        <div className="obs-study-cond">
+          <span className="obs-muted">Condition</span>
+          <strong>{activeScore != null ? activeScore.toFixed(1) : "—"}</strong>
+        </div>
+      </div>
+
+      <dl className="obs-study-metrics">
+        {shareRow(
+          "Global nominal GDP share",
+          gs?.nominal_gdp?.share_pct,
+          gs?.nominal_gdp?.period,
+          econ?.tracked_share_pct,
+          econ?.period,
+        )}
+        {shareRow(
+          "Global PPP GDP share",
+          gs?.ppp_gdp?.share_pct,
+          gs?.ppp_gdp?.period,
+          econ?.tracked_share_pct,
+          econ?.period,
+        )}
+        {shareRow(
+          "Merchandise export share",
+          gs?.merchandise_exports?.share_pct,
+          gs?.merchandise_exports?.period,
+          trade?.tracked_share_pct,
+          trade?.period,
+        )}
+        {shareRow(
+          "Military expenditure share",
+          gs?.military_expenditure?.share_pct,
+          gs?.military_expenditure?.period,
+          mil?.tracked_share_pct,
+          mil?.period,
+        )}
+        <div className="obs-study-row">
+          <dt>Currency influence</dt>
+          <dd>
+            <span className="obs-study-val">{ccy.text}</span>
+            <span className="obs-study-period">
+              {playbackPeriod && ccy.period !== "—" ? `latest ${ccy.period}` : ccy.period}
+            </span>
+          </dd>
+        </div>
+      </dl>
+
+      <div className="obs-study-actions">
+        <button
+          type="button"
+          className="glass-button"
+          onClick={() => onInspectDetails(country.iso3)}
+        >
+          Inspect 17 forces & details
+        </button>
+        <a href={`/country/${country.iso3}`} className="obs-inline-link">
+          Country page →
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- CompactTransitionMonitor (first-screen status summary) ---------- */
+
+export function CompactTransitionMonitor({
+  data,
+  onOpenComparison,
+}: {
+  data: TransitionMonitor;
+  onOpenComparison: () => void;
+}) {
+  const fr = data.forecast_readiness;
+  return (
+    <section className="obs-panel glass obs-monitor obs-monitor-compact" aria-label="Power transition monitor">
+      <div className="obs-compact-monitor-head">
+        <h2 className="obs-panel-title">Power transition monitor</h2>
+        <span className="badge badge-warn">Evidence-gated</span>
+      </div>
+
+      <div className="obs-monitor-pair compact">
+        <div>
+          <span className="obs-muted">Incumbent under study</span>
+          <strong>
+            {data.incumbent_name} <span className="obs-chip">{data.incumbent_iso3}</span>
+          </strong>
+        </div>
+        <div>
+          <span className="obs-muted">Challenger under study</span>
+          <strong>
+            {data.challenger_name} <span className="obs-chip">{data.challenger_iso3}</span>
+          </strong>
+        </div>
+      </div>
+
+      <div className="obs-window compact">
+        <div>
+          <span className="obs-muted">Transition window status</span>
+          <strong className={fr.overall_available ? "" : "obs-window-none"}>
+            {fr.estimated_transition_window || "Not estimable"}
+          </strong>
+        </div>
+        <span className="obs-muted">
+          Strict release-safe periods: <strong>{fr.strict_eligible_periods}</strong>
+        </span>
+      </div>
+
+      <p className="obs-muted obs-compact-limit">
+        Research status: {fr.methodology_status}. Retrospective latest-vintage series and shared-input
+        composite models cannot support a transition countdown or forecast probability.
+      </p>
+
+      <button
+        type="button"
+        className="glass-button obs-open-comparison-btn"
+        onClick={onOpenComparison}
+      >
+        Open detailed comparison ({data.measurements.length} measures) →
+      </button>
+    </section>
+  );
+}
+
+/* ---------- CountryFocusPanel (detailed research panel) ---------- */
 
 export function CountryFocusPanel({
   country,
@@ -187,8 +446,8 @@ export function CountryFocusPanel({
       )}
       <p className="obs-note" data-fade>{powerNote}</p>
       <p className="obs-links" data-fade>
-        <a href={`/countries/${country.iso3}`}>Country profile →</a>
-        <a href={`/forces?country=${country.iso3}`}>17-force profile →</a>
+        <a href={`/country/${country.iso3}`}>Country profile →</a>
+        <a href={`/country/${country.iso3}/forces`}>17-force profile →</a>
       </p>
     </section>
   );

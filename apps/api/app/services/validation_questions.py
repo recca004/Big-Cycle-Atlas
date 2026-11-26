@@ -12,8 +12,13 @@ from app.models import (
     Observation, ResearchObservation, ResearchPopulationMembership,
     SourceSeries, ValidationQuestion,
 )
+from app.research.validation_questions import VALIDATION_REGISTRY_VERSION
 
 PRODUCTION_SOURCES = {"world_bank", "bis", "imf", "oecd", "wid"}
+RESEARCH_SOURCES = {
+    "jst_macrohistory", "imf_cofer", "bis_fx_turnover", "bis_lbs",
+    "bis_credit_policy", "pwt", "maddison",
+}
 REGISTRY_SOURCES = {
     "theory_registry", "hypothesis_protocols", "power_registry",
     "currency_research_entities", "atlas_cycle_model", "atlas_force_engine",
@@ -110,7 +115,10 @@ async def _research_evidence(session: AsyncSession, dataset: dict[str, Any]) -> 
         )
         .order_by(ResearchObservation.variable_code)
     )
-    if dataset_version and dataset_version not in {"R6", "current WDI import", "current WEO import", "current BIS import", "current OECD import", "current WID import"}:
+    if dataset_version and dataset_version not in {
+        "R6", "COFER-SDMX-2.1", "WS_DER_OTC_TOV", "WS_LBS_D_PUB", "WS_TC_CBPOL", "11.0", "2023",
+        "current WDI import", "current WEO import", "current BIS import", "current OECD import", "current WID import",
+    }:
         stmt = stmt.where(ResearchObservation.dataset_version == dataset_version)
     rows = (await session.execute(stmt)).all()
     return [
@@ -188,7 +196,7 @@ async def actual_evidence(session: AsyncSession, question: ValidationQuestion) -
         record = {"declared_dataset": dataset}
         if source_key in PRODUCTION_SOURCES:
             rows = await _production_evidence(session, dataset)
-        elif source_key == "jst_macrohistory":
+        elif source_key in RESEARCH_SOURCES:
             rows = await _research_evidence(session, dataset)
         elif source_key == "crisis_registry":
             rows = await _crisis_evidence(session)
@@ -240,8 +248,29 @@ async def chart_points(session: AsyncSession, question: ValidationQuestion, enti
     return chart
 
 
-async def question_summary(session: AsyncSession) -> dict[str, Any]:
-    rows = (await session.execute(select(ValidationQuestion))).scalars().all()
+async def question_summary(
+    session: AsyncSession,
+    registry_version: str | None = None,
+) -> dict[str, Any]:
+    target_version = registry_version or VALIDATION_REGISTRY_VERSION
+    rows = (
+        await session.execute(
+            select(ValidationQuestion).where(
+                ValidationQuestion.registry_version == target_version
+            )
+        )
+    ).scalars().all()
+    if not rows:
+        rows = (await session.execute(select(ValidationQuestion))).scalars().all()
+    all_versions = sorted(
+        r[0]
+        for r in (
+            await session.execute(
+                select(func.distinct(ValidationQuestion.registry_version))
+            )
+        ).all()
+        if r[0]
+    )
     implementation = Counter(r.implementation_status for r in rows)
     validation = Counter(r.research_validation_status for r in rows)
     categories = Counter(r.category for r in rows)
@@ -255,7 +284,8 @@ async def question_summary(session: AsyncSession) -> dict[str, Any]:
     )
     return {
         "count": len(rows),
-        "registry_version": rows[0].registry_version if rows else None,
+        "registry_version": rows[0].registry_version if rows else target_version,
+        "preserved_registry_versions": all_versions,
         "methodology_status": "experimental",
         "by_category": dict(sorted(categories.items())),
         "by_implementation_status": dict(sorted(implementation.items())),

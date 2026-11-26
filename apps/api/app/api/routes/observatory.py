@@ -63,6 +63,7 @@ async def observatory_overview(
         "scoring_period": core["scoring_period"],
         "available_periods": core["available_periods"],
         "countries": core["countries"],
+        "currency_evidence": core.get("currency_evidence"),
         "power_summary": core["power_summary"],
         "transition_monitor": transition,
         "freshness": freshness,
@@ -116,7 +117,10 @@ async def observatory_model_comparison(
                 "near_score_share": comparison.near_score_share,
                 "exact_stage_share": comparison.exact_stage_share,
                 "equivalent_under_current_data": comparison.materially_equivalent,
-                "independent_evidence": not comparison.materially_equivalent,
+                "distinct_weighting_method": True,
+                "distinct_outputs_under_current_data": not comparison.materially_equivalent,
+                "shared_input_datasets": True,
+                "independent_evidence": False,
             }
     return {
         "cycle_label": "experimental_domestic_condition_cycle",
@@ -135,9 +139,10 @@ async def observatory_model_comparison(
         "countries": rows,
         "equivalence": equivalence,
         "note": (
-            "Stage markers are model outputs for the same experimental domestic-"
-            "condition cycle; materially equivalent models are not independent "
-            "confirmation."
+            "All four composite models weight shared underlying observations in the same "
+            "experimental domestic-condition cycle; none provide statistically independent "
+            "empirical evidence. Stage differences measure model specification sensitivity, "
+            "and materially equivalent models are not independent confirmation."
         ),
     }
 

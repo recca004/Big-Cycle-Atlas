@@ -107,8 +107,14 @@ async def seed_scientific_foundation(session: AsyncSession) -> dict[str, int]:
         ("engine", "force_signals", "experimental_model", "approved measurement methods; not independently evaluated forecasts"),
         ("engine", "cycle_stages", "retrospective_analysis", "Atlas operational labels; not validated historical stages"),
         ("source", "jst_macrohistory_R6", "retrospective_analysis", "historical dataset release, not real-time point-in-time data"),
+        ("source", "imf_cofer_SDMX_2_1", "observed_data", "currency-level official reserve shares; revised back to 2000Q1 in Dec 2025 to impute unallocated reserves; INR not separately identified"),
+        ("source", "bis_fx_turnover_WS_DER_OTC_TOV", "observed_data", "triennial survey 1989-2025 including INR; two-sided currency shares sum to 200%"),
+        ("source", "bis_lbs_WS_LBS_D_PUB", "observed_data", "quarterly cross-border bank claims by currency and reporting jurisdiction"),
+        ("source", "bis_credit_policy_WS_TC_CBPOL", "observed_data", "sectoral credit (govt/private/household/corporate) and central-bank policy rates"),
+        ("source", "pwt_11_0", "retrospective_analysis", "2021 PPP and constant national-accounts output, inputs, human capital and TFP; do not mix with 2011 PPP or OECD indices"),
+        ("source", "maddison_2023", "retrospective_analysis", "long-run reconstructed GDP per capita in 2011 international dollars; pre-modern series are historical reconstructions"),
         ("source", "alfred_fred", "unavailable_research_result", "registered API key required"),
-        ("source", "imf_laeven_valencia_WP-2026-094", "unavailable_research_result", "official supplemental dataset URL returned HTTP 404"),
+        ("source", "imf_laeven_valencia_WP-2026-094", "unavailable_research_result", "official supplemental dataset URL returned HTTP 403/404"),
     ):
         exists = (await session.execute(select(EvidenceStatusEntry).where(
             EvidenceStatusEntry.subject_type == subject_type,

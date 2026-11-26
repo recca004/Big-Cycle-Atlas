@@ -152,16 +152,28 @@ POWER_MEASURE_DEFINITIONS: tuple[PowerMeasureDefinition, ...] = (
         None, "System depth; not reserve status or global financial influence.",
     ),
     PowerMeasureDefinition(
-        "reserve_currency_status", "Official reserve share", None,
-        None, "imf_cofer", "% of allocated reserves", "quarterly",
-        "currency_area", "world_allocated_reserves", "currency_level_share",
-        None, "Not yet ingested; unreported currencies remain unavailable, never zero.",
+        "financial_centre_strength", "Cross-border bank claims booked in jurisdiction", None,
+        "LBS_REPORTING_CLAIMS_SHARE_PCT", "bis_lbs", "% of BIS reporting total", "quarterly",
+        "tracked_country", "bis_reporting_jurisdictions", "global_share_of_cross_border_banking",
+        "ALL_REPORTING", "BIS Locational Banking Statistics (WS_LBS_D_PUB); international banking intermediation kept separate from domestic credit depth.",
+    ),
+    PowerMeasureDefinition(
+        "reserve_currency_status", "Official FX reserve share", None,
+        "COFER_RESERVE_SHARE_PCT", "imf_cofer", "% of FX reserves", "quarterly",
+        "currency_area", "world_fx_reserves", "currency_level_share",
+        "ALL_CURRENCIES", "IMF COFER (1995-1998 annual, 1999Q1+ quarterly; Dec 2025 imputation back to 2000Q1). EUR belongs to Eurosystem, never DEU/FRA individually; INR not separately reported (never zero).",
     ),
     PowerMeasureDefinition(
         "reserve_currency_status", "Foreign-exchange turnover share", None,
-        None, "bis_triennial", "% of turnover", "triennial",
-        "currency_area", "global_fx_turnover", "currency_level_share",
-        None, "Not yet ingested; currency-level evidence, not country score.",
+        "FX_TURNOVER_SHARE_200PCT", "bis_fx_turnover", "% of daily FX turnover (200% sum)", "triennial",
+        "currency_area", "global_fx_turnover", "currency_level_share_two_sided",
+        "ALL_CURRENCIES", "BIS Triennial Survey (1989-2025, including INR from 1998); two currencies per trade so shares sum to 200%.",
+    ),
+    PowerMeasureDefinition(
+        "reserve_currency_status", "Cross-border bank claims by currency", None,
+        "LBS_CROSS_BORDER_CLAIMS_SHARE_PCT", "bis_lbs", "% of cross-border bank claims", "quarterly",
+        "currency_area", "bis_cross_border_claims", "currency_level_share",
+        "ALL_CURRENCIES", "BIS Locational Banking Statistics currency denomination; CNY and INR not separately disclosed in public aggregate.",
     ),
 )
 

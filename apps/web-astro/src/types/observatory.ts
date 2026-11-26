@@ -67,7 +67,16 @@ export interface InnovationPower {
 
 export interface MonetaryPower {
   currency_code?: string;
+  is_shared_currency_area?: boolean;
   reserve_anchor_role?: string;
+  cofer_reserve_share_pct?: number | null;
+  cofer_period?: string | null;
+  currency_area_cofer_share_pct?: number | null;
+  fx_turnover_share_200pct?: number | null;
+  fx_turnover_period?: string | null;
+  currency_area_fx_turnover_share_200pct?: number | null;
+  lbs_currency_claims_share_pct?: number | null;
+  lbs_currency_period?: string | null;
   reer_index?: number | null;
   reer_period?: string | null;
   gov_10y_yield?: number | null;
@@ -76,7 +85,56 @@ export interface MonetaryPower {
   scope_note?: string;
 }
 
+export interface GlobalShareMetric {
+  share_pct: number | null;
+  value: number | null;
+  period: string | null;
+  source: string | null;
+}
+
+export interface GlobalShares {
+  nominal_gdp?: GlobalShareMetric;
+  ppp_gdp?: GlobalShareMetric;
+  merchandise_exports?: GlobalShareMetric;
+  service_exports?: GlobalShareMetric;
+  military_expenditure?: GlobalShareMetric;
+  high_tech_exports?: GlobalShareMetric;
+  resident_patents?: GlobalShareMetric;
+  cross_border_banking?: GlobalShareMetric;
+}
+
+export interface CurrencySummaryItem {
+  currency_code: string;
+  entity_type: string;
+  cofer_reserve_share_pct: number | null;
+  cofer_period: string | null;
+  fx_turnover_share_200pct: number | null;
+  fx_turnover_period: string | null;
+  lbs_claims_share_pct: number | null;
+  lbs_period: string | null;
+  note: string | null;
+}
+
+export interface CurrencySeriesPoint {
+  period: string;
+  year: number;
+  value: number;
+  source_key: string;
+  entity_type: string;
+}
+
+export interface CurrencyEvidence {
+  currencies: CurrencySummaryItem[];
+  imputed_reserve_share?: CurrencySeriesPoint | null;
+  methodology_breaks: { period: string; break_code: string; description: string }[];
+  series: {
+    cofer_reserve_share_pct: Record<string, CurrencySeriesPoint[]>;
+    fx_turnover_share_200pct: Record<string, CurrencySeriesPoint[]>;
+  };
+}
+
 export interface InternationalPower {
+  global_shares?: GlobalShares;
   economic_size?: {
     value_usd: number;
     tracked_share_pct: number;
@@ -319,6 +377,9 @@ export interface ObservatoryModelComparison {
       near_score_share: number;
       exact_stage_share: number;
       equivalent_under_current_data: boolean;
+      distinct_weighting_method?: boolean;
+      distinct_outputs_under_current_data?: boolean;
+      shared_input_datasets?: boolean;
       independent_evidence: boolean;
     }
   >;
@@ -358,6 +419,7 @@ export interface ObservatoryOverview {
   scoring_period: string | null;
   available_periods: string[];
   countries: ObservatoryCountry[];
+  currency_evidence?: CurrencyEvidence | null;
   power_summary: PowerSummary;
   transition_monitor: TransitionMonitor;
   freshness: ObservatoryFreshness;

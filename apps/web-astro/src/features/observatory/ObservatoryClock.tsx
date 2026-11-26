@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ObservatoryCountry } from "@/types/observatory";
-import { CycleDial, type DialCountry } from "./CycleDial";
+import { CycleDial, type DialCountry, type DialModelGhost } from "./CycleDial";
 import type { BigCycleScene } from "./scene";
 import type { CameraPreset } from "./scene/camera";
 
@@ -15,6 +15,9 @@ interface Props {
   playbackPeriod: string | null;
   playbackControls?: React.ReactNode;
   periodLabel?: string;
+  allModelGhosts?: DialModelGhost[];
+  showAllModels?: boolean;
+  onToggleAllModels?: (() => void) | undefined;
 }
 
 const CAMERA_BUTTONS: { key: CameraPreset; label: string; hint: string }[] = [
@@ -49,6 +52,9 @@ export function ObservatoryClock({
   playbackPeriod,
   playbackControls,
   periodLabel,
+  allModelGhosts = [],
+  showAllModels = false,
+  onToggleAllModels,
 }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const canvasHostRef = useRef<HTMLDivElement>(null);
@@ -187,6 +193,14 @@ export function ObservatoryClock({
 
   return (
     <div className="obs-clock">
+      <div className="obs-clock-header">
+        <span className="obs-clock-scope-badge">Experimental domestic-condition cycle</span>
+        {periodLabel && (
+          <span className="obs-period-label" role="status">
+            <strong>{periodLabel}</strong>
+          </span>
+        )}
+      </div>
       <div className="obs-clock-frame" ref={frameRef}>
         {show3d && <div className="obs-clock-canvas" ref={canvasHostRef} />}
         <div className="obs-clock-dial">
@@ -196,6 +210,7 @@ export function ObservatoryClock({
             onSelect={handleSelect}
             decorative={!show3d}
             animate={!reducedMotion}
+            allModelGhosts={showAllModels ? allModelGhosts : []}
           />
         </div>
         {playbackPeriod && (
@@ -237,6 +252,17 @@ export function ObservatoryClock({
           >
             Reduce motion
           </button>
+          {onToggleAllModels && (
+            <button
+              type="button"
+              className={showAllModels ? "glass-button active" : "glass-button"}
+              aria-pressed={showAllModels}
+              onClick={onToggleAllModels}
+              title="Overlay all four composite models for the selected country"
+            >
+              {showAllModels ? "Single model" : "All models"}
+            </button>
+          )}
         </div>
 
         <label className="obs-speed">
@@ -280,15 +306,10 @@ export function ObservatoryClock({
             </div>
           </>
         )}
-        {periodLabel && (
-          <span className="obs-period-label" role="status">
-            Observation period: <strong>{periodLabel}</strong>
-          </span>
-        )}
       </div>
       <p className="clock-honesty">
-        Experimental domestic-condition cycle — dial positions are model classifications, not an observation,
-        international-power ranking, forecast, countdown or prediction.
+        Experimental domestic-condition cycle — dial positions are model outputs over internal governance, human capital
+        and productivity, never an international-order countdown or validated empire clock.
       </p>
     </div>
   );

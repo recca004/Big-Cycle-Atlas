@@ -1,18 +1,20 @@
 # Project Status
 
-> **CURRENT STATE (2026-11-26, 50-Question Scientific Validation Registry):**
+> **CURRENT STATE (2026-11-26, Scientific Validation & Observatory V3):**
 > branch `feature/great-power-observatory`. Versioned theory/hypothesis
 > registries, JST R6 long-history research panel, independent banking-crisis
 > outcomes, immutable prediction/outcome ledger, H01 evaluation, canonical
-> Q01–Q50 validation registry, `/research/validation` page, workspace widgets
-> and expanded reproducible exports are implemented. H01's latest result is
-> `no_evidence_of_improved_predictive_value`; strict forecast readiness
-> remains NOT READY. ALFRED is credential-blocked and the IMF WP-2026-94
-> bundle URL is unavailable (404), both recorded rather than fabricated.
-> The original 50-question source text was absent, so the registry explicitly
-> records `wording_origin: atlas_derived_v1`; it does not pretend to be a
-> recovered legacy wording source. The milestone log below is historical —
-> superseded figures intentionally retained.
+> Q01–Q50 validation registry (`v1.1` active, `v1.0` preserved), newly imported
+> IMF COFER reserve shares, BIS FX turnover (including INR), BIS cross-border
+> banking, BIS sectoral credit & policy rates, Penn World Table 11.0, Maddison
+> 2023, redesigned Observatory Homepage V3, and ChatGPT review package are
+> implemented. H01's latest result is `no_evidence_of_improved_predictive_value`
+> (forensically traced to public `debtgdp` vs private `tloans/gdp` + 2007–2008
+> clustering; preserved unchanged); strict forecast readiness remains NOT READY.
+> ALFRED is credential-blocked (`BCA_FRED_API_KEY`) and IMF WP-2026-094
+> (`wp2694.zip`) is CDN-blocked (HTTP 403/404), both documented with exact
+> local setup commands. The milestone log below is historical — superseded
+> figures intentionally retained.
 
 ## Phase
 
@@ -24,16 +26,16 @@ Milestone 3 — COMPLETE (World Bank connector). Milestone 4 — IN PROGRESS (WB
 percentage is tracked — progress is measured by milestone/sprint completion
 and the living DB/test state below.
 
-Current living truth (2026-11-26):
+Current living truth (2026-11-26 V3):
 
-- 21,178 ordinary observations; 46 indicators; 46 SourceSeries; 13 DataSources
-- 111,546 research observations (JST R6); 88 crisis events; 2,668 crisis coverage rows
-- 7 theory-registry entries; 4 hypothesis protocols; 1,666 prediction ledger rows; 1,666 outcomes; 2 evaluation rows
-- 50 canonical validation questions in `validation-questions-v1.0`
-- Primary Observatory population remains 8 countries; JST extended research population has 18 source-defined entities
-- Latest H01 evaluation: `no_evidence_of_improved_predictive_value`
-- Strict release-date-safe forecast samples remain unavailable
-- Backend pytest 837 passed; Vitest 54 passed; Astro check clean; production build and 57 Playwright checks passed
+- 21,178 ordinary observations (18,402 distinct latest-vintage); 46 indicators; 46 SourceSeries; 19 DataSources
+- 154,113 research observations (+42,567 added across IMF COFER, BIS FX turnover, BIS LBS, BIS sectoral credit/policy rates, PWT 11.0, Maddison 2023 alongside 111,546 JST R6 rows); 88 crisis events; 2,668 crisis coverage rows
+- 7 theory-registry entries; 4 hypothesis protocols; 1,666 prediction ledger rows; 1,666 outcomes; 2 evaluation rows; 9 dataset-rights rows; 12 evidence-status rows
+- 50 active canonical validation questions in `validation-questions-v1.1` (100 rows stored across preserved `v1.0` + `v1.1`)
+- Primary Observatory population remains 8 countries; extended research panels cover 18–20 countries plus currency-area entities (`USD, EUR, CNY, GBP, JPY, CHF, INR, DEM, FRF`)
+- All composite model pairs report `independent_evidence: false` (shared underlying observation tables)
+- Strict release-date-safe forecast samples remain 0 (`Not estimable`)
+- Backend pytest 838 passed; Vitest 54 passed; Astro check clean; production build (38 pages) and 59 Playwright + a11y checks passed
 - Historical milestone figures below remain dated state, not current totals
 
 Historical living truth (2026-09-10):

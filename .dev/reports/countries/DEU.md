@@ -1,6 +1,6 @@
 # Germany (DEU) — economic research profile
 
-Generated: 2026-11-26T00:16:56.338747Z
+Generated: 2026-11-26T09:05:19.352324Z
 Methodology: experimental, `normalization-v1.4`, `force-aggregation-v1.0`
 Requested calculation period: `2026-Q3`
 Latest classified composite period: `2025-Q4`

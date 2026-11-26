@@ -1,7 +1,7 @@
 # Big Cycle Atlas — economic research handover, 1980–present
 
-Generated: 2026-11-26T00:16:56.338747Z
-Base commit: `9720659680fb10a0a3bc751fef04d9bc1a70a074`
+Generated: 2026-11-26T09:05:19.352324Z
+Base commit: `ef0c039f9c0c005366d45c0813c164bdc4290b79`
 Methodology: `normalization-v1.4`, `force-aggregation-v1.0`, experimental cycle classifier v1
 
 ## 1. Executive economic summary
@@ -16,7 +16,7 @@ Largest tracked economy: **USA**; second: **CHN**. Highest domestic-condition sc
 |---|---:|
 | `countries` | 8 |
 | `indicators` | 46 |
-| `data_sources` | 13 |
+| `data_sources` | 19 |
 | `source_series` | 46 |
 | `observations_all_vintages` | 21178 |
 | `reference_observations` | 24377 |
@@ -25,7 +25,7 @@ Largest tracked economy: **USA**; second: **CHN**. Highest domestic-condition sc
 | `indicator_revisions` | 2776 |
 | `indicator_diagnostics` | 3855 |
 | `ingestion_runs` | 1503 |
-| `research_observations` | 111546 |
+| `research_observations` | 154113 |
 | `crisis_events` | 88 |
 | `crisis_coverage_rows` | 2668 |
 | `theory_registry_entries` | 7 |
@@ -34,9 +34,10 @@ Largest tracked economy: **USA**; second: **CHN**. Highest domestic-condition sc
 | `prediction_outcomes` | 1666 |
 | `evaluation_results` | 2 |
 | `population_memberships` | 26 |
-| `dataset_rights` | 3 |
-| `evidence_status_entries` | 6 |
+| `dataset_rights` | 9 |
+| `evidence_status_entries` | 12 |
 | `validation_questions` | 50 |
+| `validation_question_versions_stored` | 100 |
 | `distinct_observation_identities` | 18402 |
 | `latest_vintage_rows` | 18402 |
 
@@ -147,7 +148,7 @@ See `export/power_measure_registry.json`, `export/global_power_shares.csv`, `exp
 | IND | `PATENT_APPLICATIONS_RESIDENT` | 2024-01-01 | 2.34% |
 | IND | `HIGH_TECHNOLOGY_EXPORTS_USD` | 2023-01-01 | 1.15% |
 
-Global shares use provider world aggregates (`WLD`) as denominators and are distinct from the eight-country tracked shares shown above. Reserve-currency records are registered but remain unavailable because verified COFER/BIS currency observations have not yet been imported; unreported currencies are never set to zero.
+Global shares use provider world aggregates (`WLD`) as denominators and are distinct from the eight-country tracked shares shown above. Currency-level official reserve shares (`IMF COFER`), FX turnover shares (`BIS Triennial Survey`, including `INR` at 1.95% in 2025) and cross-border banking shares (`BIS Locational Banking Statistics`) are exported in `export/reserve_currency_history.csv`; `EUR` shares remain on the shared Eurosystem currency area and `INR` is never zero-imputed in COFER.
 
 ## 7. USA–China–India measured comparison
 
@@ -178,7 +179,7 @@ Global shares use provider world aggregates (`WLD`) as denominators and are dist
 
 Ratios are direct raw-measurement ratios on common observation years and are only meaningful for compatible units and reference populations. A change in ratio indicates convergence/divergence in that measurement, not a complete leadership transition.
 
-Decade and recent 1/3/5/10-year changes for USA, China and India are exported in `export/historical_period_comparison.csv`. India is therefore compared on the same measurement definitions rather than forced into a cycle-stage narrative.
+Decade and recent 1/3/5/10-year changes for USA, China and India are exported in `export/historical_period_comparison.csv`, and common-period ratio & gap convergence/divergence classifications (`narrowing`, `widening`, `stable`) are exported in `export/usa_chn_ind_gap_dynamics.csv`. India is therefore compared on the same measurement definitions rather than forced into a cycle-stage narrative.
 
 ## 8. Four-model experimental domestic-condition comparison
 
@@ -239,14 +240,14 @@ See `export/data_quality_findings.csv`. Material gaps are reported as gaps, not 
 - Historical calculations use latest-vintage observations and are retrospective research, not release-date-safe backtests.
 - Raw scale measures may extend to 1960, but the cycle engine remains constrained by coverage, minimum observations and hysteresis.
 - Military spending is an input resource, not full military capability.
-- OECD productivity percentiles are explicitly OECD-reference measurements and are not global percentiles.
-- Financial-centre and reserve-currency dimensions remain materially incomplete.
+- OECD productivity percentiles are explicitly OECD-reference measurements and are not global percentiles; Penn World Table 11.0 (2021 PPP) and Maddison 2023 (2011 international $) are exported separately in `export/historical_productivity_pwt_maddison.csv`.
+- Official reserve-currency shares (IMF COFER 1995–2026Q2), BIS FX turnover (1989–2025) and BIS cross-border banking claims (1977Q4–2026Q2) are currency/centre measurements with documented methodology breaks, not national strength scores.
 - Boundary metadata distinguishes current Germany from provider-labelled pre-1991 history and mainland-China coverage; provider definitions still limit historical joins.
 
 ## 12. Recommended next research priorities
 
-1. Add Maddison/PWT real-output and capital history as separate labelled historical methods.
-2. Add SIPRI direct military expenditure records for provenance and global-share denominators.
-3. Add verified financial-centre/capital-market and reserve-currency reference series.
-4. Extend boundary metadata beyond the implemented Germany/China records as new territorial-history providers are integrated.
-5. Preserve evidence gates before attempting any leadership-transition forecast.
+1. Pre-register `H01B` testing private-sector credit growth (`JST tloans/gdp` and `BIS CREDIT_PRIVATE_NF_GDP`) with multi-country crisis-wave clustering controls.
+2. Pre-register `H02` persistent productivity slowdown outcomes using PWT 11.0 `rtfpna` and WGI governance series.
+3. Configure `BCA_FRED_API_KEY` locally to populate genuine ALFRED real-time vintage histories and unlock strict `as_of` cutoff tests.
+4. Import official IMF WP/2026/094 (`wp2694.zip`) once accessible to expand banking-crisis coverage beyond the 18 JST economies.
+5. Evaluate V-Dem, UCDP and Correlates of War licensing/access to address the 25+ untestable internal-conflict and external-rivalry questions.

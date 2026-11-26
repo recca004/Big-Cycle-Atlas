@@ -1,12 +1,16 @@
 {
-  "registry_version": "validation-questions-v1.0",
+  "registry_version": "validation-questions-v1.1",
+  "preserved_registry_versions": [
+    "validation-questions-v1.0",
+    "validation-questions-v1.1"
+  ],
   "methodology_status": "experimental",
   "wording_origin": "atlas_derived_v1",
   "count": 50,
   "questions": [
     {
       "question_code": "Q01",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "What is the original Big Cycle theory, which claims does it make, and which claims can Atlas operationalise?",
       "short_title": "Original theory scope",
@@ -15,7 +19,7 @@
       "current_answer": "Atlas now records the theory and operational differences; it does not claim the theory is proven.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [],
       "related_forces": [],
       "related_power_measures": [],
@@ -70,11 +74,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "7d394ebaaf270d0211ce5e78f1e4da698914d26d95301d8e628a172a4c90ae6b"
+      "content_checksum": "725201270ce4f60041988640bba0aea3da0a5e2bf798430d379fe906b2100b21"
     },
     {
       "question_code": "Q02",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "How long is the proposed Big Cycle, and is the approximately 75-year claim supported across independently dated historical cycles?",
       "short_title": "Cycle duration",
@@ -83,7 +87,7 @@
       "current_answer": "Currently untestable; no Atlas countdown or stage advancement uses the duration claim.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H04"
       ],
@@ -112,19 +116,29 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "maddison",
+          "dataset": "2023",
+          "role": "Maddison Project Database 2023 historical GDP per capita in 2011 intl $ (1500-2022)"
         }
       ],
       "missing_datasets": [
         {
-          "source_key": "maddison",
-          "dataset": "historical GDP",
-          "reason": "not imported"
+          "source_key": "historical_entities",
+          "dataset": "boundary-stable sovereign/empire registry",
+          "reason": "modern country codes only"
         },
         {
           "source_key": "historical_order_transitions",
@@ -133,11 +147,11 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "JST 1870-2020",
-        "required": "multiple complete cycles / centuries"
+        "achieved": "Maddison 1500-2022 (reconstructed) + JST 1870-2020",
+        "required": "multiple independently dated boundary-stable order transitions"
       },
       "country_coverage": {
-        "achieved": "18 JST entities",
+        "achieved": "20 research countries",
         "required": "independent historical entities and modern countries"
       },
       "existing_research_methods": [
@@ -145,10 +159,11 @@
         "three-timescale separation"
       ],
       "supporting_evidence": [
-        "The duration claim is registered as a hypothesis candidate rather than a constant."
+        "The duration claim is registered as a hypothesis candidate rather than a constant.",
+        "Maddison 2023 extends output context pre-1870 without implying cycle stages."
       ],
       "contradictory_evidence": [
-        "JST covers roughly 1.5 centuries for selected advanced economies and no complete boundary-stable order-transition sample."
+        "GDP per capita history alone does not date order transitions, and no boundary-stable order-transition chronology is imported."
       ],
       "alternative_explanations": [
         "Different debt, internal-order and external-order clocks may have different durations."
@@ -173,11 +188,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "63759ad7703249ace7b8e18d7e19b2ba42c828df952053928b8a268a64c1eb9a"
+      "content_checksum": "eca45e5eeee9761dce552587dd10c228382a2161d5ef6d0e80a194d0f7a68580"
     },
     {
       "question_code": "Q03",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "What stages does the original framework describe, and how do those stages differ from the eight Atlas operational stages?",
       "short_title": "Original vs Atlas stages",
@@ -186,7 +201,7 @@
       "current_answer": "The frameworks are separated, but a validated original-stage mapping is not established.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [],
       "related_forces": [],
       "related_power_measures": [],
@@ -252,11 +267,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "5f2d7d5a5eefc0e2aa0888586fb3fbdad1703b1b24845d0422a695172dd57ac1"
+      "content_checksum": "266d844f24134fa10f23119b244bd1549f41b63d26c0291aa2da0016df4c1191"
     },
     {
       "question_code": "Q04",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "What evidence marks transitions from one proposed stage to another rather than ordinary short-cycle changes?",
       "short_title": "Stage transition evidence",
@@ -265,7 +280,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H04"
       ],
@@ -294,10 +309,15 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
         },
@@ -352,11 +372,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "b1d942bcc4c8e42e5410961c38fd773c5dbf2e291a1f209189bfebd4642cdde0"
+      "content_checksum": "25ed443648cfbf9ba93b78763923996486ec9be3b6bfa3e12191d34469066899"
     },
     {
       "question_code": "Q05",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "Can countries move backward, skip, repeat, or remain on a plateau within the proposed cycle?",
       "short_title": "Reversals and plateaus",
@@ -365,7 +385,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H04"
       ],
@@ -394,10 +414,15 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
         }
@@ -442,11 +467,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "09addaba1917c4366abda4eb570213ed9ea7968aedf4ba2b56995d80d30cb522"
+      "content_checksum": "f94bfee9d60e2a3ddc84b5f3902bd1637748558b14c35462a21c4586f59437f7"
     },
     {
       "question_code": "Q06",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "Do the claimed monetary, internal-order and external-order cycles interact in a measurable sequence?",
       "short_title": "Three-cycle interaction",
@@ -455,7 +480,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01",
         "H02",
@@ -489,10 +514,15 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
         },
@@ -520,6 +550,16 @@
           "source_key": "wid",
           "dataset": "current WID import",
           "role": "wealth inequality indicators"
+        },
+        {
+          "source_key": "imf_cofer",
+          "dataset": "COFER-SDMX-2.1",
+          "role": "official FX reserve shares & claims (1995-2026Q2; currency-level)"
+        },
+        {
+          "source_key": "bis_fx_turnover",
+          "dataset": "WS_DER_OTC_TOV",
+          "role": "BIS Triennial FX turnover shares 1989-2025 (including INR)"
         }
       ],
       "missing_datasets": [
@@ -534,16 +574,16 @@
           "reason": "not imported"
         },
         {
-          "source_key": "imf_cofer",
-          "dataset": "reserve shares",
+          "source_key": "independent_order_transitions",
+          "dataset": "order-transition chronology",
           "reason": "not imported"
         }
       ],
       "historical_coverage": {
-        "achieved": "JST 1870-2020 plus modern 1960-2025 panel"
+        "achieved": "JST 1870-2020, modern 1960-2026 macro, COFER 1995-2026Q2"
       },
       "country_coverage": {
-        "achieved": "8 primary + 18 JST entities"
+        "achieved": "8 primary + 18 JST entities + currency areas"
       },
       "existing_research_methods": [
         "three registered timescales",
@@ -571,11 +611,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "943c6d1b9326c32fc01facdb7c22c2b9dea807b434737835993b865f4aa7b036"
+      "content_checksum": "f5df1d86cb15cee6450f3c0c925bf7b1ba33c658393edeffb83a4fd2c1a2905d"
     },
     {
       "question_code": "Q07",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "Does the theory apply to all countries, only major powers, or only specific institutional and economic regimes?",
       "short_title": "Country applicability",
@@ -584,7 +624,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [],
       "related_forces": [],
       "related_power_measures": [],
@@ -659,11 +699,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "9aa11479874b2dd770654786da6c2b96abbe6399b5e288ce042e8fdd3d8290d2"
+      "content_checksum": "0f1684c24b0b6613416326ce5d1c3034ebdd4d39150fe2cb964c832399d6015c"
     },
     {
       "question_code": "Q08",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "Which observations would support the theory and which observations would falsify or weaken it?",
       "short_title": "Support and falsification",
@@ -672,7 +712,7 @@
       "current_answer": "The falsification machinery exists, but only H01 has an evaluated result.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01",
         "H02",
@@ -753,11 +793,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "e8b6eed78b6f5f7961efa3ab44b5bd9d67497bb28221fd962ea697caa0f90647"
+      "content_checksum": "a87bc3a534669e71f419c2d0b1ee660ad67ba652d800c63a9df66356c9edf2ce"
     },
     {
       "question_code": "Q09",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "Are the Atlas force scores and experimental stage classifications suitable evidence for the historical Big Cycle claim?",
       "short_title": "Atlas models as evidence",
@@ -766,7 +806,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [],
       "related_forces": [
         "all_17_forces"
@@ -845,11 +885,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "85fc4187d1c57ac5903b9e5d5fcbbb7d8b8415d19d18f6290e216d50902d1752"
+      "content_checksum": "ecbfc09c846f3b79fbce24edb9769dc069590740020f1569fa45325fceac2463"
     },
     {
       "question_code": "Q10",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "core_theory",
       "original_question": "How much historical depth, entity continuity and independent outcome coverage is required before the theory can be tested?",
       "short_title": "Required historical depth",
@@ -858,7 +898,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H04"
       ],
@@ -887,12 +927,27 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "maddison",
+          "dataset": "2023",
+          "role": "Maddison Project Database 2023 historical GDP per capita in 2011 intl $ (1500-2022)"
+        },
+        {
+          "source_key": "pwt",
+          "dataset": "11.0",
+          "role": "Penn World Table 11.0 output, worker/hour productivity, capital, human capital & TFP (1950-2023)"
         },
         {
           "source_key": "research_population",
@@ -901,11 +956,6 @@
         }
       ],
       "missing_datasets": [
-        {
-          "source_key": "maddison",
-          "dataset": "pre-1900 GDP",
-          "reason": "not imported"
-        },
         {
           "source_key": "historical_entities",
           "dataset": "boundary-stable entity registry",
@@ -918,11 +968,11 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "1870-2020",
-        "required": "multiple centuries and multiple transitions"
+        "achieved": "Maddison 1500-2022, JST 1870-2020, PWT 1950-2023",
+        "required": "boundary-stable entities and multiple dated order transitions"
       },
       "country_coverage": {
-        "achieved": "18 JST advanced economies",
+        "achieved": "20 research countries",
         "required": "documented eligibility across entity types"
       },
       "existing_research_methods": [
@@ -930,10 +980,10 @@
         "three-timescale architecture"
       ],
       "supporting_evidence": [
-        "The registry now states achieved coverage instead of claiming adequate long-cycle depth."
+        "The registry states achieved multi-dataset coverage instead of claiming adequate long-cycle outcome depth."
       ],
       "contradictory_evidence": [
-        "JST depth is useful but does not cover enough independent complete cycles."
+        "Historical GDP reconstructions do not provide independent order-transition outcomes."
       ],
       "alternative_explanations": [
         "Proxy depth may support sub-cycle tests even when the complete Big Cycle remains untestable."
@@ -951,20 +1001,20 @@
         }
       ],
       "chart": null,
-      "content_checksum": "6cdc2ce9ac281afdab08185fe6fd672c33e680dbf0afe2a5015d382dd9174f22"
+      "content_checksum": "ffb7241775865c7e803ba2e605717be7352c1b416f23ff306beed3effbe3f587"
     },
     {
       "question_code": "Q11",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Do rising debt burdens increase the probability of a subsequent systemic banking crisis?",
       "short_title": "Debt burdens and crises",
       "implementation_status": "evaluation_implemented",
       "research_validation_status": "evidence_inconsistent_with_registered_claim",
-      "current_answer": "The first registered test found no evidence of improved predictive value; this does not disprove every debt mechanism.",
+      "current_answer": "H01-P1.0 found no predictive value in 5-year public-debt/GDP growth before banking crises (AUC 0.30-0.38); public and private debt behave differently around banking crises.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -995,12 +1045,22 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "bis_credit_policy",
+          "dataset": "WS_TC_CBPOL",
+          "role": "BIS sectoral credit (govt, private, household, corporate) & policy rates"
         },
         {
           "source_key": "crisis_registry",
@@ -1012,7 +1072,7 @@
         {
           "source_key": "imf_laeven_valencia_banking_crises",
           "dataset": "WP-2026-094",
-          "reason": "official ZIP 404; no local bundle"
+          "reason": "official ZIP HTTP 403/404; local-file importer ready"
         },
         {
           "source_key": "alfred_fred",
@@ -1021,11 +1081,11 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "1870-2020 retrospective R6",
+        "achieved": "1870-2020 retrospective JST R6 + BIS sectoral credit 1947-2026Q1",
         "release_safety": "dataset-level only"
       },
       "country_coverage": {
-        "achieved": "18 JST advanced economies"
+        "achieved": "18 JST advanced economies + 8 primary countries"
       },
       "existing_research_methods": [
         "H01-P1.0 chronological holdout",
@@ -1034,19 +1094,20 @@
         "append-only prediction ledger"
       ],
       "supporting_evidence": [
-        "A complete leakage-aware protocol was registered and executed."
+        "A complete leakage-aware protocol was registered and executed.",
+        "Diagnostic contrast shows private bank-loan/GDP 5y growth (tloans/gdp) reaches retrospective AUC 0.721 (1y) and 0.702 (2y), confirming public vs private debt must never be conflated."
       ],
       "contradictory_evidence": [
-        "Held-out AUC was below random ordering and top-quintile precision was below the base rate."
+        "Registered H01-P1.0 tested public debtgdp 5-year change: held-out AUC was 0.363 (1y), 0.381 (2y), 0.296 (5y) and top-p80 precision (1.54%/1.50%/0.88%) fell below the ~3.42% base rate because public debt typically surges after banking crises rather than before them."
       ],
       "alternative_explanations": [
-        "Debt changes may be proxies for common global shocks or source composition rather than country-level vulnerability."
+        "Pre-crisis private credit booms improve fiscal balances before banking crises, while public debt surges post-crisis via bailouts and automatic stabilisers."
       ],
       "falsification_criteria": "No improvement over the unconditional base rate or discrimination near/below random ordering is evidence inconsistent with predictive value.",
       "scientific_limitations": [
-        "Retrospective latest dataset rather than real-time vintages.",
-        "Advanced-economy JST population only.",
-        "Annual events and correlated global crises."
+        "H01-P1.0 evaluated public debtgdp rather than private tloans/gdp; protocol is preserved unchanged.",
+        "13 of 19 post-1990 test events cluster in 2007-2008 and 4 in 1991.",
+        "Secular post-1990 debt drift pushed 35.1%-40.8% of test rows above the pre-1990 80th percentile."
       ],
       "source_references": [
         {
@@ -1076,22 +1137,22 @@
         "dataset_version": "R6",
         "variable_code": "debtgdp",
         "entity_code": "USA",
-        "label": "JST private credit / GDP \u2014 USA"
+        "label": "JST public debt / GDP \u2014 USA"
       },
-      "content_checksum": "16932d88dd2460e1061ed2724170b10b1884e33c8062a3173fee03a4b2b6eef7"
+      "content_checksum": "5d238199449f45361e7d7d64db953a76483fddbbf185c84fe59b742681ffb79e"
     },
     {
       "question_code": "Q12",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Do public, private non-financial, household and corporate debt measures provide different warning signals?",
       "short_title": "Debt composition",
-      "implementation_status": "partially_implemented",
+      "implementation_status": "data_available",
       "research_validation_status": "insufficient_evidence",
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1122,12 +1183,22 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "bis_credit_policy",
+          "dataset": "WS_TC_CBPOL",
+          "role": "BIS sectoral credit (govt, private, household, corporate) & policy rates"
         },
         {
           "source_key": "imf",
@@ -1142,34 +1213,29 @@
       ],
       "missing_datasets": [
         {
-          "source_key": "bis_sector_credit",
-          "dataset": "household/corporate splits",
-          "reason": "not imported"
-        },
-        {
           "source_key": "debt_ownership",
           "dataset": "holder composition",
           "reason": "not imported"
         }
       ],
       "historical_coverage": {
-        "achieved": "JST 1870-2020; modern BIS/IMF panel"
+        "achieved": "JST 1870-2020 (debtgdp, tloans, thh, tbus) + BIS WS_TC 1947-2026Q1 (G, P, H, N)"
       },
       "country_coverage": {
-        "achieved": "8 modern + 18 JST entities"
+        "achieved": "8 primary + 18 JST entities"
       },
       "existing_research_methods": [
-        "separate source-versioned observations",
-        "debt measures kept distinct"
+        "separate source-versioned public, private, household and corporate series",
+        "market vs nominal valuation separation"
       ],
       "supporting_evidence": [
-        "JST includes broad debt/credit variables and BIS/IMF provide modern complements."
+        "BIS WS_TC quarterly sectoral debt (general government, private non-financial, households, non-financial corporations) and JST sectoral loans (thh, tbus) are now imported separately."
       ],
       "contradictory_evidence": [
-        "No sector-decomposition evaluation has been run."
+        "No pre-registered multi-sector holdout protocol has been executed yet."
       ],
       "alternative_explanations": [
-        "Different sectors may transmit stress through different policy and banking channels."
+        "Different sectors transmit stress through distinct banking, household-consumption and sovereign-funding channels."
       ],
       "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
       "scientific_limitations": [],
@@ -1183,12 +1249,19 @@
           "url": "/api/research/foundation/theory-registry"
         }
       ],
-      "chart": null,
-      "content_checksum": "a2c6fa4f1b604c3ace92c02646c6985edbfb7adc64f64f8a9433d95a6820a4dd"
+      "chart": {
+        "kind": "research_observation",
+        "source_key": "bis_credit_policy",
+        "dataset_version": "WS_TC_CBPOL",
+        "variable_code": "CREDIT_PRIVATE_NF_GDP",
+        "entity_code": "USA",
+        "label": "BIS private non-financial credit (% of GDP) \u2014 USA"
+      },
+      "content_checksum": "512ca1e77cc9eccf692b4473c95d42ac8fb34b78016e721b3f0cccabc3e20775"
     },
     {
       "question_code": "Q13",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Do debt-service burdens predict financial crises better than debt-to-GDP levels?",
       "short_title": "Debt-service burden",
@@ -1197,7 +1270,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1290,20 +1363,20 @@
         }
       ],
       "chart": null,
-      "content_checksum": "c9acbdbf4e21cffa432205660169a5b46585d81ed426d160e2a61025da39d96c"
+      "content_checksum": "68dc9e2e1d6d0395dcd9cf895ad3979393757094bc79fc6a4dae0d02e58f6d81"
     },
     {
       "question_code": "Q14",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Is there a reproducible debt-to-GDP threshold associated with later crises?",
       "short_title": "Debt threshold",
       "implementation_status": "partially_implemented",
       "research_validation_status": "evidence_inconsistent_with_registered_claim",
-      "current_answer": "Unanswered with the current Atlas evidence.",
+      "current_answer": "Neither public-debt changes nor historical debt-to-GDP level percentiles provide a reproducible out-of-sample crisis threshold.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1334,12 +1407,22 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "bis_credit_policy",
+          "dataset": "WS_TC_CBPOL",
+          "role": "BIS sectoral credit (govt, private, household, corporate) & policy rates"
         },
         {
           "source_key": "imf",
@@ -1365,26 +1448,30 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "JST 1870-2020; modern IMF/WB"
+        "achieved": "JST 1870-2020; BIS WS_TC 1947-2026Q1; modern IMF/WB"
       },
       "country_coverage": {
         "achieved": "18 JST + 8 primary"
       },
       "existing_research_methods": [
         "H01 univariate benchmark",
+        "level-percentile diagnostic check",
         "base-rate comparison"
       ],
       "supporting_evidence": [
-        "The negative H01 result warns against assuming a simple threshold."
+        "Both H01 change benchmarks and level diagnostics warn against universal crisis cutoffs."
       ],
       "contradictory_evidence": [
-        "No pre-registered threshold validation exists; ex-post thresholds would be vulnerable to selection bias."
+        "Public debtgdp level held-out AUC is 0.365 (1y), 0.394 (2y), 0.440 (5y); private loan/GDP level 5y AUC is 0.502 and 82% of post-1990 observations exceed the pre-1990 80th percentile due to financial deepening."
       ],
       "alternative_explanations": [
-        "Thresholds may vary with growth, rates, currency denomination and institutions."
+        "Vulnerability varies with growth, interest rates, currency denomination, debt ownership and institutional capacity."
       ],
       "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
-      "scientific_limitations": [],
+      "scientific_limitations": [
+        "H01-P1.0 formally tested 5-year changes rather than fixed level cutoffs.",
+        "Ex-post threshold mining would introduce severe selection bias."
+      ],
       "source_references": [
         {
           "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
@@ -1396,11 +1483,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "611a2bb06b765f2a53f97006804f48ec6421ef019e6d611f32963e4c9d5604d5"
+      "content_checksum": "16a9866eaaba3e8c5db6348a9730bcc5ab81cbc4d69fdb59060cdf2f3192d246"
     },
     {
       "question_code": "Q15",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Do external debt and foreign-currency debt create vulnerability beyond domestic debt?",
       "short_title": "External and FX debt",
@@ -1409,7 +1496,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1441,12 +1528,22 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "bis_lbs",
+          "dataset": "WS_LBS_D_PUB",
+          "role": "BIS cross-border bank claims by currency and reporting jurisdiction"
         },
         {
           "source_key": "world_bank",
@@ -1456,13 +1553,8 @@
       ],
       "missing_datasets": [
         {
-          "source_key": "bis_international_banking",
-          "dataset": "locational/consolidated banking",
-          "reason": "not imported"
-        },
-        {
           "source_key": "external_debt",
-          "dataset": "external and FX debt stocks",
+          "dataset": "borrower external and FX debt stocks",
           "reason": "not imported"
         },
         {
@@ -1472,19 +1564,19 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "JST external proxies; missing direct FX debt"
+        "achieved": "JST external proxies + BIS LBS cross-border claims 1977Q4-2026Q2"
       },
       "country_coverage": {
-        "achieved": "18 JST entities"
+        "achieved": "18 JST + 8 primary"
       },
       "existing_research_methods": [
         "source-defined variable registry"
       ],
       "supporting_evidence": [
-        "JST contains current-account and exchange-rate variables."
+        "JST current-account/FX variables and BIS cross-border banking claims are imported."
       ],
       "contradictory_evidence": [
-        "Direct external/FX debt stocks and outcomes are absent."
+        "Borrower-side external/FX debt stocks and currency/sovereign crisis labels remain absent."
       ],
       "alternative_explanations": [
         "Reserve-currency issuers may face different constraints than borrowers in foreign currency."
@@ -1502,11 +1594,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "b0cfa607ea917389e2447dc0fddadfea98dc242659074c84c477dc87ad673d56"
+      "content_checksum": "2631109445a83382162c89e117300e49ad2e33a44702f8f653596bcecbe38b29"
     },
     {
       "question_code": "Q16",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Does rapid monetary expansion precede inflation, currency pressure or financial instability?",
       "short_title": "Monetary expansion",
@@ -1515,7 +1607,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1547,10 +1639,15 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
         },
@@ -1608,20 +1705,20 @@
         }
       ],
       "chart": null,
-      "content_checksum": "1259ce7479cc26e1028f5c78cffd83b35a9b58ba7c55402dbf8bc67942d87852"
+      "content_checksum": "1542522e7fb9c828035678be3af7f291dcc688aae93f477fcda7b20afd742d3d"
     },
     {
       "question_code": "Q17",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Does rapid private credit expansion precede financial crises independently of income growth?",
       "short_title": "Credit expansion",
       "implementation_status": "evaluation_implemented",
       "research_validation_status": "evidence_inconsistent_with_registered_claim",
-      "current_answer": "Unanswered with the current Atlas evidence.",
+      "current_answer": "Preserved contradictory H01-P1.0 benchmark reflects a variable mismatch (public debtgdp was tested instead of private tloans/gdp); exploratory tloans/gdp shows positive retrospective association but awaits an independent pre-registered protocol.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1652,12 +1749,22 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "bis_credit_policy",
+          "dataset": "WS_TC_CBPOL",
+          "role": "BIS sectoral credit (govt, private, household, corporate) & policy rates"
         },
         {
           "source_key": "world_bank",
@@ -1683,26 +1790,29 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "JST 1870-2020; BIS 1957-2026"
+        "achieved": "JST 1870-2020; BIS WS_TC 1947-2026Q1; BIS credit-gap 1957-2026"
       },
       "country_coverage": {
         "achieved": "18 JST + 8 modern"
       },
       "existing_research_methods": [
         "H01 debt-growth benchmark",
+        "JST tloans/gdp diagnostic check",
         "BIS credit-gap import"
       ],
       "supporting_evidence": [
-        "Credit variables and crisis onsets coexist in JST and modern sources."
+        "In diagnostic inspection on the 1990-2020 JST holdout, 5-year private bank-loan/GDP change (tloans/gdp) yields retrospective AUC 0.721 (1y), 0.702 (2y), 0.590 (5y)."
       ],
       "contradictory_evidence": [
-        "H01's simple debt-change benchmark did not improve prediction; richer credit models remain unevaluated."
+        "The sole pre-registered evaluation (H01-P1.0) tested public debtgdp 5-year change rather than private tloans/gdp and failed (AUC 0.363/0.381/0.296); no separate private-credit protocol controlling for income growth and global crisis clustering has been pre-registered."
       ],
       "alternative_explanations": [
-        "Credit growth can reflect productive deepening, measurement changes or denominator movements."
+        "Credit growth can reflect financial deepening, denominator contractions or synchronized global credit waves (13/19 test crises occurred in 2007-2008)."
       ],
       "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
-      "scientific_limitations": [],
+      "scientific_limitations": [
+        "Contradictory status is preserved from H01-P1.0 because H01-P1.0 may not be rewritten ex-post; a dedicated private-credit protocol must be registered separately and tested against independent post-cutoff data."
+      ],
       "source_references": [
         {
           "label": "Ray Dalio, Principles for Dealing with the Changing World Order",
@@ -1714,11 +1824,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "117680af12d40b190e3e88a98ef8f9427d8a47501f155a0d36a4fcfd6a14c705"
+      "content_checksum": "db2524b0805b471788b22766ced2137d67ac7c281938416982ba6d0baa58be49"
     },
     {
       "question_code": "Q18",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Do changes in short- and long-term interest rates predict debt stress or crisis onset?",
       "short_title": "Interest-rate stress",
@@ -1727,7 +1837,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1758,12 +1868,22 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "bis_credit_policy",
+          "dataset": "WS_TC_CBPOL",
+          "role": "BIS sectoral credit (govt, private, household, corporate) & policy rates"
         },
         {
           "source_key": "crisis_registry",
@@ -1774,7 +1894,7 @@
       "missing_datasets": [
         {
           "source_key": "policy_rate_vintages",
-          "dataset": "release-safe central-bank rates",
+          "dataset": "release-safe central-bank rate vintages",
           "reason": "not imported"
         },
         {
@@ -1784,16 +1904,16 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "JST rates 1870-2020"
+        "achieved": "JST stir/ltrate 1870-2020 + BIS WS_CBPOL policy rates 1945-2026"
       },
       "country_coverage": {
-        "achieved": "18 JST entities"
+        "achieved": "18 JST + 8 primary + EUR"
       },
       "existing_research_methods": [
-        "source-versioned historical rates"
+        "source-versioned historical rates and central-bank policy rates"
       ],
       "supporting_evidence": [
-        "JST `stir`, `ltrate`, `bill_rate` and `bond_rate` provide long series."
+        "JST `stir`, `ltrate`, `bill_rate`, `bond_rate` and BIS `POLICY_RATE_PCT` (with DEU/FRA -> EUR 1999 break preserved) are imported."
       ],
       "contradictory_evidence": [
         "No registered interest-rate protocol or evaluation exists."
@@ -1813,21 +1933,28 @@
           "url": "/api/research/foundation/theory-registry"
         }
       ],
-      "chart": null,
-      "content_checksum": "2bad7b13e187f765784b9ca4ea1ac27bdf7b7e8d6999755d400cef639a4d5367"
+      "chart": {
+        "kind": "research_observation",
+        "source_key": "bis_credit_policy",
+        "dataset_version": "WS_TC_CBPOL",
+        "variable_code": "POLICY_RATE_PCT",
+        "entity_code": "USA",
+        "label": "BIS central bank policy rate (%) \u2014 USA"
+      },
+      "content_checksum": "10d9e047c403f22e8bfbc07649a384f81727785ffa7ade501c491b00f7d80321"
     },
     {
       "question_code": "Q19",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Does reserve-currency status reduce debt vulnerability or delay adjustment?",
       "short_title": "Reserve-currency status",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable",
+      "implementation_status": "data_available",
+      "research_validation_status": "insufficient_evidence",
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01",
         "H03"
@@ -1854,6 +1981,21 @@
       ],
       "available_datasets": [
         {
+          "source_key": "imf_cofer",
+          "dataset": "COFER-SDMX-2.1",
+          "role": "official FX reserve shares & claims (1995-2026Q2; currency-level)"
+        },
+        {
+          "source_key": "bis_fx_turnover",
+          "dataset": "WS_DER_OTC_TOV",
+          "role": "BIS Triennial FX turnover shares 1989-2025 (including INR)"
+        },
+        {
+          "source_key": "bis_lbs",
+          "dataset": "WS_LBS_D_PUB",
+          "role": "BIS cross-border bank claims by currency and reporting jurisdiction"
+        },
+        {
           "source_key": "currency_research_entities",
           "dataset": "currency-area registry",
           "role": "entity model"
@@ -1861,38 +2003,34 @@
       ],
       "missing_datasets": [
         {
-          "source_key": "imf_cofer",
-          "dataset": "official reserve shares",
-          "reason": "not imported"
-        },
-        {
-          "source_key": "bis_triennial",
-          "dataset": "FX turnover shares",
+          "source_key": "pre_1995_reserve_shares",
+          "dataset": "long-run pre-1995 official reserve currency composition",
           "reason": "not imported"
         },
         {
           "source_key": "reserve_issuer_outcomes",
-          "dataset": "issuer-specific adjustments",
+          "dataset": "issuer-specific adjustment outcomes",
           "reason": "not defined"
         }
       ],
       "historical_coverage": {
-        "status": "missing"
+        "achieved": "COFER 1995-2026Q2, BIS FX turnover 1989-2025, BIS LBS 1977Q4-2026Q2"
       },
       "country_coverage": {
-        "status": "currency_area_required"
+        "achieved": "Currency entities (USD, EUR, CNY, GBP, JPY, CHF, INR in FX turnover, DEM/FRF pre-1999)"
       },
       "existing_research_methods": [
-        "currency-area entity registry"
+        "currency-area entity separation",
+        "documented COFER methodology breaks"
       ],
       "supporting_evidence": [
-        "Atlas treats reserve status as currency-level evidence rather than a country score."
+        "Official IMF COFER reserve shares, BIS FX turnover shares and BIS cross-border banking currency shares are now imported separately from country scores."
       ],
       "contradictory_evidence": [
-        "No reserve-share observations are imported."
+        "Modern COFER spans one dominant USD regime (1995-2026) and cannot by itself identify multi-regime reserve transitions or causal debt insulation."
       ],
       "alternative_explanations": [
-        "Demand for safe assets, institutional credibility and network effects may confound reserve status."
+        "Demand for safe assets, institutional depth, capital-account openness and network effects confound reserve-issuer debt outcomes."
       ],
       "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
       "scientific_limitations": [],
@@ -1906,12 +2044,19 @@
           "url": "/api/research/foundation/theory-registry"
         }
       ],
-      "chart": null,
-      "content_checksum": "b5d9791dedc145a26bc17678b395573281a34128d6758e068e350257b3a14132"
+      "chart": {
+        "kind": "research_observation",
+        "source_key": "imf_cofer",
+        "dataset_version": "COFER-SDMX-2.1",
+        "variable_code": "COFER_RESERVE_SHARE_PCT",
+        "entity_code": "USD",
+        "label": "IMF COFER official FX reserve share (%) \u2014 USD"
+      },
+      "content_checksum": "71dc5536a3aab20f216e2965eb1f105b5521df8aa6c619a0d3eec3df0a8ada2f"
     },
     {
       "question_code": "Q20",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Does financial-market depth amplify or absorb debt and credit shocks?",
       "short_title": "Financial depth",
@@ -1920,7 +2065,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -1958,20 +2103,25 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "bis_lbs",
+          "dataset": "WS_LBS_D_PUB",
+          "role": "BIS cross-border bank claims by currency and reporting jurisdiction"
         }
       ],
       "missing_datasets": [
-        {
-          "source_key": "international_banking",
-          "dataset": "cross-border intermediation",
-          "reason": "not imported"
-        },
         {
           "source_key": "financial_stress_outcomes",
           "dataset": "non-crisis stress labels",
@@ -1979,16 +2129,16 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "modern 1980-2025 plus JST financial variables"
+        "achieved": "modern 1980-2025, BIS LBS 1977Q4-2026Q2, JST 1870-2020"
       },
       "country_coverage": {
         "achieved": "8 primary + 18 JST"
       },
       "existing_research_methods": [
-        "separate financial-centre measures"
+        "separate domestic depth and cross-border banking measures"
       ],
       "supporting_evidence": [
-        "Financial-depth proxies are tracked separately from reserve status."
+        "Domestic market depth and BIS cross-border banking intermediation are tracked separately from reserve status."
       ],
       "contradictory_evidence": [
         "No test distinguishes shock absorption from amplification."
@@ -2009,11 +2159,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "d09f767fff9a579a995fa0ffbdb09492af9cb932fa346d56c2f08e60b4d1958d"
+      "content_checksum": "d9e06fffef2c3dca5729e51628804718120882e903465f0ccad86790305bb470"
     },
     {
       "question_code": "Q21",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Does debt ownership structure change the probability or severity of crises?",
       "short_title": "Debt ownership",
@@ -2022,7 +2172,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -2093,11 +2243,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "5d10b8274a452ba5b8f3d8e8d320fd85a0bd166fda430a0ab496ceb15574a37e"
+      "content_checksum": "9fc9db45ea95308ca1305848581ef27e690910a20f4ceedbdc98ad23969d23d3"
     },
     {
       "question_code": "Q22",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Are currency crises preceded by distinct external, monetary or reserve pressures?",
       "short_title": "Currency crises",
@@ -2106,7 +2256,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -2139,12 +2289,22 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "imf_cofer",
+          "dataset": "COFER-SDMX-2.1",
+          "role": "official FX reserve shares & claims (1995-2026Q2; currency-level)"
         },
         {
           "source_key": "world_bank",
@@ -2160,18 +2320,13 @@
         },
         {
           "source_key": "fx_reserves",
-          "dataset": "reserve adequacy",
-          "reason": "not imported"
-        },
-        {
-          "source_key": "imf_cofer",
-          "dataset": "reserve shares",
+          "dataset": "country FX reserve adequacy",
           "reason": "not imported"
         }
       ],
       "historical_coverage": {
-        "achieved": "JST exchange-rate and current-account variables",
-        "missing": "currency outcomes"
+        "achieved": "JST exchange-rate/CA 1870-2020 + COFER global shares 1995-2026Q2",
+        "missing": "currency crisis outcomes"
       },
       "country_coverage": {
         "achieved": "18 JST entities"
@@ -2201,11 +2356,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "dc5c3229d9277a590d4f7d2820d2ee5258f94dcae0281b3bb0b86d68fa36983b"
+      "content_checksum": "1dd2b056fb42810b71fe7d3e506cf4926eac58fccddac2095c18ca7c8f1e1176"
     },
     {
       "question_code": "Q23",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Are sovereign debt crises preceded by measurable fiscal and external vulnerabilities?",
       "short_title": "Sovereign debt crises",
@@ -2214,7 +2369,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -2245,10 +2400,15 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
         },
@@ -2302,11 +2462,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "679a4cda5a70b3aa7d08969fa633024c82ffb7e894d7e75402dcb196cef74dd9"
+      "content_checksum": "f3f306fdfb7975c6824d11eb6c784f2838a7b51823b5598d32edd7ab3a73610f"
     },
     {
       "question_code": "Q24",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Do debt restructurings and defaults follow identifiable debt and repayment patterns?",
       "short_title": "Restructurings and defaults",
@@ -2315,7 +2475,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01"
       ],
@@ -2392,11 +2552,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "09f16d3773349cf791a344053d703d098d3282f3855cf2d422cb4b31959a9095"
+      "content_checksum": "a35e94d31f902513fdf1bebb4d9ae58116b03576c1c860c70ff8934a7bad389c"
     },
     {
       "question_code": "Q25",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "debt_money",
       "original_question": "Does debt vulnerability depend on growth, inflation, institutional quality and external conditions rather than a universal threshold?",
       "short_title": "Conditional debt vulnerability",
@@ -2405,7 +2565,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H01",
         "H02"
@@ -2440,10 +2600,15 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
         },
@@ -2522,11 +2687,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "0ecd69bee4921d789125b76fce2fd779efe235171439a015be9a9c3879005774"
+      "content_checksum": "4d5329972c794a5c2f259c8333e7fab2a150171e90422f193ce5ab24b5b8f118"
     },
     {
       "question_code": "Q26",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Does institutional deterioration predict later weakness in investment or productivity?",
       "short_title": "Institutions and productivity",
@@ -2535,7 +2700,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -2620,11 +2785,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "275dfac28776e2000311b9c36fc40a084ea1694134b0cd25e484f83215769e34"
+      "content_checksum": "5038b060b34997a0d3babc073c82cbf1a06b8c28c963dd89efe5ee465b81669e"
     },
     {
       "question_code": "Q27",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Do income and wealth inequality predict later political instability or weaker economic performance?",
       "short_title": "Inequality and instability",
@@ -2633,7 +2798,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -2717,11 +2882,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "d2c76c2c5dbcf58bbd5b3fd7c8003afa3d2ac0d6b65d4d73b238bdc02e8a7d5c"
+      "content_checksum": "bd98b05a70f5315c30b06fccfc0851197ac7819dd24500ac3b97aafe91f8a041"
     },
     {
       "question_code": "Q28",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Does political polarisation precede internal conflict, institutional breakdown or policy instability?",
       "short_title": "Political polarisation",
@@ -2730,7 +2895,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -2804,11 +2969,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "13e6c313f5e70e88f0f0a5127e2352c2d62683782418bd060589bb5749bcbb21"
+      "content_checksum": "adbc1dcb7ea53f9ae902be5a08d9c5ed4b47e591f9931df7e6dfd115ba587a39"
     },
     {
       "question_code": "Q29",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Do regime characteristics predict how countries manage debt, shocks or economic transitions?",
       "short_title": "Regime characteristics",
@@ -2817,7 +2982,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -2891,11 +3056,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "0ff456af7d31863831650d92ec7f0e64591cdfa7f8b2be52f2b8f155e4c69712"
+      "content_checksum": "35c4da62a46cdb3e51bcec334c2f5872e1b5379bd1bee6a8cda81be9de7b8967"
     },
     {
       "question_code": "Q30",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Do independently recorded protests, unrest or civil conflict provide useful internal-order outcomes?",
       "short_title": "Recorded unrest outcomes",
@@ -2904,7 +3069,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -2977,11 +3142,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "5ac96e93ce3cb27db6cfaa247847a8c4dc9f89a4db6e48cdec4c890e7f64ee3b"
+      "content_checksum": "f46f92fa3554a151cb0cff14391882261c3a568d7d45011840b94db3bf72992d"
     },
     {
       "question_code": "Q31",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Do widening wealth and opportunity gaps precede internal-order deterioration?",
       "short_title": "Wealth and opportunity gaps",
@@ -2990,7 +3155,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -3074,11 +3239,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "774a7136b427cb96b070ee9e16aecffcd4b5f95c0042071788605b63d35b12e9"
+      "content_checksum": "5dffe8599fb8746f918d88720f248253a4232fb130007f6a24567928fc72c23d"
     },
     {
       "question_code": "Q32",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Do education and human-capital changes predict resilience to internal or economic stress?",
       "short_title": "Human-capital resilience",
@@ -3087,7 +3252,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -3166,11 +3331,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "f3f1eaa64c0389155d25edcbb4c58faa41d30c3ef19f37fabb7c65c3014a85df"
+      "content_checksum": "7745bd63caed46754185ba5e23403eede25d7fb5edf0b44f0f3cfea26efd5a61"
     },
     {
       "question_code": "Q33",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Do declining investment and productivity precede broader institutional deterioration?",
       "short_title": "Investment and productivity decline",
@@ -3179,7 +3344,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -3259,11 +3424,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "eefd6f31341a7fac1345172a66b50b1a45493e8c4dd513d8050ea2e0426ef359"
+      "content_checksum": "4a735122f1bf927d823718e6f31c87af3d1180591c9b1b4b1ef18fc43c792f45"
     },
     {
       "question_code": "Q34",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Are some political systems systematically better at managing debt burdens and economic shocks?",
       "short_title": "Political systems and stress",
@@ -3272,7 +3437,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -3350,11 +3515,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "19e278aacd86e276f1f20a5018347ebb66cfd5f1b96dfb7f23f0235e0e40d9c7"
+      "content_checksum": "32077ad68af2f506cd7e3e77b020c0ad2551cb9e307764feb067a7f0def9edf2"
     },
     {
       "question_code": "Q35",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "internal_conflict",
       "original_question": "Can internal conflict be distinguished from ordinary political competition using reproducible outcome definitions?",
       "short_title": "Internal conflict definition",
@@ -3363,7 +3528,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02"
       ],
@@ -3436,11 +3601,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "ae24e950e0ff93564753046ee9e52d3918f92a05ca79e857e506a884d0bc9659"
+      "content_checksum": "d1f8a5bad158a1f2e822534d88d39ea43da9eab66006588e096036d62cda8a09"
     },
     {
       "question_code": "Q36",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Does convergence in relative international power precede rivalry, conflict or crisis risk?",
       "short_title": "Power convergence and rivalry",
@@ -3449,7 +3614,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -3482,6 +3647,21 @@
           "role": "power measures"
         },
         {
+          "source_key": "imf_cofer",
+          "dataset": "COFER-SDMX-2.1",
+          "role": "official FX reserve shares & claims (1995-2026Q2; currency-level)"
+        },
+        {
+          "source_key": "bis_fx_turnover",
+          "dataset": "WS_DER_OTC_TOV",
+          "role": "BIS Triennial FX turnover shares 1989-2025 (including INR)"
+        },
+        {
+          "source_key": "bis_lbs",
+          "dataset": "WS_LBS_D_PUB",
+          "role": "BIS cross-border bank claims by currency and reporting jurisdiction"
+        },
+        {
           "source_key": "power_registry",
           "dataset": "measure definitions",
           "role": "methodology"
@@ -3494,28 +3674,23 @@
           "reason": "not imported"
         },
         {
-          "source_key": "imf_cofer",
-          "dataset": "reserve shares",
-          "reason": "not imported"
-        },
-        {
           "source_key": "historical_power_transitions",
           "dataset": "transition outcomes",
           "reason": "not imported"
         }
       ],
       "historical_coverage": {
-        "achieved": "modern power proxies; no long-run complete panel"
+        "achieved": "modern power shares 1960-2025 + COFER/BIS currency & banking panels"
       },
       "country_coverage": {
-        "achieved": "8 primary countries plus global denominators"
+        "achieved": "8 primary countries + global denominators + currency areas"
       },
       "existing_research_methods": [
         "H03-P0.1 exploratory protocol",
         "separated power-measure registry"
       ],
       "supporting_evidence": [
-        "Power dimensions are not collapsed into a universal score."
+        "Power dimensions and currency shares are tracked without collapsing into a universal score."
       ],
       "contradictory_evidence": [
         "No independent rivalry or transition outcomes exist."
@@ -3536,11 +3711,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "9e2fb0474b26d4523ba1604ceff26db519d23e86145a903ce708987c608948db"
+      "content_checksum": "43559f6623ccb6d1fffd79c7b7962b1a5537b4948a8e4d7021b18e18e148f5d6"
     },
     {
       "question_code": "Q37",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Do changes in global economic-output shares predict changes in international influence?",
       "short_title": "Output shares and influence",
@@ -3549,7 +3724,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -3579,6 +3754,16 @@
           "role": "output shares"
         },
         {
+          "source_key": "pwt",
+          "dataset": "11.0",
+          "role": "Penn World Table 11.0 output, worker/hour productivity, capital, human capital & TFP (1950-2023)"
+        },
+        {
+          "source_key": "maddison",
+          "dataset": "2023",
+          "role": "Maddison Project Database 2023 historical GDP per capita in 2011 intl $ (1500-2022)"
+        },
+        {
           "source_key": "power_registry",
           "dataset": "economic_output definitions",
           "role": "methodology"
@@ -3589,24 +3774,20 @@
           "source_key": "influence_outcomes",
           "dataset": "independent influence/order transitions",
           "reason": "not imported"
-        },
-        {
-          "source_key": "maddison",
-          "dataset": "historical output shares",
-          "reason": "not imported"
         }
       ],
       "historical_coverage": {
-        "achieved": "modern output shares 1960/1980/1990-2025"
+        "achieved": "WDI global shares 1960-2025; PWT 1950-2023; Maddison 1500-2022"
       },
       "country_coverage": {
-        "achieved": "8 primary + world denominators"
+        "achieved": "8 primary + 20 research countries + world denominators"
       },
       "existing_research_methods": [
-        "denominator-safe global-share calculations"
+        "denominator-safe global-share calculations",
+        "PPP benchmark separation"
       ],
       "supporting_evidence": [
-        "Multiple output definitions are preserved separately."
+        "Multiple output definitions (current USD, WDI PPP, constant 2015 USD, PWT 2021 PPP, Maddison 2011 intl $) are preserved separately."
       ],
       "contradictory_evidence": [
         "Output shares alone do not establish political or institutional influence."
@@ -3632,11 +3813,11 @@
         "entity_code": "USA",
         "label": "PPP GDP \u2014 USA"
       },
-      "content_checksum": "2899e9722ea29e64d75da508bba537bae64cbc5a2f74d46dcafbd09dc2a2eeee"
+      "content_checksum": "87b5d09a390b25e7748bb265f26687af7786657482ce67be2195dcb321ca4e93"
     },
     {
       "question_code": "Q38",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Do global trade shares and bilateral dependence predict rivalry or cooperation?",
       "short_title": "Trade shares and dependence",
@@ -3645,7 +3826,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -3726,20 +3907,20 @@
         }
       ],
       "chart": null,
-      "content_checksum": "edefdceced851af29620b4d2d42a798428dbeedb7842026d7525c8d8ec1600b8"
+      "content_checksum": "e3077b8abd63eb77e6d42b24073d0c19cbfe25f1bd4d2fab8428157064a9cf50"
     },
     {
       "question_code": "Q39",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Do reserve-currency shares predict monetary influence and adjustment capacity?",
       "short_title": "Reserve shares and influence",
-      "implementation_status": "partially_implemented",
+      "implementation_status": "data_available",
       "research_validation_status": "currently_untestable",
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -3765,6 +3946,21 @@
       ],
       "available_datasets": [
         {
+          "source_key": "imf_cofer",
+          "dataset": "COFER-SDMX-2.1",
+          "role": "official FX reserve shares & claims (1995-2026Q2; currency-level)"
+        },
+        {
+          "source_key": "bis_fx_turnover",
+          "dataset": "WS_DER_OTC_TOV",
+          "role": "BIS Triennial FX turnover shares 1989-2025 (including INR)"
+        },
+        {
+          "source_key": "bis_lbs",
+          "dataset": "WS_LBS_D_PUB",
+          "role": "BIS cross-border bank claims by currency and reporting jurisdiction"
+        },
+        {
           "source_key": "currency_research_entities",
           "dataset": "currency-area definitions",
           "role": "schema"
@@ -3772,36 +3968,34 @@
       ],
       "missing_datasets": [
         {
-          "source_key": "imf_cofer",
-          "dataset": "official reserve shares",
-          "reason": "not imported"
-        },
-        {
-          "source_key": "bis_triennial",
-          "dataset": "FX turnover",
-          "reason": "not imported"
-        },
-        {
           "source_key": "monetary_transition_outcomes",
-          "dataset": "independent labels",
+          "dataset": "independent monetary-order transition labels",
+          "reason": "not imported"
+        },
+        {
+          "source_key": "pre_1995_reserve_shares",
+          "dataset": "pre-1995 reserve currency archive",
           "reason": "not imported"
         }
       ],
       "historical_coverage": {
-        "status": "missing"
+        "achieved": "COFER 1995-2026Q2; BIS FX turnover 1989-2025; BIS LBS 1977Q4-2026Q2"
       },
       "country_coverage": {
-        "status": "currency areas required"
+        "achieved": "Currency areas (USD, EUR, CNY, GBP, JPY, CHF, INR in FX turnover, DEM/FRF 1989-1998)"
       },
       "existing_research_methods": [
-        "currency-area separation"
+        "currency-area separation",
+        "methodology-break preservation"
       ],
-      "supporting_evidence": [],
+      "supporting_evidence": [
+        "Reserve shares, FX turnover shares and cross-border bank-claim currency shares are imported with EUR kept at currency-area level and INR kept non-zero-imputed where unreported."
+      ],
       "contradictory_evidence": [
-        "No reserve-share observations exist."
+        "Independent monetary-order transition outcomes are not populated."
       ],
       "alternative_explanations": [
-        "Reserve status may lag real economic influence and reflect institutional network effects."
+        "Reserve status may lag real economic output and reflect financial openness, legal trust and network effects."
       ],
       "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
       "scientific_limitations": [],
@@ -3815,12 +4009,19 @@
           "url": "/api/research/foundation/theory-registry"
         }
       ],
-      "chart": null,
-      "content_checksum": "532bf8ce37f1868da9e955aae08f23c7cc462720f54fb5a148fc524c76a05578"
+      "chart": {
+        "kind": "research_observation",
+        "source_key": "bis_fx_turnover",
+        "dataset_version": "WS_DER_OTC_TOV",
+        "variable_code": "FX_TURNOVER_SHARE_200PCT",
+        "entity_code": "USD",
+        "label": "BIS Triennial FX turnover share (200% sum) \u2014 USD"
+      },
+      "content_checksum": "6d3cf52272a6ce9d4381c7066289b2f6c58bc194de8323df6775cbe99baad22e"
     },
     {
       "question_code": "Q40",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Do military resource measures predict external-order transitions better than military expenditure alone?",
       "short_title": "Military resources",
@@ -3829,7 +4030,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -3909,20 +4110,20 @@
         }
       ],
       "chart": null,
-      "content_checksum": "69a1732b8bbaff92ded0e5cd77e1fad38a8559f3980eef67947fe94cb465cbc9"
+      "content_checksum": "e0c462a5d7256be08b2000fd3e267f0fc3b660e2371c90f687796ec9f5a325e8"
     },
     {
       "question_code": "Q41",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Do international banking and financial-centre activity predict monetary or financial influence?",
       "short_title": "Financial-centre activity",
-      "implementation_status": "partially_implemented",
+      "implementation_status": "data_available",
       "research_validation_status": "currently_untestable",
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -3948,6 +4149,16 @@
       ],
       "available_datasets": [
         {
+          "source_key": "bis_lbs",
+          "dataset": "WS_LBS_D_PUB",
+          "role": "BIS cross-border bank claims by currency and reporting jurisdiction"
+        },
+        {
+          "source_key": "bis_fx_turnover",
+          "dataset": "WS_DER_OTC_TOV",
+          "role": "BIS Triennial FX turnover shares 1989-2025 (including INR)"
+        },
+        {
           "source_key": "world_bank",
           "dataset": "listed-market capitalisation, private credit, broad money",
           "role": "domestic depth proxies"
@@ -3955,38 +4166,28 @@
       ],
       "missing_datasets": [
         {
-          "source_key": "bis_international_banking",
-          "dataset": "cross-border banking statistics",
-          "reason": "not imported"
-        },
-        {
-          "source_key": "fx_turnover",
-          "dataset": "BIS triennial turnover",
-          "reason": "not imported"
-        },
-        {
           "source_key": "financial_influence_outcomes",
-          "dataset": "independent labels",
+          "dataset": "independent financial-order outcome labels",
           "reason": "not defined"
         }
       ],
       "historical_coverage": {
-        "achieved": "modern domestic-depth proxies only"
+        "achieved": "BIS LBS cross-border banking 1977Q4-2026Q2 + BIS FX turnover 1989-2025 + modern domestic depth"
       },
       "country_coverage": {
-        "achieved": "8 primary countries"
+        "achieved": "8 primary countries + global BIS reporting total"
       },
       "existing_research_methods": [
-        "domestic/international finance distinction"
+        "domestic market depth separated from cross-border banking intermediation"
       ],
       "supporting_evidence": [
-        "Domestic market depth is not mislabelled as global centre strength."
+        "BIS LBS shows UK leads cross-border banking share (14.3% in 2026Q2) while US leads equity market cap, demonstrating why stock-market cap/GDP is an incomplete financial-centre measure."
       ],
       "contradictory_evidence": [
-        "Cross-border financial evidence is missing."
+        "No independent financial-influence outcome labels exist for predictive testing."
       ],
       "alternative_explanations": [
-        "Financial influence may depend on regulation, currency networks and geopolitical trust."
+        "Financial influence may depend on legal jurisdiction, clearing infrastructure, currency networks and capital-account openness."
       ],
       "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
       "scientific_limitations": [],
@@ -4000,12 +4201,19 @@
           "url": "/api/research/foundation/theory-registry"
         }
       ],
-      "chart": null,
-      "content_checksum": "74c960dd47459a644f04440ea3a131aeab092200867d91a61dbab45c0d62655b"
+      "chart": {
+        "kind": "research_observation",
+        "source_key": "bis_lbs",
+        "dataset_version": "WS_LBS_D_PUB",
+        "variable_code": "LBS_REPORTING_CLAIMS_SHARE_PCT",
+        "entity_code": "GBR",
+        "label": "BIS cross-border bank claims share (%) \u2014 GBR"
+      },
+      "content_checksum": "3d4ff893b730ceebbdf47709f3331a01fa646b974bd6bb4a82cf596ff2ea380e"
     },
     {
       "question_code": "Q42",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Do alliances and bloc formation change the probability of rivalry or conflict?",
       "short_title": "Alliances and blocs",
@@ -4014,7 +4222,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -4077,11 +4285,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "27febfe1b0eb48d57b269ebe1a5a882d66bc0f61e31be5647b4e885a48f40bb4"
+      "content_checksum": "d960017071087d0f55e6a0b3c29f1ba1c3eb3c49f2bd04d1fe914273d331f839"
     },
     {
       "question_code": "Q43",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Are historical power transitions associated with identifiable economic, financial and military sequences?",
       "short_title": "Historical power transitions",
@@ -4090,7 +4298,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03",
         "H04"
@@ -4127,12 +4335,27 @@
           "variables": [
             "debtgdp",
             "tloans",
+            "thh",
+            "tbus",
             "ca",
             "money",
+            "cpi",
             "stir",
             "ltrate",
+            "expenditure",
+            "revenue",
             "crisisJST"
           ]
+        },
+        {
+          "source_key": "maddison",
+          "dataset": "2023",
+          "role": "Maddison Project Database 2023 historical GDP per capita in 2011 intl $ (1500-2022)"
+        },
+        {
+          "source_key": "pwt",
+          "dataset": "11.0",
+          "role": "Penn World Table 11.0 output, worker/hour productivity, capital, human capital & TFP (1950-2023)"
         },
         {
           "source_key": "world_bank",
@@ -4141,11 +4364,6 @@
         }
       ],
       "missing_datasets": [
-        {
-          "source_key": "maddison",
-          "dataset": "historical output",
-          "reason": "not imported"
-        },
         {
           "source_key": "cow_nmc",
           "dataset": "historical capabilities",
@@ -4158,19 +4376,19 @@
         }
       ],
       "historical_coverage": {
-        "achieved": "1870-2020 selected advanced economies; modern power proxies"
+        "achieved": "Maddison 1500-2022, JST 1870-2020, PWT 1950-2023, modern shares"
       },
       "country_coverage": {
-        "achieved": "18 JST + 8 modern"
+        "achieved": "20 research countries + 8 primary"
       },
       "existing_research_methods": [
         "separate long-cycle research layer"
       ],
       "supporting_evidence": [
-        "Long JST predictors provide a starting point."
+        "Maddison, JST and PWT provide long economic/financial context."
       ],
       "contradictory_evidence": [
-        "No independently dated transition outcomes or complete historical power panel exists."
+        "No independently dated transition outcomes or historical military capability series are imported."
       ],
       "alternative_explanations": [
         "Sequences may differ across monetary, industrial and military eras."
@@ -4188,11 +4406,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "9febc5461583efdaf2b80ecb21b3b09068caa4773c87dfbcefb99f17719fec5a"
+      "content_checksum": "efc475e9707514e74b4e1d03988d65ad7482f961f6836c212a8f87bab946acd9"
     },
     {
       "question_code": "Q44",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Can concentration or multipolarity in power measures be quantified without a universal national power score?",
       "short_title": "Power concentration",
@@ -4201,7 +4419,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -4238,25 +4456,30 @@
           "source_key": "world_bank",
           "dataset": "global denominator series",
           "role": "share calculations"
+        },
+        {
+          "source_key": "imf_cofer",
+          "dataset": "COFER-SDMX-2.1",
+          "role": "official FX reserve shares & claims (1995-2026Q2; currency-level)"
+        },
+        {
+          "source_key": "bis_lbs",
+          "dataset": "WS_LBS_D_PUB",
+          "role": "BIS cross-border bank claims by currency and reporting jurisdiction"
         }
       ],
       "missing_datasets": [
         {
           "source_key": "concentration_metric_protocol",
-          "dataset": "registered HHI/shares method",
+          "dataset": "registered HHI/shares method across complete global universe",
           "reason": "not implemented"
-        },
-        {
-          "source_key": "complete_power_panel",
-          "dataset": "all dimensions",
-          "reason": "missing reserve/international banking"
         }
       ],
       "historical_coverage": {
-        "achieved": "modern denominator-safe subsets"
+        "achieved": "modern denominator-safe global shares + currency/banking denominators"
       },
       "country_coverage": {
-        "achieved": "8 primary + world denominators"
+        "achieved": "8 primary + world/BIS/COFER denominators"
       },
       "existing_research_methods": [
         "separate dimensions",
@@ -4266,10 +4489,10 @@
         "The design explicitly avoids a manufactured national power score."
       ],
       "contradictory_evidence": [
-        "No concentration measure has been evaluated across all intended dimensions."
+        "Concentration across only 8 tracked countries cannot compute a full global Herfindahl index without rest-of-world country shares."
       ],
       "alternative_explanations": [
-        "Different dimensions may imply different concentration patterns and should not be forced into one rank."
+        "Different dimensions imply different concentration patterns (e.g. multipolar PPP GDP vs concentrated USD FX/reserve role)."
       ],
       "falsification_criteria": "A registered test must fail to outperform its declared baseline or produce no independent evidence.",
       "scientific_limitations": [],
@@ -4284,11 +4507,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "31c7ce486162ee11495a43ba700e26cd6bff099af5979fb51c90ff28f9e2b226"
+      "content_checksum": "249f07326cdb28658f13d3c3efdc2ef96e777b57170c2bc222a780be18bb4083"
     },
     {
       "question_code": "Q45",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "external_rivalry",
       "original_question": "Can shared international leadership or distributed influence persist without a single hegemonic transition?",
       "short_title": "Shared leadership",
@@ -4297,7 +4520,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03",
         "H04"
@@ -4380,11 +4603,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "38b1d9c3d278aaa87b22e64690bb32c964c8d74d14ca0d5f4f37d890239aa25e"
+      "content_checksum": "1c37cb99b884b35df3f2aa3475652f321bbacd4d7417f47ddfd0728f3205b4ac"
     },
     {
       "question_code": "Q46",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "technology_shocks",
       "original_question": "Do R&D expenditure, patent activity and research capacity predict durable technological advantage?",
       "short_title": "Innovation inputs and outputs",
@@ -4393,7 +4616,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -4469,11 +4692,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "33598d4f45c922af56efe5feb5fb52d4494d383f0cea8ef945623e3be24b0aeb"
+      "content_checksum": "f396e5eb6d25b5f0cba0d91571aee0c372e75f73658a22e9715fe697420b4051"
     },
     {
       "question_code": "Q47",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "technology_shocks",
       "original_question": "Do productivity and human-capital measures predict long-run economic resilience?",
       "short_title": "Productivity and human capital",
@@ -4482,7 +4705,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H02",
         "H03"
@@ -4509,6 +4732,11 @@
       ],
       "available_datasets": [
         {
+          "source_key": "pwt",
+          "dataset": "11.0",
+          "role": "Penn World Table 11.0 output, worker/hour productivity, capital, human capital & TFP (1950-2023)"
+        },
+        {
           "source_key": "oecd",
           "dataset": "labour productivity and tertiary attainment",
           "role": "human-capital/productivity"
@@ -4521,35 +4749,25 @@
       ],
       "missing_datasets": [
         {
-          "source_key": "tfp",
-          "dataset": "total-factor productivity",
-          "reason": "not imported"
-        },
-        {
-          "source_key": "penn_world_table",
-          "dataset": "PWT productivity/capital",
-          "reason": "not imported"
-        },
-        {
           "source_key": "resilience_outcomes",
-          "dataset": "independent labels",
+          "dataset": "independent resilience outcome labels",
           "reason": "not defined"
         }
       ],
       "historical_coverage": {
-        "achieved": "productivity 1970-2025; education 1970-2025 with gaps"
+        "achieved": "PWT 11.0 (1950-2023 real GDP, worker/hour productivity, capital, hc, ctfp/rtfpna) + OECD 1970-2025"
       },
       "country_coverage": {
-        "achieved": "8 primary countries"
+        "achieved": "20 research countries + 8 primary"
       },
       "existing_research_methods": [
-        "separate productivity and education inputs"
+        "separate PWT 2021 PPP, PWT constant national-accounts and OECD-relative productivity definitions"
       ],
       "supporting_evidence": [
-        "Modern productivity and human-capital measures exist."
+        "PWT 11.0 real GDP, GDP per worker, GDP per hour (where hours exist), capital stock, human capital index and TFP are imported without combining incompatible PPP bases."
       ],
       "contradictory_evidence": [
-        "No long-run resilience outcome test exists."
+        "No independent long-run resilience outcome test exists."
       ],
       "alternative_explanations": [
         "Resilience may reflect macro buffers, institutions or external demand rather than measured human capital alone."
@@ -4566,12 +4784,19 @@
           "url": "/api/research/foundation/theory-registry"
         }
       ],
-      "chart": null,
-      "content_checksum": "62042b02a9680198e7ceaa9eec00aadfa830346f22793a074ca4957735c1d91b"
+      "chart": {
+        "kind": "research_observation",
+        "source_key": "pwt",
+        "dataset_version": "11.0",
+        "variable_code": "PWT_CTFP_USA1",
+        "entity_code": "CHN",
+        "label": "PWT 11.0 TFP relative to USA (USA=1) \u2014 CHN"
+      },
+      "content_checksum": "cbf29d2eb3758318dd66e61445fb42cea680bd39c943f33e03a7d73ffcf0a9c5"
     },
     {
       "question_code": "Q48",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "technology_shocks",
       "original_question": "Can AI adoption be measured separately from general technology indicators and does it change power or productivity outcomes?",
       "short_title": "AI adoption",
@@ -4580,7 +4805,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03"
       ],
@@ -4646,11 +4871,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "f795421ec59ceb21a9c28fe5c7492d77c3b58574afe1e77128b93649ba25d7fb"
+      "content_checksum": "c27b83e9766796e2ed886e1211b9c9763403361c1b770a623f4e8db11a2b8691"
     },
     {
       "question_code": "Q49",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "technology_shocks",
       "original_question": "Do energy production, consumption and dependence constrain economic and external power?",
       "short_title": "Energy constraint",
@@ -4659,7 +4884,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H03",
         "H04"
@@ -4734,11 +4959,11 @@
         }
       ],
       "chart": null,
-      "content_checksum": "1fe7fbf36bf11adfa04143c95c40bba0bb2bcca3e2391d53cd927a9e570f211d"
+      "content_checksum": "4b4418b90c5365d4d210ce001c4a7ca2ba77dadca2547007be00324f6ec5a096"
     },
     {
       "question_code": "Q50",
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
       "category": "technology_shocks",
       "original_question": "Do pandemics, natural disasters and resource shocks alter short-, medium- or long-cycle trajectories?",
       "short_title": "Pandemics and shocks",
@@ -4747,7 +4972,7 @@
       "current_answer": "Unanswered with the current Atlas evidence.",
       "previous_implementation_status": "unavailable_prior_assessment",
       "last_reviewed_at": "2026-11-26",
-      "methodology_version": "validation-methodology-v1.0",
+      "methodology_version": "validation-methodology-v1.1",
       "related_hypotheses": [
         "H04"
       ],
@@ -4832,7 +5057,7 @@
         }
       ],
       "chart": null,
-      "content_checksum": "7c5665f242f3f0597d94b5300ba718d783e07d5eb542f4b4324e3eba3819dc3b"
+      "content_checksum": "80412930d44555b1640eea931eb90af9a8dcabfe366f4ecebf6029b435ea7d51"
     }
   ]
 }

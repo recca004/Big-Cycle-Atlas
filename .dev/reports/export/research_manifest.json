@@ -1,12 +1,14 @@
 {
-  "generated_at": "2026-11-26T00:16:56.338747Z",
-  "information_cutoff": "2026-11-26T00:16:56.338747Z",
+  "generated_at": "2026-11-26T09:05:19.352324Z",
+  "information_cutoff": "2026-11-26T09:05:19.352324Z",
   "execution_mode": "retrospective_latest_vintage",
-  "git_commit": "9720659680fb10a0a3bc751fef04d9bc1a70a074",
+  "git_commit": "ef0c039f9c0c005366d45c0813c164bdc4290b79",
+  "source_code_commit": "ef0c039f9c0c005366d45c0813c164bdc4290b79",
+  "commit_provenance_note": "source_code_commit identifies the verified application and exporter revision that produced these calculations; any subsequent report-only commit updates generated Markdown/JSON artifacts without altering code or database rows.",
   "database": {
     "countries": 8,
     "indicators": 46,
-    "data_sources": 13,
+    "data_sources": 19,
     "source_series": 46,
     "observations_all_vintages": 21178,
     "reference_observations": 24377,
@@ -15,7 +17,7 @@
     "indicator_revisions": 2776,
     "indicator_diagnostics": 3855,
     "ingestion_runs": 1503,
-    "research_observations": 111546,
+    "research_observations": 154113,
     "crisis_events": 88,
     "crisis_coverage_rows": 2668,
     "theory_registry_entries": 7,
@@ -24,9 +26,10 @@
     "prediction_outcomes": 1666,
     "evaluation_results": 2,
     "population_memberships": 26,
-    "dataset_rights": 3,
-    "evidence_status_entries": 6,
+    "dataset_rights": 9,
+    "evidence_status_entries": 12,
     "validation_questions": 50,
+    "validation_question_versions_stored": 100,
     "distinct_observation_identities": 18402,
     "latest_vintage_rows": 18402
   },
@@ -287,8 +290,92 @@
       "base_url": "https://www.imf.org/en/publications/wp/issues/2026/05/14/systemic-banking-crises-database-1970-2025-576036",
       "auth_type": "",
       "update_frequency": "manual dataset release",
-      "rate_limit_notes": "Official supplemental ZIP currently unavailable; local-bundle importer is supported.",
+      "rate_limit_notes": "Official supplemental ZIP blocked (HTTP 403/404); local-bundle importer is supported.",
       "documentation_url": "https://www.imf.org/en/publications/wp/issues/2026/05/14/systemic-banking-crises-database-1970-2025-576036",
+      "metadata": {}
+    },
+    {
+      "provider": "imf_cofer",
+      "provider_name": "IMF Currency Composition of Official Foreign Exchange Reserves (COFER)",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 0,
+      "latest_retrieval": "2026-11-26T08:03:39.133082+00:00",
+      "base_url": "https://api.imf.org/external/sdmx/2.1/data/COFER",
+      "auth_type": "",
+      "update_frequency": "quarterly",
+      "rate_limit_notes": "Public IMF SDMX 2.1 endpoint; currency-level shares and claims.",
+      "documentation_url": "https://data.imf.org/?sk=e6a5f467-c14b-4aa8-9f6d-5a09ec4e62a4",
+      "metadata": {}
+    },
+    {
+      "provider": "bis_fx_turnover",
+      "provider_name": "BIS Triennial Central Bank Survey \u2014 FX Turnover",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 0,
+      "latest_retrieval": "2026-11-26T08:03:39.133082+00:00",
+      "base_url": "https://stats.bis.org/api/v1/data/WS_DER_OTC_TOV",
+      "auth_type": "",
+      "update_frequency": "triennial",
+      "rate_limit_notes": "Public BIS SDMX API; two-sided currency turnover shares sum to 200%.",
+      "documentation_url": "https://www.bis.org/stats/rpfx22.htm",
+      "metadata": {}
+    },
+    {
+      "provider": "bis_lbs",
+      "provider_name": "BIS Locational Banking Statistics",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 0,
+      "latest_retrieval": "2026-11-26T08:03:39.133082+00:00",
+      "base_url": "https://stats.bis.org/api/v1/data/WS_LBS_D_PUB",
+      "auth_type": "",
+      "update_frequency": "quarterly",
+      "rate_limit_notes": "Public BIS SDMX API; cross-border bank claims by currency and reporting centre.",
+      "documentation_url": "https://www.bis.org/statistics/bankstats.htm",
+      "metadata": {}
+    },
+    {
+      "provider": "bis_credit_policy",
+      "provider_name": "BIS Total Credit by Sector & Central Bank Policy Rates",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 0,
+      "latest_retrieval": "2026-11-26T08:04:46.176455+00:00",
+      "base_url": "https://stats.bis.org/api/v1",
+      "auth_type": "",
+      "update_frequency": "quarterly",
+      "rate_limit_notes": "Public BIS SDMX API (WS_TC and WS_CBPOL); public, private, household and corporate credit kept separate.",
+      "documentation_url": "https://www.bis.org/statistics/totcredit.htm",
+      "metadata": {}
+    },
+    {
+      "provider": "pwt",
+      "provider_name": "Penn World Table (GGDC)",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 0,
+      "latest_retrieval": "2026-11-26T08:04:46.176455+00:00",
+      "base_url": "https://doi.org/10.34894/FABVLR",
+      "auth_type": "",
+      "update_frequency": "major academic release",
+      "rate_limit_notes": "DataverseNL PWT 11.0 bulk workbook; CC BY 4.0.",
+      "documentation_url": "https://www.rug.nl/ggdc/productivity/pwt/",
+      "metadata": {}
+    },
+    {
+      "provider": "maddison",
+      "provider_name": "Maddison Project Database (GGDC)",
+      "configured_status": "active",
+      "effective_status": "ingested",
+      "country_indicator_series": 0,
+      "latest_retrieval": "2026-11-26T08:04:46.176455+00:00",
+      "base_url": "https://doi.org/10.34894/INZBF2",
+      "auth_type": "",
+      "update_frequency": "major academic release",
+      "rate_limit_notes": "DataverseNL MPD 2023 bulk workbook; CC BY 4.0.",
+      "documentation_url": "https://www.rug.nl/ggdc/historicaldevelopment/maddison/",
       "metadata": {}
     }
   ],
@@ -772,7 +859,11 @@
       "exact_stage_share": 0.5625,
       "exact_equivalent_under_current_data": false,
       "equivalent_under_current_data": false,
-      "independent_evidence": true
+      "distinct_weighting_method": true,
+      "distinct_outputs_under_current_data": true,
+      "shared_input_datasets": true,
+      "independent_evidence": false,
+      "terminology_note": "Distinct weighting methods applied to shared underlying observation tables measure model specification sensitivity, never statistically independent empirical evidence."
     },
     "model_a_equal__model_c_overlap": {
       "left_model": "model_a_equal",
@@ -787,7 +878,11 @@
       "exact_stage_share": 0.5625,
       "exact_equivalent_under_current_data": false,
       "equivalent_under_current_data": false,
-      "independent_evidence": true
+      "distinct_weighting_method": true,
+      "distinct_outputs_under_current_data": true,
+      "shared_input_datasets": true,
+      "independent_evidence": false,
+      "terminology_note": "Distinct weighting methods applied to shared underlying observation tables measure model specification sensitivity, never statistically independent empirical evidence."
     },
     "model_a_equal__model_d_comparable": {
       "left_model": "model_a_equal",
@@ -802,7 +897,11 @@
       "exact_stage_share": 0.7853260869565217,
       "exact_equivalent_under_current_data": false,
       "equivalent_under_current_data": false,
-      "independent_evidence": true
+      "distinct_weighting_method": true,
+      "distinct_outputs_under_current_data": true,
+      "shared_input_datasets": true,
+      "independent_evidence": false,
+      "terminology_note": "Distinct weighting methods applied to shared underlying observation tables measure model specification sensitivity, never statistically independent empirical evidence."
     },
     "model_b_domain__model_c_overlap": {
       "left_model": "model_b_domain",
@@ -817,7 +916,11 @@
       "exact_stage_share": 1.0,
       "exact_equivalent_under_current_data": false,
       "equivalent_under_current_data": true,
-      "independent_evidence": false
+      "distinct_weighting_method": true,
+      "distinct_outputs_under_current_data": false,
+      "shared_input_datasets": true,
+      "independent_evidence": false,
+      "terminology_note": "Distinct weighting methods applied to shared underlying observation tables measure model specification sensitivity, never statistically independent empirical evidence."
     },
     "model_b_domain__model_d_comparable": {
       "left_model": "model_b_domain",
@@ -832,7 +935,11 @@
       "exact_stage_share": 0.47282608695652173,
       "exact_equivalent_under_current_data": false,
       "equivalent_under_current_data": false,
-      "independent_evidence": true
+      "distinct_weighting_method": true,
+      "distinct_outputs_under_current_data": true,
+      "shared_input_datasets": true,
+      "independent_evidence": false,
+      "terminology_note": "Distinct weighting methods applied to shared underlying observation tables measure model specification sensitivity, never statistically independent empirical evidence."
     },
     "model_c_overlap__model_d_comparable": {
       "left_model": "model_c_overlap",
@@ -847,7 +954,11 @@
       "exact_stage_share": 0.47282608695652173,
       "exact_equivalent_under_current_data": false,
       "equivalent_under_current_data": false,
-      "independent_evidence": true
+      "distinct_weighting_method": true,
+      "distinct_outputs_under_current_data": true,
+      "shared_input_datasets": true,
+      "independent_evidence": false,
+      "terminology_note": "Distinct weighting methods applied to shared underlying observation tables measure model specification sensitivity, never statistically independent empirical evidence."
     }
   },
   "global_denominator_series": {
@@ -914,6 +1025,18 @@
     "TX.VAL.TECH.CD": {
       "universe_code": "world_wdi_denominator_v1",
       "indicator_code": "HIGH_TECHNOLOGY_EXPORTS_USD",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "ALL_REPORTING": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "Cross-border bank claims booked in jurisdiction",
+      "entity": "WLD",
+      "entity_name": "World"
+    },
+    "ALL_CURRENCIES": {
+      "universe_code": "world_wdi_denominator_v1",
+      "indicator_code": "Cross-border bank claims by currency",
       "entity": "WLD",
       "entity_name": "World"
     }
@@ -1016,7 +1139,11 @@
     "latest_evaluation_state": "no_evidence_of_improved_predictive_value",
     "validation_questions": {
       "count": 50,
-      "registry_version": "validation-questions-v1.0",
+      "registry_version": "validation-questions-v1.1",
+      "preserved_registry_versions": [
+        "validation-questions-v1.0",
+        "validation-questions-v1.1"
+      ],
       "wording_origin": "atlas_derived_v1"
     },
     "timescales": [
@@ -1112,6 +1239,7 @@
     "global_power_shares.csv",
     "historical_boundary_metadata.csv",
     "historical_period_comparison.csv",
+    "historical_productivity_pwt_maddison.csv",
     "historical_vintage_inventory.csv",
     "hypothesis_protocols.json",
     "indicator_coverage.csv",
@@ -1133,20 +1261,28 @@
     "research_manifest.json",
     "research_population.json",
     "research_timescales.json",
+    "reserve_currency_history.csv",
+    "sectoral_debt_and_policy_rates.csv",
     "stage_disagreement.csv",
     "strict_historical_availability.json",
     "theory_registry.json",
+    "usa_chn_ind_gap_dynamics.csv",
+    "usa_chn_ind_gap_dynamics.json",
     "validation_questions.json",
     "validation_summary.json"
   ],
   "limitations": [
     "Retrospective history uses latest available vintages, not only information published at each historical date.",
-    "Composite and stage labels are experimental and coverage-gated.",
-    "Tracked-universe shares are not global shares.",
+    "Composite and stage labels are experimental domestic-condition outputs and are coverage-gated.",
+    "All four composite models share the same underlying observation tables; none provide statistically independent empirical confirmation.",
+    "Tracked-universe shares are not global shares; global shares use explicit World/COFER/BIS denominators.",
+    "EUR reserve and FX-turnover shares belong to the shared Eurosystem currency area and are never assigned nationally to DEU or FRA.",
+    "INR is not separately reported in IMF COFER (grouped in Other currencies) and is never zero-imputed; INR is measured directly in the BIS Triennial FX Survey.",
+    "PWT 11.0 (2021 PPP) and Maddison 2023 (2011 international $) are preserved separately from OECD productivity percentiles and WDI series.",
     "Military expenditure measures resources, not complete capability.",
     "Missing observations remain missing and are never interpolated.",
-    "JST research rows carry dataset-release evidence, not per-observation historical publication evidence.",
-    "ALFRED historical vintages require an unconfigured FRED API credential and are not imported.",
-    "The advertised IMF WP-2026-94 supplemental ZIP returned HTTP 404; no substitute crisis rows were fabricated."
+    "JST, PWT and Maddison carry dataset-release evidence, not per-observation historical publication evidence.",
+    "ALFRED historical vintages require an unconfigured FRED API credential (BCA_FRED_API_KEY) and are not imported.",
+    "The advertised IMF WP-2026-94 supplemental ZIP returned HTTP 403/404; no substitute crisis rows were fabricated."
   ]
 }

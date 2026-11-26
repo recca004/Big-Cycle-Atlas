@@ -1,12 +1,12 @@
 {
-  "count": 103,
+  "count": 88,
   "rows": [
     {
       "question_code": "Q02",
       "short_title": "Cycle duration",
-      "source_key": "maddison",
-      "dataset": "historical GDP",
-      "reason": "not imported",
+      "source_key": "historical_entities",
+      "dataset": "boundary-stable sovereign/empire registry",
+      "reason": "modern country codes only",
       "implementation_status": "partially_implemented",
       "research_validation_status": "currently_untestable"
     },
@@ -58,8 +58,8 @@
     {
       "question_code": "Q06",
       "short_title": "Three-cycle interaction",
-      "source_key": "imf_cofer",
-      "dataset": "reserve shares",
+      "source_key": "independent_order_transitions",
+      "dataset": "order-transition chronology",
       "reason": "not imported",
       "implementation_status": "partially_implemented",
       "research_validation_status": "currently_untestable"
@@ -121,15 +121,6 @@
     {
       "question_code": "Q10",
       "short_title": "Required historical depth",
-      "source_key": "maddison",
-      "dataset": "pre-1900 GDP",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q10",
-      "short_title": "Required historical depth",
       "source_key": "historical_entities",
       "dataset": "boundary-stable entity registry",
       "reason": "not populated",
@@ -150,7 +141,7 @@
       "short_title": "Debt burdens and crises",
       "source_key": "imf_laeven_valencia_banking_crises",
       "dataset": "WP-2026-094",
-      "reason": "official ZIP 404; no local bundle",
+      "reason": "official ZIP HTTP 403/404; local-file importer ready",
       "implementation_status": "evaluation_implemented",
       "research_validation_status": "evidence_inconsistent_with_registered_claim"
     },
@@ -166,19 +157,10 @@
     {
       "question_code": "Q12",
       "short_title": "Debt composition",
-      "source_key": "bis_sector_credit",
-      "dataset": "household/corporate splits",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "insufficient_evidence"
-    },
-    {
-      "question_code": "Q12",
-      "short_title": "Debt composition",
       "source_key": "debt_ownership",
       "dataset": "holder composition",
       "reason": "not imported",
-      "implementation_status": "partially_implemented",
+      "implementation_status": "data_available",
       "research_validation_status": "insufficient_evidence"
     },
     {
@@ -211,17 +193,8 @@
     {
       "question_code": "Q15",
       "short_title": "External and FX debt",
-      "source_key": "bis_international_banking",
-      "dataset": "locational/consolidated banking",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q15",
-      "short_title": "External and FX debt",
       "source_key": "external_debt",
-      "dataset": "external and FX debt stocks",
+      "dataset": "borrower external and FX debt stocks",
       "reason": "not imported",
       "implementation_status": "partially_implemented",
       "research_validation_status": "currently_untestable"
@@ -275,7 +248,7 @@
       "question_code": "Q18",
       "short_title": "Interest-rate stress",
       "source_key": "policy_rate_vintages",
-      "dataset": "release-safe central-bank rates",
+      "dataset": "release-safe central-bank rate vintages",
       "reason": "not imported",
       "implementation_status": "data_available",
       "research_validation_status": "untested"
@@ -292,38 +265,20 @@
     {
       "question_code": "Q19",
       "short_title": "Reserve-currency status",
-      "source_key": "imf_cofer",
-      "dataset": "official reserve shares",
+      "source_key": "pre_1995_reserve_shares",
+      "dataset": "long-run pre-1995 official reserve currency composition",
       "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q19",
-      "short_title": "Reserve-currency status",
-      "source_key": "bis_triennial",
-      "dataset": "FX turnover shares",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
+      "implementation_status": "data_available",
+      "research_validation_status": "insufficient_evidence"
     },
     {
       "question_code": "Q19",
       "short_title": "Reserve-currency status",
       "source_key": "reserve_issuer_outcomes",
-      "dataset": "issuer-specific adjustments",
+      "dataset": "issuer-specific adjustment outcomes",
       "reason": "not defined",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q20",
-      "short_title": "Financial depth",
-      "source_key": "international_banking",
-      "dataset": "cross-border intermediation",
-      "reason": "not imported",
       "implementation_status": "data_available",
-      "research_validation_status": "untested"
+      "research_validation_status": "insufficient_evidence"
     },
     {
       "question_code": "Q20",
@@ -365,16 +320,7 @@
       "question_code": "Q22",
       "short_title": "Currency crises",
       "source_key": "fx_reserves",
-      "dataset": "reserve adequacy",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q22",
-      "short_title": "Currency crises",
-      "source_key": "imf_cofer",
-      "dataset": "reserve shares",
+      "dataset": "country FX reserve adequacy",
       "reason": "not imported",
       "implementation_status": "partially_implemented",
       "research_validation_status": "currently_untestable"
@@ -607,15 +553,6 @@
     {
       "question_code": "Q36",
       "short_title": "Power convergence and rivalry",
-      "source_key": "imf_cofer",
-      "dataset": "reserve shares",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q36",
-      "short_title": "Power convergence and rivalry",
       "source_key": "historical_power_transitions",
       "dataset": "transition outcomes",
       "reason": "not imported",
@@ -627,15 +564,6 @@
       "short_title": "Output shares and influence",
       "source_key": "influence_outcomes",
       "dataset": "independent influence/order transitions",
-      "reason": "not imported",
-      "implementation_status": "data_available",
-      "research_validation_status": "untested"
-    },
-    {
-      "question_code": "Q37",
-      "short_title": "Output shares and influence",
-      "source_key": "maddison",
-      "dataset": "historical output shares",
       "reason": "not imported",
       "implementation_status": "data_available",
       "research_validation_status": "untested"
@@ -661,28 +589,19 @@
     {
       "question_code": "Q39",
       "short_title": "Reserve shares and influence",
-      "source_key": "imf_cofer",
-      "dataset": "official reserve shares",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q39",
-      "short_title": "Reserve shares and influence",
-      "source_key": "bis_triennial",
-      "dataset": "FX turnover",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q39",
-      "short_title": "Reserve shares and influence",
       "source_key": "monetary_transition_outcomes",
-      "dataset": "independent labels",
+      "dataset": "independent monetary-order transition labels",
       "reason": "not imported",
-      "implementation_status": "partially_implemented",
+      "implementation_status": "data_available",
+      "research_validation_status": "currently_untestable"
+    },
+    {
+      "question_code": "Q39",
+      "short_title": "Reserve shares and influence",
+      "source_key": "pre_1995_reserve_shares",
+      "dataset": "pre-1995 reserve currency archive",
+      "reason": "not imported",
+      "implementation_status": "data_available",
       "research_validation_status": "currently_untestable"
     },
     {
@@ -715,28 +634,10 @@
     {
       "question_code": "Q41",
       "short_title": "Financial-centre activity",
-      "source_key": "bis_international_banking",
-      "dataset": "cross-border banking statistics",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q41",
-      "short_title": "Financial-centre activity",
-      "source_key": "fx_turnover",
-      "dataset": "BIS triennial turnover",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q41",
-      "short_title": "Financial-centre activity",
       "source_key": "financial_influence_outcomes",
-      "dataset": "independent labels",
+      "dataset": "independent financial-order outcome labels",
       "reason": "not defined",
-      "implementation_status": "partially_implemented",
+      "implementation_status": "data_available",
       "research_validation_status": "currently_untestable"
     },
     {
@@ -755,15 +656,6 @@
       "dataset": "conflict outcomes",
       "reason": "not imported",
       "implementation_status": "not_implemented",
-      "research_validation_status": "currently_untestable"
-    },
-    {
-      "question_code": "Q43",
-      "short_title": "Historical power transitions",
-      "source_key": "maddison",
-      "dataset": "historical output",
-      "reason": "not imported",
-      "implementation_status": "partially_implemented",
       "research_validation_status": "currently_untestable"
     },
     {
@@ -788,17 +680,8 @@
       "question_code": "Q44",
       "short_title": "Power concentration",
       "source_key": "concentration_metric_protocol",
-      "dataset": "registered HHI/shares method",
+      "dataset": "registered HHI/shares method across complete global universe",
       "reason": "not implemented",
-      "implementation_status": "research_method_implemented",
-      "research_validation_status": "untested"
-    },
-    {
-      "question_code": "Q44",
-      "short_title": "Power concentration",
-      "source_key": "complete_power_panel",
-      "dataset": "all dimensions",
-      "reason": "missing reserve/international banking",
       "implementation_status": "research_method_implemented",
       "research_validation_status": "untested"
     },
@@ -841,26 +724,8 @@
     {
       "question_code": "Q47",
       "short_title": "Productivity and human capital",
-      "source_key": "tfp",
-      "dataset": "total-factor productivity",
-      "reason": "not imported",
-      "implementation_status": "data_available",
-      "research_validation_status": "untested"
-    },
-    {
-      "question_code": "Q47",
-      "short_title": "Productivity and human capital",
-      "source_key": "penn_world_table",
-      "dataset": "PWT productivity/capital",
-      "reason": "not imported",
-      "implementation_status": "data_available",
-      "research_validation_status": "untested"
-    },
-    {
-      "question_code": "Q47",
-      "short_title": "Productivity and human capital",
       "source_key": "resilience_outcomes",
-      "dataset": "independent labels",
+      "dataset": "independent resilience outcome labels",
       "reason": "not defined",
       "implementation_status": "data_available",
       "research_validation_status": "untested"

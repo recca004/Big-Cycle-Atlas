@@ -34,7 +34,7 @@ Q17,private credit,credit_panel,predictors,False
 Q17,crisis onsets,independent_crisis_outcomes,labels,False
 Q18,short/long rates,rate_panel,predictors,False
 Q18,crisis onsets,independent_crisis_outcomes,labels,False
-Q19,reserve currency shares,imf_cofer,status,False
+Q19,reserve currency shares,imf_cofer,status,True
 Q19,debt/crisis outcomes,debt_crisis_panel,evaluation,False
 Q20,market/banking depth,financial_depth,predictors,False
 Q20,independent outcomes,crisis_outcomes,labels,False
@@ -74,7 +74,7 @@ Q37,denominator-safe shares,global_output_shares,features,False
 Q37,independent influence/order outcomes,influence_outcomes,labels,False
 Q38,global and bilateral trade,trade_share_panel,features,False
 Q38,independent outcomes,rivalry_cooperation_outcomes,labels,False
-Q39,reserve currency shares,imf_cofer,features,False
+Q39,reserve currency shares,imf_cofer,features,True
 Q39,independent outcomes,monetary_influence_outcomes,labels,False
 Q40,personnel/material/expenditure,military_capability_panel,features,False
 Q40,order-transition outcomes,external_transition_outcomes,labels,False

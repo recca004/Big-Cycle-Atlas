@@ -1,5 +1,5 @@
 {
-  "count": 3,
+  "count": 9,
   "rights": [
     {
       "source_key": "jst_macrohistory",
@@ -45,6 +45,96 @@
       "notes": "Vintage endpoints require a registered 32-character API key; no key is configured.",
       "reviewed_at": null,
       "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "source_key": "imf_cofer",
+      "dataset_version": "COFER-SDMX-2.1",
+      "license_code": "IMF-Terms-of-Use",
+      "attribution_required": true,
+      "raw_redistribution": "noncommercial_with_attribution",
+      "derived_publication": "permitted_with_attribution",
+      "commercial_use": "restricted",
+      "share_alike": false,
+      "publication_status": "permitted_noncommercial",
+      "rights_reference": "https://www.imf.org/en/about/copyright-and-terms",
+      "notes": "IMF COFER retrieved from official IMF SDMX 2.1 API; non-commercial research redistribution permitted with IMF attribution.",
+      "reviewed_at": null,
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "source_key": "bis_fx_turnover",
+      "dataset_version": "WS_DER_OTC_TOV",
+      "license_code": "BIS-Terms",
+      "attribution_required": true,
+      "raw_redistribution": "permitted_with_attribution",
+      "derived_publication": "permitted_with_attribution",
+      "commercial_use": "review_required",
+      "share_alike": false,
+      "publication_status": "permitted_with_attribution",
+      "rights_reference": "https://www.bis.org/terms_conditions.htm",
+      "notes": "BIS Triennial Central Bank Survey FX turnover; free to use and reproduce for research with BIS source citation.",
+      "reviewed_at": null,
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "source_key": "bis_lbs",
+      "dataset_version": "WS_LBS_D_PUB",
+      "license_code": "BIS-Terms",
+      "attribution_required": true,
+      "raw_redistribution": "permitted_with_attribution",
+      "derived_publication": "permitted_with_attribution",
+      "commercial_use": "review_required",
+      "share_alike": false,
+      "publication_status": "permitted_with_attribution",
+      "rights_reference": "https://www.bis.org/terms_conditions.htm",
+      "notes": "BIS Locational Banking Statistics public aggregates; free research reproduction with BIS attribution.",
+      "reviewed_at": null,
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "source_key": "bis_credit_policy",
+      "dataset_version": "WS_TC_CBPOL",
+      "license_code": "BIS-Terms",
+      "attribution_required": true,
+      "raw_redistribution": "permitted_with_attribution",
+      "derived_publication": "permitted_with_attribution",
+      "commercial_use": "review_required",
+      "share_alike": false,
+      "publication_status": "permitted_with_attribution",
+      "rights_reference": "https://www.bis.org/terms_conditions.htm",
+      "notes": "BIS Total Credit (WS_TC) and Policy Rates (WS_CBPOL); underlying national-source series subject to BIS citation terms.",
+      "reviewed_at": null,
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "source_key": "pwt",
+      "dataset_version": "11.0",
+      "license_code": "CC-BY-4.0",
+      "attribution_required": true,
+      "raw_redistribution": "permitted_with_attribution",
+      "derived_publication": "permitted_with_attribution",
+      "commercial_use": "permitted_with_attribution",
+      "share_alike": false,
+      "publication_status": "permitted_open_license",
+      "rights_reference": "https://doi.org/10.34894/FABVLR",
+      "notes": "Penn World Table 11.0 by Feenstra, Inklaar & Timmer (GGDC), licensed CC BY 4.0; cite AER 2015 + PWT 11.0 DOI.",
+      "reviewed_at": null,
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "source_key": "maddison",
+      "dataset_version": "2023",
+      "license_code": "CC-BY-4.0",
+      "attribution_required": true,
+      "raw_redistribution": "permitted_with_attribution",
+      "derived_publication": "permitted_with_attribution",
+      "commercial_use": "permitted_with_attribution",
+      "share_alike": false,
+      "publication_status": "permitted_open_license",
+      "rights_reference": "https://doi.org/10.34894/INZBF2",
+      "notes": "Maddison Project Database 2023 by Bolt & van Zanden (GGDC), licensed CC BY 4.0; 20-country panel imported (>=12 countries) and original country sources cited when graphed.",
+      "reviewed_at": null,
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
     }
   ]
 }

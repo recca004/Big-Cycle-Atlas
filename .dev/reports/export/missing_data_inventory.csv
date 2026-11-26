@@ -1,46 +1,40 @@
 question_code,short_title,source_key,dataset,reason,implementation_status,research_validation_status
-Q02,Cycle duration,maddison,historical GDP,not imported,partially_implemented,currently_untestable
+Q02,Cycle duration,historical_entities,boundary-stable sovereign/empire registry,modern country codes only,partially_implemented,currently_untestable
 Q02,Cycle duration,historical_order_transitions,dated order transitions,no verified chronology,partially_implemented,currently_untestable
 Q04,Stage transition evidence,historical_order_transitions,independent stage/onset chronology,not imported,partially_implemented,currently_untestable
 Q05,Reversals and plateaus,independent_stage_transitions,source-defined stage labels,no verified dataset,partially_implemented,currently_untestable
 Q06,Three-cycle interaction,vdem,institutional histories,not imported,partially_implemented,currently_untestable
 Q06,Three-cycle interaction,cow,conflict/order outcomes,not imported,partially_implemented,currently_untestable
-Q06,Three-cycle interaction,imf_cofer,reserve shares,not imported,partially_implemented,currently_untestable
+Q06,Three-cycle interaction,independent_order_transitions,order-transition chronology,not imported,partially_implemented,currently_untestable
 Q07,Country applicability,global_reference_population,30-40 country eligible panel,target not reached,partially_implemented,insufficient_evidence
 Q07,Country applicability,historical_entities,pre-modern entities,not imported,partially_implemented,insufficient_evidence
 Q08,Support and falsification,independent_order_transitions,long-cycle outcomes,not imported,research_method_implemented,exploratory_findings
 Q08,Support and falsification,institutional_outcomes,persistent deterioration labels,not imported,research_method_implemented,exploratory_findings
 Q09,Atlas models as evidence,independent_stage_transitions,external stage labels,not imported,research_method_implemented,insufficient_evidence
 Q09,Atlas models as evidence,strict_historical_vintages,provider release evidence,mostly unavailable,research_method_implemented,insufficient_evidence
-Q10,Required historical depth,maddison,pre-1900 GDP,not imported,partially_implemented,currently_untestable
 Q10,Required historical depth,historical_entities,boundary-stable entity registry,not populated,partially_implemented,currently_untestable
 Q10,Required historical depth,independent_order_transitions,long-cycle outcomes,not imported,partially_implemented,currently_untestable
-Q11,Debt burdens and crises,imf_laeven_valencia_banking_crises,WP-2026-094,official ZIP 404; no local bundle,evaluation_implemented,evidence_inconsistent_with_registered_claim
+Q11,Debt burdens and crises,imf_laeven_valencia_banking_crises,WP-2026-094,official ZIP HTTP 403/404; local-file importer ready,evaluation_implemented,evidence_inconsistent_with_registered_claim
 Q11,Debt burdens and crises,alfred_fred,historical vintages,BCA_FRED_API_KEY required,evaluation_implemented,evidence_inconsistent_with_registered_claim
-Q12,Debt composition,bis_sector_credit,household/corporate splits,not imported,partially_implemented,insufficient_evidence
-Q12,Debt composition,debt_ownership,holder composition,not imported,partially_implemented,insufficient_evidence
+Q12,Debt composition,debt_ownership,holder composition,not imported,data_available,insufficient_evidence
 Q13,Debt-service burden,bis_dsr_extended_panel,30-40 country DSR,not imported,data_available,untested
 Q13,Debt-service burden,real_time_dsr_vintages,release-time DSR,not available,data_available,untested
 Q14,Debt threshold,threshold_protocol,registered threshold search,not implemented,partially_implemented,evidence_inconsistent_with_registered_claim
-Q15,External and FX debt,bis_international_banking,locational/consolidated banking,not imported,partially_implemented,currently_untestable
-Q15,External and FX debt,external_debt,external and FX debt stocks,not imported,partially_implemented,currently_untestable
+Q15,External and FX debt,external_debt,borrower external and FX debt stocks,not imported,partially_implemented,currently_untestable
 Q15,External and FX debt,currency_sovereign_crises,verified outcomes,not imported,partially_implemented,currently_untestable
 Q16,Monetary expansion,currency_crisis_registry,independent currency onsets,not imported,data_available,untested
 Q16,Monetary expansion,inflation_regime_outcomes,independent high-inflation episodes,not imported,data_available,untested
 Q16,Monetary expansion,alfred_fred,money vintages,API key required,data_available,untested
 Q17,Credit expansion,real_time_credit_vintages,release-safe credit revisions,not available,evaluation_implemented,evidence_inconsistent_with_registered_claim
-Q18,Interest-rate stress,policy_rate_vintages,release-safe central-bank rates,not imported,data_available,untested
+Q18,Interest-rate stress,policy_rate_vintages,release-safe central-bank rate vintages,not imported,data_available,untested
 Q18,Interest-rate stress,debt_stress_outcomes,non-crisis debt stress labels,not defined,data_available,untested
-Q19,Reserve-currency status,imf_cofer,official reserve shares,not imported,partially_implemented,currently_untestable
-Q19,Reserve-currency status,bis_triennial,FX turnover shares,not imported,partially_implemented,currently_untestable
-Q19,Reserve-currency status,reserve_issuer_outcomes,issuer-specific adjustments,not defined,partially_implemented,currently_untestable
-Q20,Financial depth,international_banking,cross-border intermediation,not imported,data_available,untested
+Q19,Reserve-currency status,pre_1995_reserve_shares,long-run pre-1995 official reserve currency composition,not imported,data_available,insufficient_evidence
+Q19,Reserve-currency status,reserve_issuer_outcomes,issuer-specific adjustment outcomes,not defined,data_available,insufficient_evidence
 Q20,Financial depth,financial_stress_outcomes,non-crisis stress labels,not imported,data_available,untested
 Q21,Debt ownership,debt_ownership,holder composition,not imported,not_implemented,currently_untestable
 Q21,Debt ownership,sovereign_bondholder_data,ownership shares,not imported,not_implemented,currently_untestable
 Q22,Currency crises,currency_crisis_registry,verified currency-crisis chronology,not imported,partially_implemented,currently_untestable
-Q22,Currency crises,fx_reserves,reserve adequacy,not imported,partially_implemented,currently_untestable
-Q22,Currency crises,imf_cofer,reserve shares,not imported,partially_implemented,currently_untestable
+Q22,Currency crises,fx_reserves,country FX reserve adequacy,not imported,partially_implemented,currently_untestable
 Q23,Sovereign debt crises,sovereign_crisis_registry,verified sovereign-crisis chronology,not imported,partially_implemented,currently_untestable
 Q23,Sovereign debt crises,sovereign_defaults,default/restructuring data,not imported,partially_implemented,currently_untestable
 Q24,Restructurings and defaults,sovereign_defaults,default/restructuring chronology,not imported,partially_implemented,currently_untestable
@@ -66,35 +60,26 @@ Q34,Political systems and stress,vdem,regime characteristics,not imported,partia
 Q34,Political systems and stress,policy_response_outcomes,shock/debt-management outcomes,not defined,partially_implemented,currently_untestable
 Q35,Internal conflict definition,ucdp_acled,verified conflict/protest event data,not imported,partially_implemented,currently_untestable
 Q36,Power convergence and rivalry,cow,rivalry/conflict outcomes,not imported,partially_implemented,currently_untestable
-Q36,Power convergence and rivalry,imf_cofer,reserve shares,not imported,partially_implemented,currently_untestable
 Q36,Power convergence and rivalry,historical_power_transitions,transition outcomes,not imported,partially_implemented,currently_untestable
 Q37,Output shares and influence,influence_outcomes,independent influence/order transitions,not imported,data_available,untested
-Q37,Output shares and influence,maddison,historical output shares,not imported,data_available,untested
 Q38,Trade shares and dependence,un_comtrade,bilateral trade,planned provider not imported,data_available,untested
 Q38,Trade shares and dependence,rivalry_outcomes,independent rivalry/cooperation labels,not imported,data_available,untested
-Q39,Reserve shares and influence,imf_cofer,official reserve shares,not imported,partially_implemented,currently_untestable
-Q39,Reserve shares and influence,bis_triennial,FX turnover,not imported,partially_implemented,currently_untestable
-Q39,Reserve shares and influence,monetary_transition_outcomes,independent labels,not imported,partially_implemented,currently_untestable
+Q39,Reserve shares and influence,monetary_transition_outcomes,independent monetary-order transition labels,not imported,data_available,currently_untestable
+Q39,Reserve shares and influence,pre_1995_reserve_shares,pre-1995 reserve currency archive,not imported,data_available,currently_untestable
 Q40,Military resources,cow_nmc,Correlates of War capabilities,not imported,data_available,untested
 Q40,Military resources,sipri_full,direct military resource data,not imported,data_available,untested
 Q40,Military resources,external_order_transitions,independent outcomes,not imported,data_available,untested
-Q41,Financial-centre activity,bis_international_banking,cross-border banking statistics,not imported,partially_implemented,currently_untestable
-Q41,Financial-centre activity,fx_turnover,BIS triennial turnover,not imported,partially_implemented,currently_untestable
-Q41,Financial-centre activity,financial_influence_outcomes,independent labels,not defined,partially_implemented,currently_untestable
+Q41,Financial-centre activity,financial_influence_outcomes,independent financial-order outcome labels,not defined,data_available,currently_untestable
 Q42,Alliances and blocs,cow_alliances,alliance histories,not imported,not_implemented,currently_untestable
 Q42,Alliances and blocs,ucdp_cow,conflict outcomes,not imported,not_implemented,currently_untestable
-Q43,Historical power transitions,maddison,historical output,not imported,partially_implemented,currently_untestable
 Q43,Historical power transitions,cow_nmc,historical capabilities,not imported,partially_implemented,currently_untestable
 Q43,Historical power transitions,historical_order_transitions,dated transitions,not imported,partially_implemented,currently_untestable
-Q44,Power concentration,concentration_metric_protocol,registered HHI/shares method,not implemented,research_method_implemented,untested
-Q44,Power concentration,complete_power_panel,all dimensions,missing reserve/international banking,research_method_implemented,untested
+Q44,Power concentration,concentration_metric_protocol,registered HHI/shares method across complete global universe,not implemented,research_method_implemented,untested
 Q45,Shared leadership,leadership_transition_outcomes,independent order labels,not imported,partially_implemented,currently_untestable
 Q45,Shared leadership,institutional_influence,international institutional roles,not imported,partially_implemented,currently_untestable
 Q46,Innovation inputs and outputs,wipo_full,patent quality/family data,not imported,data_available,untested
 Q46,Innovation inputs and outputs,technology_advantage_outcomes,independent leadership labels,not defined,data_available,untested
-Q47,Productivity and human capital,tfp,total-factor productivity,not imported,data_available,untested
-Q47,Productivity and human capital,penn_world_table,PWT productivity/capital,not imported,data_available,untested
-Q47,Productivity and human capital,resilience_outcomes,independent labels,not defined,data_available,untested
+Q47,Productivity and human capital,resilience_outcomes,independent resilience outcome labels,not defined,data_available,untested
 Q48,AI adoption,ai_adoption,comparable AI usage/capability data,not imported,not_implemented,currently_untestable
 Q48,AI adoption,ai_histories,long-run AI data,not available before actual observations,not_implemented,currently_untestable
 Q49,Energy constraint,energy_balances,IEA/WB energy production/consumption/imports,not imported,not_implemented,currently_untestable

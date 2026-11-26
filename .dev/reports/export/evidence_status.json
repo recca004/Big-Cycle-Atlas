@@ -1,0 +1,173 @@
+{
+  "count": 12,
+  "entries": [
+    {
+      "subject_type": "engine",
+      "subject_key": "observations",
+      "evidence_version": "v1",
+      "evidence_status": "observed_data",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "latest production observations; release evidence varies by row"
+      },
+      "assessed_at": "2026-11-25T22:05:41.559433+00:00",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "subject_type": "engine",
+      "subject_key": "force_signals",
+      "evidence_version": "v1",
+      "evidence_status": "experimental_model",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "approved measurement methods; not independently evaluated forecasts"
+      },
+      "assessed_at": "2026-11-25T22:05:41.559433+00:00",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "subject_type": "engine",
+      "subject_key": "cycle_stages",
+      "evidence_version": "v1",
+      "evidence_status": "retrospective_analysis",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "Atlas operational labels; not validated historical stages"
+      },
+      "assessed_at": "2026-11-25T22:05:41.559433+00:00",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "jst_macrohistory_R6",
+      "evidence_version": "v1",
+      "evidence_status": "retrospective_analysis",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "historical dataset release, not real-time point-in-time data"
+      },
+      "assessed_at": "2026-11-25T22:05:41.559433+00:00",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "alfred_fred",
+      "evidence_version": "v1",
+      "evidence_status": "unavailable_research_result",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "registered API key required"
+      },
+      "assessed_at": "2026-11-25T22:05:41.559433+00:00",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "imf_laeven_valencia_WP-2026-094",
+      "evidence_version": "v1",
+      "evidence_status": "unavailable_research_result",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "official supplemental dataset URL returned HTTP 404"
+      },
+      "assessed_at": "2026-11-25T22:05:41.559433+00:00",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "imf_cofer_SDMX_2_1",
+      "evidence_version": "v1",
+      "evidence_status": "observed_data",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "currency-level official reserve shares; revised back to 2000Q1 in Dec 2025 to impute unallocated reserves; INR not separately identified"
+      },
+      "assessed_at": "2026-11-26T08:15:48.153934+00:00",
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "bis_fx_turnover_WS_DER_OTC_TOV",
+      "evidence_version": "v1",
+      "evidence_status": "observed_data",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "triennial survey 1989-2025 including INR; two-sided currency shares sum to 200%"
+      },
+      "assessed_at": "2026-11-26T08:15:48.153934+00:00",
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "bis_lbs_WS_LBS_D_PUB",
+      "evidence_version": "v1",
+      "evidence_status": "observed_data",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "quarterly cross-border bank claims by currency and reporting jurisdiction"
+      },
+      "assessed_at": "2026-11-26T08:15:48.153934+00:00",
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "bis_credit_policy_WS_TC_CBPOL",
+      "evidence_version": "v1",
+      "evidence_status": "observed_data",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "sectoral credit (govt/private/household/corporate) and central-bank policy rates"
+      },
+      "assessed_at": "2026-11-26T08:15:48.153934+00:00",
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "pwt_11_0",
+      "evidence_version": "v1",
+      "evidence_status": "retrospective_analysis",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "2021 PPP and constant national-accounts output, inputs, human capital and TFP; do not mix with 2011 PPP or OECD indices"
+      },
+      "assessed_at": "2026-11-26T08:15:48.153934+00:00",
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    },
+    {
+      "subject_type": "source",
+      "subject_key": "maddison_2023",
+      "evidence_version": "v1",
+      "evidence_status": "retrospective_analysis",
+      "methodology_status": "experimental",
+      "source_versions": {},
+      "evaluation_versions": {},
+      "limitations": {
+        "note": "long-run reconstructed GDP per capita in 2011 international dollars; pre-modern series are historical reconstructions"
+      },
+      "assessed_at": "2026-11-26T08:15:48.153934+00:00",
+      "created_at": "2026-11-26T08:15:48.145299+00:00"
+    }
+  ]
+}

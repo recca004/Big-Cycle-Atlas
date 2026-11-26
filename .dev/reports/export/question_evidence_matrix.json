@@ -1,0 +1,505 @@
+{
+  "count": 50,
+  "rows": [
+    {
+      "question_code": "Q01",
+      "category": "core_theory",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 1,
+      "missing_dataset_count": 0,
+      "related_hypotheses": ""
+    },
+    {
+      "question_code": "Q02",
+      "category": "core_theory",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 14,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H04"
+    },
+    {
+      "question_code": "Q03",
+      "category": "core_theory",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 2,
+      "missing_dataset_count": 0,
+      "related_hypotheses": ""
+    },
+    {
+      "question_code": "Q04",
+      "category": "core_theory",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 13,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H04"
+    },
+    {
+      "question_code": "Q05",
+      "category": "core_theory",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 12,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H04"
+    },
+    {
+      "question_code": "Q06",
+      "category": "core_theory",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 8,
+      "observed_evidence_rows": 63,
+      "missing_dataset_count": 3,
+      "related_hypotheses": "H01;H02;H03;H04"
+    },
+    {
+      "question_code": "Q07",
+      "category": "core_theory",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 2,
+      "missing_dataset_count": 2,
+      "related_hypotheses": ""
+    },
+    {
+      "question_code": "Q08",
+      "category": "core_theory",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 3,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01;H01B;H02;H03;H04"
+    },
+    {
+      "question_code": "Q09",
+      "category": "core_theory",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "insufficient_evidence",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 2,
+      "missing_dataset_count": 2,
+      "related_hypotheses": ""
+    },
+    {
+      "question_code": "Q10",
+      "category": "core_theory",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 4,
+      "observed_evidence_rows": 27,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H04"
+    },
+    {
+      "question_code": "Q11",
+      "category": "debt_money",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evaluated_with_no_clear_conclusion",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 20,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01;H01B"
+    },
+    {
+      "question_code": "Q12",
+      "category": "debt_money",
+      "implementation_status": "data_available",
+      "research_validation_status": "insufficient_evidence",
+      "available_dataset_count": 4,
+      "observed_evidence_rows": 21,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q13",
+      "category": "debt_money",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 4,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q14",
+      "category": "debt_money",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "evaluated_with_no_clear_conclusion",
+      "available_dataset_count": 5,
+      "observed_evidence_rows": 60,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H01;H01T"
+    },
+    {
+      "question_code": "Q15",
+      "category": "debt_money",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 55,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q16",
+      "category": "debt_money",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 51,
+      "missing_dataset_count": 3,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q17",
+      "category": "debt_money",
+      "implementation_status": "evaluation_implemented",
+      "research_validation_status": "exploratory_findings",
+      "available_dataset_count": 5,
+      "observed_evidence_rows": 61,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H01;H01B"
+    },
+    {
+      "question_code": "Q18",
+      "category": "debt_money",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 20,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q19",
+      "category": "debt_money",
+      "implementation_status": "data_available",
+      "research_validation_status": "insufficient_evidence",
+      "available_dataset_count": 4,
+      "observed_evidence_rows": 10,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01;H03"
+    },
+    {
+      "question_code": "Q20",
+      "category": "debt_money",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 55,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q21",
+      "category": "debt_money",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 1,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q22",
+      "category": "debt_money",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 54,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q23",
+      "category": "debt_money",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 13,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q24",
+      "category": "debt_money",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 3,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01"
+    },
+    {
+      "question_code": "Q25",
+      "category": "debt_money",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested",
+      "available_dataset_count": 7,
+      "observed_evidence_rows": 60,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H01;H02"
+    },
+    {
+      "question_code": "Q26",
+      "category": "internal_conflict",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 42,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q27",
+      "category": "internal_conflict",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 43,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q28",
+      "category": "internal_conflict",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 39,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q29",
+      "category": "internal_conflict",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 39,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q30",
+      "category": "internal_conflict",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 2,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q31",
+      "category": "internal_conflict",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 43,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q32",
+      "category": "internal_conflict",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 42,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q33",
+      "category": "internal_conflict",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 81,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q34",
+      "category": "internal_conflict",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 41,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q35",
+      "category": "internal_conflict",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 41,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H02"
+    },
+    {
+      "question_code": "Q36",
+      "category": "external_rivalry",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 5,
+      "observed_evidence_rows": 49,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q37",
+      "category": "external_rivalry",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 4,
+      "observed_evidence_rows": 53,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q38",
+      "category": "external_rivalry",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 39,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q39",
+      "category": "external_rivalry",
+      "implementation_status": "data_available",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 4,
+      "observed_evidence_rows": 10,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q40",
+      "category": "external_rivalry",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 39,
+      "missing_dataset_count": 3,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q41",
+      "category": "external_rivalry",
+      "implementation_status": "data_available",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 45,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q42",
+      "category": "external_rivalry",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 0,
+      "observed_evidence_rows": 0,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q43",
+      "category": "external_rivalry",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 4,
+      "observed_evidence_rows": 64,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03;H04"
+    },
+    {
+      "question_code": "Q44",
+      "category": "external_rivalry",
+      "implementation_status": "research_method_implemented",
+      "research_validation_status": "untested",
+      "available_dataset_count": 4,
+      "observed_evidence_rows": 47,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q45",
+      "category": "external_rivalry",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 40,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03;H04"
+    },
+    {
+      "question_code": "Q46",
+      "category": "technology_shocks",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 39,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q47",
+      "category": "technology_shocks",
+      "implementation_status": "data_available",
+      "research_validation_status": "untested",
+      "available_dataset_count": 3,
+      "observed_evidence_rows": 53,
+      "missing_dataset_count": 1,
+      "related_hypotheses": "H02;H03"
+    },
+    {
+      "question_code": "Q48",
+      "category": "technology_shocks",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 0,
+      "observed_evidence_rows": 0,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03"
+    },
+    {
+      "question_code": "Q49",
+      "category": "technology_shocks",
+      "implementation_status": "not_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 1,
+      "observed_evidence_rows": 0,
+      "missing_dataset_count": 2,
+      "related_hypotheses": "H03;H04"
+    },
+    {
+      "question_code": "Q50",
+      "category": "technology_shocks",
+      "implementation_status": "partially_implemented",
+      "research_validation_status": "currently_untestable",
+      "available_dataset_count": 2,
+      "observed_evidence_rows": 41,
+      "missing_dataset_count": 3,
+      "related_hypotheses": "H04"
+    }
+  ]
+}

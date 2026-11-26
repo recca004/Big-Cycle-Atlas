@@ -39,6 +39,19 @@ EXPECTED_MAPPINGS = {
     # Mission 4 §18 — EM-DAT-derived structural disaster exposure (static
     # 1990-2009 average published at 2009)
     "NATURAL_DISASTER_AFFECTED_PCT": "EN.CLC.MDAT.ZS",
+    "GDP_PPP_CURRENT_INTL": "NY.GDP.MKTP.PP.CD",
+    "GDP_REAL_CONSTANT_USD": "NY.GDP.MKTP.KD",
+    "MERCHANDISE_EXPORTS_USD": "TX.VAL.MRCH.CD.WT",
+    "MERCHANDISE_IMPORTS_USD": "TM.VAL.MRCH.CD.WT",
+    "COMMERCIAL_SERVICE_EXPORTS_USD": "TX.VAL.SERV.CD.WT",
+    "COMMERCIAL_SERVICE_IMPORTS_USD": "TM.VAL.SERV.CD.WT",
+    "PATENT_APPLICATIONS_RESIDENT": "IP.PAT.RESD",
+    "PATENT_APPLICATIONS_NONRESIDENT": "IP.PAT.NRES",
+    "RESEARCHERS_PER_MILLION": "SP.POP.SCIE.RD.P6",
+    "HIGH_TECHNOLOGY_EXPORTS_USD": "TX.VAL.TECH.CD",
+    "STOCK_MARKET_CAP_GDP": "CM.MKT.LCAP.GD.ZS",
+    "DOMESTIC_CREDIT_PRIVATE_GDP": "FS.AST.PRVT.GD.ZS",
+    "BROAD_MONEY_GDP": "FM.LBL.BMNY.GD.ZS",
 }
 
 
@@ -60,7 +73,7 @@ async def _load_series(session):
 
 @pytest.mark.asyncio
 async def test_module_has_exactly_22_world_bank_mappings():
-    assert len(WORLD_BANK_MAPPINGS) == 26
+    assert len(WORLD_BANK_MAPPINGS) == 39
     assert {m.indicator_code for m in WORLD_BANK_MAPPINGS} == set(EXPECTED_MAPPINGS)
 
 
@@ -79,7 +92,7 @@ async def test_seeded_series_match_verified_mappings(client):
         rows = await _load_series(session)
 
     wb_rows = [row for row in rows if row[1] == "world_bank"]
-    assert len(wb_rows) == 26
+    assert len(wb_rows) == 39
     assert {(indicator, source, code) for indicator, source, code in wb_rows} == {
         (canonical, "world_bank", external)
         for canonical, external in EXPECTED_MAPPINGS.items()
@@ -97,13 +110,13 @@ async def test_seed_is_idempotent(client):
     sessionmaker = session_module._sessionmaker
     async with sessionmaker() as session:
         before = (await session.execute(select(SourceSeries))).scalars().all()
-        assert len(before) == 33  # 21 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
+        assert len(before) == 46  # 21 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
 
     await seed()  # re-run full seed against the same test DB
 
     async with sessionmaker() as session:
         after = (await session.execute(select(SourceSeries))).scalars().all()
-        assert len(after) == 33
+        assert len(after) == 46
         assert {s.external_code for s in after} >= set(EXPECTED_MAPPINGS.values())
 
 

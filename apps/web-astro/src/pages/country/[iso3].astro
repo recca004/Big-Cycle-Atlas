@@ -11,7 +11,7 @@ const { iso3 } = Astro.params;
 const country = INITIAL_COUNTRIES.find((c) => c.iso3 === iso3);
 ---
 
-<BaseLayout title={country?.name ?? iso3}>
+<BaseLayout title={country?.name ?? iso3} fullWidth>
   <header class="page-header">
     <p class="label-md text-tertiary">
       Country · {iso3}{country ? ` · ${country.region}` : ""}

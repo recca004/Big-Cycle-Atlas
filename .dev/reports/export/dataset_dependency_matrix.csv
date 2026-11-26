@@ -1,0 +1,100 @@
+question_code,dependency,source_key,role,available
+Q01,primary-source registry,theory_registry,claim definition,True
+Q02,multi-century boundary-stable entity panel,historical_entities,duration estimation,False
+Q02,dated cycle boundaries,independent_order_transitions,outcome labels,False
+Q03,edition-level source mapping,theory_registry,framework comparison,True
+Q03,Atlas stage definitions,cycle_model,operational comparison,False
+Q04,source-defined transitions,independent_stage_transitions,outcomes,False
+Q04,multi-century predictors,long_historical_panel,transition features,False
+Q05,reversal/plateau outcomes,independent_stage_transitions,labels,False
+Q05,long-run predictors,long_historical_panel,evidence,False
+Q06,debt+institutional+external predictors,multi_timescale_panel,features,False
+Q06,outcome chronology,independent_order_transitions,validation,False
+Q07,eligibility rules,global_reference_population,population,False
+Q07,boundary-aware panel,historical_entities,scope,False
+Q08,registered falsification rules,hypothesis_protocols,protocol,True
+Q08,outcome registry,independent_outcomes,test labels,False
+Q09,approved measurement methods,force_methodology,features,False
+Q09,external validation,independent_outcomes,labels,False
+Q10,boundary-aware entities,multi_century_panel,coverage,False
+Q10,multiple complete transitions,independent_order_transitions,outcomes,False
+Q11,public/private debt predictors,debt_panel,features,False
+Q11,banking-crisis onsets,independent_crisis_outcomes,outcome,False
+Q12,public/household/corporate debt,sectoral_debt_panel,features,False
+Q12,crisis outcomes,independent_crisis_outcomes,evaluation,False
+Q13,sectoral DSR,bis_dsr,predictors,False
+Q13,crisis onsets,independent_crisis_outcomes,labels,False
+Q14,pre-registered candidate thresholds,debt_threshold_panel,features,False
+Q14,crisis onsets,independent_crisis_outcomes,labels,False
+Q15,external/FX debt,external_debt,predictors,False
+Q15,currency and sovereign outcomes,currency_debt_outcomes,labels,False
+Q16,money growth,money_panel,predictors,False
+Q16,outcomes,independent_currency_inflation_outcomes,labels,False
+Q17,private credit,credit_panel,predictors,False
+Q17,crisis onsets,independent_crisis_outcomes,labels,False
+Q18,short/long rates,rate_panel,predictors,False
+Q18,crisis onsets,independent_crisis_outcomes,labels,False
+Q19,reserve currency shares,imf_cofer,status,True
+Q19,debt/crisis outcomes,debt_crisis_panel,evaluation,False
+Q20,market/banking depth,financial_depth,predictors,False
+Q20,independent outcomes,crisis_outcomes,labels,False
+Q21,domestic/foreign/public/private holders,debt_ownership,predictors,False
+Q21,crisis outcomes,crisis_outcomes,labels,False
+Q22,independent currency onsets,currency_crisis_outcomes,labels,False
+Q22,external/reserve predictors,external_monetary_panel,features,False
+Q23,sovereign default/debt crises,sovereign_crisis_outcomes,labels,False
+Q23,debt/revenue/external predictors,fiscal_external_panel,features,False
+Q24,independent default/restructuring events,restructuring_defaults,labels,False
+Q24,repayment burden,debt_service_panel,features,False
+Q25,debt+growth+institutions+external conditions,multivariate_debt_panel,features,False
+Q25,crisis outcomes,independent_crisis_outcomes,labels,False
+Q26,institutional measures,institutional_panel,predictors,False
+Q26,investment/productivity weakness labels,persistent_weakness_outcomes,outcomes,False
+Q27,income/wealth distribution,inequality_panel,predictors,False
+Q27,independent outcomes,instability_growth_outcomes,labels,False
+Q28,polarisation measures,polarisation_panel,predictors,False
+Q28,verified conflict/breakdown outcomes,internal_conflict_outcomes,labels,False
+Q29,regime/institutional classifications,regime_panel,features,False
+Q29,independent outcomes,debt_shock_outcomes,labels,False
+Q30,event-level unrest/conflict,ucdp_acled,outcomes,False
+Q30,institutional/economic predictors,internal_order_predictors,features,False
+Q31,wealth/opportunity measures,distribution_panel,predictors,False
+Q31,independent outcomes,internal_order_outcomes,labels,False
+Q32,attainment/enrollment/researchers,education_panel,predictors,False
+Q32,independent outcomes,stress_resilience_outcomes,labels,False
+Q33,predictors/outcomes,investment_productivity_panel,features,False
+Q33,independent deterioration labels,institutional_outcomes,outcomes,False
+Q34,political-system measures,regime_panel,features,False
+Q34,independent outcomes,debt_shock_outcomes,labels,False
+Q35,event typology and thresholds,conflict_outcome_definitions,labels,False
+Q35,UCDP/ACLED or equivalent,event_sources,evidence,False
+Q36,separated power measures,relative_power_panel,features,False
+Q36,independent outcomes,rivalry_conflict_outcomes,labels,False
+Q37,denominator-safe shares,global_output_shares,features,False
+Q37,independent influence/order outcomes,influence_outcomes,labels,False
+Q38,global and bilateral trade,trade_share_panel,features,False
+Q38,independent outcomes,rivalry_cooperation_outcomes,labels,False
+Q39,reserve currency shares,imf_cofer,features,True
+Q39,independent outcomes,monetary_influence_outcomes,labels,False
+Q40,personnel/material/expenditure,military_capability_panel,features,False
+Q40,order-transition outcomes,external_transition_outcomes,labels,False
+Q41,cross-border claims and centre activity,international_banking,features,False
+Q41,independent outcomes,financial_influence_outcomes,labels,False
+Q42,alliance/bloc histories,alliance_panel,features,False
+Q42,independent rivalry/conflict outcomes,conflict_outcomes,labels,False
+Q43,multi-century power measures,historical_power_panel,features,False
+Q43,independent transitions,power_transition_outcomes,labels,False
+Q44,global denominators,compatible_reference_population,features,False
+Q44,separated dimensions,power_measure_registry,methodology,False
+Q45,multi-dimensional shares,distributed_power_panel,features,False
+Q45,independent order/leadership labels,leadership_outcomes,outcomes,False
+Q46,R&D/patents/researchers,innovation_panel,features,False
+Q46,durable advantage labels,technology_outcomes,outcomes,False
+Q47,productivity/attainment/research,productivity_human_capital,features,False
+Q47,independent resilience labels,resilience_outcomes,outcomes,False
+Q48,comparable AI adoption measures,ai_adoption,features,False
+Q48,independent outcomes,productivity_power_outcomes,labels,False
+Q49,production/consumption/dependence,energy_panel,features,False
+Q49,independent outcomes,power_growth_outcomes,labels,False
+Q50,EM-DAT/UCDP/pandemic/resource events,shock_outcomes,outcomes,False
+Q50,pre/post shock predictors,cycle_panel,features,False

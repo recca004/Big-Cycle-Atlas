@@ -5,24 +5,42 @@ import { GlobalSearch } from "@/features/site/GlobalSearch";
 interface Props {
   title: string;
   description?: string;
+  /** Remove the reading-column max-width — observatory homepage. */
+  fullWidth?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, fullWidth } = Astro.props;
 const path = Astro.url.pathname;
 
+// Focused Atlas mode — the 17 forces and the Big Cycle are primary.
 const NAV = [
-  { href: "/", label: "Overview" },
-  { href: "/countries", label: "Countries" },
+  { href: "/", label: "Observatory" },
   { href: "/forces", label: "Forces" },
-  { href: "/workspace", label: "Workspace" },
+  { href: "/countries", label: "Countries" },
   { href: "/compare", label: "Compare" },
   { href: "/cycle", label: "Cycle" },
-  { href: "/research", label: "Research" },
-  { href: "/forecast", label: "Forecast" },
+  { href: "/workspace", label: "Workspace" },
+];
+
+// Advanced research tooling — implemented, one click away.
+const RESEARCH_NAV = [
+  { href: "/research", label: "Research lab" },
+  { href: "/research/validation", label: "Theory validation" },
+  { href: "/research/debt-cycle", label: "Debt & monetary cycle" },
+  { href: "/research/historical-power", label: "Historical power" },
+  { href: "/forecast", label: "Forecast readiness" },
+];
+
+// Financial research — implemented but hidden from default chrome.
+const FINANCE_NAV = [
   { href: "/markets", label: "Markets" },
   { href: "/strategies", label: "Strategies" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/watchlist", label: "Watchlist" },
+];
+
+// Reference & deep-dives — one click away, off the primary rail.
+const MORE_NAV = [
   { href: "/economy", label: "Economy" },
   { href: "/debt", label: "Debt" },
   { href: "/trade", label: "Trade" },
@@ -41,7 +59,8 @@ const isActive = (href: string) =>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description ?? "Big Cycle Atlas — country-level macro cycle research"} />
+    <meta name="description" content={description ?? "Big Cycle Atlas — Great Power Observatory"} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title} · Big Cycle Atlas</title>
     <script is:inline>
       // Resolve theme before first paint: versioned prefs blob, legacy
@@ -57,6 +76,7 @@ const isActive = (href: string) =>
               theme = p.theme;
               transparency = p.reducedTransparency ? "reduced" : null;
               motion = p.reducedMotion ? "reduced" : null;
+              if (p.fullResearch) el.dataset.fullResearch = "true";
             }
           }
           if (theme !== "light" && theme !== "dark" && theme !== "system") {
@@ -85,7 +105,10 @@ const isActive = (href: string) =>
   </head>
   <body>
     <header class="site-header glass">
-      <a class="site-logo" href="/">Big Cycle Atlas</a>
+      <a class="site-logo" href="/" aria-label="Big Cycle Atlas — Observatory">
+        <img src="/observatory-mark.svg" alt="" width="26" height="26" class="site-mark" />
+        <span class="wordmark"><span class="wordmark-name">Big Cycle Atlas</span></span>
+      </a>
       <nav class="site-nav" aria-label="Primary">
         {
           NAV.map((item) => (
@@ -98,6 +121,65 @@ const isActive = (href: string) =>
             </a>
           ))
         }
+        {
+          // Inlined when Full Research mode is active (data-full-research).
+          RESEARCH_NAV.map((item) => (
+            <a
+              href={item.href}
+              class:list={["nav-link", "nav-full-only", { "nav-link-active": isActive(item.href) }]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <details class="nav-disclosure">
+          <summary>Research</summary>
+          <div class="nav-disclosure-menu glass-strong">
+            {
+              RESEARCH_NAV.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["nav-link", { "nav-link-active": isActive(item.href) }]}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+            <a href="/settings" class="nav-link nav-research-toggle">
+              Full research mode →
+            </a>
+          </div>
+        </details>
+        <details class="nav-disclosure nav-full-only">
+          <summary>Finance</summary>
+          <div class="nav-disclosure-menu glass-strong">
+            {
+              FINANCE_NAV.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["nav-link", { "nav-link-active": isActive(item.href) }]}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+          </div>
+        </details>
+        <details class="nav-disclosure">
+          <summary>More</summary>
+          <div class="nav-disclosure-menu glass-strong">
+            {
+              MORE_NAV.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["nav-link", { "nav-link-active": isActive(item.href) }]}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+          </div>
+        </details>
       </nav>
       <div class="header-actions">
         <GlobalSearch client:load />
@@ -113,7 +195,7 @@ const isActive = (href: string) =>
       </div>
     </header>
     <div class="nav-scroll-hint" aria-hidden="true"></div>
-    <main class="site-main">
+    <main class:list={["site-main", { "site-main-wide": fullWidth }]}>
       <slot />
     </main>
     <footer class="site-footer">
@@ -170,11 +252,15 @@ const isActive = (href: string) =>
         width: calc(100% - var(--space-6));
       }
       .site-logo {
-        font-weight: var(--weight-bold);
-        font-size: var(--text-base);
-        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--accent);
         text-decoration: none;
         white-space: nowrap;
+      }
+      .site-mark {
+        flex: none;
       }
       .site-nav {
         display: flex;
@@ -239,11 +325,31 @@ const isActive = (href: string) =>
         padding: var(--space-8) var(--space-6) var(--space-16);
         width: 100%;
       }
+      .site-main-wide {
+        max-width: 152rem;
+        padding-inline: var(--space-8);
+      }
       .site-footer {
         max-width: var(--content-max);
         margin: 0 auto;
         padding: var(--space-6);
         border-top: 1px solid var(--border-subtle);
+      }
+      @media (max-width: 860px) {
+        .site-header {
+          flex-wrap: wrap;
+          row-gap: var(--space-1);
+        }
+        .site-nav {
+          order: 3;
+          width: 100%;
+          overflow-x: auto;
+          scrollbar-width: none;
+          padding-bottom: 2px;
+        }
+        .site-nav::-webkit-scrollbar {
+          display: none;
+        }
       }
       @media (max-width: 640px) {
         .site-header {

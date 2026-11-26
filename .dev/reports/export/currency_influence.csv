@@ -1,0 +1,10 @@
+entity,scope,issuer_area,country_iso3,measurement_status
+USD,currency,United States,USA,registered_not_imported
+EUR,currency_area,Euro area,,registered_not_imported
+CNY,currency,China,CHN,registered_not_imported
+JPY,currency,Japan,JPN,registered_not_imported
+GBP,currency,United Kingdom,GBR,registered_not_imported
+CHF,currency,Switzerland,CHE,registered_not_imported
+INR,currency,India,IND,registered_not_imported
+DEM,historical_currency,Germany,DEU,registered_not_imported
+FRF,historical_currency,France,FRA,registered_not_imported

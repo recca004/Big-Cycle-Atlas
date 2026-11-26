@@ -1,0 +1,1473 @@
+model,country,period,score,momentum,stage,phase,reason
+model_a_equal,CHE,1980-Q4,,,,,missing score
+model_a_equal,CHE,1981-Q4,,,,,missing score
+model_a_equal,CHE,1982-Q4,,,,,missing score
+model_a_equal,CHE,1983-Q4,,,,,missing score
+model_a_equal,CHE,1984-Q4,,,,,missing score
+model_a_equal,CHE,1985-Q4,,,,,missing score
+model_a_equal,CHE,1986-Q4,,,,,missing score
+model_a_equal,CHE,1987-Q4,,,,,missing score
+model_a_equal,CHE,1988-Q4,,,,,missing score
+model_a_equal,CHE,1989-Q4,,,,,missing score
+model_a_equal,CHE,1990-Q4,,,,,missing score
+model_a_equal,CHE,1991-Q4,,,,,missing score
+model_a_equal,CHE,1992-Q4,,,,,missing score
+model_a_equal,CHE,1993-Q4,,,,,missing score
+model_a_equal,CHE,1994-Q4,,,,,missing score
+model_a_equal,CHE,1995-Q4,51.32603599606157,0.0,RISE,RISE,stage=RISE run=1
+model_a_equal,CHE,1996-Q4,72.35806385150929,0.0,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_a_equal,CHE,1997-Q4,73.42121971335139,0.0,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,CHE,1998-Q4,73.36873981471643,0.0,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,CHE,1999-Q4,73.32183227928863,21.9958,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_RISEx1
+model_a_equal,CHE,2000-Q4,73.50277624493035,1.1447,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,CHE,2001-Q4,73.70669725428863,0.2855,LATE_RISE,RISE,stage=LATE_RISE run=2 candidate=PEAKx1
+model_a_equal,CHE,2002-Q4,73.30106965428863,-0.0677,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,CHE,2003-Q4,73.31233187614691,-0.0095,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,CHE,2004-Q4,71.56577088308823,-1.937,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_a_equal,CHE,2005-Q4,72.27667792058824,-1.43,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,CHE,2006-Q4,72.23066599766042,-1.0704,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,CHE,2007-Q4,72.61043702266042,-0.7019,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3 candidate=PEAKx1
+model_a_equal,CHE,2008-Q4,73.98738309001196,2.4216,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=LATE_RISEx1
+model_a_equal,CHE,2009-Q4,74.15393019937025,1.8773,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,CHE,2010-Q4,73.56041237200253,1.3297,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_a_equal,CHE,2011-Q4,74.03495499208415,1.4245,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_a_equal,CHE,2012-Q4,74.60542394001196,0.618,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_a_equal,CHE,2013-Q4,74.74343562093301,0.5895,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,CHE,2014-Q4,76.18696244071911,2.6266,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_a_equal,CHE,2015-Q4,75.76991772437025,1.735,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,CHE,2016-Q4,75.8119272382353,1.2065,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_a_equal,CHE,2017-Q4,75.9572748830214,1.2138,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_a_equal,CHE,2018-Q4,77.44305784035674,1.2561,LATE_RISE,RISE,stage=LATE_RISE run=4
+model_a_equal,CHE,2019-Q4,77.31171137578455,1.5418,LATE_RISE,RISE,stage=LATE_RISE run=5
+model_a_equal,CHE,2020-Q4,77.0156346910639,1.2037,LATE_RISE,RISE,stage=LATE_RISE run=6
+model_a_equal,CHE,2021-Q4,76.60513741606388,0.6479,LATE_RISE,RISE,stage=LATE_RISE run=7 candidate=PEAKx1
+model_a_equal,CHE,2022-Q4,75.5282566538677,-1.9148,LATE_RISE,RISE,stage=LATE_RISE run=8 candidate=EARLY_DECLINEx1
+model_a_equal,CHE,2023-Q4,75.70000845444623,-1.6117,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,CHE,2024-Q4,74.7915180619923,-2.2241,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,CHE,2025-Q4,74.96522753304481,-1.6399,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_a_equal,CHN,1980-Q4,,,,,missing score
+model_a_equal,CHN,1981-Q4,,,,,missing score
+model_a_equal,CHN,1982-Q4,,,,,missing score
+model_a_equal,CHN,1983-Q4,,,,,missing score
+model_a_equal,CHN,1984-Q4,,,,,missing score
+model_a_equal,CHN,1985-Q4,,,,,missing score
+model_a_equal,CHN,1986-Q4,,,,,missing score
+model_a_equal,CHN,1987-Q4,,,,,missing score
+model_a_equal,CHN,1988-Q4,,,,,missing score
+model_a_equal,CHN,1989-Q4,,,,,missing score
+model_a_equal,CHN,1990-Q4,,,,,missing score
+model_a_equal,CHN,1991-Q4,,,,,missing score
+model_a_equal,CHN,1992-Q4,,,,,missing score
+model_a_equal,CHN,1993-Q4,,,,,missing score
+model_a_equal,CHN,1994-Q4,,,,,missing score
+model_a_equal,CHN,1995-Q4,,,,,missing score
+model_a_equal,CHN,1996-Q4,57.664501199465235,0.0,RISE,RISE,stage=RISE run=1
+model_a_equal,CHN,1997-Q4,57.480294425846694,0.0,RISE,RISE,stage=RISE run=2
+model_a_equal,CHN,1998-Q4,55.65842224251336,0.0,RISE,RISE,stage=RISE run=3
+model_a_equal,CHN,1999-Q4,55.49008890918003,0.0,RISE,RISE,stage=RISE run=4
+model_a_equal,CHN,2000-Q4,54.49672255365418,-3.1678,RISE,RISE,stage=RISE run=5 candidate=DECLINEx1
+model_a_equal,CHN,2001-Q4,54.29259599393939,-3.1877,DECLINE,DECLINE,stage=DECLINE run=1
+model_a_equal,CHN,2002-Q4,53.305567303654186,-2.3529,DECLINE,DECLINE,stage=DECLINE run=2
+model_a_equal,CHN,2003-Q4,52.99395007032085,-2.4961,DECLINE,DECLINE,stage=DECLINE run=3
+model_a_equal,CHN,2004-Q4,53.228799734224594,-1.2679,DECLINE,DECLINE,stage=DECLINE run=4
+model_a_equal,CHN,2005-Q4,51.76246345784313,-2.5301,DECLINE,DECLINE,stage=DECLINE run=5
+model_a_equal,CHN,2006-Q4,51.60754843146167,-1.698,DECLINE,DECLINE,stage=DECLINE run=6
+model_a_equal,CHN,2007-Q4,52.40797357174688,-0.586,DECLINE,DECLINE,stage=DECLINE run=7 candidate=LATE_PEAKx1
+model_a_equal,CHN,2008-Q4,53.24071805508021,0.0119,DECLINE,DECLINE,stage=DECLINE run=8 candidate=RISEx1
+model_a_equal,CHN,2009-Q4,53.454162505080205,1.6917,RISE,RISE,stage=RISE run=1
+model_a_equal,CHN,2010-Q4,46.878106053170356,-4.7294,RISE,RISE,stage=RISE run=2 candidate=DECLINEx1
+model_a_equal,CHN,2011-Q4,46.8642459591291,-5.5437,DECLINE,DECLINE,stage=DECLINE run=1
+model_a_equal,CHN,2012-Q4,46.211706905576776,-7.029,DECLINE,DECLINE,stage=DECLINE run=2
+model_a_equal,CHN,2013-Q4,46.27870225974026,-7.1755,DECLINE,DECLINE,stage=DECLINE run=3
+model_a_equal,CHN,2014-Q4,48.61859911390374,1.7405,DECLINE,DECLINE,stage=DECLINE run=4 candidate=RISEx1
+model_a_equal,CHN,2015-Q4,54.03492569679144,7.1707,RISE,RISE,stage=RISE run=1
+model_a_equal,CHN,2016-Q4,54.37509349402852,8.1634,RISE,RISE,stage=RISE run=2
+model_a_equal,CHN,2017-Q4,55.621600150980385,9.3429,RISE,RISE,stage=RISE run=3
+model_a_equal,CHN,2018-Q4,55.21954135793226,6.6009,RISE,RISE,stage=RISE run=4
+model_a_equal,CHN,2019-Q4,55.384806509358285,1.3499,RISE,RISE,stage=RISE run=5
+model_a_equal,CHN,2020-Q4,55.307692237165774,0.9326,RISE,RISE,stage=RISE run=6
+model_a_equal,CHN,2021-Q4,56.00863662040998,0.387,RISE,RISE,stage=RISE run=7
+model_a_equal,CHN,2022-Q4,54.03962228996416,-1.1799,RISE,RISE,stage=RISE run=8 candidate=DECLINEx1
+model_a_equal,CHN,2023-Q4,54.83060265362319,-0.5542,RISE,RISE,stage=RISE run=9 candidate=LATE_PEAKx1
+model_a_equal,CHN,2024-Q4,54.73013649322344,-0.5776,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_a_equal,CHN,2025-Q4,54.59316314358974,-1.4155,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=DECLINEx1
+model_a_equal,DEU,1980-Q4,,,,,missing score
+model_a_equal,DEU,1981-Q4,,,,,missing score
+model_a_equal,DEU,1982-Q4,,,,,missing score
+model_a_equal,DEU,1983-Q4,,,,,missing score
+model_a_equal,DEU,1984-Q4,,,,,missing score
+model_a_equal,DEU,1985-Q4,,,,,missing score
+model_a_equal,DEU,1986-Q4,,,,,missing score
+model_a_equal,DEU,1987-Q4,,,,,missing score
+model_a_equal,DEU,1988-Q4,,,,,missing score
+model_a_equal,DEU,1989-Q4,,,,,missing score
+model_a_equal,DEU,1990-Q4,,,,,missing score
+model_a_equal,DEU,1991-Q4,,,,,missing score
+model_a_equal,DEU,1992-Q4,,,,,missing score
+model_a_equal,DEU,1993-Q4,,,,,missing score
+model_a_equal,DEU,1994-Q4,,,,,missing score
+model_a_equal,DEU,1995-Q4,45.106465334838845,0.0,RISE,RISE,stage=RISE run=1
+model_a_equal,DEU,1996-Q4,66.37958619640092,0.0,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_a_equal,DEU,1997-Q4,66.40904491097312,0.0,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,DEU,1998-Q4,66.11011000232199,0.0,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,DEU,1999-Q4,66.17914209189418,21.0727,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_RISEx1
+model_a_equal,DEU,2000-Q4,65.93180518460808,-0.4478,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,DEU,2001-Q4,66.11340906896636,-0.2956,PEAK,PEAK,stage=PEAK run=5
+model_a_equal,DEU,2002-Q4,65.52987705646636,-0.5802,PEAK,PEAK,stage=PEAK run=6
+model_a_equal,DEU,2003-Q4,64.77891098875246,-1.4002,PEAK,PEAK,stage=PEAK run=7 candidate=EARLY_DECLINEx1
+model_a_equal,DEU,2004-Q4,64.45591048875247,-1.4759,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,DEU,2005-Q4,65.89564783246904,-0.2178,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2 candidate=PEAKx1
+model_a_equal,DEU,2006-Q4,65.31624334112018,-0.2136,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,DEU,2007-Q4,65.61294541297846,0.834,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,DEU,2008-Q4,65.01388329633409,0.558,PEAK,PEAK,stage=PEAK run=3
+model_a_equal,DEU,2009-Q4,64.82240740427807,-1.0732,PEAK,PEAK,stage=PEAK run=4 candidate=EARLY_DECLINEx1
+model_a_equal,DEU,2010-Q4,64.12287850635026,-1.1934,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,DEU,2011-Q4,64.97937711256685,-0.6336,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2 candidate=PEAKx1
+model_a_equal,DEU,2012-Q4,65.55939451778075,0.5455,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,DEU,2013-Q4,65.86182478963904,1.0394,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_a_equal,DEU,2014-Q4,66.96003179899732,2.8372,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,DEU,2015-Q4,66.38264828235295,1.4033,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_a_equal,DEU,2016-Q4,66.73561844034619,1.1762,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_a_equal,DEU,2017-Q4,67.7095401118421,1.8477,LATE_RISE,RISE,stage=LATE_RISE run=4
+model_a_equal,DEU,2018-Q4,67.55553468927667,0.5955,LATE_RISE,RISE,stage=LATE_RISE run=5 candidate=PEAKx1
+model_a_equal,DEU,2019-Q4,68.2847348441282,1.9021,LATE_RISE,RISE,stage=LATE_RISE run=6
+model_a_equal,DEU,2020-Q4,67.538296547158,0.8027,LATE_RISE,RISE,stage=LATE_RISE run=7 candidate=PEAKx1
+model_a_equal,DEU,2021-Q4,68.37073759537085,0.6612,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,DEU,2022-Q4,67.05110569014633,-0.5044,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,DEU,2023-Q4,66.50555115591614,-1.7792,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_a_equal,DEU,2024-Q4,65.41455795964998,-2.1237,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,DEU,2025-Q4,64.72543786271206,-3.6453,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,FRA,1980-Q4,,,,,missing score
+model_a_equal,FRA,1981-Q4,,,,,missing score
+model_a_equal,FRA,1982-Q4,,,,,missing score
+model_a_equal,FRA,1983-Q4,,,,,missing score
+model_a_equal,FRA,1984-Q4,,,,,missing score
+model_a_equal,FRA,1985-Q4,,,,,missing score
+model_a_equal,FRA,1986-Q4,,,,,missing score
+model_a_equal,FRA,1987-Q4,,,,,missing score
+model_a_equal,FRA,1988-Q4,,,,,missing score
+model_a_equal,FRA,1989-Q4,,,,,missing score
+model_a_equal,FRA,1990-Q4,,,,,missing score
+model_a_equal,FRA,1991-Q4,,,,,missing score
+model_a_equal,FRA,1992-Q4,,,,,missing score
+model_a_equal,FRA,1993-Q4,,,,,missing score
+model_a_equal,FRA,1994-Q4,,,,,missing score
+model_a_equal,FRA,1995-Q4,46.347374178710794,0.0,RISE,RISE,stage=RISE run=1
+model_a_equal,FRA,1996-Q4,63.294923026730935,0.0,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_a_equal,FRA,1997-Q4,63.293902437158735,0.0,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,FRA,1998-Q4,62.71656153194483,0.0,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,FRA,1999-Q4,62.51358658330988,16.1662,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_RISEx1
+model_a_equal,FRA,2000-Q4,63.05505263330988,-0.2399,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,FRA,2001-Q4,63.91669667151703,0.6228,PEAK,PEAK,stage=PEAK run=5
+model_a_equal,FRA,2002-Q4,64.02646016179636,1.3099,PEAK,PEAK,stage=PEAK run=6 candidate=LATE_RISEx1
+model_a_equal,FRA,2003-Q4,63.82547527566141,1.3119,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,FRA,2004-Q4,63.821321395447505,0.7663,LATE_RISE,RISE,stage=LATE_RISE run=2 candidate=PEAKx1
+model_a_equal,FRA,2005-Q4,65.01713153952646,1.1004,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_a_equal,FRA,2006-Q4,64.96191561523361,0.9355,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_a_equal,FRA,2007-Q4,64.88607902702645,1.0606,LATE_RISE,RISE,stage=LATE_RISE run=5
+model_a_equal,FRA,2008-Q4,64.84574509159864,1.0244,LATE_RISE,RISE,stage=LATE_RISE run=6
+model_a_equal,FRA,2009-Q4,64.42244034888475,-0.5947,LATE_RISE,RISE,stage=LATE_RISE run=7 candidate=PEAKx1
+model_a_equal,FRA,2010-Q4,63.8843587586054,-1.0776,LATE_RISE,RISE,stage=LATE_RISE run=8 candidate=EARLY_DECLINEx1
+model_a_equal,FRA,2011-Q4,63.60008798674711,-1.286,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,FRA,2012-Q4,64.0930523388193,-0.7527,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2 candidate=PEAKx1
+model_a_equal,FRA,2013-Q4,63.65372760202646,-0.7687,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,FRA,2014-Q4,63.22477678016816,-0.6596,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,FRA,2015-Q4,62.481089818575995,-1.119,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_a_equal,FRA,2016-Q4,61.581998091716784,-2.5111,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,FRA,2017-Q4,62.47744639181658,-1.1763,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,FRA,2018-Q4,62.94473255538169,-0.28,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3 candidate=PEAKx1
+model_a_equal,FRA,2019-Q4,63.04598264869224,0.5649,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,FRA,2020-Q4,62.82823372587835,1.2462,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_a_equal,FRA,2021-Q4,62.031339520762636,-0.4461,PEAK,PEAK,stage=PEAK run=3
+model_a_equal,FRA,2022-Q4,61.1889988895936,-1.7557,PEAK,PEAK,stage=PEAK run=4 candidate=EARLY_DECLINEx1
+model_a_equal,FRA,2023-Q4,60.715905096093394,-2.3301,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,FRA,2024-Q4,59.65200884162415,-3.1762,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2 candidate=DECLINEx1
+model_a_equal,FRA,2025-Q4,59.6078196750079,-2.4235,DECLINE,DECLINE,stage=DECLINE run=1
+model_a_equal,GBR,1980-Q4,,,,,missing score
+model_a_equal,GBR,1981-Q4,,,,,missing score
+model_a_equal,GBR,1982-Q4,,,,,missing score
+model_a_equal,GBR,1983-Q4,,,,,missing score
+model_a_equal,GBR,1984-Q4,,,,,missing score
+model_a_equal,GBR,1985-Q4,,,,,missing score
+model_a_equal,GBR,1986-Q4,,,,,missing score
+model_a_equal,GBR,1987-Q4,,,,,missing score
+model_a_equal,GBR,1988-Q4,,,,,missing score
+model_a_equal,GBR,1989-Q4,,,,,missing score
+model_a_equal,GBR,1990-Q4,,,,,missing score
+model_a_equal,GBR,1991-Q4,,,,,missing score
+model_a_equal,GBR,1992-Q4,,,,,missing score
+model_a_equal,GBR,1993-Q4,,,,,missing score
+model_a_equal,GBR,1994-Q4,,,,,missing score
+model_a_equal,GBR,1995-Q4,,,,,missing score
+model_a_equal,GBR,1996-Q4,72.70017950793293,0.0,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,GBR,1997-Q4,66.5883449537996,0.0,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,GBR,1998-Q4,66.79084989995074,0.0,PEAK,PEAK,stage=PEAK run=3
+model_a_equal,GBR,1999-Q4,67.36125836452294,0.0,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,GBR,2000-Q4,67.60720024159512,-5.093,PEAK,PEAK,stage=PEAK run=5 candidate=EARLY_DECLINEx1
+model_a_equal,GBR,2001-Q4,67.43550822287855,0.8472,PEAK,PEAK,stage=PEAK run=6
+model_a_equal,GBR,2002-Q4,66.60040493116733,-0.1904,PEAK,PEAK,stage=PEAK run=7
+model_a_equal,GBR,2003-Q4,66.56109752073952,-0.8002,PEAK,PEAK,stage=PEAK run=8
+model_a_equal,GBR,2004-Q4,65.43629577317408,-2.1709,PEAK,PEAK,stage=PEAK run=9 candidate=EARLY_DECLINEx1
+model_a_equal,GBR,2005-Q4,66.66986443981847,-0.7656,PEAK,PEAK,stage=PEAK run=10
+model_a_equal,GBR,2006-Q4,67.78855703531171,1.1882,PEAK,PEAK,stage=PEAK run=11 candidate=LATE_RISEx1
+model_a_equal,GBR,2007-Q4,67.6982747800978,1.1372,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,GBR,2008-Q4,67.32792519988391,1.8916,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_a_equal,GBR,2009-Q4,65.5713547057557,-1.0985,LATE_RISE,RISE,stage=LATE_RISE run=3 candidate=EARLY_DECLINEx1
+model_a_equal,GBR,2010-Q4,66.32558437210456,-1.463,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,GBR,2011-Q4,65.46541153774626,-2.2329,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,GBR,2012-Q4,65.7913075286835,-1.5366,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_a_equal,GBR,2013-Q4,65.6409681359696,0.0696,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=PEAKx1
+model_a_equal,GBR,2014-Q4,66.38065605889742,0.0551,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,GBR,2015-Q4,67.09979189118351,1.6344,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_a_equal,GBR,2016-Q4,67.4490368255418,1.6577,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,GBR,2017-Q4,67.77224023874895,2.1313,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_a_equal,GBR,2018-Q4,66.77855033490009,0.3979,LATE_RISE,RISE,stage=LATE_RISE run=3 candidate=PEAKx1
+model_a_equal,GBR,2019-Q4,66.82888868847054,-0.2709,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,GBR,2020-Q4,67.63537011938665,0.1863,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,GBR,2021-Q4,66.57778303931283,-1.1945,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_a_equal,GBR,2022-Q4,66.0814520431551,-0.6971,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,GBR,2023-Q4,65.31212759116858,-1.5168,PEAK,PEAK,stage=PEAK run=5 candidate=EARLY_DECLINEx1
+model_a_equal,GBR,2024-Q4,64.83281022132441,-2.8026,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,GBR,2025-Q4,64.74457428653,-1.8332,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,IND,1980-Q4,,,,,missing score
+model_a_equal,IND,1981-Q4,,,,,missing score
+model_a_equal,IND,1982-Q4,,,,,missing score
+model_a_equal,IND,1983-Q4,,,,,missing score
+model_a_equal,IND,1984-Q4,,,,,missing score
+model_a_equal,IND,1985-Q4,,,,,missing score
+model_a_equal,IND,1986-Q4,,,,,missing score
+model_a_equal,IND,1987-Q4,,,,,missing score
+model_a_equal,IND,1988-Q4,,,,,missing score
+model_a_equal,IND,1989-Q4,,,,,missing score
+model_a_equal,IND,1990-Q4,,,,,missing score
+model_a_equal,IND,1991-Q4,,,,,missing score
+model_a_equal,IND,1992-Q4,,,,,missing score
+model_a_equal,IND,1993-Q4,,,,,missing score
+model_a_equal,IND,1994-Q4,,,,,missing score
+model_a_equal,IND,1995-Q4,,,,,missing score
+model_a_equal,IND,1996-Q4,47.455225683511586,0.0,RISE,RISE,stage=RISE run=1
+model_a_equal,IND,1997-Q4,47.74839858903743,0.0,RISE,RISE,stage=RISE run=2
+model_a_equal,IND,1998-Q4,47.49660726122995,0.0,RISE,RISE,stage=RISE run=3
+model_a_equal,IND,1999-Q4,47.93803328618538,0.0,RISE,RISE,stage=RISE run=4
+model_a_equal,IND,2000-Q4,47.85244512923351,0.3972,RISE,RISE,stage=RISE run=5
+model_a_equal,IND,2001-Q4,47.467525343137254,-0.2809,RISE,RISE,stage=RISE run=6 candidate=LATE_PEAKx1
+model_a_equal,IND,2002-Q4,44.39247676675579,-3.1041,RISE,RISE,stage=RISE run=7 candidate=DECLINEx1
+model_a_equal,IND,2003-Q4,44.367153057040994,-3.5709,DECLINE,DECLINE,stage=DECLINE run=1
+model_a_equal,IND,2004-Q4,46.90856192647058,-0.9439,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_a_equal,IND,2005-Q4,47.213527601515146,-0.254,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_a_equal,IND,2006-Q4,47.36812635017825,2.9756,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_a_equal,IND,2007-Q4,46.49775700160427,2.1306,RISE,RISE,stage=RISE run=1
+model_a_equal,IND,2008-Q4,46.36947741969696,-0.5391,RISE,RISE,stage=RISE run=2 candidate=LATE_PEAKx1
+model_a_equal,IND,2009-Q4,45.634605061408195,-1.5789,RISE,RISE,stage=RISE run=3 candidate=DECLINEx1
+model_a_equal,IND,2010-Q4,44.44406103645276,-2.9241,DECLINE,DECLINE,stage=DECLINE run=1
+model_a_equal,IND,2011-Q4,38.82303592291825,-7.6747,DECLINE,DECLINE,stage=DECLINE run=2
+model_a_equal,IND,2012-Q4,37.858595897937356,-8.5109,DECLINE,DECLINE,stage=DECLINE run=3
+model_a_equal,IND,2013-Q4,37.708726044385024,-7.9259,DECLINE,DECLINE,stage=DECLINE run=4
+model_a_equal,IND,2014-Q4,38.54542697058823,-5.8986,DECLINE,DECLINE,stage=DECLINE run=5
+model_a_equal,IND,2015-Q4,39.64917796226126,0.8261,DECLINE,DECLINE,stage=DECLINE run=6 candidate=RISEx1
+model_a_equal,IND,2016-Q4,39.97956473964859,2.121,DECLINE,DECLINE,stage=DECLINE run=7 candidate=EARLY_RISEx1
+model_a_equal,IND,2017-Q4,45.50137908654189,7.7927,DECLINE,DECLINE,stage=DECLINE run=8 candidate=RISEx1
+model_a_equal,IND,2018-Q4,42.11728666822001,3.5719,DECLINE,DECLINE,stage=DECLINE run=9 candidate=EARLY_RISEx1
+model_a_equal,IND,2019-Q4,42.53948807679144,2.8903,EARLY_RISE,RISE,stage=EARLY_RISE run=1
+model_a_equal,IND,2020-Q4,41.991181374873946,2.0116,EARLY_RISE,RISE,stage=EARLY_RISE run=2
+model_a_equal,IND,2021-Q4,41.683912331283416,-3.8175,EARLY_RISE,RISE,stage=EARLY_RISE run=3 candidate=DECLINEx1
+model_a_equal,IND,2022-Q4,41.54905838222734,-0.5682,EARLY_RISE,RISE,stage=EARLY_RISE run=4 candidate=LATE_PEAKx1
+model_a_equal,IND,2023-Q4,42.15001376838509,-0.3895,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_a_equal,IND,2024-Q4,42.946629295557294,0.9554,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_a_equal,IND,2025-Q4,42.95562893841444,1.2717,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=EARLY_RISEx1
+model_a_equal,JPN,1980-Q4,,,,,missing score
+model_a_equal,JPN,1981-Q4,,,,,missing score
+model_a_equal,JPN,1982-Q4,,,,,missing score
+model_a_equal,JPN,1983-Q4,,,,,missing score
+model_a_equal,JPN,1984-Q4,,,,,missing score
+model_a_equal,JPN,1985-Q4,,,,,missing score
+model_a_equal,JPN,1986-Q4,,,,,missing score
+model_a_equal,JPN,1987-Q4,,,,,missing score
+model_a_equal,JPN,1988-Q4,,,,,missing score
+model_a_equal,JPN,1989-Q4,,,,,missing score
+model_a_equal,JPN,1990-Q4,,,,,missing score
+model_a_equal,JPN,1991-Q4,,,,,missing score
+model_a_equal,JPN,1992-Q4,,,,,missing score
+model_a_equal,JPN,1993-Q4,,,,,missing score
+model_a_equal,JPN,1994-Q4,,,,,missing score
+model_a_equal,JPN,1995-Q4,,,,,missing score
+model_a_equal,JPN,1996-Q4,66.72277142270515,0.0,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,JPN,1997-Q4,64.12168299486702,0.0,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,JPN,1998-Q4,62.894712782367016,0.0,PEAK,PEAK,stage=PEAK run=3
+model_a_equal,JPN,1999-Q4,62.69805269279482,0.0,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,JPN,2000-Q4,63.66884702300872,-3.0539,PEAK,PEAK,stage=PEAK run=5 candidate=EARLY_DECLINEx1
+model_a_equal,JPN,2001-Q4,63.60773780843653,-0.5139,PEAK,PEAK,stage=PEAK run=6
+model_a_equal,JPN,2002-Q4,62.39231396786167,-0.5024,PEAK,PEAK,stage=PEAK run=7
+model_a_equal,JPN,2003-Q4,62.23957763350337,-0.4585,PEAK,PEAK,stage=PEAK run=8
+model_a_equal,JPN,2004-Q4,61.813459404358994,-1.8554,PEAK,PEAK,stage=PEAK run=9 candidate=EARLY_DECLINEx1
+model_a_equal,JPN,2005-Q4,62.5905560397868,-1.0172,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,JPN,2006-Q4,62.62561914950746,0.2333,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2 candidate=PEAKx1
+model_a_equal,JPN,2007-Q4,61.39382863108641,-0.8457,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,JPN,2008-Q4,61.67599379358641,-0.1375,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,JPN,2009-Q4,62.33759065715592,-0.253,PEAK,PEAK,stage=PEAK run=3
+model_a_equal,JPN,2010-Q4,62.83038600715592,0.2048,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,JPN,2011-Q4,63.106871781153245,1.713,PEAK,PEAK,stage=PEAK run=5 candidate=LATE_RISEx1
+model_a_equal,JPN,2012-Q4,62.709343461367155,1.0333,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_a_equal,JPN,2013-Q4,63.6370804245743,1.2995,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_a_equal,JPN,2014-Q4,65.44777259329088,2.6174,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_a_equal,JPN,2015-Q4,65.30995678985364,2.2031,LATE_RISE,RISE,stage=LATE_RISE run=4
+model_a_equal,JPN,2016-Q4,65.40272995786307,2.6934,LATE_RISE,RISE,stage=LATE_RISE run=5
+model_a_equal,JPN,2017-Q4,65.78681115501689,2.1497,LATE_RISE,RISE,stage=LATE_RISE run=6
+model_a_equal,JPN,2018-Q4,66.39361384559174,0.9458,LATE_RISE,RISE,stage=LATE_RISE run=7 candidate=PEAKx1
+model_a_equal,JPN,2019-Q4,66.56934733830566,1.2594,LATE_RISE,RISE,stage=LATE_RISE run=8
+model_a_equal,JPN,2020-Q4,65.84879552249859,0.4461,LATE_RISE,RISE,stage=LATE_RISE run=9 candidate=PEAKx1
+model_a_equal,JPN,2021-Q4,65.85541392948916,0.0686,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,JPN,2022-Q4,67.5612561349506,1.1676,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_a_equal,JPN,2023-Q4,67.26240169537603,0.6931,PEAK,PEAK,stage=PEAK run=3
+model_a_equal,JPN,2024-Q4,66.56954573754294,0.7208,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,JPN,2025-Q4,66.95433664696186,1.0989,PEAK,PEAK,stage=PEAK run=5 candidate=LATE_RISEx1
+model_a_equal,USA,1980-Q4,,,,,missing score
+model_a_equal,USA,1981-Q4,,,,,missing score
+model_a_equal,USA,1982-Q4,,,,,missing score
+model_a_equal,USA,1983-Q4,,,,,missing score
+model_a_equal,USA,1984-Q4,,,,,missing score
+model_a_equal,USA,1985-Q4,,,,,missing score
+model_a_equal,USA,1986-Q4,,,,,missing score
+model_a_equal,USA,1987-Q4,,,,,missing score
+model_a_equal,USA,1988-Q4,,,,,missing score
+model_a_equal,USA,1989-Q4,,,,,missing score
+model_a_equal,USA,1990-Q4,,,,,missing score
+model_a_equal,USA,1991-Q4,,,,,missing score
+model_a_equal,USA,1992-Q4,,,,,missing score
+model_a_equal,USA,1993-Q4,,,,,missing score
+model_a_equal,USA,1994-Q4,,,,,missing score
+model_a_equal,USA,1995-Q4,49.135404927301636,0.0,RISE,RISE,stage=RISE run=1
+model_a_equal,USA,1996-Q4,67.02036545248029,0.0,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_a_equal,USA,1997-Q4,67.0705764972664,0.0,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,USA,1998-Q4,67.08970542611526,0.0,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,USA,1999-Q4,67.30569159590135,18.1703,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_RISEx1
+model_a_equal,USA,2000-Q4,67.8108498295525,0.7905,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,USA,2001-Q4,67.8138664899803,0.7433,PEAK,PEAK,stage=PEAK run=5
+model_a_equal,USA,2002-Q4,66.80312838583592,-0.2866,PEAK,PEAK,stage=PEAK run=6
+model_a_equal,USA,2003-Q4,64.60606268897763,-2.6996,PEAK,PEAK,stage=PEAK run=7 candidate=EARLY_DECLINEx1
+model_a_equal,USA,2004-Q4,64.11742295669153,-3.6934,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,USA,2005-Q4,64.11168412961933,-3.7022,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,USA,2006-Q4,64.17556853897763,-2.6276,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_a_equal,USA,2007-Q4,63.65266828098438,-0.9534,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=PEAKx1
+model_a_equal,USA,2008-Q4,64.45477296711934,0.3374,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,USA,2009-Q4,64.56917157238249,0.4575,PEAK,PEAK,stage=PEAK run=2
+model_a_equal,USA,2010-Q4,64.38983740052421,0.2143,PEAK,PEAK,stage=PEAK run=3
+model_a_equal,USA,2011-Q4,63.88325012795877,0.2306,PEAK,PEAK,stage=PEAK run=4
+model_a_equal,USA,2012-Q4,64.05897309744934,-0.3958,PEAK,PEAK,stage=PEAK run=5
+model_a_equal,USA,2013-Q4,63.93150786202153,-0.6377,PEAK,PEAK,stage=PEAK run=6
+model_a_equal,USA,2014-Q4,64.28432050059105,-0.1055,PEAK,PEAK,stage=PEAK run=7
+model_a_equal,USA,2015-Q4,64.29412877351886,0.4109,PEAK,PEAK,stage=PEAK run=8
+model_a_equal,USA,2016-Q4,63.89408767559105,-0.1649,PEAK,PEAK,stage=PEAK run=9
+model_a_equal,USA,2017-Q4,63.433170309242186,-0.4983,PEAK,PEAK,stage=PEAK run=10
+model_a_equal,USA,2018-Q4,63.846441213091055,-0.4379,PEAK,PEAK,stage=PEAK run=11
+model_a_equal,USA,2019-Q4,62.938550568304954,-1.3556,PEAK,PEAK,stage=PEAK run=12 candidate=EARLY_DECLINEx1
+model_a_equal,USA,2020-Q4,62.12583379537715,-1.7683,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_a_equal,USA,2021-Q4,61.72970518187447,-1.7035,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_a_equal,USA,2022-Q4,61.81297591755304,-2.0335,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_a_equal,USA,2023-Q4,62.163646733312284,-0.7749,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=PEAKx1
+model_a_equal,USA,2024-Q4,63.01717503068867,0.8913,PEAK,PEAK,stage=PEAK run=1
+model_a_equal,USA,2025-Q4,61.14219067748274,-0.5875,PEAK,PEAK,stage=PEAK run=2
+model_b_domain,CHE,1980-Q4,,,,,missing score
+model_b_domain,CHE,1981-Q4,,,,,missing score
+model_b_domain,CHE,1982-Q4,,,,,missing score
+model_b_domain,CHE,1983-Q4,,,,,missing score
+model_b_domain,CHE,1984-Q4,,,,,missing score
+model_b_domain,CHE,1985-Q4,,,,,missing score
+model_b_domain,CHE,1986-Q4,,,,,missing score
+model_b_domain,CHE,1987-Q4,,,,,missing score
+model_b_domain,CHE,1988-Q4,,,,,missing score
+model_b_domain,CHE,1989-Q4,,,,,missing score
+model_b_domain,CHE,1990-Q4,,,,,missing score
+model_b_domain,CHE,1991-Q4,,,,,missing score
+model_b_domain,CHE,1992-Q4,,,,,missing score
+model_b_domain,CHE,1993-Q4,,,,,missing score
+model_b_domain,CHE,1994-Q4,,,,,missing score
+model_b_domain,CHE,1995-Q4,54.288528501878886,0.0,RISE,RISE,stage=RISE run=1
+model_b_domain,CHE,1996-Q4,64.55167452618035,0.0,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_b_domain,CHE,1997-Q4,66.28147512486456,0.0,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,CHE,1998-Q4,65.90676914530853,0.0,PEAK,PEAK,stage=PEAK run=2
+model_b_domain,CHE,1999-Q4,65.55986160988073,11.2713,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_RISEx1
+model_b_domain,CHE,2000-Q4,65.58451296302245,1.0328,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_b_domain,CHE,2001-Q4,65.78718397238073,-0.4943,LATE_RISE,RISE,stage=LATE_RISE run=2 candidate=PEAKx1
+model_b_domain,CHE,2002-Q4,65.72020760988073,-0.1866,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,CHE,2003-Q4,66.10078260048903,0.5409,PEAK,PEAK,stage=PEAK run=2
+model_b_domain,CHE,2004-Q4,64.20375011433823,-1.3808,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_b_domain,CHE,2005-Q4,64.49506700808824,-1.2921,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_b_domain,CHE,2006-Q4,64.55333459141042,-1.1669,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_b_domain,CHE,2007-Q4,64.74156716641042,-1.3592,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_b_domain,CHE,2008-Q4,66.35182155218301,2.1481,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=LATE_RISEx1
+model_b_domain,CHE,2009-Q4,66.68330942404131,2.1882,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_b_domain,CHE,2010-Q4,66.37857794634463,1.8252,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_b_domain,CHE,2011-Q4,66.4001822355052,1.6586,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_b_domain,CHE,2012-Q4,66.62133510218301,0.2695,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_b_domain,CHE,2013-Q4,67.20195212027511,0.5186,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,CHE,2014-Q4,67.93731299006122,1.5587,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_b_domain,CHE,2015-Q4,67.34772937404131,0.9475,PEAK,PEAK,stage=PEAK run=3
+model_b_domain,CHE,2016-Q4,67.0138650382353,0.3925,PEAK,PEAK,stage=PEAK run=4
+model_b_domain,CHE,2017-Q4,67.13508675802139,-0.0669,PEAK,PEAK,stage=PEAK run=5
+model_b_domain,CHE,2018-Q4,69.4882265643699,1.5509,PEAK,PEAK,stage=PEAK run=6 candidate=LATE_RISEx1
+model_b_domain,CHE,2019-Q4,69.5162581622977,2.1685,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_b_domain,CHE,2020-Q4,70.0411026897481,3.0272,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_b_domain,CHE,2021-Q4,69.72636817724809,2.5913,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_b_domain,CHE,2022-Q4,68.6299465645096,-0.8583,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_b_domain,CHE,2023-Q4,68.73959109008814,-0.7767,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,CHE,2024-Q4,68.1787771788842,-1.8623,PEAK,PEAK,stage=PEAK run=2 candidate=EARLY_DECLINEx1
+model_b_domain,CHE,2025-Q4,68.0789438187591,-1.6474,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_b_domain,CHN,1980-Q4,,,,,missing score
+model_b_domain,CHN,1981-Q4,,,,,missing score
+model_b_domain,CHN,1982-Q4,,,,,missing score
+model_b_domain,CHN,1983-Q4,,,,,missing score
+model_b_domain,CHN,1984-Q4,,,,,missing score
+model_b_domain,CHN,1985-Q4,,,,,missing score
+model_b_domain,CHN,1986-Q4,,,,,missing score
+model_b_domain,CHN,1987-Q4,,,,,missing score
+model_b_domain,CHN,1988-Q4,,,,,missing score
+model_b_domain,CHN,1989-Q4,,,,,missing score
+model_b_domain,CHN,1990-Q4,,,,,missing score
+model_b_domain,CHN,1991-Q4,,,,,missing score
+model_b_domain,CHN,1992-Q4,,,,,missing score
+model_b_domain,CHN,1993-Q4,,,,,missing score
+model_b_domain,CHN,1994-Q4,,,,,missing score
+model_b_domain,CHN,1995-Q4,,,,,missing score
+model_b_domain,CHN,1996-Q4,65.20791904893048,0.0,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,CHN,1997-Q4,64.8395055016934,0.0,PEAK,PEAK,stage=PEAK run=2
+model_b_domain,CHN,1998-Q4,63.61106941002673,0.0,PEAK,PEAK,stage=PEAK run=3
+model_b_domain,CHN,1999-Q4,63.274402743360056,0.0,PEAK,PEAK,stage=PEAK run=4
+model_b_domain,CHN,2000-Q4,62.03546020730837,-3.1725,PEAK,PEAK,stage=PEAK run=5 candidate=EARLY_DECLINEx1
+model_b_domain,CHN,2001-Q4,61.62720708787878,-3.2123,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_b_domain,CHN,2002-Q4,61.12488258230836,-2.4862,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_b_domain,CHN,2003-Q4,60.9640739656417,-2.3103,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_b_domain,CHN,2004-Q4,60.41911911844919,-1.6163,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_b_domain,CHN,2005-Q4,59.13226114068627,-2.4949,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=5 candidate=DECLINEx1
+model_b_domain,CHN,2006-Q4,58.51111378792335,-2.6138,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,CHN,2007-Q4,58.30513651849376,-2.6589,DECLINE,DECLINE,stage=DECLINE run=2
+model_b_domain,CHN,2008-Q4,58.44900876016042,-1.9701,DECLINE,DECLINE,stage=DECLINE run=3
+model_b_domain,CHN,2009-Q4,58.233230985160425,-0.899,DECLINE,DECLINE,stage=DECLINE run=4 candidate=LATE_PEAKx1
+model_b_domain,CHN,2010-Q4,45.125449495365416,-13.3857,DECLINE,DECLINE,stage=DECLINE run=5
+model_b_domain,CHN,2011-Q4,44.06530116065062,-14.2398,DECLINE,DECLINE,stage=DECLINE run=6
+model_b_domain,CHN,2012-Q4,43.61096353983957,-14.838,DECLINE,DECLINE,stage=DECLINE run=7
+model_b_domain,CHN,2013-Q4,43.667325803030295,-14.5659,DECLINE,DECLINE,stage=DECLINE run=8
+model_b_domain,CHN,2014-Q4,45.01204727455437,-0.1134,DECLINE,DECLINE,stage=DECLINE run=9 candidate=LATE_PEAKx1
+model_b_domain,CHN,2015-Q4,55.41897354358288,11.3537,DECLINE,DECLINE,stage=DECLINE run=10 candidate=RISEx1
+model_b_domain,CHN,2016-Q4,55.32167776305704,11.7107,RISE,RISE,stage=RISE run=1
+model_b_domain,CHN,2017-Q4,55.70874125196079,12.0414,RISE,RISE,stage=RISE run=2
+model_b_domain,CHN,2018-Q4,55.39902201586451,10.387,RISE,RISE,stage=RISE run=3
+model_b_domain,CHN,2019-Q4,54.83070539371657,-0.5883,RISE,RISE,stage=RISE run=4 candidate=LATE_PEAKx1
+model_b_domain,CHN,2020-Q4,54.18238889933155,-1.1393,RISE,RISE,stage=RISE run=5 candidate=DECLINEx1
+model_b_domain,CHN,2021-Q4,56.08213916581996,0.3734,RISE,RISE,stage=RISE run=6
+model_b_domain,CHN,2022-Q4,52.81645092992832,-2.5826,RISE,RISE,stage=RISE run=7 candidate=DECLINEx1
+model_b_domain,CHN,2023-Q4,52.86204045724637,-1.9687,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,CHN,2024-Q4,51.76740341144688,-2.415,DECLINE,DECLINE,stage=DECLINE run=2
+model_b_domain,CHN,2025-Q4,51.149466187179485,-4.9327,DECLINE,DECLINE,stage=DECLINE run=3
+model_b_domain,DEU,1980-Q4,,,,,missing score
+model_b_domain,DEU,1981-Q4,,,,,missing score
+model_b_domain,DEU,1982-Q4,,,,,missing score
+model_b_domain,DEU,1983-Q4,,,,,missing score
+model_b_domain,DEU,1984-Q4,,,,,missing score
+model_b_domain,DEU,1985-Q4,,,,,missing score
+model_b_domain,DEU,1986-Q4,,,,,missing score
+model_b_domain,DEU,1987-Q4,,,,,missing score
+model_b_domain,DEU,1988-Q4,,,,,missing score
+model_b_domain,DEU,1989-Q4,,,,,missing score
+model_b_domain,DEU,1990-Q4,,,,,missing score
+model_b_domain,DEU,1991-Q4,,,,,missing score
+model_b_domain,DEU,1992-Q4,,,,,missing score
+model_b_domain,DEU,1993-Q4,,,,,missing score
+model_b_domain,DEU,1994-Q4,,,,,missing score
+model_b_domain,DEU,1995-Q4,50.84759851151418,0.0,RISE,RISE,stage=RISE run=1
+model_b_domain,DEU,1996-Q4,59.85770358949303,0.0,RISE,RISE,stage=RISE run=2
+model_b_domain,DEU,1997-Q4,59.812162304065225,0.0,RISE,RISE,stage=RISE run=3
+model_b_domain,DEU,1998-Q4,59.98022229508514,0.0,RISE,RISE,stage=RISE run=4
+model_b_domain,DEU,1999-Q4,59.98675438465733,9.1392,RISE,RISE,stage=RISE run=5
+model_b_domain,DEU,2000-Q4,59.93483272112123,0.0771,RISE,RISE,stage=RISE run=6
+model_b_domain,DEU,2001-Q4,60.15643660547952,0.3443,RISE,RISE,stage=RISE run=7 candidate=PEAKx1
+model_b_domain,DEU,2002-Q4,59.86404791172953,-0.1162,RISE,RISE,stage=RISE run=8 candidate=LATE_PEAKx1
+model_b_domain,DEU,2003-Q4,59.52574815026561,-0.461,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,DEU,2004-Q4,59.270686462765624,-0.6641,LATE_PEAK,PEAK,stage=LATE_PEAK run=2
+model_b_domain,DEU,2005-Q4,60.0280814564822,-0.1284,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=PEAKx1
+model_b_domain,DEU,2006-Q4,59.203014390462286,-0.661,LATE_PEAK,PEAK,stage=LATE_PEAK run=4
+model_b_domain,DEU,2007-Q4,59.30212174357057,-0.2236,LATE_PEAK,PEAK,stage=LATE_PEAK run=5
+model_b_domain,DEU,2008-Q4,58.87484159567619,-0.3958,LATE_PEAK,PEAK,stage=LATE_PEAK run=6
+model_b_domain,DEU,2009-Q4,58.09933562927807,-1.9287,LATE_PEAK,PEAK,stage=LATE_PEAK run=7 candidate=DECLINEx1
+model_b_domain,DEU,2010-Q4,57.945707412600264,-1.2573,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,DEU,2011-Q4,58.734332162566844,-0.5678,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_b_domain,DEU,2012-Q4,59.17060084278075,0.2958,DECLINE,DECLINE,stage=DECLINE run=3 candidate=RISEx1
+model_b_domain,DEU,2013-Q4,59.472016233389034,1.3727,RISE,RISE,stage=RISE run=1
+model_b_domain,DEU,2014-Q4,59.961233805247325,2.0155,RISE,RISE,stage=RISE run=2
+model_b_domain,DEU,2015-Q4,59.609843769852944,0.8755,RISE,RISE,stage=RISE run=3
+model_b_domain,DEU,2016-Q4,60.40340425876724,1.2328,RISE,RISE,stage=RISE run=4 candidate=LATE_RISEx1
+model_b_domain,DEU,2017-Q4,61.75215822368422,2.2801,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_b_domain,DEU,2018-Q4,61.05823193269772,1.097,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_b_domain,DEU,2019-Q4,62.197021674720304,2.5872,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_b_domain,DEU,2020-Q4,61.53918843432906,1.1358,LATE_RISE,RISE,stage=LATE_RISE run=4
+model_b_domain,DEU,2021-Q4,62.89847323813402,1.1463,LATE_RISE,RISE,stage=LATE_RISE run=5
+model_b_domain,DEU,2022-Q4,61.43728931261255,0.3791,LATE_RISE,RISE,stage=LATE_RISE run=6 candidate=PEAKx1
+model_b_domain,DEU,2023-Q4,61.24023499713235,-0.9568,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,DEU,2024-Q4,59.82998681894051,-1.7092,PEAK,PEAK,stage=PEAK run=2 candidate=DECLINEx1
+model_b_domain,DEU,2025-Q4,58.72213605646205,-4.1763,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,FRA,1980-Q4,,,,,missing score
+model_b_domain,FRA,1981-Q4,,,,,missing score
+model_b_domain,FRA,1982-Q4,,,,,missing score
+model_b_domain,FRA,1983-Q4,,,,,missing score
+model_b_domain,FRA,1984-Q4,,,,,missing score
+model_b_domain,FRA,1985-Q4,,,,,missing score
+model_b_domain,FRA,1986-Q4,,,,,missing score
+model_b_domain,FRA,1987-Q4,,,,,missing score
+model_b_domain,FRA,1988-Q4,,,,,missing score
+model_b_domain,FRA,1989-Q4,,,,,missing score
+model_b_domain,FRA,1990-Q4,,,,,missing score
+model_b_domain,FRA,1991-Q4,,,,,missing score
+model_b_domain,FRA,1992-Q4,,,,,missing score
+model_b_domain,FRA,1993-Q4,,,,,missing score
+model_b_domain,FRA,1994-Q4,,,,,missing score
+model_b_domain,FRA,1995-Q4,53.241222425446836,0.0,RISE,RISE,stage=RISE run=1
+model_b_domain,FRA,1996-Q4,59.470295456336196,0.0,RISE,RISE,stage=RISE run=2
+model_b_domain,FRA,1997-Q4,59.300524866764,0.0,RISE,RISE,stage=RISE run=3
+model_b_domain,FRA,1998-Q4,58.9163689365501,0.0,RISE,RISE,stage=RISE run=4
+model_b_domain,FRA,1999-Q4,58.28194661949409,5.0407,RISE,RISE,stage=RISE run=5
+model_b_domain,FRA,2000-Q4,58.55193176949409,-0.9184,RISE,RISE,stage=RISE run=6 candidate=LATE_PEAKx1
+model_b_domain,FRA,2001-Q4,59.85127317612229,0.5507,RISE,RISE,stage=RISE run=7
+model_b_domain,FRA,2002-Q4,60.896767228572685,1.9804,RISE,RISE,stage=RISE run=8 candidate=LATE_RISEx1
+model_b_domain,FRA,2003-Q4,60.60076819276668,2.3188,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_b_domain,FRA,2004-Q4,60.773061087552776,2.2211,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_b_domain,FRA,2005-Q4,61.12853791946067,1.2773,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_b_domain,FRA,2006-Q4,61.67776321983887,0.781,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_b_domain,FRA,2007-Q4,61.00226828821067,0.4015,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,FRA,2008-Q4,61.10212974028286,0.3291,PEAK,PEAK,stage=PEAK run=2
+model_b_domain,FRA,2009-Q4,60.994189266318955,-0.1343,PEAK,PEAK,stage=PEAK run=3
+model_b_domain,FRA,2010-Q4,59.79720097636856,-1.8806,PEAK,PEAK,stage=PEAK run=4 candidate=DECLINEx1
+model_b_domain,FRA,2011-Q4,59.68583114826027,-1.3164,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,FRA,2012-Q4,60.07864018158246,-1.0235,DECLINE,DECLINE,stage=DECLINE run=2 candidate=EARLY_DECLINEx1
+model_b_domain,FRA,2013-Q4,60.33555463821067,-0.6586,DECLINE,DECLINE,stage=DECLINE run=3 candidate=PEAKx1
+model_b_domain,FRA,2014-Q4,59.90897228510238,0.1118,DECLINE,DECLINE,stage=DECLINE run=4 candidate=RISEx1
+model_b_domain,FRA,2015-Q4,59.389443373510204,-0.2964,DECLINE,DECLINE,stage=DECLINE run=5 candidate=LATE_PEAKx1
+model_b_domain,FRA,2016-Q4,58.38209210322993,-1.6965,DECLINE,DECLINE,stage=DECLINE run=6
+model_b_domain,FRA,2017-Q4,59.28652184675079,-1.049,DECLINE,DECLINE,stage=DECLINE run=7
+model_b_domain,FRA,2018-Q4,59.681598004065904,-0.2274,DECLINE,DECLINE,stage=DECLINE run=8 candidate=LATE_PEAKx1
+model_b_domain,FRA,2019-Q4,59.81315040362645,0.4237,DECLINE,DECLINE,stage=DECLINE run=9 candidate=RISEx1
+model_b_domain,FRA,2020-Q4,59.56773168739151,1.1856,RISE,RISE,stage=RISE run=1
+model_b_domain,FRA,2021-Q4,57.203819271091575,-2.0827,RISE,RISE,stage=RISE run=2 candidate=DECLINEx1
+model_b_domain,FRA,2022-Q4,56.543736804796296,-3.1379,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,FRA,2023-Q4,56.2676773112961,-3.5455,DECLINE,DECLINE,stage=DECLINE run=2
+model_b_domain,FRA,2024-Q4,55.27076821898902,-4.297,DECLINE,DECLINE,stage=DECLINE run=3
+model_b_domain,FRA,2025-Q4,54.96340154911505,-2.2404,DECLINE,DECLINE,stage=DECLINE run=4
+model_b_domain,GBR,1980-Q4,,,,,missing score
+model_b_domain,GBR,1981-Q4,,,,,missing score
+model_b_domain,GBR,1982-Q4,,,,,missing score
+model_b_domain,GBR,1983-Q4,,,,,missing score
+model_b_domain,GBR,1984-Q4,,,,,missing score
+model_b_domain,GBR,1985-Q4,,,,,missing score
+model_b_domain,GBR,1986-Q4,,,,,missing score
+model_b_domain,GBR,1987-Q4,,,,,missing score
+model_b_domain,GBR,1988-Q4,,,,,missing score
+model_b_domain,GBR,1989-Q4,,,,,missing score
+model_b_domain,GBR,1990-Q4,,,,,missing score
+model_b_domain,GBR,1991-Q4,,,,,missing score
+model_b_domain,GBR,1992-Q4,,,,,missing score
+model_b_domain,GBR,1993-Q4,,,,,missing score
+model_b_domain,GBR,1994-Q4,,,,,missing score
+model_b_domain,GBR,1995-Q4,,,,,missing score
+model_b_domain,GBR,1996-Q4,62.27100715138263,0.0,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,GBR,1997-Q4,59.08776455445749,0.0,PEAK,PEAK,stage=PEAK run=2 candidate=RISEx1
+model_b_domain,GBR,1998-Q4,58.81599808218759,0.0,RISE,RISE,stage=RISE run=1
+model_b_domain,GBR,1999-Q4,59.61140654675978,0.0,RISE,RISE,stage=RISE run=2
+model_b_domain,GBR,2000-Q4,59.70870896758197,-2.5623,RISE,RISE,stage=RISE run=3 candidate=DECLINEx1
+model_b_domain,GBR,2001-Q4,59.620766948865395,0.533,RISE,RISE,stage=RISE run=4
+model_b_domain,GBR,2002-Q4,59.49083210715416,0.6748,RISE,RISE,stage=RISE run=5
+model_b_domain,GBR,2003-Q4,59.83747363422635,0.2261,RISE,RISE,stage=RISE run=6
+model_b_domain,GBR,2004-Q4,58.83267755573986,-0.876,RISE,RISE,stage=RISE run=7 candidate=LATE_PEAKx1
+model_b_domain,GBR,2005-Q4,59.58866641613426,-0.0321,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,GBR,2006-Q4,61.05917374879855,1.5683,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=LATE_RISEx1
+model_b_domain,GBR,2007-Q4,61.135240706084645,1.2978,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_b_domain,GBR,2008-Q4,61.10808825087074,2.2754,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_b_domain,GBR,2009-Q4,59.218656001150435,-0.37,LATE_RISE,RISE,stage=LATE_RISE run=3 candidate=LATE_PEAKx1
+model_b_domain,GBR,2010-Q4,60.028794279670336,-1.0304,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=EARLY_DECLINEx1
+model_b_domain,GBR,2011-Q4,59.32555773281206,-1.8097,LATE_RISE,RISE,stage=LATE_RISE run=5 candidate=DECLINEx1
+model_b_domain,GBR,2012-Q4,59.18473111782824,-1.9234,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,GBR,2013-Q4,58.966904693864336,-0.2518,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_b_domain,GBR,2014-Q4,59.12942886054215,-0.8994,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,GBR,2015-Q4,59.794758674078246,0.4692,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_b_domain,GBR,2016-Q4,60.084771645936534,0.9,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=PEAKx1
+model_b_domain,GBR,2017-Q4,60.68693361506473,1.72,LATE_PEAK,PEAK,stage=LATE_PEAK run=4 candidate=LATE_RISEx1
+model_b_domain,GBR,2018-Q4,59.78586884279481,0.6564,LATE_PEAK,PEAK,stage=LATE_PEAK run=5 candidate=RISEx1
+model_b_domain,GBR,2019-Q4,59.80746013386528,0.0127,RISE,RISE,stage=RISE run=1
+model_b_domain,GBR,2020-Q4,60.85710345853138,0.7723,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_b_domain,GBR,2021-Q4,60.02064664720756,-0.6663,PEAK,PEAK,stage=PEAK run=1
+model_b_domain,GBR,2022-Q4,59.907042238594286,0.1212,PEAK,PEAK,stage=PEAK run=2 candidate=RISEx1
+model_b_domain,GBR,2023-Q4,59.53328666785777,-0.2742,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_PEAKx1
+model_b_domain,GBR,2024-Q4,58.62973943517574,-2.2274,PEAK,PEAK,stage=PEAK run=4 candidate=DECLINEx1
+model_b_domain,GBR,2025-Q4,58.25398582045857,-1.7667,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,IND,1980-Q4,,,,,missing score
+model_b_domain,IND,1981-Q4,,,,,missing score
+model_b_domain,IND,1982-Q4,,,,,missing score
+model_b_domain,IND,1983-Q4,,,,,missing score
+model_b_domain,IND,1984-Q4,,,,,missing score
+model_b_domain,IND,1985-Q4,,,,,missing score
+model_b_domain,IND,1986-Q4,,,,,missing score
+model_b_domain,IND,1987-Q4,,,,,missing score
+model_b_domain,IND,1988-Q4,,,,,missing score
+model_b_domain,IND,1989-Q4,,,,,missing score
+model_b_domain,IND,1990-Q4,,,,,missing score
+model_b_domain,IND,1991-Q4,,,,,missing score
+model_b_domain,IND,1992-Q4,,,,,missing score
+model_b_domain,IND,1993-Q4,,,,,missing score
+model_b_domain,IND,1994-Q4,,,,,missing score
+model_b_domain,IND,1995-Q4,,,,,missing score
+model_b_domain,IND,1996-Q4,45.04155669202317,0.0,RISE,RISE,stage=RISE run=1
+model_b_domain,IND,1997-Q4,45.627902503074864,0.0,RISE,RISE,stage=RISE run=2
+model_b_domain,IND,1998-Q4,45.9242661974599,0.0,RISE,RISE,stage=RISE run=3
+model_b_domain,IND,1999-Q4,46.80711824737077,0.0,RISE,RISE,stage=RISE run=4
+model_b_domain,IND,2000-Q4,46.69801400846701,1.6565,RISE,RISE,stage=RISE run=5
+model_b_domain,IND,2001-Q4,45.9281744362745,0.3003,RISE,RISE,stage=RISE run=6
+model_b_domain,IND,2002-Q4,43.80446030851159,-2.1198,RISE,RISE,stage=RISE run=7 candidate=DECLINEx1
+model_b_domain,IND,2003-Q4,43.71060861408199,-3.0965,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,IND,2004-Q4,45.01119272794117,-1.6868,DECLINE,DECLINE,stage=DECLINE run=2
+model_b_domain,IND,2005-Q4,44.28403652803029,-1.6441,DECLINE,DECLINE,stage=DECLINE run=3
+model_b_domain,IND,2006-Q4,43.055507025356505,-0.749,DECLINE,DECLINE,stage=DECLINE run=4 candidate=LATE_PEAKx1
+model_b_domain,IND,2007-Q4,41.356873153208554,-2.3537,DECLINE,DECLINE,stage=DECLINE run=5
+model_b_domain,IND,2008-Q4,40.35678416439393,-4.6544,DECLINE,DECLINE,stage=DECLINE run=6
+model_b_domain,IND,2009-Q4,39.5422089478164,-4.7418,DECLINE,DECLINE,stage=DECLINE run=7
+model_b_domain,IND,2010-Q4,37.732297897905525,-5.3232,DECLINE,DECLINE,stage=DECLINE run=8
+model_b_domain,IND,2011-Q4,34.832262135071296,-6.5246,DECLINE,DECLINE,stage=DECLINE run=9 candidate=RESETx1
+model_b_domain,IND,2012-Q4,34.118692055926914,-6.2381,RESET,DECLINE,stage=RESET run=1
+model_b_domain,IND,2013-Q4,33.85757813511586,-5.6846,RESET,DECLINE,stage=RESET run=2
+model_b_domain,IND,2014-Q4,34.34902711568627,-3.3833,RESET,DECLINE,stage=RESET run=3
+model_b_domain,IND,2015-Q4,34.565818580971474,-0.2664,RESET,DECLINE,stage=RESET run=4 candidate=DECLINEx1
+model_b_domain,IND,2016-Q4,34.80648092125668,0.6878,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,IND,2017-Q4,36.409178848083776,2.5516,DECLINE,DECLINE,stage=DECLINE run=2 candidate=EARLY_RISEx1
+model_b_domain,IND,2018-Q4,36.87387358792335,2.5248,EARLY_RISE,RISE,stage=EARLY_RISE run=1
+model_b_domain,IND,2019-Q4,37.394825914590015,2.829,EARLY_RISE,RISE,stage=EARLY_RISE run=2
+model_b_domain,IND,2020-Q4,37.39927222068627,2.5928,EARLY_RISE,RISE,stage=EARLY_RISE run=3
+model_b_domain,IND,2021-Q4,36.86891571149733,0.4597,EARLY_RISE,RISE,stage=EARLY_RISE run=4 candidate=RISEx1
+model_b_domain,IND,2022-Q4,36.59009938759856,-0.2838,EARLY_RISE,RISE,stage=EARLY_RISE run=5 candidate=LATE_PEAKx1
+model_b_domain,IND,2023-Q4,37.27288261311594,-0.1219,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,IND,2024-Q4,37.899584878150186,0.5003,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_b_domain,IND,2025-Q4,37.90483466981685,1.0359,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=EARLY_RISEx1
+model_b_domain,JPN,1980-Q4,,,,,missing score
+model_b_domain,JPN,1981-Q4,,,,,missing score
+model_b_domain,JPN,1982-Q4,,,,,missing score
+model_b_domain,JPN,1983-Q4,,,,,missing score
+model_b_domain,JPN,1984-Q4,,,,,missing score
+model_b_domain,JPN,1985-Q4,,,,,missing score
+model_b_domain,JPN,1986-Q4,,,,,missing score
+model_b_domain,JPN,1987-Q4,,,,,missing score
+model_b_domain,JPN,1988-Q4,,,,,missing score
+model_b_domain,JPN,1989-Q4,,,,,missing score
+model_b_domain,JPN,1990-Q4,,,,,missing score
+model_b_domain,JPN,1991-Q4,,,,,missing score
+model_b_domain,JPN,1992-Q4,,,,,missing score
+model_b_domain,JPN,1993-Q4,,,,,missing score
+model_b_domain,JPN,1994-Q4,,,,,missing score
+model_b_domain,JPN,1995-Q4,,,,,missing score
+model_b_domain,JPN,1996-Q4,57.173780045984024,0.0,RISE,RISE,stage=RISE run=1
+model_b_domain,JPN,1997-Q4,55.614769329406485,0.0,RISE,RISE,stage=RISE run=2
+model_b_domain,JPN,1998-Q4,55.00621722315649,0.0,RISE,RISE,stage=RISE run=3
+model_b_domain,JPN,1999-Q4,54.783307133584294,0.0,RISE,RISE,stage=RISE run=4
+model_b_domain,JPN,2000-Q4,55.3218815887982,-1.8519,RISE,RISE,stage=RISE run=5 candidate=DECLINEx1
+model_b_domain,JPN,2001-Q4,55.248272374226005,-0.3665,RISE,RISE,stage=RISE run=6 candidate=LATE_PEAKx1
+model_b_domain,JPN,2002-Q4,54.43960531490114,-0.5666,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,JPN,2003-Q4,54.264404643042845,-0.5189,LATE_PEAK,PEAK,stage=LATE_PEAK run=2
+model_b_domain,JPN,2004-Q4,53.92916781389847,-1.3927,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=DECLINEx1
+model_b_domain,JPN,2005-Q4,54.268085024326275,-0.9802,LATE_PEAK,PEAK,stage=LATE_PEAK run=4
+model_b_domain,JPN,2006-Q4,53.73245802187587,-0.7071,LATE_PEAK,PEAK,stage=LATE_PEAK run=5
+model_b_domain,JPN,2007-Q4,52.58826439753378,-1.6761,LATE_PEAK,PEAK,stage=LATE_PEAK run=6 candidate=DECLINEx1
+model_b_domain,JPN,2008-Q4,52.870905541283776,-1.0583,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,JPN,2009-Q4,53.1324999861033,-1.1356,DECLINE,DECLINE,stage=DECLINE run=2
+model_b_domain,JPN,2010-Q4,53.4044115986033,-0.328,DECLINE,DECLINE,stage=DECLINE run=3 candidate=LATE_PEAKx1
+model_b_domain,JPN,2011-Q4,53.44404745385063,0.8558,DECLINE,DECLINE,stage=DECLINE run=4 candidate=RISEx1
+model_b_domain,JPN,2012-Q4,53.19583214656453,0.3249,RISE,RISE,stage=RISE run=1
+model_b_domain,JPN,2013-Q4,54.167395515692725,1.0349,RISE,RISE,stage=RISE run=2
+model_b_domain,JPN,2014-Q4,55.288736421909306,1.8843,RISE,RISE,stage=RISE run=3
+model_b_domain,JPN,2015-Q4,55.67364975564311,2.2296,RISE,RISE,stage=RISE run=4
+model_b_domain,JPN,2016-Q4,55.4270934614815,2.2313,RISE,RISE,stage=RISE run=5
+model_b_domain,JPN,2017-Q4,55.449376771464244,1.282,RISE,RISE,stage=RISE run=6
+model_b_domain,JPN,2018-Q4,56.07075344328912,0.782,RISE,RISE,stage=RISE run=7
+model_b_domain,JPN,2019-Q4,56.17415054225302,0.5005,RISE,RISE,stage=RISE run=8
+model_b_domain,JPN,2020-Q4,53.41502567216964,-2.0121,RISE,RISE,stage=RISE run=9 candidate=DECLINEx1
+model_b_domain,JPN,2021-Q4,53.81624687883127,-1.6331,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,JPN,2022-Q4,55.8176104020114,-0.2531,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_b_domain,JPN,2023-Q4,55.62238190618684,-0.5518,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,JPN,2024-Q4,53.881789741090245,0.4668,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_b_domain,JPN,2025-Q4,54.006300514819,0.1901,RISE,RISE,stage=RISE run=1
+model_b_domain,USA,1980-Q4,,,,,missing score
+model_b_domain,USA,1981-Q4,,,,,missing score
+model_b_domain,USA,1982-Q4,,,,,missing score
+model_b_domain,USA,1983-Q4,,,,,missing score
+model_b_domain,USA,1984-Q4,,,,,missing score
+model_b_domain,USA,1985-Q4,,,,,missing score
+model_b_domain,USA,1986-Q4,,,,,missing score
+model_b_domain,USA,1987-Q4,,,,,missing score
+model_b_domain,USA,1988-Q4,,,,,missing score
+model_b_domain,USA,1989-Q4,,,,,missing score
+model_b_domain,USA,1990-Q4,,,,,missing score
+model_b_domain,USA,1991-Q4,,,,,missing score
+model_b_domain,USA,1992-Q4,,,,,missing score
+model_b_domain,USA,1993-Q4,,,,,missing score
+model_b_domain,USA,1994-Q4,,,,,missing score
+model_b_domain,USA,1995-Q4,48.37207175333622,0.0,RISE,RISE,stage=RISE run=1
+model_b_domain,USA,1996-Q4,57.79207922912503,0.0,RISE,RISE,stage=RISE run=2
+model_b_domain,USA,1997-Q4,57.757290273911124,0.0,RISE,RISE,stage=RISE run=3
+model_b_domain,USA,1998-Q4,58.10411462118104,0.0,RISE,RISE,stage=RISE run=4
+model_b_domain,USA,1999-Q4,58.322600790967144,9.9505,RISE,RISE,stage=RISE run=5
+model_b_domain,USA,2000-Q4,58.187668899947234,0.3956,RISE,RISE,stage=RISE run=6
+model_b_domain,USA,2001-Q4,58.248185560375035,0.4909,RISE,RISE,stage=RISE run=7
+model_b_domain,USA,2002-Q4,57.65531410623065,-0.4488,RISE,RISE,stage=RISE run=8 candidate=LATE_PEAKx1
+model_b_domain,USA,2003-Q4,56.41002712812236,-1.9126,RISE,RISE,stage=RISE run=9 candidate=DECLINEx1
+model_b_domain,USA,2004-Q4,56.06285923958627,-2.1248,DECLINE,DECLINE,stage=DECLINE run=1
+model_b_domain,USA,2005-Q4,56.02073328126407,-2.2275,DECLINE,DECLINE,stage=DECLINE run=2
+model_b_domain,USA,2006-Q4,56.118932115622364,-1.5364,DECLINE,DECLINE,stage=DECLINE run=3
+model_b_domain,USA,2007-Q4,55.20016326420806,-1.2099,DECLINE,DECLINE,stage=DECLINE run=4
+model_b_domain,USA,2008-Q4,55.85174363751407,-0.2111,DECLINE,DECLINE,stage=DECLINE run=5 candidate=LATE_PEAKx1
+model_b_domain,USA,2009-Q4,57.26367059804039,1.2429,DECLINE,DECLINE,stage=DECLINE run=6 candidate=RISEx1
+model_b_domain,USA,2010-Q4,56.9084020074321,0.7895,RISE,RISE,stage=RISE run=1
+model_b_domain,USA,2011-Q4,55.97624760394561,0.7761,RISE,RISE,stage=RISE run=2
+model_b_domain,USA,2012-Q4,56.29726852935724,0.4455,RISE,RISE,stage=RISE run=3
+model_b_domain,USA,2013-Q4,56.42518545642942,-0.8385,RISE,RISE,stage=RISE run=4 candidate=LATE_PEAKx1
+model_b_domain,USA,2014-Q4,56.54225110124895,-0.3662,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,USA,2015-Q4,56.61242888042675,0.6362,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_b_domain,USA,2016-Q4,56.62263431374895,0.3254,RISE,RISE,stage=RISE run=1
+model_b_domain,USA,2017-Q4,56.15654893522903,-0.2686,RISE,RISE,stage=RISE run=2 candidate=LATE_PEAKx1
+model_b_domain,USA,2018-Q4,56.92643158249895,0.3842,RISE,RISE,stage=RISE run=3
+model_b_domain,USA,2019-Q4,56.54696698771285,-0.0655,RISE,RISE,stage=RISE run=4 candidate=LATE_PEAKx1
+model_b_domain,USA,2020-Q4,56.370946208535045,-0.2517,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_b_domain,USA,2021-Q4,55.92963899503236,-0.2269,LATE_PEAK,PEAK,stage=LATE_PEAK run=2
+model_b_domain,USA,2022-Q4,55.937521819917905,-0.9889,LATE_PEAK,PEAK,stage=LATE_PEAK run=3
+model_b_domain,USA,2023-Q4,57.17808955510282,0.6311,LATE_PEAK,PEAK,stage=LATE_PEAK run=4 candidate=RISEx1
+model_b_domain,USA,2024-Q4,59.16039780349273,2.7895,RISE,RISE,stage=RISE run=1
+model_b_domain,USA,2025-Q4,57.99054005605417,2.0609,RISE,RISE,stage=RISE run=2
+model_c_overlap,CHE,1980-Q4,,,,,missing score
+model_c_overlap,CHE,1981-Q4,,,,,missing score
+model_c_overlap,CHE,1982-Q4,,,,,missing score
+model_c_overlap,CHE,1983-Q4,,,,,missing score
+model_c_overlap,CHE,1984-Q4,,,,,missing score
+model_c_overlap,CHE,1985-Q4,,,,,missing score
+model_c_overlap,CHE,1986-Q4,,,,,missing score
+model_c_overlap,CHE,1987-Q4,,,,,missing score
+model_c_overlap,CHE,1988-Q4,,,,,missing score
+model_c_overlap,CHE,1989-Q4,,,,,missing score
+model_c_overlap,CHE,1990-Q4,,,,,missing score
+model_c_overlap,CHE,1991-Q4,,,,,missing score
+model_c_overlap,CHE,1992-Q4,,,,,missing score
+model_c_overlap,CHE,1993-Q4,,,,,missing score
+model_c_overlap,CHE,1994-Q4,,,,,missing score
+model_c_overlap,CHE,1995-Q4,54.28852850187888,0.0,RISE,RISE,stage=RISE run=1
+model_c_overlap,CHE,1996-Q4,64.55167452618034,0.0,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_c_overlap,CHE,1997-Q4,66.28147512486456,0.0,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,CHE,1998-Q4,65.90676914530854,0.0,PEAK,PEAK,stage=PEAK run=2
+model_c_overlap,CHE,1999-Q4,65.55986160988073,11.2713,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_RISEx1
+model_c_overlap,CHE,2000-Q4,65.58451296302245,1.0328,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_c_overlap,CHE,2001-Q4,65.78718397238073,-0.4943,LATE_RISE,RISE,stage=LATE_RISE run=2 candidate=PEAKx1
+model_c_overlap,CHE,2002-Q4,65.72020760988073,-0.1866,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,CHE,2003-Q4,66.10078260048903,0.5409,PEAK,PEAK,stage=PEAK run=2
+model_c_overlap,CHE,2004-Q4,64.20375011433823,-1.3808,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_c_overlap,CHE,2005-Q4,64.49506700808823,-1.2921,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_c_overlap,CHE,2006-Q4,64.55333459141043,-1.1669,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_c_overlap,CHE,2007-Q4,64.74156716641043,-1.3592,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_c_overlap,CHE,2008-Q4,66.35182155218301,2.1481,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=LATE_RISEx1
+model_c_overlap,CHE,2009-Q4,66.6833094240413,2.1882,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_c_overlap,CHE,2010-Q4,66.37857794634465,1.8252,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_c_overlap,CHE,2011-Q4,66.40018223550521,1.6586,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_c_overlap,CHE,2012-Q4,66.62133510218302,0.2695,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_c_overlap,CHE,2013-Q4,67.20195212027511,0.5186,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,CHE,2014-Q4,67.93731299006122,1.5587,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_c_overlap,CHE,2015-Q4,67.34772937404131,0.9475,PEAK,PEAK,stage=PEAK run=3
+model_c_overlap,CHE,2016-Q4,67.0138650382353,0.3925,PEAK,PEAK,stage=PEAK run=4
+model_c_overlap,CHE,2017-Q4,67.13508675802139,-0.0669,PEAK,PEAK,stage=PEAK run=5
+model_c_overlap,CHE,2018-Q4,69.4882265643699,1.5509,PEAK,PEAK,stage=PEAK run=6 candidate=LATE_RISEx1
+model_c_overlap,CHE,2019-Q4,69.5162581622977,2.1685,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_c_overlap,CHE,2020-Q4,70.0411026897481,3.0272,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_c_overlap,CHE,2021-Q4,69.7263681772481,2.5913,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_c_overlap,CHE,2022-Q4,68.6299465645096,-0.8583,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_c_overlap,CHE,2023-Q4,68.73959109008813,-0.7767,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,CHE,2024-Q4,68.1787771788842,-1.8623,PEAK,PEAK,stage=PEAK run=2 candidate=EARLY_DECLINEx1
+model_c_overlap,CHE,2025-Q4,68.0789438187591,-1.6474,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_c_overlap,CHN,1980-Q4,,,,,missing score
+model_c_overlap,CHN,1981-Q4,,,,,missing score
+model_c_overlap,CHN,1982-Q4,,,,,missing score
+model_c_overlap,CHN,1983-Q4,,,,,missing score
+model_c_overlap,CHN,1984-Q4,,,,,missing score
+model_c_overlap,CHN,1985-Q4,,,,,missing score
+model_c_overlap,CHN,1986-Q4,,,,,missing score
+model_c_overlap,CHN,1987-Q4,,,,,missing score
+model_c_overlap,CHN,1988-Q4,,,,,missing score
+model_c_overlap,CHN,1989-Q4,,,,,missing score
+model_c_overlap,CHN,1990-Q4,,,,,missing score
+model_c_overlap,CHN,1991-Q4,,,,,missing score
+model_c_overlap,CHN,1992-Q4,,,,,missing score
+model_c_overlap,CHN,1993-Q4,,,,,missing score
+model_c_overlap,CHN,1994-Q4,,,,,missing score
+model_c_overlap,CHN,1995-Q4,,,,,missing score
+model_c_overlap,CHN,1996-Q4,65.20791904893048,0.0,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,CHN,1997-Q4,64.8395055016934,0.0,PEAK,PEAK,stage=PEAK run=2
+model_c_overlap,CHN,1998-Q4,63.61106941002673,0.0,PEAK,PEAK,stage=PEAK run=3
+model_c_overlap,CHN,1999-Q4,63.274402743360056,0.0,PEAK,PEAK,stage=PEAK run=4
+model_c_overlap,CHN,2000-Q4,62.03546020730837,-3.1725,PEAK,PEAK,stage=PEAK run=5 candidate=EARLY_DECLINEx1
+model_c_overlap,CHN,2001-Q4,61.62720708787879,-3.2123,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_c_overlap,CHN,2002-Q4,61.12488258230837,-2.4862,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_c_overlap,CHN,2003-Q4,60.96407396564171,-2.3103,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_c_overlap,CHN,2004-Q4,60.419119118449196,-1.6163,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_c_overlap,CHN,2005-Q4,59.13226114068627,-2.4949,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=5 candidate=DECLINEx1
+model_c_overlap,CHN,2006-Q4,58.51111378792335,-2.6138,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,CHN,2007-Q4,58.305136518493754,-2.6589,DECLINE,DECLINE,stage=DECLINE run=2
+model_c_overlap,CHN,2008-Q4,58.44900876016042,-1.9701,DECLINE,DECLINE,stage=DECLINE run=3
+model_c_overlap,CHN,2009-Q4,58.233230985160425,-0.899,DECLINE,DECLINE,stage=DECLINE run=4 candidate=LATE_PEAKx1
+model_c_overlap,CHN,2010-Q4,45.125449495365416,-13.3857,DECLINE,DECLINE,stage=DECLINE run=5
+model_c_overlap,CHN,2011-Q4,44.06530116065062,-14.2398,DECLINE,DECLINE,stage=DECLINE run=6
+model_c_overlap,CHN,2012-Q4,43.61096353983957,-14.838,DECLINE,DECLINE,stage=DECLINE run=7
+model_c_overlap,CHN,2013-Q4,43.6673258030303,-14.5659,DECLINE,DECLINE,stage=DECLINE run=8
+model_c_overlap,CHN,2014-Q4,45.01204727455436,-0.1134,DECLINE,DECLINE,stage=DECLINE run=9 candidate=LATE_PEAKx1
+model_c_overlap,CHN,2015-Q4,55.41897354358288,11.3537,DECLINE,DECLINE,stage=DECLINE run=10 candidate=RISEx1
+model_c_overlap,CHN,2016-Q4,55.32167776305704,11.7107,RISE,RISE,stage=RISE run=1
+model_c_overlap,CHN,2017-Q4,55.70874125196078,12.0414,RISE,RISE,stage=RISE run=2
+model_c_overlap,CHN,2018-Q4,55.399022015864524,10.387,RISE,RISE,stage=RISE run=3
+model_c_overlap,CHN,2019-Q4,54.83070539371657,-0.5883,RISE,RISE,stage=RISE run=4 candidate=LATE_PEAKx1
+model_c_overlap,CHN,2020-Q4,54.18238889933155,-1.1393,RISE,RISE,stage=RISE run=5 candidate=DECLINEx1
+model_c_overlap,CHN,2021-Q4,56.08213916581997,0.3734,RISE,RISE,stage=RISE run=6
+model_c_overlap,CHN,2022-Q4,52.816450929928315,-2.5826,RISE,RISE,stage=RISE run=7 candidate=DECLINEx1
+model_c_overlap,CHN,2023-Q4,52.86204045724637,-1.9687,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,CHN,2024-Q4,51.767403411446885,-2.415,DECLINE,DECLINE,stage=DECLINE run=2
+model_c_overlap,CHN,2025-Q4,51.149466187179485,-4.9327,DECLINE,DECLINE,stage=DECLINE run=3
+model_c_overlap,DEU,1980-Q4,,,,,missing score
+model_c_overlap,DEU,1981-Q4,,,,,missing score
+model_c_overlap,DEU,1982-Q4,,,,,missing score
+model_c_overlap,DEU,1983-Q4,,,,,missing score
+model_c_overlap,DEU,1984-Q4,,,,,missing score
+model_c_overlap,DEU,1985-Q4,,,,,missing score
+model_c_overlap,DEU,1986-Q4,,,,,missing score
+model_c_overlap,DEU,1987-Q4,,,,,missing score
+model_c_overlap,DEU,1988-Q4,,,,,missing score
+model_c_overlap,DEU,1989-Q4,,,,,missing score
+model_c_overlap,DEU,1990-Q4,,,,,missing score
+model_c_overlap,DEU,1991-Q4,,,,,missing score
+model_c_overlap,DEU,1992-Q4,,,,,missing score
+model_c_overlap,DEU,1993-Q4,,,,,missing score
+model_c_overlap,DEU,1994-Q4,,,,,missing score
+model_c_overlap,DEU,1995-Q4,50.84759851151418,0.0,RISE,RISE,stage=RISE run=1
+model_c_overlap,DEU,1996-Q4,59.857703589493035,0.0,RISE,RISE,stage=RISE run=2
+model_c_overlap,DEU,1997-Q4,59.812162304065225,0.0,RISE,RISE,stage=RISE run=3
+model_c_overlap,DEU,1998-Q4,59.98022229508514,0.0,RISE,RISE,stage=RISE run=4
+model_c_overlap,DEU,1999-Q4,59.98675438465733,9.1392,RISE,RISE,stage=RISE run=5
+model_c_overlap,DEU,2000-Q4,59.93483272112123,0.0771,RISE,RISE,stage=RISE run=6
+model_c_overlap,DEU,2001-Q4,60.15643660547952,0.3443,RISE,RISE,stage=RISE run=7 candidate=PEAKx1
+model_c_overlap,DEU,2002-Q4,59.864047911729514,-0.1162,RISE,RISE,stage=RISE run=8 candidate=LATE_PEAKx1
+model_c_overlap,DEU,2003-Q4,59.52574815026561,-0.461,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,DEU,2004-Q4,59.27068646276561,-0.6641,LATE_PEAK,PEAK,stage=LATE_PEAK run=2
+model_c_overlap,DEU,2005-Q4,60.0280814564822,-0.1284,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=PEAKx1
+model_c_overlap,DEU,2006-Q4,59.203014390462286,-0.661,LATE_PEAK,PEAK,stage=LATE_PEAK run=4
+model_c_overlap,DEU,2007-Q4,59.302121743570574,-0.2236,LATE_PEAK,PEAK,stage=LATE_PEAK run=5
+model_c_overlap,DEU,2008-Q4,58.87484159567619,-0.3958,LATE_PEAK,PEAK,stage=LATE_PEAK run=6
+model_c_overlap,DEU,2009-Q4,58.09933562927807,-1.9287,LATE_PEAK,PEAK,stage=LATE_PEAK run=7 candidate=DECLINEx1
+model_c_overlap,DEU,2010-Q4,57.94570741260027,-1.2573,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,DEU,2011-Q4,58.73433216256684,-0.5678,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_c_overlap,DEU,2012-Q4,59.17060084278075,0.2958,DECLINE,DECLINE,stage=DECLINE run=3 candidate=RISEx1
+model_c_overlap,DEU,2013-Q4,59.47201623338903,1.3727,RISE,RISE,stage=RISE run=1
+model_c_overlap,DEU,2014-Q4,59.961233805247325,2.0155,RISE,RISE,stage=RISE run=2
+model_c_overlap,DEU,2015-Q4,59.609843769852944,0.8755,RISE,RISE,stage=RISE run=3
+model_c_overlap,DEU,2016-Q4,60.40340425876724,1.2328,RISE,RISE,stage=RISE run=4 candidate=LATE_RISEx1
+model_c_overlap,DEU,2017-Q4,61.752158223684205,2.2801,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_c_overlap,DEU,2018-Q4,61.05823193269773,1.097,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_c_overlap,DEU,2019-Q4,62.19702167472031,2.5872,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_c_overlap,DEU,2020-Q4,61.53918843432906,1.1358,LATE_RISE,RISE,stage=LATE_RISE run=4
+model_c_overlap,DEU,2021-Q4,62.89847323813402,1.1463,LATE_RISE,RISE,stage=LATE_RISE run=5
+model_c_overlap,DEU,2022-Q4,61.43728931261254,0.3791,LATE_RISE,RISE,stage=LATE_RISE run=6 candidate=PEAKx1
+model_c_overlap,DEU,2023-Q4,61.24023499713235,-0.9568,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,DEU,2024-Q4,59.82998681894052,-1.7092,PEAK,PEAK,stage=PEAK run=2 candidate=DECLINEx1
+model_c_overlap,DEU,2025-Q4,58.72213605646205,-4.1763,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,FRA,1980-Q4,,,,,missing score
+model_c_overlap,FRA,1981-Q4,,,,,missing score
+model_c_overlap,FRA,1982-Q4,,,,,missing score
+model_c_overlap,FRA,1983-Q4,,,,,missing score
+model_c_overlap,FRA,1984-Q4,,,,,missing score
+model_c_overlap,FRA,1985-Q4,,,,,missing score
+model_c_overlap,FRA,1986-Q4,,,,,missing score
+model_c_overlap,FRA,1987-Q4,,,,,missing score
+model_c_overlap,FRA,1988-Q4,,,,,missing score
+model_c_overlap,FRA,1989-Q4,,,,,missing score
+model_c_overlap,FRA,1990-Q4,,,,,missing score
+model_c_overlap,FRA,1991-Q4,,,,,missing score
+model_c_overlap,FRA,1992-Q4,,,,,missing score
+model_c_overlap,FRA,1993-Q4,,,,,missing score
+model_c_overlap,FRA,1994-Q4,,,,,missing score
+model_c_overlap,FRA,1995-Q4,53.241222425446836,0.0,RISE,RISE,stage=RISE run=1
+model_c_overlap,FRA,1996-Q4,59.470295456336196,0.0,RISE,RISE,stage=RISE run=2
+model_c_overlap,FRA,1997-Q4,59.30052486676401,0.0,RISE,RISE,stage=RISE run=3
+model_c_overlap,FRA,1998-Q4,58.9163689365501,0.0,RISE,RISE,stage=RISE run=4
+model_c_overlap,FRA,1999-Q4,58.28194661949409,5.0407,RISE,RISE,stage=RISE run=5
+model_c_overlap,FRA,2000-Q4,58.5519317694941,-0.9184,RISE,RISE,stage=RISE run=6 candidate=LATE_PEAKx1
+model_c_overlap,FRA,2001-Q4,59.85127317612229,0.5507,RISE,RISE,stage=RISE run=7
+model_c_overlap,FRA,2002-Q4,60.896767228572685,1.9804,RISE,RISE,stage=RISE run=8 candidate=LATE_RISEx1
+model_c_overlap,FRA,2003-Q4,60.60076819276668,2.3188,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_c_overlap,FRA,2004-Q4,60.77306108755276,2.2211,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_c_overlap,FRA,2005-Q4,61.12853791946067,1.2773,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_c_overlap,FRA,2006-Q4,61.677763219838866,0.781,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_c_overlap,FRA,2007-Q4,61.002268288210665,0.4015,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,FRA,2008-Q4,61.102129740282855,0.3291,PEAK,PEAK,stage=PEAK run=2
+model_c_overlap,FRA,2009-Q4,60.99418926631896,-0.1343,PEAK,PEAK,stage=PEAK run=3
+model_c_overlap,FRA,2010-Q4,59.797200976368565,-1.8806,PEAK,PEAK,stage=PEAK run=4 candidate=DECLINEx1
+model_c_overlap,FRA,2011-Q4,59.68583114826027,-1.3164,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,FRA,2012-Q4,60.07864018158246,-1.0235,DECLINE,DECLINE,stage=DECLINE run=2 candidate=EARLY_DECLINEx1
+model_c_overlap,FRA,2013-Q4,60.33555463821067,-0.6586,DECLINE,DECLINE,stage=DECLINE run=3 candidate=PEAKx1
+model_c_overlap,FRA,2014-Q4,59.90897228510238,0.1118,DECLINE,DECLINE,stage=DECLINE run=4 candidate=RISEx1
+model_c_overlap,FRA,2015-Q4,59.389443373510204,-0.2964,DECLINE,DECLINE,stage=DECLINE run=5 candidate=LATE_PEAKx1
+model_c_overlap,FRA,2016-Q4,58.382092103229944,-1.6965,DECLINE,DECLINE,stage=DECLINE run=6
+model_c_overlap,FRA,2017-Q4,59.28652184675079,-1.049,DECLINE,DECLINE,stage=DECLINE run=7
+model_c_overlap,FRA,2018-Q4,59.681598004065904,-0.2274,DECLINE,DECLINE,stage=DECLINE run=8 candidate=LATE_PEAKx1
+model_c_overlap,FRA,2019-Q4,59.81315040362645,0.4237,DECLINE,DECLINE,stage=DECLINE run=9 candidate=RISEx1
+model_c_overlap,FRA,2020-Q4,59.56773168739151,1.1856,RISE,RISE,stage=RISE run=1
+model_c_overlap,FRA,2021-Q4,57.20381927109159,-2.0827,RISE,RISE,stage=RISE run=2 candidate=DECLINEx1
+model_c_overlap,FRA,2022-Q4,56.543736804796296,-3.1379,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,FRA,2023-Q4,56.2676773112961,-3.5455,DECLINE,DECLINE,stage=DECLINE run=2
+model_c_overlap,FRA,2024-Q4,55.27076821898902,-4.297,DECLINE,DECLINE,stage=DECLINE run=3
+model_c_overlap,FRA,2025-Q4,54.96340154911505,-2.2404,DECLINE,DECLINE,stage=DECLINE run=4
+model_c_overlap,GBR,1980-Q4,,,,,missing score
+model_c_overlap,GBR,1981-Q4,,,,,missing score
+model_c_overlap,GBR,1982-Q4,,,,,missing score
+model_c_overlap,GBR,1983-Q4,,,,,missing score
+model_c_overlap,GBR,1984-Q4,,,,,missing score
+model_c_overlap,GBR,1985-Q4,,,,,missing score
+model_c_overlap,GBR,1986-Q4,,,,,missing score
+model_c_overlap,GBR,1987-Q4,,,,,missing score
+model_c_overlap,GBR,1988-Q4,,,,,missing score
+model_c_overlap,GBR,1989-Q4,,,,,missing score
+model_c_overlap,GBR,1990-Q4,,,,,missing score
+model_c_overlap,GBR,1991-Q4,,,,,missing score
+model_c_overlap,GBR,1992-Q4,,,,,missing score
+model_c_overlap,GBR,1993-Q4,,,,,missing score
+model_c_overlap,GBR,1994-Q4,,,,,missing score
+model_c_overlap,GBR,1995-Q4,,,,,missing score
+model_c_overlap,GBR,1996-Q4,62.27100715138263,0.0,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,GBR,1997-Q4,59.08776455445749,0.0,PEAK,PEAK,stage=PEAK run=2 candidate=RISEx1
+model_c_overlap,GBR,1998-Q4,58.81599808218758,0.0,RISE,RISE,stage=RISE run=1
+model_c_overlap,GBR,1999-Q4,59.61140654675978,0.0,RISE,RISE,stage=RISE run=2
+model_c_overlap,GBR,2000-Q4,59.70870896758198,-2.5623,RISE,RISE,stage=RISE run=3 candidate=DECLINEx1
+model_c_overlap,GBR,2001-Q4,59.62076694886539,0.533,RISE,RISE,stage=RISE run=4
+model_c_overlap,GBR,2002-Q4,59.49083210715416,0.6748,RISE,RISE,stage=RISE run=5
+model_c_overlap,GBR,2003-Q4,59.837473634226356,0.2261,RISE,RISE,stage=RISE run=6
+model_c_overlap,GBR,2004-Q4,58.83267755573987,-0.876,RISE,RISE,stage=RISE run=7 candidate=LATE_PEAKx1
+model_c_overlap,GBR,2005-Q4,59.58866641613425,-0.0321,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,GBR,2006-Q4,61.05917374879855,1.5683,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=LATE_RISEx1
+model_c_overlap,GBR,2007-Q4,61.135240706084645,1.2978,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_c_overlap,GBR,2008-Q4,61.10808825087074,2.2754,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_c_overlap,GBR,2009-Q4,59.218656001150435,-0.37,LATE_RISE,RISE,stage=LATE_RISE run=3 candidate=LATE_PEAKx1
+model_c_overlap,GBR,2010-Q4,60.02879427967034,-1.0304,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=EARLY_DECLINEx1
+model_c_overlap,GBR,2011-Q4,59.32555773281206,-1.8097,LATE_RISE,RISE,stage=LATE_RISE run=5 candidate=DECLINEx1
+model_c_overlap,GBR,2012-Q4,59.18473111782824,-1.9234,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,GBR,2013-Q4,58.966904693864336,-0.2518,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_c_overlap,GBR,2014-Q4,59.12942886054215,-0.8994,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,GBR,2015-Q4,59.794758674078246,0.4692,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_c_overlap,GBR,2016-Q4,60.08477164593653,0.9,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=PEAKx1
+model_c_overlap,GBR,2017-Q4,60.68693361506473,1.72,LATE_PEAK,PEAK,stage=LATE_PEAK run=4 candidate=LATE_RISEx1
+model_c_overlap,GBR,2018-Q4,59.78586884279483,0.6564,LATE_PEAK,PEAK,stage=LATE_PEAK run=5 candidate=RISEx1
+model_c_overlap,GBR,2019-Q4,59.80746013386528,0.0127,RISE,RISE,stage=RISE run=1
+model_c_overlap,GBR,2020-Q4,60.857103458531384,0.7723,RISE,RISE,stage=RISE run=2 candidate=PEAKx1
+model_c_overlap,GBR,2021-Q4,60.02064664720756,-0.6663,PEAK,PEAK,stage=PEAK run=1
+model_c_overlap,GBR,2022-Q4,59.907042238594286,0.1212,PEAK,PEAK,stage=PEAK run=2 candidate=RISEx1
+model_c_overlap,GBR,2023-Q4,59.533286667857766,-0.2742,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_PEAKx1
+model_c_overlap,GBR,2024-Q4,58.62973943517575,-2.2274,PEAK,PEAK,stage=PEAK run=4 candidate=DECLINEx1
+model_c_overlap,GBR,2025-Q4,58.25398582045857,-1.7667,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,IND,1980-Q4,,,,,missing score
+model_c_overlap,IND,1981-Q4,,,,,missing score
+model_c_overlap,IND,1982-Q4,,,,,missing score
+model_c_overlap,IND,1983-Q4,,,,,missing score
+model_c_overlap,IND,1984-Q4,,,,,missing score
+model_c_overlap,IND,1985-Q4,,,,,missing score
+model_c_overlap,IND,1986-Q4,,,,,missing score
+model_c_overlap,IND,1987-Q4,,,,,missing score
+model_c_overlap,IND,1988-Q4,,,,,missing score
+model_c_overlap,IND,1989-Q4,,,,,missing score
+model_c_overlap,IND,1990-Q4,,,,,missing score
+model_c_overlap,IND,1991-Q4,,,,,missing score
+model_c_overlap,IND,1992-Q4,,,,,missing score
+model_c_overlap,IND,1993-Q4,,,,,missing score
+model_c_overlap,IND,1994-Q4,,,,,missing score
+model_c_overlap,IND,1995-Q4,,,,,missing score
+model_c_overlap,IND,1996-Q4,45.041556692023164,0.0,RISE,RISE,stage=RISE run=1
+model_c_overlap,IND,1997-Q4,45.627902503074864,0.0,RISE,RISE,stage=RISE run=2
+model_c_overlap,IND,1998-Q4,45.924266197459886,0.0,RISE,RISE,stage=RISE run=3
+model_c_overlap,IND,1999-Q4,46.80711824737076,0.0,RISE,RISE,stage=RISE run=4
+model_c_overlap,IND,2000-Q4,46.69801400846702,1.6565,RISE,RISE,stage=RISE run=5
+model_c_overlap,IND,2001-Q4,45.9281744362745,0.3003,RISE,RISE,stage=RISE run=6
+model_c_overlap,IND,2002-Q4,43.80446030851159,-2.1198,RISE,RISE,stage=RISE run=7 candidate=DECLINEx1
+model_c_overlap,IND,2003-Q4,43.71060861408199,-3.0965,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,IND,2004-Q4,45.01119272794117,-1.6868,DECLINE,DECLINE,stage=DECLINE run=2
+model_c_overlap,IND,2005-Q4,44.28403652803029,-1.6441,DECLINE,DECLINE,stage=DECLINE run=3
+model_c_overlap,IND,2006-Q4,43.055507025356505,-0.749,DECLINE,DECLINE,stage=DECLINE run=4 candidate=LATE_PEAKx1
+model_c_overlap,IND,2007-Q4,41.356873153208554,-2.3537,DECLINE,DECLINE,stage=DECLINE run=5
+model_c_overlap,IND,2008-Q4,40.35678416439393,-4.6544,DECLINE,DECLINE,stage=DECLINE run=6
+model_c_overlap,IND,2009-Q4,39.54220894781639,-4.7418,DECLINE,DECLINE,stage=DECLINE run=7
+model_c_overlap,IND,2010-Q4,37.732297897905525,-5.3232,DECLINE,DECLINE,stage=DECLINE run=8
+model_c_overlap,IND,2011-Q4,34.8322621350713,-6.5246,DECLINE,DECLINE,stage=DECLINE run=9 candidate=RESETx1
+model_c_overlap,IND,2012-Q4,34.118692055926914,-6.2381,RESET,DECLINE,stage=RESET run=1
+model_c_overlap,IND,2013-Q4,33.85757813511586,-5.6846,RESET,DECLINE,stage=RESET run=2
+model_c_overlap,IND,2014-Q4,34.34902711568627,-3.3833,RESET,DECLINE,stage=RESET run=3
+model_c_overlap,IND,2015-Q4,34.56581858097148,-0.2664,RESET,DECLINE,stage=RESET run=4 candidate=DECLINEx1
+model_c_overlap,IND,2016-Q4,34.806480921256686,0.6878,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,IND,2017-Q4,36.40917884808377,2.5516,DECLINE,DECLINE,stage=DECLINE run=2 candidate=EARLY_RISEx1
+model_c_overlap,IND,2018-Q4,36.87387358792335,2.5248,EARLY_RISE,RISE,stage=EARLY_RISE run=1
+model_c_overlap,IND,2019-Q4,37.394825914590015,2.829,EARLY_RISE,RISE,stage=EARLY_RISE run=2
+model_c_overlap,IND,2020-Q4,37.39927222068627,2.5928,EARLY_RISE,RISE,stage=EARLY_RISE run=3
+model_c_overlap,IND,2021-Q4,36.86891571149732,0.4597,EARLY_RISE,RISE,stage=EARLY_RISE run=4 candidate=RISEx1
+model_c_overlap,IND,2022-Q4,36.59009938759857,-0.2838,EARLY_RISE,RISE,stage=EARLY_RISE run=5 candidate=LATE_PEAKx1
+model_c_overlap,IND,2023-Q4,37.27288261311594,-0.1219,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,IND,2024-Q4,37.89958487815018,0.5003,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_c_overlap,IND,2025-Q4,37.90483466981685,1.0359,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=EARLY_RISEx1
+model_c_overlap,JPN,1980-Q4,,,,,missing score
+model_c_overlap,JPN,1981-Q4,,,,,missing score
+model_c_overlap,JPN,1982-Q4,,,,,missing score
+model_c_overlap,JPN,1983-Q4,,,,,missing score
+model_c_overlap,JPN,1984-Q4,,,,,missing score
+model_c_overlap,JPN,1985-Q4,,,,,missing score
+model_c_overlap,JPN,1986-Q4,,,,,missing score
+model_c_overlap,JPN,1987-Q4,,,,,missing score
+model_c_overlap,JPN,1988-Q4,,,,,missing score
+model_c_overlap,JPN,1989-Q4,,,,,missing score
+model_c_overlap,JPN,1990-Q4,,,,,missing score
+model_c_overlap,JPN,1991-Q4,,,,,missing score
+model_c_overlap,JPN,1992-Q4,,,,,missing score
+model_c_overlap,JPN,1993-Q4,,,,,missing score
+model_c_overlap,JPN,1994-Q4,,,,,missing score
+model_c_overlap,JPN,1995-Q4,,,,,missing score
+model_c_overlap,JPN,1996-Q4,57.173780045984024,0.0,RISE,RISE,stage=RISE run=1
+model_c_overlap,JPN,1997-Q4,55.61476932940648,0.0,RISE,RISE,stage=RISE run=2
+model_c_overlap,JPN,1998-Q4,55.00621722315649,0.0,RISE,RISE,stage=RISE run=3
+model_c_overlap,JPN,1999-Q4,54.783307133584294,0.0,RISE,RISE,stage=RISE run=4
+model_c_overlap,JPN,2000-Q4,55.3218815887982,-1.8519,RISE,RISE,stage=RISE run=5 candidate=DECLINEx1
+model_c_overlap,JPN,2001-Q4,55.248272374226005,-0.3665,RISE,RISE,stage=RISE run=6 candidate=LATE_PEAKx1
+model_c_overlap,JPN,2002-Q4,54.43960531490114,-0.5666,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,JPN,2003-Q4,54.26440464304285,-0.5189,LATE_PEAK,PEAK,stage=LATE_PEAK run=2
+model_c_overlap,JPN,2004-Q4,53.92916781389847,-1.3927,LATE_PEAK,PEAK,stage=LATE_PEAK run=3 candidate=DECLINEx1
+model_c_overlap,JPN,2005-Q4,54.26808502432627,-0.9802,LATE_PEAK,PEAK,stage=LATE_PEAK run=4
+model_c_overlap,JPN,2006-Q4,53.732458021875885,-0.7071,LATE_PEAK,PEAK,stage=LATE_PEAK run=5
+model_c_overlap,JPN,2007-Q4,52.58826439753376,-1.6761,LATE_PEAK,PEAK,stage=LATE_PEAK run=6 candidate=DECLINEx1
+model_c_overlap,JPN,2008-Q4,52.87090554128377,-1.0583,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,JPN,2009-Q4,53.13249998610329,-1.1356,DECLINE,DECLINE,stage=DECLINE run=2
+model_c_overlap,JPN,2010-Q4,53.40441159860329,-0.328,DECLINE,DECLINE,stage=DECLINE run=3 candidate=LATE_PEAKx1
+model_c_overlap,JPN,2011-Q4,53.444047453850615,0.8558,DECLINE,DECLINE,stage=DECLINE run=4 candidate=RISEx1
+model_c_overlap,JPN,2012-Q4,53.19583214656452,0.3249,RISE,RISE,stage=RISE run=1
+model_c_overlap,JPN,2013-Q4,54.167395515692725,1.0349,RISE,RISE,stage=RISE run=2
+model_c_overlap,JPN,2014-Q4,55.28873642190929,1.8843,RISE,RISE,stage=RISE run=3
+model_c_overlap,JPN,2015-Q4,55.67364975564311,2.2296,RISE,RISE,stage=RISE run=4
+model_c_overlap,JPN,2016-Q4,55.42709346148149,2.2313,RISE,RISE,stage=RISE run=5
+model_c_overlap,JPN,2017-Q4,55.44937677146426,1.282,RISE,RISE,stage=RISE run=6
+model_c_overlap,JPN,2018-Q4,56.07075344328912,0.782,RISE,RISE,stage=RISE run=7
+model_c_overlap,JPN,2019-Q4,56.17415054225302,0.5005,RISE,RISE,stage=RISE run=8
+model_c_overlap,JPN,2020-Q4,53.41502567216965,-2.0121,RISE,RISE,stage=RISE run=9 candidate=DECLINEx1
+model_c_overlap,JPN,2021-Q4,53.81624687883127,-1.6331,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,JPN,2022-Q4,55.8176104020114,-0.2531,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_c_overlap,JPN,2023-Q4,55.62238190618684,-0.5518,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,JPN,2024-Q4,53.88178974109024,0.4668,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_c_overlap,JPN,2025-Q4,54.006300514819,0.1901,RISE,RISE,stage=RISE run=1
+model_c_overlap,USA,1980-Q4,,,,,missing score
+model_c_overlap,USA,1981-Q4,,,,,missing score
+model_c_overlap,USA,1982-Q4,,,,,missing score
+model_c_overlap,USA,1983-Q4,,,,,missing score
+model_c_overlap,USA,1984-Q4,,,,,missing score
+model_c_overlap,USA,1985-Q4,,,,,missing score
+model_c_overlap,USA,1986-Q4,,,,,missing score
+model_c_overlap,USA,1987-Q4,,,,,missing score
+model_c_overlap,USA,1988-Q4,,,,,missing score
+model_c_overlap,USA,1989-Q4,,,,,missing score
+model_c_overlap,USA,1990-Q4,,,,,missing score
+model_c_overlap,USA,1991-Q4,,,,,missing score
+model_c_overlap,USA,1992-Q4,,,,,missing score
+model_c_overlap,USA,1993-Q4,,,,,missing score
+model_c_overlap,USA,1994-Q4,,,,,missing score
+model_c_overlap,USA,1995-Q4,48.372071753336215,0.0,RISE,RISE,stage=RISE run=1
+model_c_overlap,USA,1996-Q4,57.792079229125044,0.0,RISE,RISE,stage=RISE run=2
+model_c_overlap,USA,1997-Q4,57.75729027391113,0.0,RISE,RISE,stage=RISE run=3
+model_c_overlap,USA,1998-Q4,58.10411462118104,0.0,RISE,RISE,stage=RISE run=4
+model_c_overlap,USA,1999-Q4,58.32260079096713,9.9505,RISE,RISE,stage=RISE run=5
+model_c_overlap,USA,2000-Q4,58.187668899947234,0.3956,RISE,RISE,stage=RISE run=6
+model_c_overlap,USA,2001-Q4,58.248185560375035,0.4909,RISE,RISE,stage=RISE run=7
+model_c_overlap,USA,2002-Q4,57.65531410623064,-0.4488,RISE,RISE,stage=RISE run=8 candidate=LATE_PEAKx1
+model_c_overlap,USA,2003-Q4,56.41002712812236,-1.9126,RISE,RISE,stage=RISE run=9 candidate=DECLINEx1
+model_c_overlap,USA,2004-Q4,56.06285923958626,-2.1248,DECLINE,DECLINE,stage=DECLINE run=1
+model_c_overlap,USA,2005-Q4,56.02073328126408,-2.2275,DECLINE,DECLINE,stage=DECLINE run=2
+model_c_overlap,USA,2006-Q4,56.11893211562236,-1.5364,DECLINE,DECLINE,stage=DECLINE run=3
+model_c_overlap,USA,2007-Q4,55.200163264208065,-1.2099,DECLINE,DECLINE,stage=DECLINE run=4
+model_c_overlap,USA,2008-Q4,55.85174363751407,-0.2111,DECLINE,DECLINE,stage=DECLINE run=5 candidate=LATE_PEAKx1
+model_c_overlap,USA,2009-Q4,57.263670598040385,1.2429,DECLINE,DECLINE,stage=DECLINE run=6 candidate=RISEx1
+model_c_overlap,USA,2010-Q4,56.90840200743211,0.7895,RISE,RISE,stage=RISE run=1
+model_c_overlap,USA,2011-Q4,55.976247603945616,0.7761,RISE,RISE,stage=RISE run=2
+model_c_overlap,USA,2012-Q4,56.29726852935723,0.4455,RISE,RISE,stage=RISE run=3
+model_c_overlap,USA,2013-Q4,56.42518545642943,-0.8385,RISE,RISE,stage=RISE run=4 candidate=LATE_PEAKx1
+model_c_overlap,USA,2014-Q4,56.54225110124895,-0.3662,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,USA,2015-Q4,56.61242888042676,0.6362,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_c_overlap,USA,2016-Q4,56.622634313748954,0.3254,RISE,RISE,stage=RISE run=1
+model_c_overlap,USA,2017-Q4,56.15654893522903,-0.2686,RISE,RISE,stage=RISE run=2 candidate=LATE_PEAKx1
+model_c_overlap,USA,2018-Q4,56.92643158249895,0.3842,RISE,RISE,stage=RISE run=3
+model_c_overlap,USA,2019-Q4,56.54696698771284,-0.0655,RISE,RISE,stage=RISE run=4 candidate=LATE_PEAKx1
+model_c_overlap,USA,2020-Q4,56.37094620853504,-0.2517,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_c_overlap,USA,2021-Q4,55.92963899503238,-0.2269,LATE_PEAK,PEAK,stage=LATE_PEAK run=2
+model_c_overlap,USA,2022-Q4,55.9375218199179,-0.9889,LATE_PEAK,PEAK,stage=LATE_PEAK run=3
+model_c_overlap,USA,2023-Q4,57.17808955510282,0.6311,LATE_PEAK,PEAK,stage=LATE_PEAK run=4 candidate=RISEx1
+model_c_overlap,USA,2024-Q4,59.16039780349272,2.7895,RISE,RISE,stage=RISE run=1
+model_c_overlap,USA,2025-Q4,57.990540056054165,2.0609,RISE,RISE,stage=RISE run=2
+model_d_comparable,CHE,1980-Q4,,,,,missing score
+model_d_comparable,CHE,1981-Q4,,,,,missing score
+model_d_comparable,CHE,1982-Q4,,,,,missing score
+model_d_comparable,CHE,1983-Q4,,,,,missing score
+model_d_comparable,CHE,1984-Q4,,,,,missing score
+model_d_comparable,CHE,1985-Q4,,,,,missing score
+model_d_comparable,CHE,1986-Q4,,,,,missing score
+model_d_comparable,CHE,1987-Q4,,,,,missing score
+model_d_comparable,CHE,1988-Q4,,,,,missing score
+model_d_comparable,CHE,1989-Q4,,,,,missing score
+model_d_comparable,CHE,1990-Q4,,,,,missing score
+model_d_comparable,CHE,1991-Q4,,,,,missing score
+model_d_comparable,CHE,1992-Q4,,,,,missing score
+model_d_comparable,CHE,1993-Q4,,,,,missing score
+model_d_comparable,CHE,1994-Q4,,,,,missing score
+model_d_comparable,CHE,1995-Q4,,,,,missing score
+model_d_comparable,CHE,1996-Q4,79.95413314411765,0.0,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,CHE,1997-Q4,79.9657998107843,0.0,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,CHE,1998-Q4,80.28700293716577,0.0,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,CHE,1999-Q4,80.06525605659536,0.0,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,CHE,2000-Q4,80.36465667745098,0.4105,PEAK,PEAK,stage=PEAK run=5
+model_d_comparable,CHE,2001-Q4,80.6303696899287,0.6646,PEAK,PEAK,stage=PEAK run=6
+model_d_comparable,CHE,2002-Q4,79.90729972326203,-0.3797,PEAK,PEAK,stage=PEAK run=7
+model_d_comparable,CHE,2003-Q4,79.49984535240641,-0.5654,PEAK,PEAK,stage=PEAK run=8
+model_d_comparable,CHE,2004-Q4,77.85195734411764,-2.5127,PEAK,PEAK,stage=PEAK run=9 candidate=EARLY_DECLINEx1
+model_d_comparable,CHE,2005-Q4,78.69586439411765,-1.9345,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,CHE,2006-Q4,78.4360388302139,-1.4713,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,CHE,2007-Q4,78.4768080302139,-1.023,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,CHE,2008-Q4,79.29747829545454,1.4455,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=LATE_RISEx1
+model_d_comparable,CHE,2009-Q4,79.2700159412656,0.5742,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=5 candidate=PEAKx1
+model_d_comparable,CHE,2010-Q4,78.46909951354723,0.0331,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,CHE,2011-Q4,79.43862799821747,0.9618,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,CHE,2012-Q4,79.99188442878787,0.6944,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,CHE,2013-Q4,79.29879651212121,0.0288,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,CHE,2014-Q4,80.83636560516933,2.3673,PEAK,PEAK,stage=PEAK run=5 candidate=LATE_RISEx1
+model_d_comparable,CHE,2015-Q4,80.33752947459892,0.8989,PEAK,PEAK,stage=PEAK run=6
+model_d_comparable,CHE,2016-Q4,80.44179331764705,0.4499,PEAK,PEAK,stage=PEAK run=7
+model_d_comparable,CHE,2017-Q4,80.42025567736185,1.1215,PEAK,PEAK,stage=PEAK run=8 candidate=LATE_RISEx1
+model_d_comparable,CHE,2018-Q4,80.90713614679144,0.0708,PEAK,PEAK,stage=PEAK run=9
+model_d_comparable,CHE,2019-Q4,80.48387486069518,0.1463,PEAK,PEAK,stage=PEAK run=10
+model_d_comparable,CHE,2020-Q4,79.60432428983957,-0.8375,PEAK,PEAK,stage=PEAK run=11
+model_d_comparable,CHE,2021-Q4,79.1739569231729,-1.2463,PEAK,PEAK,stage=PEAK run=12 candidate=EARLY_DECLINEx1
+model_d_comparable,CHE,2022-Q4,78.14268915430107,-2.7644,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,CHE,2023-Q4,78.09978120507246,-2.3841,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,CHE,2024-Q4,77.02577897509157,-2.5785,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,CHE,2025-Q4,77.47208624175823,-1.7019,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_d_comparable,CHN,1980-Q4,,,,,missing score
+model_d_comparable,CHN,1981-Q4,,,,,missing score
+model_d_comparable,CHN,1982-Q4,,,,,missing score
+model_d_comparable,CHN,1983-Q4,,,,,missing score
+model_d_comparable,CHN,1984-Q4,,,,,missing score
+model_d_comparable,CHN,1985-Q4,,,,,missing score
+model_d_comparable,CHN,1986-Q4,,,,,missing score
+model_d_comparable,CHN,1987-Q4,,,,,missing score
+model_d_comparable,CHN,1988-Q4,,,,,missing score
+model_d_comparable,CHN,1989-Q4,,,,,missing score
+model_d_comparable,CHN,1990-Q4,,,,,missing score
+model_d_comparable,CHN,1991-Q4,,,,,missing score
+model_d_comparable,CHN,1992-Q4,,,,,missing score
+model_d_comparable,CHN,1993-Q4,,,,,missing score
+model_d_comparable,CHN,1994-Q4,,,,,missing score
+model_d_comparable,CHN,1995-Q4,,,,,missing score
+model_d_comparable,CHN,1996-Q4,57.664501199465235,0.0,RISE,RISE,stage=RISE run=1
+model_d_comparable,CHN,1997-Q4,57.480294425846694,0.0,RISE,RISE,stage=RISE run=2
+model_d_comparable,CHN,1998-Q4,55.65842224251336,0.0,RISE,RISE,stage=RISE run=3
+model_d_comparable,CHN,1999-Q4,55.49008890918003,0.0,RISE,RISE,stage=RISE run=4
+model_d_comparable,CHN,2000-Q4,54.49672255365418,-3.1678,RISE,RISE,stage=RISE run=5 candidate=DECLINEx1
+model_d_comparable,CHN,2001-Q4,54.29259599393939,-3.1877,DECLINE,DECLINE,stage=DECLINE run=1
+model_d_comparable,CHN,2002-Q4,53.305567303654186,-2.3529,DECLINE,DECLINE,stage=DECLINE run=2
+model_d_comparable,CHN,2003-Q4,52.99395007032085,-2.4961,DECLINE,DECLINE,stage=DECLINE run=3
+model_d_comparable,CHN,2004-Q4,53.228799734224594,-1.2679,DECLINE,DECLINE,stage=DECLINE run=4
+model_d_comparable,CHN,2005-Q4,51.76246345784313,-2.5301,DECLINE,DECLINE,stage=DECLINE run=5
+model_d_comparable,CHN,2006-Q4,51.60754843146167,-1.698,DECLINE,DECLINE,stage=DECLINE run=6
+model_d_comparable,CHN,2007-Q4,52.40797357174688,-0.586,DECLINE,DECLINE,stage=DECLINE run=7 candidate=LATE_PEAKx1
+model_d_comparable,CHN,2008-Q4,53.24071805508021,0.0119,DECLINE,DECLINE,stage=DECLINE run=8 candidate=RISEx1
+model_d_comparable,CHN,2009-Q4,53.454162505080205,1.6917,RISE,RISE,stage=RISE run=1
+model_d_comparable,CHN,2010-Q4,51.69965506203208,0.0921,RISE,RISE,stage=RISE run=2
+model_d_comparable,CHN,2011-Q4,51.683484952317286,-0.7245,RISE,RISE,stage=RISE run=3 candidate=LATE_PEAKx1
+model_d_comparable,CHN,2012-Q4,50.922189389839566,-2.3185,RISE,RISE,stage=RISE run=4 candidate=DECLINEx1
+model_d_comparable,CHN,2013-Q4,51.000350636363635,-2.4538,DECLINE,DECLINE,stage=DECLINE run=1
+model_d_comparable,CHN,2014-Q4,53.730230299554364,2.0306,DECLINE,DECLINE,stage=DECLINE run=2 candidate=RISEx1
+model_d_comparable,CHN,2015-Q4,54.03492569679144,2.3514,RISE,RISE,stage=RISE run=1
+model_d_comparable,CHN,2016-Q4,54.37509349402852,3.4529,RISE,RISE,stage=RISE run=2
+model_d_comparable,CHN,2017-Q4,55.621600150980385,4.6212,RISE,RISE,stage=RISE run=3
+model_d_comparable,CHN,2018-Q4,55.21954135793226,1.4893,RISE,RISE,stage=RISE run=4
+model_d_comparable,CHN,2019-Q4,55.384806509358285,1.3499,RISE,RISE,stage=RISE run=5
+model_d_comparable,CHN,2020-Q4,55.307692237165774,0.9326,RISE,RISE,stage=RISE run=6
+model_d_comparable,CHN,2021-Q4,56.00863662040998,0.387,RISE,RISE,stage=RISE run=7
+model_d_comparable,CHN,2022-Q4,54.03962228996416,-1.1799,RISE,RISE,stage=RISE run=8 candidate=DECLINEx1
+model_d_comparable,CHN,2023-Q4,54.83060265362319,-0.5542,RISE,RISE,stage=RISE run=9 candidate=LATE_PEAKx1
+model_d_comparable,CHN,2024-Q4,54.73013649322344,-0.5776,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_d_comparable,CHN,2025-Q4,54.59316314358974,-1.4155,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=DECLINEx1
+model_d_comparable,DEU,1980-Q4,,,,,missing score
+model_d_comparable,DEU,1981-Q4,,,,,missing score
+model_d_comparable,DEU,1982-Q4,,,,,missing score
+model_d_comparable,DEU,1983-Q4,,,,,missing score
+model_d_comparable,DEU,1984-Q4,,,,,missing score
+model_d_comparable,DEU,1985-Q4,,,,,missing score
+model_d_comparable,DEU,1986-Q4,,,,,missing score
+model_d_comparable,DEU,1987-Q4,,,,,missing score
+model_d_comparable,DEU,1988-Q4,,,,,missing score
+model_d_comparable,DEU,1989-Q4,,,,,missing score
+model_d_comparable,DEU,1990-Q4,,,,,missing score
+model_d_comparable,DEU,1991-Q4,,,,,missing score
+model_d_comparable,DEU,1992-Q4,,,,,missing score
+model_d_comparable,DEU,1993-Q4,,,,,missing score
+model_d_comparable,DEU,1994-Q4,,,,,missing score
+model_d_comparable,DEU,1995-Q4,,,,,missing score
+model_d_comparable,DEU,1996-Q4,71.58322977941177,0.0,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,DEU,1997-Q4,71.66148289884136,0.0,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,DEU,1998-Q4,70.74010302941176,0.0,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,DEU,1999-Q4,70.83502281550803,0.0,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,DEU,2000-Q4,70.38478893912655,-1.1984,PEAK,PEAK,stage=PEAK run=5 candidate=EARLY_DECLINEx1
+model_d_comparable,DEU,2001-Q4,70.70550195160428,-0.956,PEAK,PEAK,stage=PEAK run=6
+model_d_comparable,DEU,2002-Q4,69.93411976827093,-0.806,PEAK,PEAK,stage=PEAK run=7
+model_d_comparable,DEU,2003-Q4,68.9228028446524,-1.9122,PEAK,PEAK,stage=PEAK run=8 candidate=EARLY_DECLINEx1
+model_d_comparable,DEU,2004-Q4,68.30163267798574,-2.0832,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,DEU,2005-Q4,70.2959716362745,-0.4095,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2 candidate=PEAKx1
+model_d_comparable,DEU,2006-Q4,70.04713197237076,0.113,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,DEU,2007-Q4,70.33643090151514,1.4136,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_d_comparable,DEU,2008-Q4,69.32183941265596,1.0202,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_d_comparable,DEU,2009-Q4,69.65399353903743,-0.642,LATE_RISE,RISE,stage=LATE_RISE run=2 candidate=PEAKx1
+model_d_comparable,DEU,2010-Q4,68.64151150846702,-1.4056,LATE_RISE,RISE,stage=LATE_RISE run=3 candidate=EARLY_DECLINEx1
+model_d_comparable,DEU,2011-Q4,69.52726781675578,-0.8092,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_d_comparable,DEU,2012-Q4,70.08647119037433,0.7646,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,DEU,2013-Q4,70.31655721951871,0.6626,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,DEU,2014-Q4,72.04290873199643,3.4014,PEAK,PEAK,stage=PEAK run=3 candidate=LATE_RISEx1
+model_d_comparable,DEU,2015-Q4,71.07875320980392,1.5515,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_d_comparable,DEU,2016-Q4,70.95429176256684,0.8678,LATE_RISE,RISE,stage=LATE_RISE run=2 candidate=PEAKx1
+model_d_comparable,DEU,2017-Q4,71.684071,1.3675,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_d_comparable,DEU,2018-Q4,71.75516076114081,-0.2877,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=PEAKx1
+model_d_comparable,DEU,2019-Q4,72.12574764304813,1.047,LATE_RISE,RISE,stage=LATE_RISE run=5
+model_d_comparable,DEU,2020-Q4,71.31552762914438,0.3612,LATE_RISE,RISE,stage=LATE_RISE run=6 candidate=PEAKx1
+model_d_comparable,DEU,2021-Q4,71.18849067361853,-0.4956,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,DEU,2022-Q4,69.94804390591398,-1.8071,PEAK,PEAK,stage=PEAK run=2 candidate=EARLY_DECLINEx1
+model_d_comparable,DEU,2023-Q4,69.05140517391304,-3.0743,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,DEU,2024-Q4,68.23663481300366,-3.0789,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,DEU,2025-Q4,67.82023338809523,-3.3683,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,FRA,1980-Q4,,,,,missing score
+model_d_comparable,FRA,1981-Q4,,,,,missing score
+model_d_comparable,FRA,1982-Q4,,,,,missing score
+model_d_comparable,FRA,1983-Q4,,,,,missing score
+model_d_comparable,FRA,1984-Q4,,,,,missing score
+model_d_comparable,FRA,1985-Q4,,,,,missing score
+model_d_comparable,FRA,1986-Q4,,,,,missing score
+model_d_comparable,FRA,1987-Q4,,,,,missing score
+model_d_comparable,FRA,1988-Q4,,,,,missing score
+model_d_comparable,FRA,1989-Q4,,,,,missing score
+model_d_comparable,FRA,1990-Q4,,,,,missing score
+model_d_comparable,FRA,1991-Q4,,,,,missing score
+model_d_comparable,FRA,1992-Q4,,,,,missing score
+model_d_comparable,FRA,1993-Q4,,,,,missing score
+model_d_comparable,FRA,1994-Q4,,,,,missing score
+model_d_comparable,FRA,1995-Q4,,,,,missing score
+model_d_comparable,FRA,1996-Q4,65.46760991283422,0.0,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,FRA,1997-Q4,65.06435679340463,0.0,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,FRA,1998-Q4,63.98832341978609,0.0,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,FRA,1999-Q4,63.94078331283422,0.0,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,FRA,2000-Q4,64.58973237950089,-0.8779,PEAK,PEAK,stage=PEAK run=5
+model_d_comparable,FRA,2001-Q4,64.82385893921568,-0.2405,PEAK,PEAK,stage=PEAK run=6
+model_d_comparable,FRA,2002-Q4,64.2281501016934,0.2398,PEAK,PEAK,stage=PEAK run=7
+model_d_comparable,FRA,2003-Q4,64.09845474474153,0.1577,PEAK,PEAK,stage=PEAK run=8
+model_d_comparable,FRA,2004-Q4,64.032056571123,-0.5577,PEAK,PEAK,stage=PEAK run=9
+model_d_comparable,FRA,2005-Q4,65.80575242112299,0.9819,PEAK,PEAK,stage=PEAK run=10
+model_d_comparable,FRA,2006-Q4,65.02022869750445,0.7921,PEAK,PEAK,stage=PEAK run=11
+model_d_comparable,FRA,2007-Q4,65.35299807112298,1.2545,PEAK,PEAK,stage=PEAK run=12 candidate=LATE_RISEx1
+model_d_comparable,FRA,2008-Q4,65.40239682388591,1.3703,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_d_comparable,FRA,2009-Q4,64.45055200026738,-1.3552,LATE_RISE,RISE,stage=LATE_RISE run=2 candidate=EARLY_DECLINEx1
+model_d_comparable,FRA,2010-Q4,64.218063871123,-0.8022,LATE_RISE,RISE,stage=LATE_RISE run=3 candidate=PEAKx1
+model_d_comparable,FRA,2011-Q4,63.81961500864527,-1.5334,LATE_RISE,RISE,stage=LATE_RISE run=4 candidate=EARLY_DECLINEx1
+model_d_comparable,FRA,2012-Q4,64.48994897807486,-0.9124,LATE_RISE,RISE,stage=LATE_RISE run=5 candidate=PEAKx1
+model_d_comparable,FRA,2013-Q4,63.27463067112299,-1.1759,LATE_RISE,RISE,stage=LATE_RISE run=6 candidate=EARLY_DECLINEx1
+model_d_comparable,FRA,2014-Q4,62.59093507531194,-1.6271,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,FRA,2015-Q4,61.605800596167555,-2.2138,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,FRA,2016-Q4,60.9540466100713,-3.5359,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,FRA,2017-Q4,61.658162517023165,-1.6165,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_d_comparable,FRA,2018-Q4,61.848975653119425,-0.742,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=5 candidate=PEAKx1
+model_d_comparable,FRA,2019-Q4,61.798169503119425,0.1924,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,FRA,2020-Q4,61.71364855445633,0.7596,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,FRA,2021-Q4,62.27097153360071,0.6128,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,FRA,2022-Q4,61.25014624336917,-0.5988,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,FRA,2023-Q4,60.369510285507246,-1.4287,PEAK,PEAK,stage=PEAK run=5 candidate=EARLY_DECLINEx1
+model_d_comparable,FRA,2024-Q4,59.15767324139193,-2.556,PEAK,PEAK,stage=PEAK run=6 candidate=DECLINEx1
+model_d_comparable,FRA,2025-Q4,58.992734049999996,-3.2782,DECLINE,DECLINE,stage=DECLINE run=1
+model_d_comparable,GBR,1980-Q4,,,,,missing score
+model_d_comparable,GBR,1981-Q4,,,,,missing score
+model_d_comparable,GBR,1982-Q4,,,,,missing score
+model_d_comparable,GBR,1983-Q4,,,,,missing score
+model_d_comparable,GBR,1984-Q4,,,,,missing score
+model_d_comparable,GBR,1985-Q4,,,,,missing score
+model_d_comparable,GBR,1986-Q4,,,,,missing score
+model_d_comparable,GBR,1987-Q4,,,,,missing score
+model_d_comparable,GBR,1988-Q4,,,,,missing score
+model_d_comparable,GBR,1989-Q4,,,,,missing score
+model_d_comparable,GBR,1990-Q4,,,,,missing score
+model_d_comparable,GBR,1991-Q4,,,,,missing score
+model_d_comparable,GBR,1992-Q4,,,,,missing score
+model_d_comparable,GBR,1993-Q4,,,,,missing score
+model_d_comparable,GBR,1994-Q4,,,,,missing score
+model_d_comparable,GBR,1995-Q4,,,,,missing score
+model_d_comparable,GBR,1996-Q4,73.19406907504455,0.0,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,GBR,1997-Q4,73.04811542085561,0.0,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,GBR,1998-Q4,73.5388993402852,0.0,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,GBR,1999-Q4,74.0171524597148,0.0,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,GBR,2000-Q4,74.1417774624777,0.9477,PEAK,PEAK,stage=PEAK run=5
+model_d_comparable,GBR,2001-Q4,73.71868477085562,0.6706,PEAK,PEAK,stage=PEAK run=6
+model_d_comparable,GBR,2002-Q4,72.38124804857398,-1.1577,PEAK,PEAK,stage=PEAK run=7 candidate=EARLY_DECLINEx1
+model_d_comparable,GBR,2003-Q4,72.01030400133689,-2.0068,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,GBR,2004-Q4,70.68658966247772,-3.4552,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,GBR,2005-Q4,72.2566420513369,-1.462,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,GBR,2006-Q4,72.22891552076649,-0.1523,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=PEAKx1
+model_d_comparable,GBR,2007-Q4,71.89944418048128,-0.1109,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,GBR,2008-Q4,71.36337840686274,0.6768,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,GBR,2009-Q4,69.57416389714794,-2.6825,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_d_comparable,GBR,2010-Q4,70.01401412771835,-2.2149,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,GBR,2011-Q4,68.7231376819073,-3.1763,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,GBR,2012-Q4,69.43791799438502,-1.9255,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,GBR,2013-Q4,69.16200997076649,-0.4122,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=PEAKx1
+model_d_comparable,GBR,2014-Q4,70.0028602013369,-0.0112,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,GBR,2015-Q4,70.83546947771836,2.1123,PEAK,PEAK,stage=PEAK run=2 candidate=LATE_RISEx1
+model_d_comparable,GBR,2016-Q4,70.99580105686275,1.5579,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_d_comparable,GBR,2017-Q4,71.01323111657754,1.8512,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_d_comparable,GBR,2018-Q4,70.2722909026738,0.2694,LATE_RISE,RISE,stage=LATE_RISE run=3 candidate=PEAKx1
+model_d_comparable,GBR,2019-Q4,70.08744349714794,-0.748,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,GBR,2020-Q4,70.47440393734402,-0.5214,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,GBR,2021-Q4,68.8143310638146,-2.1989,PEAK,PEAK,stage=PEAK run=3 candidate=EARLY_DECLINEx1
+model_d_comparable,GBR,2022-Q4,67.83782312311827,-2.4345,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,GBR,2023-Q4,66.40003682173912,-3.6874,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,GBR,2024-Q4,66.25461287948717,-4.2198,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,GBR,2025-Q4,66.36644103772893,-2.4479,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_d_comparable,IND,1980-Q4,,,,,missing score
+model_d_comparable,IND,1981-Q4,,,,,missing score
+model_d_comparable,IND,1982-Q4,,,,,missing score
+model_d_comparable,IND,1983-Q4,,,,,missing score
+model_d_comparable,IND,1984-Q4,,,,,missing score
+model_d_comparable,IND,1985-Q4,,,,,missing score
+model_d_comparable,IND,1986-Q4,,,,,missing score
+model_d_comparable,IND,1987-Q4,,,,,missing score
+model_d_comparable,IND,1988-Q4,,,,,missing score
+model_d_comparable,IND,1989-Q4,,,,,missing score
+model_d_comparable,IND,1990-Q4,,,,,missing score
+model_d_comparable,IND,1991-Q4,,,,,missing score
+model_d_comparable,IND,1992-Q4,,,,,missing score
+model_d_comparable,IND,1993-Q4,,,,,missing score
+model_d_comparable,IND,1994-Q4,,,,,missing score
+model_d_comparable,IND,1995-Q4,,,,,missing score
+model_d_comparable,IND,1996-Q4,47.455225683511586,0.0,RISE,RISE,stage=RISE run=1
+model_d_comparable,IND,1997-Q4,47.74839858903743,0.0,RISE,RISE,stage=RISE run=2
+model_d_comparable,IND,1998-Q4,47.49660726122995,0.0,RISE,RISE,stage=RISE run=3
+model_d_comparable,IND,1999-Q4,47.93803328618538,0.0,RISE,RISE,stage=RISE run=4
+model_d_comparable,IND,2000-Q4,47.85244512923351,0.3972,RISE,RISE,stage=RISE run=5
+model_d_comparable,IND,2001-Q4,47.467525343137254,-0.2809,RISE,RISE,stage=RISE run=6 candidate=LATE_PEAKx1
+model_d_comparable,IND,2002-Q4,44.39247676675579,-3.1041,RISE,RISE,stage=RISE run=7 candidate=DECLINEx1
+model_d_comparable,IND,2003-Q4,44.367153057040994,-3.5709,DECLINE,DECLINE,stage=DECLINE run=1
+model_d_comparable,IND,2004-Q4,46.90856192647058,-0.9439,DECLINE,DECLINE,stage=DECLINE run=2 candidate=LATE_PEAKx1
+model_d_comparable,IND,2005-Q4,47.213527601515146,-0.254,LATE_PEAK,PEAK,stage=LATE_PEAK run=1
+model_d_comparable,IND,2006-Q4,47.36812635017825,2.9756,LATE_PEAK,PEAK,stage=LATE_PEAK run=2 candidate=RISEx1
+model_d_comparable,IND,2007-Q4,46.49775700160427,2.1306,RISE,RISE,stage=RISE run=1
+model_d_comparable,IND,2008-Q4,46.36947741969696,-0.5391,RISE,RISE,stage=RISE run=2 candidate=LATE_PEAKx1
+model_d_comparable,IND,2009-Q4,45.634605061408195,-1.5789,RISE,RISE,stage=RISE run=3 candidate=DECLINEx1
+model_d_comparable,IND,2010-Q4,44.44406103645276,-2.9241,DECLINE,DECLINE,stage=DECLINE run=1
+model_d_comparable,IND,2011-Q4,42.976944576737964,-3.5208,DECLINE,DECLINE,stage=DECLINE run=2
+model_d_comparable,IND,2012-Q4,42.56134499759358,-3.8081,DECLINE,DECLINE,stage=DECLINE run=3
+model_d_comparable,IND,2013-Q4,42.386496835115864,-3.2481,DECLINE,DECLINE,stage=DECLINE run=4
+model_d_comparable,IND,2014-Q4,43.362647915686274,-1.0814,DECLINE,DECLINE,stage=DECLINE run=5
+model_d_comparable,IND,2015-Q4,44.65035740597148,1.6734,DECLINE,DECLINE,stage=DECLINE run=6 candidate=EARLY_RISEx1
+model_d_comparable,IND,2016-Q4,45.03580864625668,2.4745,DECLINE,DECLINE,stage=DECLINE run=7 candidate=RISEx1
+model_d_comparable,IND,2017-Q4,45.50137908654189,3.1149,RISE,RISE,stage=RISE run=1
+model_d_comparable,IND,2018-Q4,46.07904114625668,2.7164,RISE,RISE,stage=RISE run=2
+model_d_comparable,IND,2019-Q4,46.26227311292335,1.6119,RISE,RISE,stage=RISE run=3
+model_d_comparable,IND,2020-Q4,45.53725131568628,0.5014,RISE,RISE,stage=RISE run=4
+model_d_comparable,IND,2021-Q4,45.03838291149732,-0.463,RISE,RISE,stage=RISE run=5 candidate=LATE_PEAKx1
+model_d_comparable,IND,2022-Q4,45.07084784426523,-1.0082,RISE,RISE,stage=RISE run=6 candidate=DECLINEx1
+model_d_comparable,IND,2023-Q4,45.32506400144927,-0.9372,RISE,RISE,stage=RISE run=7 candidate=LATE_PEAKx1
+model_d_comparable,IND,2024-Q4,46.25444878315018,0.7172,RISE,RISE,stage=RISE run=8
+model_d_comparable,IND,2025-Q4,46.264948366483516,1.2266,RISE,RISE,stage=RISE run=9
+model_d_comparable,JPN,1980-Q4,,,,,missing score
+model_d_comparable,JPN,1981-Q4,,,,,missing score
+model_d_comparable,JPN,1982-Q4,,,,,missing score
+model_d_comparable,JPN,1983-Q4,,,,,missing score
+model_d_comparable,JPN,1984-Q4,,,,,missing score
+model_d_comparable,JPN,1985-Q4,,,,,missing score
+model_d_comparable,JPN,1986-Q4,,,,,missing score
+model_d_comparable,JPN,1987-Q4,,,,,missing score
+model_d_comparable,JPN,1988-Q4,,,,,missing score
+model_d_comparable,JPN,1989-Q4,,,,,missing score
+model_d_comparable,JPN,1990-Q4,,,,,missing score
+model_d_comparable,JPN,1991-Q4,,,,,missing score
+model_d_comparable,JPN,1992-Q4,,,,,missing score
+model_d_comparable,JPN,1993-Q4,,,,,missing score
+model_d_comparable,JPN,1994-Q4,,,,,missing score
+model_d_comparable,JPN,1995-Q4,,,,,missing score
+model_d_comparable,JPN,1996-Q4,69.72919823877005,0.0,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,JPN,1997-Q4,69.75753157210337,0.0,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,JPN,1998-Q4,68.06841662210338,0.0,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,JPN,1999-Q4,67.85516350267379,0.0,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,JPN,2000-Q4,68.80362327629233,-0.9256,PEAK,PEAK,stage=PEAK run=5
+model_d_comparable,JPN,2001-Q4,68.60870349019608,-1.1488,PEAK,PEAK,stage=PEAK run=6 candidate=EARLY_DECLINEx1
+model_d_comparable,JPN,2002-Q4,66.57687970276292,-1.4915,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,JPN,2003-Q4,66.26440492361853,-1.5908,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,JPN,2004-Q4,65.53054828475935,-3.2731,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,JPN,2005-Q4,66.47577363199643,-2.1329,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_d_comparable,JPN,2006-Q4,66.8130412695187,0.2362,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=5 candidate=PEAKx1
+model_d_comparable,JPN,2007-Q4,65.67225656951871,-0.5921,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,JPN,2008-Q4,65.82098728618539,0.2904,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,JPN,2009-Q4,66.60202760427806,0.1263,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,JPN,2010-Q4,67.08605090427807,0.273,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,JPN,2011-Q4,67.11876476960784,1.4465,PEAK,PEAK,stage=PEAK run=5 candidate=LATE_RISEx1
+model_d_comparable,JPN,2012-Q4,66.61647017655972,0.7955,PEAK,PEAK,stage=PEAK run=6
+model_d_comparable,JPN,2013-Q4,67.44591930294118,0.8439,PEAK,PEAK,stage=PEAK run=7
+model_d_comparable,JPN,2014-Q4,69.82394869456327,2.7379,PEAK,PEAK,stage=PEAK run=8 candidate=LATE_RISEx1
+model_d_comparable,JPN,2015-Q4,69.02481763208556,1.9061,LATE_RISE,RISE,stage=LATE_RISE run=1
+model_d_comparable,JPN,2016-Q4,69.50813601399287,2.8917,LATE_RISE,RISE,stage=LATE_RISE run=2
+model_d_comparable,JPN,2017-Q4,70.40787643475936,2.962,LATE_RISE,RISE,stage=LATE_RISE run=3
+model_d_comparable,JPN,2018-Q4,71.16615152219251,1.3422,LATE_RISE,RISE,stage=LATE_RISE run=4
+model_d_comparable,JPN,2019-Q4,71.2699220124777,2.2451,LATE_RISE,RISE,stage=LATE_RISE run=5
+model_d_comparable,JPN,2020-Q4,72.60160420543671,3.0935,LATE_RISE,RISE,stage=LATE_RISE run=6
+model_d_comparable,JPN,2021-Q4,71.96089025686274,1.553,LATE_RISE,RISE,stage=LATE_RISE run=7
+model_d_comparable,JPN,2022-Q4,73.05353286218637,1.8874,LATE_RISE,RISE,stage=LATE_RISE run=8
+model_d_comparable,JPN,2023-Q4,72.68989609275363,1.42,LATE_RISE,RISE,stage=LATE_RISE run=9
+model_d_comparable,JPN,2024-Q4,73.02834724487178,0.4267,LATE_RISE,RISE,stage=LATE_RISE run=10 candidate=PEAKx1
+model_d_comparable,JPN,2025-Q4,73.49373737802198,1.5328,LATE_RISE,RISE,stage=LATE_RISE run=11
+model_d_comparable,USA,1980-Q4,,,,,missing score
+model_d_comparable,USA,1981-Q4,,,,,missing score
+model_d_comparable,USA,1982-Q4,,,,,missing score
+model_d_comparable,USA,1983-Q4,,,,,missing score
+model_d_comparable,USA,1984-Q4,,,,,missing score
+model_d_comparable,USA,1985-Q4,,,,,missing score
+model_d_comparable,USA,1986-Q4,,,,,missing score
+model_d_comparable,USA,1987-Q4,,,,,missing score
+model_d_comparable,USA,1988-Q4,,,,,missing score
+model_d_comparable,USA,1989-Q4,,,,,missing score
+model_d_comparable,USA,1990-Q4,,,,,missing score
+model_d_comparable,USA,1991-Q4,,,,,missing score
+model_d_comparable,USA,1992-Q4,,,,,missing score
+model_d_comparable,USA,1993-Q4,,,,,missing score
+model_d_comparable,USA,1994-Q4,,,,,missing score
+model_d_comparable,USA,1995-Q4,,,,,missing score
+model_d_comparable,USA,1996-Q4,73.19381439278074,0.0,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,USA,1997-Q4,73.1696076191622,0.0,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,USA,1998-Q4,72.67469303306595,0.0,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,USA,1999-Q4,72.76715292611408,0.0,PEAK,PEAK,stage=PEAK run=4
+model_d_comparable,USA,2000-Q4,73.76012006221033,0.5663,PEAK,PEAK,stage=PEAK run=5
+model_d_comparable,USA,2001-Q4,73.65853360944742,0.4889,PEAK,PEAK,stage=PEAK run=6
+model_d_comparable,USA,2002-Q4,72.20771630392157,-0.467,PEAK,PEAK,stage=PEAK run=7
+model_d_comparable,USA,2003-Q4,69.39226004144385,-3.3749,PEAK,PEAK,stage=PEAK run=8 candidate=EARLY_DECLINEx1
+model_d_comparable,USA,2004-Q4,68.67587523172905,-5.0842,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,USA,2005-Q4,68.61465446229946,-5.0439,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,USA,2006-Q4,68.72052900811052,-3.4872,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,USA,2007-Q4,68.27073248868092,-1.1215,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_d_comparable,USA,2008-Q4,68.70519707896612,0.0293,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=5 candidate=PEAKx1
+model_d_comparable,USA,2009-Q4,67.62670041229946,-0.988,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,USA,2010-Q4,67.17847918315508,-1.542,PEAK,PEAK,stage=PEAK run=2 candidate=EARLY_DECLINEx1
+model_d_comparable,USA,2011-Q4,66.8046256442959,-1.4661,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,USA,2012-Q4,66.44872461238859,-2.2565,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,USA,2013-Q4,66.15595863181818,-1.4707,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,USA,2014-Q4,66.4789844832442,-0.6995,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4 candidate=PEAKx1
+model_d_comparable,USA,2015-Q4,66.34974601381461,-0.4549,PEAK,PEAK,stage=PEAK run=1
+model_d_comparable,USA,2016-Q4,65.64900838324421,-0.7997,PEAK,PEAK,stage=PEAK run=2
+model_d_comparable,USA,2017-Q4,65.43384988600712,-0.7221,PEAK,PEAK,stage=PEAK run=3
+model_d_comparable,USA,2018-Q4,65.27682509991088,-1.2022,PEAK,PEAK,stage=PEAK run=4 candidate=EARLY_DECLINEx1
+model_d_comparable,USA,2019-Q4,63.89856240686274,-2.4512,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=1
+model_d_comparable,USA,2020-Q4,62.568959542959,-3.08,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=2
+model_d_comparable,USA,2021-Q4,62.1555498916221,-3.2783,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=3
+model_d_comparable,USA,2022-Q4,62.38819823691756,-2.8886,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=4
+model_d_comparable,USA,2023-Q4,61.85937652536232,-2.0392,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=5
+model_d_comparable,USA,2024-Q4,61.64606290384615,-0.9229,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=6 candidate=PEAKx1
+model_d_comparable,USA,2025-Q4,59.156379679120874,-2.9992,EARLY_DECLINE,DECLINE,stage=EARLY_DECLINE run=7 candidate=DECLINEx1

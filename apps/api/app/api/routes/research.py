@@ -86,6 +86,31 @@ def _method_info(m) -> MethodInfo:
     )
 
 
+@router.get("/versions")
+async def research_versions():
+    """Authoritative engine versions — the single source the UI must read
+    instead of hardcoding model metadata (drift regression: the workspace
+    displayed normalization-v0.8 / force-aggregation-v0.3 while the engine
+    had moved on)."""
+    from app.core.config import get_settings
+    from app.cycle.force_aggregation_definitions import (
+        FORCE_AGGREGATION_VERSION,
+    )
+
+    settings = get_settings()
+
+    return {
+        "normalization_version": CURRENT_MODEL_VERSION.version_id,
+        "force_aggregation_version": FORCE_AGGREGATION_VERSION,
+        "app_version": settings.app_version,
+        "composite_models": [
+            {"model_id": m.model_id, "version": m.version}
+            for m in COMPOSITE_MODELS.values()
+        ],
+        "backtest_safe": False,
+    }
+
+
 @router.get("/methods", response_model=list[MethodInfo])
 async def list_methods(state: Optional[str] = Query(None)):
     methods = list(METHODOLOGY_REGISTRY.values())
@@ -169,6 +194,89 @@ async def country_cycle(
         "period": result.scoring_period,
         "backtest_safe": result.backtest_safe,
     }
+
+
+_POSITIONS_CACHE: dict = {}
+_POSITIONS_TTL = 3600  # seconds — positions only change on new data
+
+
+@router.get("/cycle/positions")
+async def cycle_positions(
+    model: str = Query("model_b_domain"),
+    session: AsyncSession = Depends(get_session),
+):
+    """Latest classified cycle position for every tracked country.
+
+    One request so the Observatory clock doesn't fan out N slow
+    per-country history calls. Each country runs on its own DB session
+    concurrently; a country that fails classifies as unclassified
+    rather than failing the whole response."""
+    import asyncio
+
+    from sqlalchemy import select
+
+    from app.db.session import get_sessionmaker
+    from app.models import Country
+
+    if model not in COMPOSITE_MODELS:
+        raise HTTPException(422, f"unknown model {model!r}")
+    import time
+
+    cached = _POSITIONS_CACHE.get(model)
+    if cached and time.monotonic() - cached[0] < _POSITIONS_TTL:
+        return cached[1]
+    countries = (
+        (await session.execute(select(Country).order_by(Country.name)))
+        .scalars()
+        .all()
+    )
+    latest = _latest_completed_scoring_period()
+    sm = get_sessionmaker()
+
+    async def _one(iso3: str, name: str) -> dict:
+        base = {
+            "iso3": iso3,
+            "name": name,
+            "stage": None,
+            "phase": None,
+            "score": None,
+            "momentum": None,
+            "period": None,
+            "classified": False,
+        }
+        try:
+            async with sm() as s:
+                result = await research_service.cycle_history(
+                    s, iso3, model, 2000, latest.year, latest
+                )
+            if not result.points:
+                return base
+            last = result.points[-1]
+            return {
+                **base,
+                "stage": last.stage.value if last.stage else None,
+                "phase": last.phase.value if last.phase else None,
+                "score": last.score,
+                "momentum": last.momentum,
+                "period": last.period,
+                "classified": last.stage is not None,
+            }
+        except Exception:
+            return base
+
+    rows = await asyncio.gather(
+        *[_one(c.iso3, c.name) for c in countries]
+    )
+    payload = {
+        "methodology_status": "experimental",
+        "retrospective": True,
+        "model": model,
+        "model_version": COMPOSITE_MODELS[model].version,
+        "scoring_period": f"{latest.year}-Q{latest.quarter}",
+        "positions": list(rows),
+    }
+    _POSITIONS_CACHE[model] = (time.monotonic(), payload)
+    return payload
 
 
 @router.get("/countries/{iso3}/cycle/history")
@@ -639,18 +747,37 @@ def _load_transition_dataset():
     return transitions, sorted(scored_periods), manifest["generated_at"]
 
 
-async def _strict_eligible_periods(session: AsyncSession) -> int:
-    """Live count: observation rows with ANY strict evidence
-    (provider release_date or Atlas retrieved_at) — both non-null by
-    construction for retrieved_at, so this counts rows eligible under
-    at least one evidence type."""
+async def _observation_evidence_counts(session: AsyncSession) -> dict[str, int]:
+    """Separate raw evidence from strict forecast eligibility."""
     from sqlalchemy import func, select
 
     from app.models import Observation
 
-    return int((await session.execute(
-        select(func.count(Observation.id)).where(Observation.retrieved_at.isnot(None))
-    )).scalar() or 0)
+    rows = await session.execute(
+        select(
+            func.count(Observation.id),
+            func.count(Observation.release_date),
+            func.count(Observation.retrieved_at),
+        )
+    )
+    all_vintages, with_release, with_retrieved = rows.one()
+    return {
+        "observation_vintages": int(all_vintages or 0),
+        "with_provider_release_date": int(with_release or 0),
+        "with_atlas_retrieval": int(with_retrieved or 0),
+    }
+
+
+async def _strict_eligible_periods(session: AsyncSession) -> int:
+    """Fully release-date-safe SCORED periods.
+
+    No production strict-as-of composite run exists yet: Atlas retrieval time
+    proves only that a value existed by retrieval, and current provider rows
+    lack publication dates. Therefore zero scored periods are strictly
+    eligible. Raw observation evidence is exported separately and must never
+    be counted as a scored forecast sample.
+    """
+    return 0
 
 
 def _readiness_json(report) -> dict:
@@ -706,6 +833,7 @@ async def forecast_readiness(session: AsyncSession = Depends(get_session)):
         )
     transitions, scored_periods, generated_at = dataset
     strict_periods = await _strict_eligible_periods(session)
+    evidence_counts = await _observation_evidence_counts(session)
 
     models = {}
     for model_id, model in COMPOSITE_MODELS.items():
@@ -724,9 +852,14 @@ async def forecast_readiness(session: AsyncSession = Depends(get_session)):
             "source": ".dev/MODEL_DIAGNOSTICS.json",
             "generated_at": generated_at,
             "execution_mode": "retrospective_latest_vintage",
+            "observation_evidence": {
+                **evidence_counts,
+                "strict_scored_periods": strict_periods,
+            },
             "warning": (
                 "latest-vintage transitions — NOT release-date-safe; "
-                "usable for readiness evaluation, not backtesting"
+                "usable for readiness evaluation, not backtesting. Raw "
+                "observation vintages are not forecast origins."
             ),
         },
         "models": models,
@@ -762,6 +895,7 @@ async def country_forecast(
 
     dataset = _load_transition_dataset()
     strict_periods = await _strict_eligible_periods(session)
+    evidence_counts = await _observation_evidence_counts(session)
     transitions, scored_periods, generated_at = (
         dataset if dataset else ([], [], None)
     )
@@ -788,5 +922,9 @@ async def country_forecast(
             "eligible_samples": hr.eligible_samples,
             "positive_transitions": hr.positive_transitions,
             "dataset_generated_at": generated_at,
+            "observation_evidence": {
+                **evidence_counts,
+                "strict_scored_periods": strict_periods,
+            },
         },
     }

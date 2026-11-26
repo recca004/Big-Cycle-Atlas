@@ -1,0 +1,818 @@
+{
+  "model_a_equal": {
+    "methodology_status": "experimental",
+    "overall_available": false,
+    "estimated_transition_window": "Not estimable",
+    "blockers": [
+      "eligible_origins",
+      "positive_labels",
+      "sample_size",
+      "strict_availability"
+    ],
+    "total_scored_periods": 31,
+    "total_genuine_transitions": 50,
+    "strict_eligible_periods": 0,
+    "horizons": [
+      {
+        "horizon": "1y",
+        "horizon_label": "1 year",
+        "horizon_quarters": 4,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 24 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 30,
+        "positive_transitions": 24,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 30,
+            "requirement": ">= 40 origins with a fully observable 1y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 50,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "18 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 24,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "2y",
+        "horizon_label": "2 years",
+        "horizon_quarters": 8,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 29,
+        "positive_transitions": 27,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 29,
+            "requirement": ">= 40 origins with a fully observable 2y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 50,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "18 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 27,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "5y",
+        "horizon_label": "5 years",
+        "horizon_quarters": 20,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 26,
+        "positive_transitions": 26,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 26,
+            "requirement": ">= 40 origins with a fully observable 5y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 50,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "18 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 26,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "10y",
+        "horizon_label": "10 years",
+        "horizon_quarters": 40,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 21,
+        "positive_transitions": 21,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 21,
+            "requirement": ">= 40 origins with a fully observable 10y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 50,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "18 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 21,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      }
+    ]
+  },
+  "model_b_domain": {
+    "methodology_status": "experimental",
+    "overall_available": false,
+    "estimated_transition_window": "Not estimable",
+    "blockers": [
+      "eligible_origins",
+      "positive_labels",
+      "sample_size",
+      "strict_availability"
+    ],
+    "total_scored_periods": 31,
+    "total_genuine_transitions": 49,
+    "strict_eligible_periods": 0,
+    "horizons": [
+      {
+        "horizon": "1y",
+        "horizon_label": "1 year",
+        "horizon_quarters": 4,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 30,
+        "positive_transitions": 27,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 30,
+            "requirement": ">= 40 origins with a fully observable 1y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 27,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "2y",
+        "horizon_label": "2 years",
+        "horizon_quarters": 8,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 29 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 29,
+        "positive_transitions": 29,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 29,
+            "requirement": ">= 40 origins with a fully observable 2y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 29,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "5y",
+        "horizon_label": "5 years",
+        "horizon_quarters": 20,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 26,
+        "positive_transitions": 26,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 26,
+            "requirement": ">= 40 origins with a fully observable 5y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 26,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "10y",
+        "horizon_label": "10 years",
+        "horizon_quarters": 40,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 21,
+        "positive_transitions": 21,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 21,
+            "requirement": ">= 40 origins with a fully observable 10y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 21,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      }
+    ]
+  },
+  "model_c_overlap": {
+    "methodology_status": "experimental",
+    "overall_available": false,
+    "estimated_transition_window": "Not estimable",
+    "blockers": [
+      "eligible_origins",
+      "positive_labels",
+      "sample_size",
+      "strict_availability"
+    ],
+    "total_scored_periods": 31,
+    "total_genuine_transitions": 49,
+    "strict_eligible_periods": 0,
+    "horizons": [
+      {
+        "horizon": "1y",
+        "horizon_label": "1 year",
+        "horizon_quarters": 4,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 30 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 27 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 30,
+        "positive_transitions": 27,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 30,
+            "requirement": ">= 40 origins with a fully observable 1y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 27,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "2y",
+        "horizon_label": "2 years",
+        "horizon_quarters": 8,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 29 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 29,
+        "positive_transitions": 29,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 29,
+            "requirement": ">= 40 origins with a fully observable 2y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 29,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "5y",
+        "horizon_label": "5 years",
+        "horizon_quarters": 20,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 26 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 26 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 26,
+        "positive_transitions": 26,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 26,
+            "requirement": ">= 40 origins with a fully observable 5y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 26,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "10y",
+        "horizon_label": "10 years",
+        "horizon_quarters": 40,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 31 (needs >= 100); eligible_origins: 21 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 21 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 21,
+        "positive_transitions": 21,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 31,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 21,
+            "requirement": ">= 40 origins with a fully observable 10y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 49,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "22 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 21,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      }
+    ]
+  },
+  "model_d_comparable": {
+    "methodology_status": "experimental",
+    "overall_available": false,
+    "estimated_transition_window": "Not estimable",
+    "blockers": [
+      "eligible_origins",
+      "positive_labels",
+      "sample_size",
+      "strict_availability"
+    ],
+    "total_scored_periods": 30,
+    "total_genuine_transitions": 39,
+    "strict_eligible_periods": 0,
+    "horizons": [
+      {
+        "horizon": "1y",
+        "horizon_label": "1 year",
+        "horizon_quarters": 4,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 29 (needs >= 40 origins with a fully observable 1y horizon); positive_labels: 23 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 29,
+        "positive_transitions": 23,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 30,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 29,
+            "requirement": ">= 40 origins with a fully observable 1y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 39,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "15 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 23,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "2y",
+        "horizon_label": "2 years",
+        "horizon_quarters": 8,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 28 (needs >= 40 origins with a fully observable 2y horizon); positive_labels: 25 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 28,
+        "positive_transitions": 25,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 30,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 28,
+            "requirement": ">= 40 origins with a fully observable 2y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 39,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "15 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 25,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "5y",
+        "horizon_label": "5 years",
+        "horizon_quarters": 20,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 25 (needs >= 40 origins with a fully observable 5y horizon); positive_labels: 25 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 25,
+        "positive_transitions": 25,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 30,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 25,
+            "requirement": ">= 40 origins with a fully observable 5y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 39,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "15 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 25,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      },
+      {
+        "horizon": "10y",
+        "horizon_label": "10 years",
+        "horizon_quarters": 40,
+        "available": false,
+        "status_label": "Gated \u2014 insufficient evidence",
+        "unavailable_reason": "sample_size: 30 (needs >= 100); eligible_origins: 20 (needs >= 40 origins with a fully observable 10y horizon); positive_labels: 20 (needs >= 30 positive labels at this horizon); strict_availability: 0 (needs >= 40 strict-eligible scored periods)",
+        "eligible_samples": 20,
+        "positive_transitions": 20,
+        "gates": [
+          {
+            "gate": "sample_size",
+            "passed": false,
+            "value": 30,
+            "requirement": ">= 100",
+            "note": null
+          },
+          {
+            "gate": "eligible_origins",
+            "passed": false,
+            "value": 20,
+            "requirement": ">= 40 origins with a fully observable 10y horizon",
+            "note": null
+          },
+          {
+            "gate": "independent_transitions",
+            "passed": true,
+            "value": 39,
+            "requirement": ">= 30 genuine transitions dataset-wide",
+            "note": "15 of them post-2015"
+          },
+          {
+            "gate": "positive_labels",
+            "passed": false,
+            "value": 20,
+            "requirement": ">= 30 positive labels at this horizon",
+            "note": null
+          },
+          {
+            "gate": "strict_availability",
+            "passed": false,
+            "value": 0,
+            "requirement": ">= 40 strict-eligible scored periods",
+            "note": "requires release-date-safe scored periods; raw retrieval timestamps are prospective evidence only"
+          }
+        ]
+      }
+    ]
+  }
+}

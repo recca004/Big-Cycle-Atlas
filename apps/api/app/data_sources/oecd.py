@@ -85,6 +85,7 @@ class OECDAdapter(BaseDataSourceAdapter):
     ):
         self.base_url = base_url or self.DEFAULT_BASE_URL
         self._retrieved_at = retrieved_at or datetime.now(timezone.utc)
+        self.last_retry_after: float | None = None
         self._client = httpx.AsyncClient(
             timeout=timeout, transport=transport, verify=_build_ssl_context()
         )
@@ -127,6 +128,15 @@ class OECDAdapter(BaseDataSourceAdapter):
             )
         return params
 
+    def _capture_retry_after(self, response: httpx.Response) -> None:
+        raw = response.headers.get("Retry-After")
+        self.last_retry_after = None
+        if raw:
+            try:
+                self.last_retry_after = max(0.0, float(raw))
+            except ValueError:
+                self.last_retry_after = None
+
     async def fetch_indicator(
         self,
         country_iso3: str,
@@ -149,6 +159,7 @@ class OECDAdapter(BaseDataSourceAdapter):
         except httpx.HTTPError as exc:
             raise DataSourceHTTPError(f"Request to OECD failed: {exc}") from exc
 
+        self._capture_retry_after(response)
         if response.status_code != 200:
             # Verified live (2026-09-08): a key with no observations returns
             # HTTP 404 with body "NoRecordsFound" (e.g. CHN in DF_PDB). That
@@ -163,6 +174,7 @@ class OECDAdapter(BaseDataSourceAdapter):
             raise DataSourceHTTPError(
                 f"OECD returned HTTP {response.status_code}",
                 status_code=response.status_code,
+                retry_after=self.last_retry_after,
             )
 
         observations = self.parse_response(
@@ -205,11 +217,13 @@ class OECDAdapter(BaseDataSourceAdapter):
             )
         except httpx.HTTPError as exc:
             raise DataSourceHTTPError(f"Request to OECD failed: {exc}") from exc
+        self._capture_retry_after(response)
         if response.status_code != 200:
             raise DataSourceHTTPError(
                 f"OECD returned HTTP {response.status_code} for universe "
                 f"fetch ({external_series_code})",
                 status_code=response.status_code,
+                retry_after=self.last_retry_after,
             )
         return response.text
 

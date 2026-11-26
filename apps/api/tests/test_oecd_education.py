@@ -288,4 +288,4 @@ async def test_seed_updates_existing_series_not_duplicate(client):
         total = (await session.execute(
             select(func.count()).select_from(SourceSeries)
         )).scalar_one()
-        assert total == 33
+        assert total == 46

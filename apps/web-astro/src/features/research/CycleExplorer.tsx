@@ -37,10 +37,9 @@ export function CycleExplorer() {
 
   const composite = cycle.kind === "ready" ? cycle.data : null;
   const hist = history.kind === "ready" ? history.data : null;
-  const latestStage =
-    hist?.points?.filter((p) => p.stage).at(-1)?.stage ?? null;
-  const latestPhase =
-    hist?.points?.filter((p) => p.phase).at(-1)?.phase ?? null;
+  const latestClassified = hist?.points?.filter((p) => p.stage).at(-1) ?? null;
+  const latestStage = latestClassified?.stage ?? null;
+  const latestPhase = latestClassified?.phase ?? null;
 
   return (
     <div className="section-stack">
@@ -88,16 +87,25 @@ export function CycleExplorer() {
           <div className="research-grid">
             <div className="metric-card glass-subtle">
               <p className="label-md text-tertiary">
-                Conditions ({composite.period})
+                Conditions — composite period {composite.period}
               </p>
               <p className="metric-value">
                 {composite.composite.score?.toFixed(1) ?? "unavailable"}
               </p>
               <p className="body-sm">
-                {latestStage ? `stage ${latestStage}` : "no stage"}
+                {latestStage
+                  ? `stage ${latestStage} — classified period ${latestClassified?.period}`
+                  : `no stage classification for period ${composite.period}`}
                 {latestPhase ? ` · phase ${latestPhase}` : ""}
                 {` · coverage ${(composite.composite.coverage_ratio * 100).toFixed(0)}%`}
               </p>
+              {latestStage && latestClassified?.period !== composite.period && (
+                <p className="body-sm" style={{ color: "var(--text-tertiary)" }}>
+                  Composite and classification periods differ — underlying
+                  observations arrive on different release schedules. Results
+                  from different periods are never silently combined.
+                </p>
+              )}
             </div>
             <div>
               <p className="label-md text-tertiary">Weights</p>

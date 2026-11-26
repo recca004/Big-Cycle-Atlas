@@ -1,13 +1,17 @@
 # Project Status
 
-> **CURRENT STATE (2026-11-25, Mission 2 checkpoint):** branch
-> `feature/big-cycle-atlas-astro-v2`, PR #1. 9/17 forces with published
-> levels (8 approved + character_determination LFP proxy, PARTIAL ceiling),
-> military relative_share dimension-only, 7 context/profile forces.
-> normalization-v1.3 / force-aggregation-v1.0. 716 backend tests.
-> Research engine: methodology registry, composite engine, experimental
-> cycle classifier, /api/research/* + Astro /research lab. The milestone
-> log below is historical — superseded figures intentionally retained.
+> **CURRENT STATE (2026-11-26, v1.2 Debt Cycles, Monetary Power & Validation Corrections):**
+> branch `feature/great-power-observatory`. Everything from the V3 phase plus:
+> `validation-questions-v1.2` active (v1.0/v1.1 preserved — 150 rows) with
+> corrected Q08/Q11/Q14/Q17 attribution; protocols `H01B-P1.0` (private credit)
+> and `H01T-P1.0` (threshold heterogeneity) registered and evaluated as
+> append-only retrospective diagnostics; `/research/debt-cycle` and
+> `/research/historical-power` modules with new API routes; 13 new research
+> exports + `DEBT_MONETARY_CYCLE_RESEARCH.md`; H01B primary private-credit
+> diagnostic: 1y AUC 0.719 (year-block CI 0.52–0.85), exploratory —
+> holdout was pre-inspected; public-debt control reproduces H01-P1.0 (0.363).
+> Independent outcome registries (V-Dem/UCDP/COW) investigated and documented
+> but not imported. The milestone log below is historical.
 
 ## Phase
 
@@ -19,7 +23,19 @@ Milestone 3 — COMPLETE (World Bank connector). Milestone 4 — IN PROGRESS (WB
 percentage is tracked — progress is measured by milestone/sprint completion
 and the living DB/test state below.
 
-Current living truth (2026-09-10):
+Current living truth (2026-11-26 V3):
+
+- 21,178 ordinary observations (18,402 distinct latest-vintage); 46 indicators; 46 SourceSeries; 19 DataSources
+- 154,113 research observations (+42,567 added across IMF COFER, BIS FX turnover, BIS LBS, BIS sectoral credit/policy rates, PWT 11.0, Maddison 2023 alongside 111,546 JST R6 rows); 88 crisis events; 2,668 crisis coverage rows
+- 7 theory-registry entries; 6 hypothesis protocols (H01, H01B, H01T, H02–H04); 1,666 prediction ledger rows; 1,666 outcomes; 4 evaluation rows; 9 dataset-rights rows; 12 evidence-status rows
+- 50 active canonical validation questions in `validation-questions-v1.2` (150 rows stored across preserved `v1.0` + `v1.1` + `v1.2`); v1.2 corrections: Q08→insufficient_evidence, Q11/Q14→evaluated_with_no_clear_conclusion, Q17→exploratory_findings
+- Primary Observatory population remains 8 countries; extended research panels cover 18–20 countries plus currency-area entities (`USD, EUR, CNY, GBP, JPY, CHF, INR, DEM, FRF`)
+- All composite model pairs report `independent_evidence: false` (shared underlying observation tables)
+- Strict release-date-safe forecast samples remain 0 (`Not estimable`)
+- Backend pytest 845 passed; Vitest 54 passed; Astro check clean; production build (40 pages) and 61 Playwright + a11y checks passed (incl. /research/debt-cycle + /research/historical-power)
+- Historical milestone figures below remain dated state, not current totals
+
+Historical living truth (2026-09-10):
 
 - 6814 observations
 - 27 indicators

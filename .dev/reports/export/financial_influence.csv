@@ -1,0 +1,892 @@
+country,indicator,indicator_name,unit,frequency,provider,source_series,period,year,value,vintage,release_date,retrieved_at
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1980-01-01,1980,86.4726306508796,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1981-01-01,1981,87.298365332155,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1982-01-01,1982,97.7134885100514,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1983-01-01,1983,98.5355851911654,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1984-01-01,1984,104.881750247949,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1985-01-01,1985,103.045258934522,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1986-01-01,1986,101.458774051592,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1987-01-01,1987,108.061541540317,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1988-01-01,1988,107.313617569198,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1989-01-01,1989,105.667359920712,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1990-01-01,1990,98.2498128539097,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1991-01-01,1991,96.2624047965721,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1992-01-01,1992,96.7499334462691,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1993-01-01,1993,103.097670014895,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1994-01-01,1994,104.794968516469,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1995-01-01,1995,108.298316598226,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1996-01-01,1996,117.723141871478,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1997-01-01,1997,123.534524091266,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1998-01-01,1998,126.562432965884,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1999-01-01,1999,140.658702657454,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2000-01-01,2000,111.143474338935,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2001-01-01,2001,112.455017442451,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2002-01-01,2002,118.993764839138,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2003-01-01,2003,127.802080276395,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2004-01-01,2004,127.579534535768,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2005-01-01,2005,131.208941940939,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2006-01-01,2006,129.059137437475,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2007-01-01,2007,125.15538525638,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2008-01-01,2008,125.276765821504,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2009-01-01,2009,136.814802729325,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2010-01-01,2010,139.155875527803,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2011-01-01,2011,152.471052478327,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2012-01-01,2012,170.040436126763,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2013-01-01,2013,173.831757399075,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2014-01-01,2014,178.346119787014,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2015-01-01,2015,178.327344222199,1,,2026-11-25
+CHE,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2016-01-01,2016,181.877973322694,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1980-01-01,1980,93.9151339906759,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1981-01-01,1981,95.4724214571757,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1982-01-01,1982,110.529181231099,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1983-01-01,1983,115.294716394743,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1984-01-01,1984,116.867765386381,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1985-01-01,1985,121.116510344495,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1986-01-01,1986,122.268464755395,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1987-01-01,1987,128.734126602115,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1988-01-01,1988,134.882604865774,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1989-01-01,1989,141.798359701572,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1990-01-01,1990,142.164879950207,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1991-01-01,1991,141.032473295234,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1992-01-01,1992,141.137107332988,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1993-01-01,1993,140.651095749735,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1994-01-01,1994,142.05628342865,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1995-01-01,1995,144.433488131735,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1996-01-01,1996,142.467999363983,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1997-01-01,1997,144.241756215158,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1998-01-01,1998,142.862587069313,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1999-01-01,1999,149.160661652256,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2000-01-01,2000,140.300296124263,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,134.976056409222,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,135.480432997259,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,139.161484664263,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,140.924568613317,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,144.228510209127,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,147.92858367262,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,151.063646993445,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,143.978771187878,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,152.589138144841,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,151.124117500095,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,153.882471661955,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,159.565695854112,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,161.204723861096,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,161.86455636843,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,150.817573681514,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,153.258505580395,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,155.413773189959,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,153.695266970297,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,156.951364894678,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,167.065418595122,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,159.052789937909,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,151.516853945134,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,150.924131505466,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2024-01-01,2024,149.683133431224,1,,2026-11-25
+CHE,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2025-01-01,2025,152.585598347099,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1980-01-01,1980,34.3483575088292,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1981-01-01,1981,33.6567047692014,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1982-01-01,1982,33.1791648646774,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1983-01-01,1983,37.8828764757048,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1984-01-01,1984,36.0717332109228,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1985-01-01,1985,74.6586963075315,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1986-01-01,1986,79.6646378559599,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1987-01-01,1987,64.1351605390831,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1988-01-01,1988,64.1450292825106,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1989-01-01,1989,80.9195648712716,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1990-01-01,1990,58.4333355344634,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1991-01-01,1991,69.490736964324,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1992-01-01,1992,68.3249421589213,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1993-01-01,1993,98.0239852229873,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1994-01-01,1994,93.1551703451577,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1995-01-01,1995,111.15432606924,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1996-01-01,1996,115.899022171541,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1997-01-01,1997,192.506018612553,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1998-01-01,1998,224.562315568279,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1999-01-01,1999,224.646143278547,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2000-01-01,2000,280.637332685966,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2001-01-01,2001,181.746499011375,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2002-01-01,2002,195.15983277473,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,198.356323580995,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,202.707066374415,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,221.12443583471,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,270.434837824483,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,255.445375086112,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,153.180509272277,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,188.888226056447,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,201.533993303482,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,149.817377904795,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,176.740192679596,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,214.358713724636,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,201.751014435626,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2015-01-01,2015,215.140978803195,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2016-01-01,2016,200.878898545103,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2017-01-01,2017,238.657347417085,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2018-01-01,2018,194.549891066388,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2019-01-01,2019,249.116134565923,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2020-01-01,2020,264.72860495236,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2021-01-01,2021,276.87394523513,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2022-01-01,2022,213.228806628245,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2023-01-01,2023,220.230029295719,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2024-01-01,2024,203.255126625222,1,,2026-11-25
+CHE,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2025-01-01,2025,240.942562527901,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1980-01-01,1980,36.3622516700394,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1981-01-01,1981,39.9963597387101,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1982-01-01,1982,42.0852217846794,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1983-01-01,1983,44.9697472026523,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1984-01-01,1984,49.3458943557676,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1985-01-01,1985,53.4768920238265,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1986-01-01,1986,61.072418039095,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1987-01-01,1987,65.2454473151253,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1988-01-01,1988,63.1451231060606,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1989-01-01,1989,66.2004648460198,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1990-01-01,1990,77.6425730845708,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1991-01-01,1991,84.2688789310812,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1992-01-01,1992,89.1253535368338,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1993-01-01,1993,99.6122245579946,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1994-01-01,1994,96.0257622456623,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1995-01-01,1995,98.5305615302014,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1996-01-01,1996,105.379681099451,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1997-01-01,1997,114.512695543783,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1998-01-01,1998,122.938871865825,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1999-01-01,1999,132.461717092239,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2000-01-01,2000,134.204035985099,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2001-01-01,2001,139.457645645892,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2002-01-01,2002,143.510188392199,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2003-01-01,2003,151.396834348204,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2004-01-01,2004,147.615589302677,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2005-01-01,2005,149.026378631702,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2006-01-01,2006,155.272748838162,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2007-01-01,2007,147.145178873564,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2008-01-01,2008,146.512649012789,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2009-01-01,2009,172.126190075826,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2010-01-01,2010,173.1296534949,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2011-01-01,2011,171.792982609304,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2012-01-01,2012,177.923288760071,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2013-01-01,2013,183.302565918285,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2014-01-01,2014,187.314251294572,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2015-01-01,2015,198.185813599802,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2016-01-01,2016,203.636484929709,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2017-01-01,2017,197.758726760426,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2018-01-01,2018,191.550070069751,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2019-01-01,2019,194.078381206535,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2020-01-01,2020,207.530288794204,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2021-01-01,2021,199.568437256614,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2022-01-01,2022,211.972452276011,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2023-01-01,2023,222.011222933801,1,,2026-11-25
+CHN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2024-01-01,2024,227.669028630796,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1980-01-01,1980,52.5338903757861,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1981-01-01,1981,55.9123910449572,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1982-01-01,1982,56.6962627238279,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1983-01-01,1983,56.8769167012018,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1984-01-01,1984,60.605561954912,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1985-01-01,1985,66.0691758356279,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1986-01-01,1986,75.835000769586,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1987-01-01,1987,77.8994924607046,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1988-01-01,1988,73.8570601851852,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1989-01-01,1989,76.9976757699012,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1990-01-01,1990,86.033020264839,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1991-01-01,1991,88.101074265209,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1992-01-01,1992,86.0530634974135,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1993-01-01,1993,96.5063917341575,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1994-01-01,1994,85.4875547969596,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1995-01-01,1995,83.7832971610429,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1996-01-01,1996,88.9638086375131,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1997-01-01,1997,96.1109753817389,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1998-01-01,1998,104.374364546684,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1999-01-01,1999,109.399598813293,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2000-01-01,2000,109.994877039067,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,108.774792189184,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,115.979390472452,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,123.908441331551,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,116.911160094503,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,110.318412911549,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,107.618484093695,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,104.210464888538,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,100.407960956815,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,122.30114770831,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,124.425608463989,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,121.167093127879,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,126.819734509975,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,131.939045697462,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,137.623726308462,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,149.628832038708,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,153.192761827313,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,152.089747458443,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,154.991560224764,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,162.207566232758,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,179.104100221958,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,173.554518720488,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,181.785162429715,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,189.606708989308,1,,2026-11-25
+CHN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2024-01-01,2024,194.312528264561,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,30.4636713403437,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,22.5643099574266,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,17.3395191009478,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,41.033691444197,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,124.272951099968,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,38.1112495628245,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,68.8524786238225,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,65.0431667921056,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,44.4762288163661,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,42.6276108457102,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,40.5326196174462,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,56.2548972900922,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2015-01-01,2015,72.5835808340326,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2016-01-01,2016,63.9029590501553,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2017-01-01,2017,69.4813653656583,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2018-01-01,2018,44.7058557619521,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2019-01-01,2019,58.8558640185154,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2020-01-01,2020,81.8646786726428,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2021-01-01,2021,79.3192238397069,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2022-01-01,2022,62.6166578891979,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2023-01-01,2023,59.8556765846528,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2024-01-01,2024,62.7654354387815,1,,2026-11-25
+CHN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2025-01-01,2025,79.540605039043,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,111.240170458005,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,110.165745012493,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,108.505942047742,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,105.024726999965,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,103.75352043032,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,100.341277234171,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,95.4983439670839,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,95.4017333003769,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,96.8593447395117,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,86.7703784709742,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,83.2493965947192,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,82.1912777571376,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,80.6847771482794,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,77.7920367770492,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,76.5815039050479,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,75.9886830599554,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,76.0590859587592,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,76.6188414195566,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,77.9656968065859,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,83.809378912227,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,82.7038241987432,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,81.079187544963,1,,2026-11-25
+DEU,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,77.253484574492,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1980-01-01,1980,7.51915892316582,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1981-01-01,1981,7.78976927063543,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1982-01-01,1982,8.84669824569716,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1983-01-01,1983,10.7134674066503,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1984-01-01,1984,10.7682937060332,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1985-01-01,1985,24.2490872987985,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1986-01-01,1986,24.5385258389746,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1987-01-01,1987,16.7670627893431,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1988-01-01,1988,17.8379496304773,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1989-01-01,1989,26.0079267863675,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1990-01-01,1990,19.9819105831424,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1991-01-01,1991,19.7575256941085,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1992-01-01,1992,15.3495629455696,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1993-01-01,1993,21.2460777777209,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1994-01-01,1994,22.5340068453009,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1995-01-01,1995,22.2661742613675,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1996-01-01,1996,26.5215642092546,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1997-01-01,1997,37.1929033514981,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1998-01-01,1998,48.6819029844089,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1999-01-01,1999,64.6905525686686,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2000-01-01,2000,64.5783239896819,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2001-01-01,2001,54.5036012508445,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2002-01-01,2002,32.6307836233992,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,42.5699149347862,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,41.8788117991391,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,41.5476294494245,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,53.7571829522138,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,60.423753481629,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,29.1628668367447,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,37.1521747753963,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,41.2368151824591,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,30.978859078058,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,41.3268938999697,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,50.8561638490348,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,43.8485684872249,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2015-01-01,2015,50.0949082078409,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2016-01-01,2016,48.5197743240464,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2017-01-01,2017,60.079981755637,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2018-01-01,2018,43.2795387525403,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2019-01-01,2019,52.9855978284666,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2020-01-01,2020,57.9517289387954,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2021-01-01,2021,57.4718950080433,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2022-01-01,2022,44.9810563246043,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2023-01-01,2023,47.7411977532533,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2024-01-01,2024,43.6283922696023,1,,2026-11-25
+DEU,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2025-01-01,2025,57.3881572341157,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,77.3883861486517,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,76.5284393068992,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,75.9612449584322,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,76.9744161883116,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,80.324329471898,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,84.3572835148986,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,88.974306564356,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,92.6357426084034,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,95.0966407247871,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,95.8471452301569,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,96.6491919516285,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,96.5785492959372,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,95.8769626871841,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,93.9159081503646,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,94.9454202268228,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,97.4904687619857,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,101.617830234188,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,104.624051971951,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,106.913030586051,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,125.397439701102,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,120.721909947613,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,119.290366998126,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,112.567354839828,1,,2026-11-25
+FRA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2024-01-01,2024,107.58266062477,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1980-01-01,1980,7.86375883099319,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1981-01-01,1981,6.25877246341262,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1982-01-01,1982,5.127705875417,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1983-01-01,1983,6.89242701464061,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1984-01-01,1984,7.82011502513431,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1985-01-01,1985,14.4541296336244,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1986-01-01,1986,20.0721583493571,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1987-01-01,1987,16.7953089965478,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1988-01-01,1988,22.0505006289133,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1989-01-01,1989,33.2588189605752,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1990-01-01,1990,24.7833187953387,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1991-01-01,1991,28.4514998480837,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1992-01-01,1992,23.5567891479851,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1993-01-01,1993,34.6923250152048,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1994-01-01,1994,32.6535821833371,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1995-01-01,1995,31.3401139101389,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1996-01-01,1996,36.645209307141,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1997-01-01,1997,46.5301758427665,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1998-01-01,1998,10.0975379498864,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1999-01-01,1999,101.078467888935,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2000-01-01,2000,106.29519670679,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2001-01-01,2001,85.7182568456558,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2002-01-01,2002,64.7947651646464,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,73.8885242256958,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,73.8987284218355,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,80.2187850031749,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,104.762589273809,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,103.182610132339,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,50.3076872405421,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,72.0789053596651,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,72.2354205712469,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,54.1371348632507,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,67.3941083808224,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,81.7124216877025,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,72.901910850665,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2015-01-01,2015,85.4997526284434,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2016-01-01,2016,87.3963704443473,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2017-01-01,2017,106.197544283094,1,,2026-11-25
+FRA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2018-01-01,2018,85.0578939321398,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1980-01-01,1980,30.7642628251274,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1981-01-01,1981,34.7901220803835,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1982-01-01,1982,36.0898736152286,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1983-01-01,1983,36.3203209897183,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1984-01-01,1984,37.7044266254691,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1985-01-01,1985,38.1701293898246,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1986-01-01,1986,43.4692221266308,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1987-01-01,1987,74.0602897152194,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1988-01-01,1988,77.000259932652,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1989-01-01,1989,83.5431553082724,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1990-01-01,1990,84.9601980271995,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1991-01-01,1991,82.0672689616431,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1992-01-01,1992,56.4625020456135,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1993-01-01,1993,56.1429859240901,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1994-01-01,1994,57.4022136458059,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1995-01-01,1995,60.1876664627492,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1996-01-01,1996,64.4915932308022,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1997-01-01,1997,77.1463654582651,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1998-01-01,1998,89.1125284701697,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1999-01-01,1999,89.1267732656175,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2000-01-01,2000,93.7876948728184,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2001-01-01,2001,98.0027673913686,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2002-01-01,2002,99.0983102944303,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2003-01-01,2003,102.959599271922,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2004-01-01,2004,107.564520176047,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2005-01-01,2005,115.819929321168,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2006-01-01,2006,125.457350075774,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2007-01-01,2007,138.398070797156,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2008-01-01,2008,157.900147108663,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2009-01-01,2009,162.129475382348,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2010-01-01,2010,162.71011110175,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2011-01-01,2011,150.482621483146,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2012-01-01,2012,147.082166986044,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2013-01-01,2013,144.519765569044,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2014-01-01,2014,134.397088665789,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2015-01-01,2015,133.286497622426,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2016-01-01,2016,139.358126055304,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2017-01-01,2017,144.265652372519,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2018-01-01,2018,146.711233726553,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2019-01-01,2019,139.481331456692,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2020-01-01,2020,162.255779585075,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2021-01-01,2021,162.874808623935,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2022-01-01,2022,159.190979752021,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2023-01-01,2023,145.360559908494,1,,2026-11-25
+GBR,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2024-01-01,2024,141.905739831033,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1980-01-01,1980,26.2158726763391,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1981-01-01,1981,30.8601371313897,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1982-01-01,1982,34.0485865664453,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1983-01-01,1983,37.0723310454147,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1984-01-01,1984,42.2356793276187,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1985-01-01,1985,43.9062454918151,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1986-01-01,1986,77.6106416839909,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1987-01-01,1987,82.7710460232693,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1988-01-01,1988,91.5754459408487,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1989-01-01,1989,102.930035021323,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1990-01-01,1990,104.805960306851,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1991-01-01,1991,102.333764425911,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1992-01-01,1992,101.677998125474,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1993-01-01,1993,99.876224683285,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1994-01-01,1994,100.030864363201,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1995-01-01,1995,96.9838148788017,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1996-01-01,1996,99.8119545669975,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1997-01-01,1997,101.512510184771,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1998-01-01,1998,102.081363855748,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1999-01-01,1999,105.111743558731,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2000-01-01,2000,114.294248790913,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,119.336886441347,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,124.533460121241,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,129.216112132892,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,136.667035880836,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,142.664487913407,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,153.471395323663,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,169.583348638841,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,190.146653043876,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,191.129828943179,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,183.762819228277,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,169.61587364494,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,160.010705514872,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,148.906248602627,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,134.605055432715,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,130.08273790259,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,131.480106047871,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,132.333248459152,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,132.783359788981,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,131.443065370417,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,145.572075379344,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,136.161594591011,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,126.126397693252,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,117.978361754605,1,,2026-11-25
+GBR,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2024-01-01,2024,112.372018963535,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1980-01-01,1980,6.3679716380704,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1981-01-01,1981,35.0545659014809,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1982-01-01,1982,38.1034118474699,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1983-01-01,1983,46.1251335172337,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1984-01-01,1984,51.2264332443666,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1985-01-01,1985,72.2432225237442,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1986-01-01,1986,78.6256952228919,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1987-01-01,1987,91.2165455508647,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1988-01-01,1988,78.1792515323323,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1989-01-01,1989,87.855646708278,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1990-01-01,1990,77.7416472133746,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1991-01-01,1991,86.6223568752064,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1992-01-01,1992,80.9456098129937,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1993-01-01,1993,108.375316778903,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1994-01-01,1994,100.249024953167,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1995-01-01,1995,98.5799465675776,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1996-01-01,1996,120.061990896543,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1997-01-01,1997,131.792732085392,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1998-01-01,1998,138.344248296377,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1999-01-01,1999,174.484028978616,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2000-01-01,2000,154.163358398166,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2001-01-01,2001,129.787370279399,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2002-01-01,2002,103.666935952575,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,117.688207622641,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,115.892551894257,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,119.864709043085,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,139.043106242558,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,123.891584653248,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,63.4293117399204,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,115.110417691876,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,107.61553654272,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,109.592307961893,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,121.028819426289,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,141.115984497304,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,115.736607371526,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2021-01-01,2021,118.935321441875,1,,2026-11-25
+GBR,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2022-01-01,2022,97.3198877208869,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1980-01-01,1980,34.4665520003824,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1981-01-01,1981,34.4567940286085,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1982-01-01,1982,36.1051758720796,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1983-01-01,1983,36.2359994537155,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1984-01-01,1984,38.156258303124,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1985-01-01,1985,39.5283397579026,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1986-01-01,1986,41.6611461222068,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1987-01-01,1987,42.6341664425997,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1988-01-01,1988,42.5039894446876,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1989-01-01,1989,42.8163359110211,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1990-01-01,1990,42.1837730850963,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1991-01-01,1991,43.4178555336728,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1992-01-01,1992,44.1444293103205,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1993-01-01,1993,44.8834588757366,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1994-01-01,1994,46.0214654858897,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1995-01-01,1995,43.545308881586,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1996-01-01,1996,44.6894365497978,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1997-01-01,1997,47.4599823040339,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1998-01-01,1998,48.9013068508578,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1999-01-01,1999,51.0649259553469,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2000-01-01,2000,54.6451291831448,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2001-01-01,2001,57.7390677682671,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2002-01-01,2002,62.6195245160236,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2003-01-01,2003,63.1792536038838,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2004-01-01,2004,64.6357080581913,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2005-01-01,2005,65.5481218951747,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2006-01-01,2006,68.0630217874844,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2007-01-01,2007,72.2804239219053,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2008-01-01,2008,77.3729561105341,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2009-01-01,2009,79.0751963448471,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2010-01-01,2010,77.67995244357,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2011-01-01,2011,78.8373112865613,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2012-01-01,2012,76.9131885205749,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2013-01-01,2013,78.1821717320597,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2014-01-01,2014,77.8993537588766,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2015-01-01,2015,78.0119105841633,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2016-01-01,2016,74.5492653519617,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2017-01-01,2017,74.1441893624702,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2018-01-01,2018,74.097824604711,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2019-01-01,2019,76.98188096813,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2020-01-01,2020,87.6766726830318,1,,2026-11-25
+IND,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2021-01-01,2021,82.1020348312414,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1980-01-01,1980,20.5434589538871,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1981-01-01,1981,21.2254624473987,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1982-01-01,1982,22.6878989175431,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1983-01-01,1983,22.8926687647968,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1984-01-01,1984,24.2825746445338,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1985-01-01,1985,24.5636651595543,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1986-01-01,1986,25.8010010963318,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1987-01-01,1987,25.3823595128242,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1988-01-01,1988,25.2751174407626,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1989-01-01,1989,26.5898140097507,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1990-01-01,1990,24.9164565697186,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1991-01-01,1991,23.8217444526828,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1992-01-01,1992,24.6982402507395,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1993-01-01,1993,23.8320553867162,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1994-01-01,1994,23.6473414046455,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1995-01-01,1995,22.5107747023582,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1996-01-01,1996,23.4024420368578,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1997-01-01,1997,23.5553253462263,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1998-01-01,1998,23.6777468578745,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1999-01-01,1999,25.4228622073471,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2000-01-01,2000,28.3395511575183,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,28.6194154254102,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,32.3064890735537,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,31.6262656186491,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,36.1918038545968,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,40.0679804780573,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,43.6277524334268,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,45.6277647457138,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,49.559366687116,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,48.1244479112046,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,50.5553749785224,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,51.2892331325447,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,51.8885076473464,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,52.385709516972,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,51.8821873589628,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,51.8675240772049,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,38.2036507912231,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,38.1707138624147,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,38.8975254010362,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,38.73794497616,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,40.7867848551821,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,36.8920885102897,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,38.1859763563586,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,40.8940758962905,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2024-01-01,2024,41.6079694330612,1,,2026-11-25
+IND,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2025-01-01,2025,44.0305399373406,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2000-01-01,2000,48.1747500764228,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2001-01-01,2001,30.6467519464107,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2002-01-01,2002,33.4380606971708,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,50.8465706710106,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,58.597294477825,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,76.1521145313341,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,95.2151519574149,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,161.239453726325,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,66.003104287215,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,101.894485676839,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,105.182951703662,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,68.2700641693541,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,76.0772432428783,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,68.1342663963192,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,82.7172077979209,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2015-01-01,2015,82.9615370858036,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2016-01-01,2016,76.0981248580096,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2017-01-01,2017,96.3987783868431,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2018-01-01,2018,153.160482470967,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2019-01-01,2019,76.2695069175453,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2020-01-01,2020,95.4245016969537,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2021-01-01,2021,112.02132346833,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2022-01-01,2022,104.228639351922,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2023-01-01,2023,123.971644540276,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2024-01-01,2024,136.443816484113,1,,2026-11-25
+IND,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2025-01-01,2025,266.92119852826,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1980-01-01,1980,134.019248777662,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1981-01-01,1981,139.685675163132,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1982-01-01,1982,145.263838106853,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1983-01-01,1983,150.685069272927,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1984-01-01,1984,153.478686735244,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1985-01-01,1985,156.734844046554,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1986-01-01,1986,163.042070330153,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1987-01-01,1987,170.766946340347,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1988-01-01,1988,173.582955384005,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1989-01-01,1989,179.8983310169,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1990-01-01,1990,178.765309967189,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1991-01-01,1991,177.118150022139,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1992-01-01,1992,178.322321994797,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1993-01-01,1993,186.078767067814,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1994-01-01,1994,191.434668819731,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1995-01-01,1995,195.930839311756,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1996-01-01,1996,197.514077915097,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1997-01-01,1997,206.016294906551,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1998-01-01,1998,216.704533741699,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1999-01-01,1999,226.613164288586,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2000-01-01,2000,225.714728959497,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2001-01-01,2001,188.171842883456,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2002-01-01,2002,192.424606135192,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2003-01-01,2003,194.259746765349,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2004-01-01,2004,193.850972094747,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2005-01-01,2005,193.271046541661,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2006-01-01,2006,190.763107557634,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2007-01-01,2007,190.634225723693,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2008-01-01,2008,196.316583651351,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2009-01-01,2009,214.095334103517,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2010-01-01,2010,213.350580899816,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2011-01-01,2011,223.520020273695,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2012-01-01,2012,226.47929635118,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2013-01-01,2013,230.344281146385,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2014-01-01,2014,230.810828002808,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2015-01-01,2015,228.77893667078,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2016-01-01,2016,234.557133057036,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2017-01-01,2017,238.806145254362,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2018-01-01,2018,242.620523285897,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2019-01-01,2019,246.472200168579,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2020-01-01,2020,273.088126793081,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2021-01-01,2021,271.574168608892,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2022-01-01,2022,272.358226337945,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2023-01-01,2023,264.113886756067,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2024-01-01,2024,256.724826796757,1,,2026-11-25
+JPN,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2025-01-01,2025,246.778137129339,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1980-01-01,1980,121.938630741089,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1981-01-01,1981,124.857867259534,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1982-01-01,1982,129.826974211827,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1983-01-01,1983,134.142261901714,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1984-01-01,1984,136.849457136246,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1985-01-01,1985,140.338412466508,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1986-01-01,1986,145.91047777134,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1987-01-01,1987,161.203367644633,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1988-01-01,1988,169.907424481771,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1989-01-01,1989,178.155291623351,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1990-01-01,1990,183.131254703793,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1991-01-01,1991,182.807241098565,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1992-01-01,1992,186.447378576269,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1993-01-01,1993,189.810312869705,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1994-01-01,1994,191.553133358291,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1995-01-01,1995,190.332712994983,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1996-01-01,1996,189.725204443054,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1997-01-01,1997,202.643347425556,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1998-01-01,1998,211.895476565606,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1999-01-01,1999,215.299459602765,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2000-01-01,2000,205.749576550972,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,177.60004048631,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,175.273915326861,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,175.44585013008,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,169.100287467634,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,169.444394821443,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,167.53837644247,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,161.492521362224,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,159.383518006942,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,166.633704587276,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,158.536780912519,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,157.84603964545,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,157.913585716488,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,161.247027275892,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,160.88072749082,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,159.337649742642,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,160.541780446664,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,165.377575342538,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,164.291566334917,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,172.16150378254,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,189.481448700752,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,187.981075679151,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,186.54834684731,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,186.423438354763,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2024-01-01,2024,187.972158189667,1,,2026-11-25
+JPN,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2025-01-01,2025,188.725562792304,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1980-01-01,1980,32.8846651487543,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1981-01-01,1981,32.8715423133354,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1982-01-01,1982,35.2796711894496,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1983-01-01,1983,42.0652745204877,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1984-01-01,1984,46.8947994172309,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1985-01-01,1985,65.0800801474287,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1986-01-01,1986,82.395504065924,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1987-01-01,1987,103.463814577581,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1988-01-01,1988,118.72089879086,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1989-01-01,1989,134.188034539178,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1990-01-01,1990,90.025788982626,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1991-01-01,1991,80.6922968782168,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1992-01-01,1992,55.4761396749758,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1993-01-01,1993,62.7374187658689,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1994-01-01,1994,70.3790993119085,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1995-01-01,1995,62.8639483771911,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1996-01-01,1996,60.1367885801957,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1997-01-01,1997,45.5342828414601,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1998-01-01,1998,58.7792223542597,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1999-01-01,1999,95.0173558482956,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2000-01-01,2000,62.6136988673042,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2001-01-01,2001,51.0167522686997,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2002-01-01,2002,48.7358680988777,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,64.5709925284669,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,71.9960566684748,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,93.7906217560041,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,99.2687248330119,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,93.6482320199346,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,60.3814858968213,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,61.9491699156553,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,65.8646262325499,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,52.9569038140964,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,54.9248375717532,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,86.1705838607882,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,87.8099122589042,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2015-01-01,2015,107.949838400187,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2016-01-01,2016,96.9658143386727,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2017-01-01,2017,123.512090450451,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2018-01-01,2018,102.765022446672,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2019-01-01,2019,118.020633625372,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2020-01-01,2020,129.465480808821,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2021-01-01,2021,125.227453889557,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2022-01-01,2022,120.9645737572,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2023-01-01,2023,140.237275891347,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2024-01-01,2024,150.612627620477,1,,2026-11-25
+JPN,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2025-01-01,2025,171.595579915317,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1980-01-01,1980,69.5063918577878,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1981-01-01,1981,69.3976784206999,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1982-01-01,1982,73.2369775724485,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1983-01-01,1983,72.9613724457477,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1984-01-01,1984,73.8990586765002,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1985-01-01,1985,74.4692242115023,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1986-01-01,1986,77.1709336407235,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1987-01-01,1987,75.7492716594425,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1988-01-01,1988,75.0041917807487,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1989-01-01,1989,73.3197083086653,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1990-01-01,1990,71.2235190027274,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1991-01-01,1991,70.0032428680854,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1992-01-01,1992,66.0133609863432,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1993-01-01,1993,63.1321973026696,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1994-01-01,1994,59.658847332514,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1995-01-01,1995,60.8150738983702,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1996-01-01,1996,62.077087401875,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1997-01-01,1997,63.1026078302994,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1998-01-01,1998,65.4584220336789,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,1999-01-01,1999,67.4524242740136,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2000-01-01,2000,68.5141438570779,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2001-01-01,2001,71.6362791527051,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2002-01-01,2002,72.4487187841909,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2003-01-01,2003,72.1574582749613,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2004-01-01,2004,71.5496408003688,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2005-01-01,2005,72.4515020115068,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2006-01-01,2006,74.5361185496312,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2007-01-01,2007,79.4778659454736,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2008-01-01,2008,84.2543810723865,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2009-01-01,2009,90.6906840737303,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2010-01-01,2010,84.8487824908965,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2011-01-01,2011,87.3236637727481,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2012-01-01,2012,87.9168524173424,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2013-01-01,2013,88.4631681340767,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2014-01-01,2014,89.2001588850565,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2015-01-01,2015,88.549501953734,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2016-01-01,2016,89.4647151888467,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2017-01-01,2017,89.9017920480885,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2018-01-01,2018,88.7964841162556,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2019-01-01,2019,92.3005594054721,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2020-01-01,2020,111.204684153729,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2021-01-01,2021,114.755152590099,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2022-01-01,2022,103.593363094519,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2023-01-01,2023,98.8152626539929,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2024-01-01,2024,98.7562585226237,1,,2026-11-25
+USA,BROAD_MONEY_GDP,Broad money (% of GDP),% of GDP,annual,world_bank,FM.LBL.BMNY.GD.ZS,2025-01-01,2025,99.7158460103202,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1980-01-01,1980,94.3548659876566,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1981-01-01,1981,89.2380076705677,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1982-01-01,1982,92.610926323638,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1983-01-01,1983,96.109272798397,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1984-01-01,1984,96.7960678673929,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1985-01-01,1985,103.684613019629,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1986-01-01,1986,110.161710524439,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1987-01-01,1987,112.619055040487,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1988-01-01,1988,113.690862126055,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1989-01-01,1989,117.539952502031,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1990-01-01,1990,114.791425711226,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1991-01-01,1991,119.177672922602,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1992-01-01,1992,118.243163763414,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1993-01-01,1993,120.994532191545,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1994-01-01,1994,120.183035270976,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1995-01-01,1995,130.168599500427,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1996-01-01,1996,137.665711099743,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1997-01-01,1997,146.57986221463,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1998-01-01,1998,157.804656954083,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,1999-01-01,1999,171.614264671168,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2000-01-01,2000,162.620241986949,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2001-01-01,2001,170.849434711063,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2002-01-01,2002,162.404344473509,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2003-01-01,2003,177.400119261882,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2004-01-01,2004,184.805504038328,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2005-01-01,2005,188.633073823051,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2006-01-01,2006,198.283902773609,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2007-01-01,2007,206.35133732187,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2008-01-01,2008,185.125593254636,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2009-01-01,2009,187.479963222695,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2010-01-01,2010,181.920666527452,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2011-01-01,2011,174.474559125537,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2012-01-01,2012,175.443843579456,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2013-01-01,2013,184.162921715823,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2014-01-01,2014,184.794021331949,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2015-01-01,2015,183.632163440252,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2016-01-01,2016,186.327051044306,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2017-01-01,2017,194.090996653847,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2018-01-01,2018,183.054001756212,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2019-01-01,2019,194.735258917444,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2020-01-01,2020,217.264343389463,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2021-01-01,2021,219.12594011019,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2022-01-01,2022,187.087355429321,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2023-01-01,2023,191.075390105862,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2024-01-01,2024,195.875075677875,1,,2026-11-25
+USA,DOMESTIC_CREDIT_PRIVATE_GDP,Domestic credit to private sector (% of GDP),% of GDP,annual,world_bank,FS.AST.PRVT.GD.ZS,2025-01-01,2025,201.266130729677,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1980-01-01,1980,47.5901889436452,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1981-01-01,1981,39.3995804855629,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1982-01-01,1982,43.5692922011526,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1983-01-01,1983,49.7802829799798,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1984-01-01,1984,39.6808634210361,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1985-01-01,1985,53.0276339203301,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1986-01-01,1986,55.4180500568714,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1987-01-01,1987,52.1453262110947,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1988-01-01,1988,53.0883913836085,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1989-01-01,1989,59.9518858192208,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1990-01-01,1990,51.8761327916951,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1991-01-01,1991,67.5464122300783,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1992-01-01,1992,69.7180371475234,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1993-01-01,1993,76.562432866729,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1994-01-01,1994,70.5032725713837,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1995-01-01,1995,90.9980943091193,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1996-01-01,1996,105.046065202533,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1997-01-01,1997,125.561966864206,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1998-01-01,1998,142.588998542065,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,1999-01-01,1999,153.432909307403,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2000-01-01,2000,147.379004408566,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2001-01-01,2001,132.146662484694,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2002-01-01,2002,101.146680955115,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2003-01-01,2003,124.5260586831,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2004-01-01,2004,133.612707285698,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2005-01-01,2005,130.382756468822,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2006-01-01,2006,141.644203505563,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2007-01-01,2007,137.639671145155,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2008-01-01,2008,78.4724852540938,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2009-01-01,2009,104.138803474248,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2010-01-01,2010,114.848062900779,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2011-01-01,2011,100.262665025271,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2012-01-01,2012,114.85399080963,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2013-01-01,2013,142.380811961222,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2014-01-01,2014,149.536476770003,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2015-01-01,2015,137.018385168116,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2016-01-01,2016,145.452418312172,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2017-01-01,2017,163.780010169231,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2018-01-01,2018,147.344852587919,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2019-01-01,2019,158.243991893772,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2020-01-01,2020,194.476328849197,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2021-01-01,2021,204.624734627868,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2022-01-01,2022,154.667347288277,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2023-01-01,2023,176.111924063689,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2024-01-01,2024,212.252227889994,1,,2026-11-25
+USA,STOCK_MARKET_CAP_GDP,Market capitalization of listed domestic companies (% of GDP),% of GDP,annual,world_bank,CM.MKT.LCAP.GD.ZS,2025-01-01,2025,224.04464850161,1,,2026-11-25

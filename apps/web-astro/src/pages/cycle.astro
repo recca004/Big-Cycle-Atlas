@@ -13,7 +13,7 @@ const PHASES = [
 ];
 ---
 
-<BaseLayout title="Big Cycle">
+<BaseLayout title="Big Cycle" fullWidth>
   <header class="page-header">
     <p class="label-md text-tertiary">Big Cycle explorer</p>
     <h1 class="headline-lg">Big Cycle</h1>
@@ -56,9 +56,12 @@ const PHASES = [
     <h2 class="headline-sm">Production status</h2>
     <p class="body-sm">
       There is no approved production cycle score. The classifications above
-      are experimental and retrospective (backtest_safe=false) until Mission 4
-      release-date validation completes. Approved force scores remain
-      available on each country's page and are unaffected by this research.
+      are experimental and retrospective (backtest_safe=false): input
+      observations are not yet restricted to information genuinely available
+      at each historical scoring date, so retrospective classifications may
+      embed information published later than the scored period. Approved
+      force scores remain available on each country's page and are unaffected
+      by this research.
     </p>
   </GlassCard>
 </BaseLayout>

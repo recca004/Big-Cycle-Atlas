@@ -4,6 +4,7 @@
 @import "./liquid-glass.css";
 @import "./typography.css";
 @import "./components.css";
+@import "./observatory.css";
 
 html {
   font-family: var(--font-sans);

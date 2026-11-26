@@ -2,6 +2,12 @@
  *  Cancellable, retry-limited (network errors only), timeout-guarded. */
 
 import type {
+  FoundationEvaluationsResponse,
+  ValidationQuestionResponse,
+  ValidationQuestionsResponse,
+  ValidationSummaryResponse,
+} from "@/types/validation";
+import type {
   Country,
   ObservationPage,
   ForceCoverageData,
@@ -219,6 +225,98 @@ export function fetchCountryCycle(
   );
 }
 
+export function fetchCyclePositions(
+  model: string,
+  opts?: FetchOptions,
+): Promise<import("@/types/research").CyclePositionsResponse> {
+  // Single-request fan-out — the server computes every country's latest
+  // stage concurrently (~20-30s), so allow a longer timeout.
+  return request<import("@/types/research").CyclePositionsResponse>(
+    `/api/research/cycle/positions?model=${encodeURIComponent(model)}`,
+    { timeoutMs: 60_000, ...opts },
+  );
+}
+
+export function fetchObservatoryOverview(
+  opts?: FetchOptions & { model?: string; startYear?: number },
+): Promise<import("@/types/observatory").ObservatoryOverview> {
+  const { model = "model_b_domain", startYear = 1980, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ model, start_year: String(startYear) });
+  // First call computes all country composites server-side (~20-30s).
+  return request<import("@/types/observatory").ObservatoryOverview>(
+    `/api/observatory/overview?${q}`,
+    { timeoutMs: 90_000, ...rest },
+  );
+}
+
+export function postObservatoryRefresh(
+  opts?: FetchOptions & { model?: string },
+): Promise<import("@/types/observatory").RefreshJob> {
+  const { model = "model_b_domain", ...rest } = opts ?? {};
+  return request<import("@/types/observatory").RefreshJob>(
+    "/api/observatory/refresh",
+    { method: "POST", body: { model }, timeoutMs: 30_000, ...rest },
+  );
+}
+
+export function fetchObservatoryTransition(
+  opts?: FetchOptions & { model?: string; incumbent?: string; challenger?: string; startYear?: number },
+): Promise<import("@/types/observatory").TransitionMonitor> {
+  const {
+    model = "model_b_domain",
+    incumbent = "USA",
+    challenger = "CHN",
+    startYear = 1980,
+    ...rest
+  } = opts ?? {};
+  const q = new URLSearchParams({ model, incumbent, challenger, start_year: String(startYear) });
+  return request<import("@/types/observatory").TransitionMonitor>(
+    `/api/observatory/transition?${q}`,
+    { timeoutMs: 90_000, ...rest },
+  );
+}
+
+export function fetchObservatoryModelComparison(
+  opts?: FetchOptions & { startYear?: number; period?: string },
+): Promise<import("@/types/observatory").ObservatoryModelComparison> {
+  const { startYear = 1980, period, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ start_year: String(startYear) });
+  if (period) q.set("period", period);
+  return request<import("@/types/observatory").ObservatoryModelComparison>(
+    `/api/observatory/model-comparison?${q}`,
+    { timeoutMs: 90_000, ...rest },
+  );
+}
+
+export function fetchObservatorySeries(
+  opts?: FetchOptions & { indicator?: string; startYear?: number; worldShare?: boolean },
+): Promise<import("@/types/observatory").MeasureHistory> {
+  const { indicator = "GDP_CURRENT_USD", startYear = 1970, worldShare = false, ...rest } = opts ?? {};
+  const q = new URLSearchParams({ indicator, start_year: String(startYear), world_share: String(worldShare) });
+  return request<import("@/types/observatory").MeasureHistory>(
+    `/api/observatory/series?${q}`,
+    { timeoutMs: 30_000, ...rest },
+  );
+}
+
+export function fetchObservatoryCoverage(
+  opts?: FetchOptions,
+): Promise<import("@/types/observatory").ObservatoryCoverage> {
+  return request<import("@/types/observatory").ObservatoryCoverage>(
+    "/api/observatory/coverage",
+    { timeoutMs: 30_000, ...opts },
+  );
+}
+
+export function fetchObservatoryRefreshStatus(
+  opts?: FetchOptions,
+): Promise<import("@/types/observatory").RefreshJob> {
+  return request<import("@/types/observatory").RefreshJob>(
+    "/api/observatory/refresh/status",
+    opts,
+  );
+}
+
 export function fetchCycleHistory(
   iso3: string,
   model: string,
@@ -269,10 +367,60 @@ export function fetchModelDiagnostics(
   );
 }
 
+export interface ResearchVersions {
+  normalization_version: string;
+  force_aggregation_version: string;
+  app_version: string;
+  composite_models: { model_id: string; version: string }[];
+  backtest_safe: boolean;
+}
+
+export function fetchResearchVersions(
+  opts?: FetchOptions,
+): Promise<ResearchVersions> {
+  return request<ResearchVersions>("/api/research/versions", opts);
+}
+
 export function fetchResearchProgress(
   opts?: FetchOptions,
 ): Promise<ResearchProgress> {
   return request<ResearchProgress>("/api/research/progress", opts);
+}
+
+export function fetchValidationQuestions(
+  opts?: FetchOptions,
+): Promise<ValidationQuestionsResponse> {
+  return request<ValidationQuestionsResponse>(
+    "/api/research/foundation/validation/questions", opts,
+  );
+}
+
+export function fetchValidationSummary(
+  opts?: FetchOptions,
+): Promise<ValidationSummaryResponse> {
+  return request<ValidationSummaryResponse>(
+    "/api/research/foundation/validation/summary", opts,
+  );
+}
+
+export function fetchValidationQuestion(
+  questionCode: string,
+  entity?: string,
+  opts?: FetchOptions,
+): Promise<ValidationQuestionResponse> {
+  const q = entity ? `?entity=${encodeURIComponent(entity)}` : "";
+  return request<ValidationQuestionResponse>(
+    `/api/research/foundation/validation/questions/${encodeURIComponent(questionCode)}${q}`,
+    opts,
+  );
+}
+
+export function fetchFoundationEvaluations(
+  opts?: FetchOptions,
+): Promise<FoundationEvaluationsResponse> {
+  return request<FoundationEvaluationsResponse>(
+    "/api/research/foundation/evaluations", opts,
+  );
 }
 
 export function fetchIndicatorUncertaintyHistory(
@@ -564,5 +712,39 @@ export function searchEntities(
   return request(
     `/api/search/?q=${encodeURIComponent(q)}&limit=8`,
     opts,
+  );
+}
+
+import type {
+  CurrencyPowerOverview,
+  DebtCycleOverview,
+  HistoricalPowerOverview,
+} from "@/types/research_modules";
+
+export function fetchDebtCycleOverview(
+  entities?: string[],
+  opts?: FetchOptions,
+): Promise<DebtCycleOverview> {
+  const q = entities?.length
+    ? `?entities=${encodeURIComponent(entities.join(","))}`
+    : "";
+  return request<DebtCycleOverview>(
+    `/api/research/foundation/debt-cycle/overview${q}`, opts,
+  );
+}
+
+export function fetchCurrencyPowerOverview(
+  opts?: FetchOptions,
+): Promise<CurrencyPowerOverview> {
+  return request<CurrencyPowerOverview>(
+    "/api/research/foundation/currency-power/overview", opts,
+  );
+}
+
+export function fetchHistoricalPowerOverview(
+  opts?: FetchOptions,
+): Promise<HistoricalPowerOverview> {
+  return request<HistoricalPowerOverview>(
+    "/api/research/foundation/historical-power/overview", opts,
   );
 }

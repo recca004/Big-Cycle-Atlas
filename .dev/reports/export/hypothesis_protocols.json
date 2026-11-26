@@ -1,0 +1,389 @@
+{
+  "count": 6,
+  "protocols": [
+    {
+      "hypothesis_code": "H01",
+      "protocol_version": "H01-P1.0",
+      "protocol_type": "retrospective_research_protocol",
+      "title": "Debt/credit burdens and subsequent systemic banking crises",
+      "definition": "Higher private-credit burden and weaker external positions are associated with higher later systemic-banking-crisis onset risk.",
+      "scientific_rationale": "Long debt-cycle mechanisms predict repayment stress before financial-system breakdown.",
+      "target_outcome": "source-defined systemic banking crisis onset (initially JST crisisJST=1)",
+      "research_population": {
+        "population_code": "jst_extended_research_v1",
+        "entity_type": "country",
+        "selection_rule": "predefined JST R6 source coverage; outcomes were not used to select countries"
+      },
+      "predictor_variables": {
+        "primary": [
+          "debtgdp"
+        ],
+        "secondary": [
+          "ca",
+          "tloans",
+          "money",
+          "stir"
+        ],
+        "transformation": "lagged level and five-year change; source units preserved"
+      },
+      "information_cutoff_rules": {
+        "execution_mode": "retrospective_latest_vintage",
+        "strict_release_safety": false,
+        "leakage_guard": "predictor period < outcome year; dataset-version fixed to JST R6"
+      },
+      "forecast_horizons": {
+        "years": [
+          1,
+          2,
+          5
+        ],
+        "event": "onset only; ongoing-crisis state is separate"
+      },
+      "measurement_method": {
+        "model": "univariate percentile-score benchmark",
+        "benchmark": "country-year base rate",
+        "split": "chronological train/test at 1990"
+      },
+      "training_periods": {
+        "start": 1870,
+        "end": 1989
+      },
+      "validation_periods": {
+        "type": "held_out_chronological_test",
+        "start": 1990,
+        "end": 2020
+      },
+      "test_population": {
+        "included_entities": "JST R6 covered countries",
+        "minimum_entity_years": 20
+      },
+      "evaluation_metrics": [
+        "auc",
+        "base_rate",
+        "crisis_precision_at_top_quintile",
+        "true_positive_rate",
+        "false_positive_rate"
+      ],
+      "minimum_evidence": {
+        "minimum_test_events": 10,
+        "minimum_entities": 10
+      },
+      "falsification_criteria": "No out-of-sample discrimination above base rate or an exploratory-only result is evidence inconsistent with predictive value.",
+      "known_limitations": [
+        "retrospective dataset, not real-time vintages",
+        "annual onset only",
+        "correlated crisis episodes",
+        "JST covers advanced economies only",
+        "IMF 2026 dataset unavailable at implementation time"
+      ],
+      "protocol_status": "exploratory",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "2b60a8a2fa61584002779ab09c811eee647282ce7b5fe0823410f7665f4c941b",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "hypothesis_code": "H01B",
+      "protocol_version": "H01B-P1.0",
+      "protocol_type": "retrospective_research_protocol",
+      "title": "Private-credit expansion and subsequent systemic banking crises",
+      "definition": "Private non-financial credit expansion (distinct from public debt) is associated with higher later systemic-banking-crisis onset risk.",
+      "scientific_rationale": "Long debt-cycle mechanisms emphasise private-sector leverage accumulation; the registered H01-P1.0 public-debt protocol cannot stand in as a test of private credit.",
+      "target_outcome": "source-defined systemic banking crisis onset (JST crisisJST=1), same registry as H01-P1.0",
+      "research_population": {
+        "population_code": "jst_extended_research_v1",
+        "entity_type": "country",
+        "selection_rule": "predefined JST R6 source coverage; identical panel as H01-P1.0 for comparability"
+      },
+      "predictor_variables": {
+        "primary": [
+          "tloans/gdp five-year change"
+        ],
+        "candidates": [
+          "tloans/gdp level",
+          "thh/gdp five-year change",
+          "tbus/gdp five-year change",
+          "tmort/gdp five-year change",
+          "credit-to-GDP gap vs trailing 10y trend",
+          "debt-service proxy (tloans/gdp x stir)",
+          "real house-price 3y growth",
+          "real long-term rate"
+        ],
+        "controls": [
+          "debtgdp five-year change (H01-P1.0 reference)",
+          "public interest burden proxy",
+          "income-residualised credit growth"
+        ],
+        "transformation": "lagged level and changes measured strictly before outcome year; source units preserved"
+      },
+      "information_cutoff_rules": {
+        "execution_mode": "retrospective_latest_vintage",
+        "strict_release_safety": false,
+        "leakage_guard": "predictor period < outcome year; dataset-version fixed to JST R6",
+        "holdout_integrity_disclosure": "The 1990-2020 holdout was already used for exploratory private-credit predictor inspection during the H01-P1.0 forensic audit; it is NOT an untouched confirmatory holdout for predictor selection. All results are retrospective diagnostics."
+      },
+      "forecast_horizons": {
+        "years": [
+          1,
+          2,
+          5
+        ],
+        "event": "onset only"
+      },
+      "measurement_method": {
+        "model": "univariate percentile-score benchmark per predictor",
+        "benchmark": "unconditional country-year base rate + public-debt control",
+        "split": "chronological train/test at 1990",
+        "cluster_handling": "crisis episodes grouped from globally co-moving onset years (max gap 3y); leave-one-episode-out, leave-one-country-out, decade time-blocks, ex-2007-2008 sensitivity, year-block bootstrap intervals"
+      },
+      "training_periods": {
+        "start": 1870,
+        "end": 1989
+      },
+      "validation_periods": {
+        "type": "held_out_chronological_test_previously_inspected",
+        "start": 1990,
+        "end": 2020
+      },
+      "test_population": {
+        "included_entities": "JST R6 covered countries",
+        "minimum_entity_years": 20
+      },
+      "evaluation_metrics": [
+        "roc_auc",
+        "pr_auc",
+        "base_rate",
+        "precision",
+        "recall",
+        "false_positive_rate",
+        "warning_frequency",
+        "n",
+        "distinct_episodes",
+        "independent_countries",
+        "bootstrap_intervals"
+      ],
+      "minimum_evidence": {
+        "minimum_test_events": 10,
+        "minimum_entities": 10,
+        "minimum_independent_episodes": 3
+      },
+      "falsification_criteria": "No out-of-sample discrimination above the public-debt control or base rate is evidence inconsistent with private-credit predictive value; positive retrospective discrimination remains exploratory, not confirmatory.",
+      "known_limitations": [
+        "retrospective dataset, not real-time vintages",
+        "annual onset only; 13 of 19 held-out events in 2007-2008 and 4 in 1991 form just 3 independent episodes",
+        "predictor family partially pre-screened on the same holdout; no untouched confirmatory sample remains in JST R6",
+        "debt-service and credit-gap measures are derived proxies, not official BIS DSR/gap series",
+        "JST covers advanced economies only"
+      ],
+      "protocol_status": "exploratory",
+      "registered_at": "2026-11-26T09:33:49.899472+00:00",
+      "content_checksum": "92363ae24f639d76c9615c36e60a610a6872e5fa64ce63442cda2141d0ad403a",
+      "created_at": "2026-11-26T09:33:49.982754+00:00"
+    },
+    {
+      "hypothesis_code": "H01T",
+      "protocol_version": "H01T-P1.0",
+      "protocol_type": "retrospective_research_protocol",
+      "title": "Debt/GDP level thresholds and crisis heterogeneity",
+      "definition": "Dedicated research into whether debt-to-GDP LEVEL thresholds (public or private) carry reproducible crisis information \u2014 across countries, eras, monetary regimes and debt type \u2014 instead of the H01-P1.0 change-based test.",
+      "scientific_rationale": "Q14 asks for a reproducible threshold; the change-based H01-P1.0 protocol never tested levels and could not answer it.",
+      "target_outcome": "source-defined systemic banking crisis onset (JST crisisJST=1)",
+      "research_population": {
+        "population_code": "jst_extended_research_v1",
+        "entity_type": "country",
+        "selection_rule": "predefined JST R6 coverage"
+      },
+      "predictor_variables": {
+        "candidates": [
+          "debtgdp level",
+          "tloans/gdp level"
+        ],
+        "transformation": "lagged level at origin; pooled train p80 vs per-country p80 thresholds; regime and era splits"
+      },
+      "information_cutoff_rules": {
+        "execution_mode": "retrospective_latest_vintage",
+        "strict_release_safety": false,
+        "leakage_guard": "thresholds estimated on pre-1990 train only; no threshold fitted to maximise test performance"
+      },
+      "forecast_horizons": {
+        "years": [
+          1
+        ]
+      },
+      "measurement_method": {
+        "model": "pooled vs within-country train-percentile level thresholds; pegged/non-pegged regime split; gold/interwar/Bretton-Woods/fiat era split",
+        "benchmark": "country-year base rate",
+        "split": "chronological train/test at 1990"
+      },
+      "training_periods": {
+        "start": 1870,
+        "end": 1989
+      },
+      "validation_periods": {
+        "type": "held_out_chronological_test_previously_inspected",
+        "start": 1990,
+        "end": 2020
+      },
+      "test_population": {
+        "included_entities": "JST R6 covered countries"
+      },
+      "evaluation_metrics": [
+        "auc",
+        "threshold_dispersion_across_countries",
+        "warning_share",
+        "regime_era_conditional_auc"
+      ],
+      "minimum_evidence": {
+        "minimum_test_events": 10,
+        "minimum_entities": 10
+      },
+      "falsification_criteria": "If no level threshold reproduces above-chance discrimination out of sample and per-country thresholds are not portable, the universal-threshold claim is unsupported; conditional heterogeneity then defines the open research question rather than a falsified result.",
+      "known_limitations": [
+        "retrospective dataset",
+        "threshold concepts differ across debt types and eras",
+        "financial development trends make level thresholds non-stationary"
+      ],
+      "protocol_status": "exploratory",
+      "registered_at": "2026-11-26T09:33:49.899472+00:00",
+      "content_checksum": "2a409898cf1b72a8dfd32369de510dcf625763286d3bfee0d7d73fac18a5dde1",
+      "created_at": "2026-11-26T09:33:49.982754+00:00"
+    },
+    {
+      "hypothesis_code": "H02",
+      "protocol_version": "H02-P0.1",
+      "protocol_type": "exploratory_analysis",
+      "title": "Institutional deterioration and later investment/productivity weakness",
+      "definition": "WGI deterioration and inequality/institutional proxies are candidates for predicting later investment or productivity weakness.",
+      "scientific_rationale": "Internal-order theory links institutional cohesion to productive capacity.",
+      "target_outcome": "independently defined persistent productivity/investment weakness (outcome registry not yet populated)",
+      "research_population": {
+        "population_code": "primary_observatory_v1"
+      },
+      "predictor_variables": {
+        "candidates": [
+          "RULE_OF_LAW_WGI_SCORE",
+          "CONTROL_OF_CORRUPTION_WGI_SCORE",
+          "POLITICAL_STABILITY_WGI_SCORE",
+          "GINI_INDEX"
+        ]
+      },
+      "information_cutoff_rules": {
+        "strict_release_safety": false
+      },
+      "forecast_horizons": {
+        "years": [
+          5,
+          10
+        ]
+      },
+      "measurement_method": {
+        "status": "outcome definition required before evaluation"
+      },
+      "training_periods": {},
+      "validation_periods": {},
+      "test_population": {},
+      "evaluation_metrics": [],
+      "minimum_evidence": {
+        "status": "not_met"
+      },
+      "falsification_criteria": "Unavailable outcome evidence means untestable, not supported.",
+      "known_limitations": [
+        "no approved outcome registry yet"
+      ],
+      "protocol_status": "untestable_with_current_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "7e254807408bfe535f72e7cad9efe02b01e19698dc4450ad0202b89e8c7913c1",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "hypothesis_code": "H03",
+      "protocol_version": "H03-P0.1",
+      "protocol_type": "exploratory_analysis",
+      "title": "Relative international-power convergence and rivalry/crisis risk",
+      "definition": "Power convergence between major states may precede independently dated rivalry, conflict or order-transition episodes.",
+      "scientific_rationale": "External-order theory proposes challenger/incumbent transitions.",
+      "target_outcome": "independent rivalry, conflict or order-transition outcome registry (not populated)",
+      "research_population": {
+        "population_code": "primary_observatory_v1"
+      },
+      "predictor_variables": {
+        "candidates": [
+          "global GDP share",
+          "trade share",
+          "military share",
+          "financial depth",
+          "reserve share"
+        ]
+      },
+      "information_cutoff_rules": {
+        "strict_release_safety": false
+      },
+      "forecast_horizons": {
+        "years": [
+          5,
+          10,
+          20
+        ]
+      },
+      "measurement_method": {
+        "status": "outcome registry required"
+      },
+      "training_periods": {},
+      "validation_periods": {},
+      "test_population": {},
+      "evaluation_metrics": [],
+      "minimum_evidence": {
+        "status": "not_met"
+      },
+      "falsification_criteria": "No independent outcome evidence means untestable.",
+      "known_limitations": [
+        "reserve/cross-border banking/conflict outcomes missing"
+      ],
+      "protocol_status": "untestable_with_current_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "6db02a6cc62950e00b0c0a3b824ed342475ad13fb8b5d28ecf3dd5b09207cf0b",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "hypothesis_code": "H04",
+      "protocol_version": "H04-P0.1",
+      "protocol_type": "exploratory_analysis",
+      "title": "Recurring long sequences of monetary, domestic and external order changes",
+      "definition": "Historical orders may recur through a long sequence spanning decades to centuries.",
+      "scientific_rationale": "The broad Big Cycle claim motivates separated long-run measurements.",
+      "target_outcome": "independently dated complete order-transition cycles (not populated)",
+      "research_population": {
+        "population_code": "historical_entities_future_v0"
+      },
+      "predictor_variables": {
+        "status": "undefined"
+      },
+      "information_cutoff_rules": {
+        "strict_release_safety": false
+      },
+      "forecast_horizons": {
+        "years": [
+          25,
+          500
+        ]
+      },
+      "measurement_method": {
+        "status": "insufficient independent chronology"
+      },
+      "training_periods": {},
+      "validation_periods": {},
+      "test_population": {},
+      "evaluation_metrics": [],
+      "minimum_evidence": {
+        "status": "not_met"
+      },
+      "falsification_criteria": "Current evidence cannot test a universal duration or deterministic sequence.",
+      "known_limitations": [
+        "no consistent multi-century entities or outcomes"
+      ],
+      "protocol_status": "untestable_with_current_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "b82566d36bd7f8ebb32525c510c7884286f2c842973c2c9a020ee7d96223a88d",
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    }
+  ]
+}

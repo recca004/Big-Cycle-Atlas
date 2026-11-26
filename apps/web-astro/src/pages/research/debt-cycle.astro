@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DebtCycleExplorer } from "@/features/research/DebtCycleExplorer";
+---
+
+<BaseLayout
+  title="Debt & Monetary Cycle"
+  description="Sectoral debt, monetary and fiscal conditions, crisis evidence and currency-power research — measured series only, no combined cycle score"
+  fullWidth
+>
+  <header class="page-header">
+    <p class="label-md text-tertiary">Research module</p>
+    <h1 class="headline-lg">Debt &amp; Monetary Cycle</h1>
+    <p class="body-sm">
+      Actual measured series from JST Macrohistory R6, BIS sectoral credit and
+      canonical indicators — kept separate, never combined into a debt-cycle
+      stage score. JST covers 18 advanced economies (1870–2020); China and India
+      appear only through modern BIS/WDI series. Retrospective data; not
+      release-date-safe.
+    </p>
+  </header>
+  <DebtCycleExplorer client:load />
+</BaseLayout>
+
+<style>
+  .page-header { margin-bottom: var(--space-6); }
+  .page-header h1 { margin-top: var(--space-2); }
+  .page-header .body-sm { margin-top: var(--space-2); max-width: 54rem; }
+</style>

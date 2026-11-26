@@ -37,6 +37,7 @@ async def test_force_scores_shape_and_no_invented_scores(client):
             "limitations",
             "reasons",
             "backtest_safe",
+            "comparison_semantics",
         }
         if f["execution_status"] == "deferred":
             # Deferred forces never present a numeric score.

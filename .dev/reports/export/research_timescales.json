@@ -1,0 +1,71 @@
+{
+  "timescales": [
+    {
+      "timescale_code": "short_economic_financial",
+      "label": "Short economic and financial cycle",
+      "candidate_window_years": [
+        1,
+        5
+      ],
+      "candidate_measurements": [
+        "growth",
+        "inflation",
+        "credit conditions",
+        "debt service",
+        "employment",
+        "monetary conditions"
+      ],
+      "independent_outcomes": [
+        "recession",
+        "banking crisis",
+        "currency crisis",
+        "sovereign debt crisis"
+      ],
+      "status": "candidate_definition_not_natural_law"
+    },
+    {
+      "timescale_code": "medium_institutional_financial",
+      "label": "Medium institutional and financial cycle",
+      "candidate_window_years": [
+        5,
+        25
+      ],
+      "candidate_measurements": [
+        "credit expansion",
+        "institutional changes",
+        "investment",
+        "wealth distribution",
+        "productivity",
+        "structural economic change"
+      ],
+      "independent_outcomes": [
+        "institutional deterioration",
+        "financial stress",
+        "persistent productivity weakness"
+      ],
+      "status": "candidate_definition_not_natural_law"
+    },
+    {
+      "timescale_code": "long_historical_big_cycle",
+      "label": "Long historical Big Cycle",
+      "candidate_window_years": [
+        25,
+        500
+      ],
+      "candidate_measurements": [
+        "relative international power",
+        "monetary influence",
+        "military resources",
+        "trade influence",
+        "institutional change",
+        "international order transitions"
+      ],
+      "independent_outcomes": [
+        "international order transition",
+        "leadership transition",
+        "external-order breakdown"
+      ],
+      "status": "candidate_definition_not_natural_law"
+    }
+  ]
+}

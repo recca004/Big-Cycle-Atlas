@@ -52,6 +52,19 @@ EXPECTED_WB_CODES = {
     "REER_INDEX": "PX.REX.REER",
     "BROADBAND_PER_100": "IT.NET.BBND.P2",
     "NATURAL_DISASTER_AFFECTED_PCT": "EN.CLC.MDAT.ZS",
+    "GDP_PPP_CURRENT_INTL": "NY.GDP.MKTP.PP.CD",
+    "GDP_REAL_CONSTANT_USD": "NY.GDP.MKTP.KD",
+    "MERCHANDISE_EXPORTS_USD": "TX.VAL.MRCH.CD.WT",
+    "MERCHANDISE_IMPORTS_USD": "TM.VAL.MRCH.CD.WT",
+    "COMMERCIAL_SERVICE_EXPORTS_USD": "TX.VAL.SERV.CD.WT",
+    "COMMERCIAL_SERVICE_IMPORTS_USD": "TM.VAL.SERV.CD.WT",
+    "PATENT_APPLICATIONS_RESIDENT": "IP.PAT.RESD",
+    "PATENT_APPLICATIONS_NONRESIDENT": "IP.PAT.NRES",
+    "RESEARCHERS_PER_MILLION": "SP.POP.SCIE.RD.P6",
+    "HIGH_TECHNOLOGY_EXPORTS_USD": "TX.VAL.TECH.CD",
+    "STOCK_MARKET_CAP_GDP": "CM.MKT.LCAP.GD.ZS",
+    "DOMESTIC_CREDIT_PRIVATE_GDP": "FS.AST.PRVT.GD.ZS",
+    "BROAD_MONEY_GDP": "FM.LBL.BMNY.GD.ZS",
 }
 
 TRADE_DTOS_SPEC = [
@@ -106,7 +119,7 @@ async def coverage_by_code(iso3: str) -> dict:
 
 
 async def test_world_bank_mappings_verified_codes(client):
-    assert len(WORLD_BANK_MAPPINGS) == 26  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 6 pop/rnd/enroll/unemp/lfp + 1 EM-DAT exposure (Mission 4 §18)
+    assert len(WORLD_BANK_MAPPINGS) == 39  # 3 GDP + 5 trade/investment + 4 WGI + Gini + CPI + 2 military + 6 pop/rnd/enroll/unemp/lfp + 1 EM-DAT exposure (Mission 4 §18)
     by_indicator = {m.indicator_code: m for m in WORLD_BANK_MAPPINGS}
     for indicator_code, external_code in EXPECTED_WB_CODES.items():
         mapping = by_indicator.get(indicator_code)
@@ -157,7 +170,7 @@ async def test_seed_idempotent_no_duplicate_series(client):
             await session.execute(select(func.count()).select_from(SourceSeries))
         ).scalar_one()
         # 22 = 15 WB + 2 BIS + 3 OECD + 1 IMF + 1 WID
-        assert total == 33
+        assert total == 46
         dup = (
             await session.execute(
                 select(func.count())

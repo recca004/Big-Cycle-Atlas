@@ -1,0 +1,159 @@
+{
+  "count": 7,
+  "entries": [
+    {
+      "theory_code": "atlas_17_forces",
+      "version": "theory-registry-v1.0",
+      "source_title": "Big Cycle Atlas methodology registry",
+      "source_author": "Cognition / Big Cycle Atlas",
+      "source_edition": "normalization-v1.4 / force-aggregation-v1.0",
+      "chapter_section": "apps/api/app/cycle/force_definitions.py",
+      "publication_date": null,
+      "concept": "Seventeen Atlas force concepts operationalize dimensions of national condition and influence using approved source indicators.",
+      "atlas_interpretation": "An Atlas operational measurement framework with partial coverage ceilings and explicit unscored dimensions.",
+      "framework_differences": "The 17 Atlas forces are not a one-to-one quotation of the author's determinants and do not imply the author's approval.",
+      "measurement_limitations": "Several forces remain context-only or dimension-only; incomplete proxies are never silently treated as complete concepts.",
+      "framework_scope": "atlas_operational_framework",
+      "atlas_operational": true,
+      "testable_status": "descriptive_monitoring",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "18185bdeaa1b0fe2d094ae34c0cf4711a24fdd281085fa8c5e64bacf6a799c44",
+      "raw_payload": {
+        "registry_seed": true
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "theory_code": "atlas_eight_stages",
+      "version": "theory-registry-v1.0",
+      "source_title": "Big Cycle Atlas experimental cycle classifier",
+      "source_author": "Cognition / Big Cycle Atlas",
+      "source_edition": "cycle-classifier experimental model layer",
+      "chapter_section": "apps/api/app/research/cycle.py",
+      "publication_date": null,
+      "concept": "Eight Atlas labels used by the experimental national-condition classifier (including RISE, PEAK and DECLINE variants).",
+      "atlas_interpretation": "A labelled Atlas operational framework for current/research-state classification only.",
+      "framework_differences": "Not represented as the author's original stage structure and not a validated long historical Big Cycle stage map.",
+      "measurement_limitations": "Stage thresholds are sensitivity-tested assumptions; classified periods are retrospective and not release-date-safe.",
+      "framework_scope": "atlas_operational_framework",
+      "atlas_operational": true,
+      "testable_status": "experimental_classifier",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "2bc36bd7f1488bfecfdd46ff60fe7fc7f33f7b1e5c8b5d1663d6af355a2f628f",
+      "raw_payload": {
+        "registry_seed": true
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "theory_code": "cycle_duration_approximately_75_years",
+      "version": "theory-registry-v1.0",
+      "source_title": "Principles for Dealing with the Changing World Order: Why Nations Succeed and Fail",
+      "source_author": "Ray Dalio",
+      "source_edition": "Avid Reader Press / Simon & Schuster hardcover (ISBN 978-1-9821-6027-2)",
+      "chapter_section": "Long-term debt/capital-cycle discussion; exact wording and edition context require page-level citation",
+      "publication_date": "2021-11-30",
+      "concept": "An approximate roughly-75-year duration is proposed for long debt/capital-cycle dynamics, with substantial variation.",
+      "atlas_interpretation": "A falsifiable duration hypothesis candidate only. Atlas does not use it to advance stages, produce countdowns or date an order transition.",
+      "framework_differences": "The claim is not treated as a universal Big Cycle duration and the source context is narrower than a complete civilizational cycle.",
+      "measurement_limitations": "Atlas lacks independent, consistently dated full cycles and boundary-stable entities needed to estimate duration. No numeric duration estimate is currently defensible.",
+      "framework_scope": "testable_claim_candidate",
+      "atlas_operational": false,
+      "testable_status": "untestable_with_current_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "045b36345dceadf49d750a2ef10e7b57e41a281aaf545eb74a87c3023b53d014",
+      "raw_payload": {
+        "registry_seed": true
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "theory_code": "dalio_big_cycle",
+      "version": "theory-registry-v1.0",
+      "source_title": "Principles for Dealing with the Changing World Order: Why Nations Succeed and Fail",
+      "source_author": "Ray Dalio",
+      "source_edition": "Avid Reader Press / Simon & Schuster hardcover (ISBN 978-1-9821-6027-2)",
+      "chapter_section": "Chapter 1, 'The Big Cycle in a Tiny Nutshell'",
+      "publication_date": "2021-11-30",
+      "concept": "A broad historical cycle in which monetary, domestic-order and external-order arrangements rise, interact, break down and are replaced.",
+      "atlas_interpretation": "A research framing for measuring related debt, institutional, international-power and conflict evidence \u2014 not a validated stage law.",
+      "framework_differences": "Atlas separates measured national condition, international power and independent outcomes; it does not adopt a deterministic sequence or calendar advancement.",
+      "measurement_limitations": "The author's narrative synthesis does not specify a unique dataset, frequency, threshold or falsification rule. Atlas's modern panel is far shorter than the claimed historical cycle.",
+      "framework_scope": "historical_big_cycle",
+      "atlas_operational": false,
+      "testable_status": "insufficient_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "52ecaaf52b119971b0a692b2c933aa70ea5904a9bacb5d82ed408a595d210075",
+      "raw_payload": {
+        "registry_seed": true
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "theory_code": "dalio_external_order_cycle",
+      "version": "theory-registry-v1.0",
+      "source_title": "Principles for Dealing with the Changing World Order: Why Nations Succeed and Fail",
+      "source_author": "Ray Dalio",
+      "source_edition": "Avid Reader Press / Simon & Schuster hardcover (ISBN 978-1-9821-6027-2)",
+      "chapter_section": "Part I, Chapter 6, 'The Big Cycle of External Order and Disorder'",
+      "publication_date": "2021-11-30",
+      "concept": "Relative international power, rivalry and order transitions are linked to changes in economic, trade, financial, military and monetary influence.",
+      "atlas_interpretation": "Atlas publishes separated international-power measures and asks whether convergence predicts independently dated rivalry/crisis events.",
+      "framework_differences": "Atlas does not combine power dimensions into a leadership ranking or predict a transition date.",
+      "measurement_limitations": "Reserve shares, international banking, conflict outcomes and pre-1900 entities remain incomplete.",
+      "framework_scope": "external_order",
+      "atlas_operational": false,
+      "testable_status": "insufficient_evidence",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "3a633f9822afbdd40a71140db5c6739ea9e21f74ecfcb9ab3f29811827f8f1a6",
+      "raw_payload": {
+        "registry_seed": true
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "theory_code": "dalio_internal_order_cycle",
+      "version": "theory-registry-v1.0",
+      "source_title": "Principles for Dealing with the Changing World Order: Why Nations Succeed and Fail",
+      "source_author": "Ray Dalio",
+      "source_edition": "Avid Reader Press / Simon & Schuster hardcover (ISBN 978-1-9821-6027-2)",
+      "chapter_section": "Part I, Chapter 5, 'The Big Cycle of Internal Order and Disorder'",
+      "publication_date": "2021-11-30",
+      "concept": "Internal cohesion, institutional quality, wealth/opportunity gaps and productive capacity strengthen or weaken together over time.",
+      "atlas_interpretation": "Institutional deterioration is evaluated as a predictor of later investment/productivity weakness, not as a stage countdown.",
+      "framework_differences": "Atlas currently uses partial WGI, education, inequality and productivity proxies; it does not claim complete institutional measurement.",
+      "measurement_limitations": "Values gaps, political conflict and structural institutional change are only partially observed; causal attribution remains unsupported.",
+      "framework_scope": "internal_order",
+      "atlas_operational": false,
+      "testable_status": "exploratory_association_possible",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "0ddc5bf6b34a7f0dd3ffc734aad4b21d3b4391ebdc00fd5377712046b0ab058a",
+      "raw_payload": {
+        "registry_seed": true
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "theory_code": "dalio_money_credit_debt_cycle",
+      "version": "theory-registry-v1.0",
+      "source_title": "Principles for Dealing with the Changing World Order: Why Nations Succeed and Fail",
+      "source_author": "Ray Dalio",
+      "source_edition": "Avid Reader Press / Simon & Schuster hardcover (ISBN 978-1-9821-6027-2)",
+      "chapter_section": "Part I, Chapter 3, 'The Big Cycle of Money, Credit, Debt, and Economic Activity'",
+      "publication_date": "2021-11-30",
+      "concept": "Debt, credit, money creation and repayment burdens interact over short debt cycles and longer financial/order cycles.",
+      "atlas_interpretation": "Testable as debt, credit, debt-service, external-position and independently defined crisis relationships at annual/quarterly horizons.",
+      "framework_differences": "Atlas keeps private debt, public debt and debt-service measures separate and evaluates against independent crisis chronologies.",
+      "measurement_limitations": "Public-debt and external-debt coverage are incomplete; historical release timing is not yet available for most macro predictors.",
+      "framework_scope": "debt_monetary_cycle",
+      "atlas_operational": false,
+      "testable_status": "exploratory_association_possible",
+      "registered_at": "2026-11-25T22:05:41.559433+00:00",
+      "content_checksum": "b821c1e3f3d6d77da946374370ee91eb960e87b6c9eeb9bef0f25a329c5784ca",
+      "raw_payload": {
+        "registry_seed": true
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    }
+  ]
+}

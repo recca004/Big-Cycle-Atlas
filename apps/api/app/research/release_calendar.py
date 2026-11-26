@@ -95,6 +95,101 @@ PROVIDER_RELEASE_METADATA: dict[str, ProviderReleaseMetadata] = {
         notes="Distributional accounts typically lag ~2 years. "
             "Assumption, not evidence.",
     ),
+    "alfred_fred": ProviderReleaseMetadata(
+        source_key="alfred_fred",
+        provider="ALFRED / FRED",
+        has_release_dates=True,
+        has_revision_dates=True,
+        has_vintage_history=True,
+        publication_calendar="Official realtime_start/realtime_end vintage "
+            "evidence via the FRED API.",
+        historical_archive="ALFRED historical vintages are first-class API "
+            "output.",
+        assumed_lag_days=None,
+        notes="Implemented adapter; BCA_FRED_API_KEY is required and "
+            "currently unconfigured.",
+    ),
+    "jst_macrohistory": ProviderReleaseMetadata(
+        source_key="jst_macrohistory",
+        provider="Jorda-Schularick-Taylor Macrohistory Database",
+        has_release_dates=True,
+        has_revision_dates=False,
+        has_vintage_history=True,
+        publication_calendar="Discrete dataset release (R6, July 2022), not "
+            "per-observation publication dates.",
+        historical_archive="Official R6 workbook; later releases are distinct "
+            "dataset versions.",
+        assumed_lag_days=None,
+        notes="Dataset-release evidence only; values must not be treated as "
+            "known in their historical year.",
+    ),
+    "imf_cofer": ProviderReleaseMetadata(
+        source_key="imf_cofer",
+        provider="IMF COFER (SDMX 2.1)",
+        has_release_dates=True,
+        has_revision_dates=False,
+        has_vintage_history=False,
+        publication_calendar="Quarterly COFER release ~3 months after reference quarter; "
+            "SDMX feed includes dataset PUBLICATION_DATE, not historical point-in-time vintages.",
+        historical_archive="IMF revised 2000Q1+ series in December 2025 to impute formerly unallocated reserves.",
+        assumed_lag_days=95,
+        notes="Dataset publication timestamp only; not historical vintage evidence.",
+    ),
+    "bis_fx_turnover": ProviderReleaseMetadata(
+        source_key="bis_fx_turnover",
+        provider="BIS Triennial Central Bank Survey (WS_DER_OTC_TOV)",
+        has_release_dates=False,
+        has_revision_dates=False,
+        has_vintage_history=False,
+        publication_calendar="Triennial April survey published ~September/December of survey year.",
+        historical_archive=None,
+        assumed_lag_days=240,
+        notes="No per-observation release timestamp in SDMX feed.",
+    ),
+    "bis_lbs": ProviderReleaseMetadata(
+        source_key="bis_lbs",
+        provider="BIS Locational Banking Statistics (WS_LBS_D_PUB)",
+        has_release_dates=False,
+        has_revision_dates=False,
+        has_vintage_history=False,
+        publication_calendar="Quarterly cross-border banking statistics lag ~4 months.",
+        historical_archive=None,
+        assumed_lag_days=135,
+        notes="No per-observation release timestamp in SDMX feed.",
+    ),
+    "bis_credit_policy": ProviderReleaseMetadata(
+        source_key="bis_credit_policy",
+        provider="BIS Total Credit & Policy Rates (WS_TC / WS_CBPOL)",
+        has_release_dates=False,
+        has_revision_dates=False,
+        has_vintage_history=False,
+        publication_calendar="WS_TC lags ~5 months; WS_CBPOL updates monthly.",
+        historical_archive=None,
+        assumed_lag_days=150,
+        notes="Retrospective latest SDMX series; no vintage timestamps.",
+    ),
+    "pwt": ProviderReleaseMetadata(
+        source_key="pwt",
+        provider="Penn World Table 11.0 (GGDC)",
+        has_release_dates=True,
+        has_revision_dates=False,
+        has_vintage_history=True,
+        publication_calendar="Discrete academic release (PWT 11.0 published 2025-10-07).",
+        historical_archive="Prior PWT editions (8.0–10.01) archived on DataverseNL with distinct PPP benchmarks.",
+        assumed_lag_days=None,
+        notes="Dataset-release evidence only; retrospective 2021 PPP benchmark.",
+    ),
+    "maddison": ProviderReleaseMetadata(
+        source_key="maddison",
+        provider="Maddison Project Database 2023 (GGDC)",
+        has_release_dates=True,
+        has_revision_dates=False,
+        has_vintage_history=True,
+        publication_calendar="Discrete academic release (MPD 2023).",
+        historical_archive="MPD 2018/2020/2023 editions archived on DataverseNL.",
+        assumed_lag_days=None,
+        notes="Dataset-release evidence only; reconstructed historical estimates in 2011 international dollars.",
+    ),
 }
 
 

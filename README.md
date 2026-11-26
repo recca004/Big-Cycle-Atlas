@@ -91,6 +91,43 @@ Notes:
 - Data ingestion is a separate step — see `apps/api/scripts/` (e.g.
   `collect_snapshot.py`, `ingest_markets.py`).
 
+#### Unified terminal data update
+
+`Update.bat` is the single owner-facing command for data refreshes:
+
+```bat
+Update.bat                    :: daily macro + market update + Observatory refresh
+Update.bat -Full              :: daily update + reference universes + optional WID archive
+Update.bat -MacroOnly         :: economic providers only
+Update.bat -MarketsOnly       :: financial markets/currencies only
+Update.bat -ReferencesOnly    :: reference distributions only
+Update.bat -Historical        :: macro + reference history without market updates
+Update.bat -RecalculateOnly   :: recalculate without downloading provider data
+Update.bat -Status            :: DB totals, refresh state, lock and schedules
+Update.bat -DryRun            :: print the plan without changing data
+Update.bat -Help              :: command reference
+Export-Research.bat -FromYear 1980 :: regenerate the ChatGPT research package
+```
+
+Optional filters: `-Source world_bank|bis|oecd|imf_weo|wid`, `-Country USA`,
+`-MarketLookbackDays 30`, and `-WidZip <local archive>`. WID is never
+auto-downloaded by the unified updater; pass a locally downloaded ZIP to opt in.
+All eight tracked countries are covered by default. Macro-capable modes also
+refresh the auxiliary WGI uncertainty diagnostics. Immutable observation
+vintages are preserved, and provider failures are reported as partial success
+(exit `2`) instead of aborting independent sources. Exit `0` means complete
+success; exit `1` means a fatal configuration/database/lock failure.
+
+Every run writes a timestamped plain-text log under `.run/updates/` (not
+tracked by Git) and uses a shared cross-process update lock. The same lock is
+respected by Observatory refresh triggers, so terminal, scheduler, and app
+updates cannot overlap. OECD collection uses a rolling request budget with a
+55-request/hour safety ceiling plus bounded Retry-After handling.
+
+Scheduled collection is still opt-in: `scripts/ops/install-schedule.ps1`
+prints the plan, `-Approve` registers tasks, `-Disable`/`-Enable` toggles them,
+and `-Remove` unregisters them. Scheduled data jobs reuse `update.ps1`.
+
 ### 3. Frontend (apps/web-astro)
 
 ```bash

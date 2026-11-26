@@ -49,6 +49,7 @@
   --weight-bold: 700;
 
   --tracking-label: 0.06em;
+  --tracking-wordmark: 0.28em;
 
   /* --- Motion --- */
   --duration-fast: 120ms;
@@ -72,11 +73,11 @@
   --z-toast: 400;
 
   /* --- Chart palette (theme-independent series colours) --- */
-  --chart-1: #4d8fd1;
-  --chart-2: #4fbf8f;
-  --chart-3: #d9a441;
-  --chart-4: #d16a6a;
-  --chart-5: #8f7fd4;
+  --chart-1: #c9a24e;
+  --chart-2: #58b98c;
+  --chart-3: #5f9ec9;
+  --chart-4: #cf6b63;
+  --chart-5: #9b8bd4;
   --chart-6: #4fb3bf;
   --chart-7: #c98fd1;
   --chart-8: #9db55f;

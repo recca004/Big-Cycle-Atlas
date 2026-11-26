@@ -41,3 +41,15 @@ __all__ = [
     "PaperTransaction",
     "WatchlistEntry",
 ]
+from app.models.research import (
+    CrisisCoverage, CrisisEvent, DatasetRightsRegistry, EvaluationResult,
+    EvidenceStatusEntry, HypothesisProtocol, PredictionLedgerEntry,
+    PredictionOutcome, ResearchObservation, ResearchPopulationMembership,
+    TheoryRegistryEntry, ValidationQuestion,
+)
+__all__ += [
+    "CrisisCoverage", "CrisisEvent", "DatasetRightsRegistry",
+    "EvaluationResult", "EvidenceStatusEntry", "HypothesisProtocol",
+    "PredictionLedgerEntry", "PredictionOutcome", "ResearchObservation",
+    "ResearchPopulationMembership", "TheoryRegistryEntry", "ValidationQuestion",
+]

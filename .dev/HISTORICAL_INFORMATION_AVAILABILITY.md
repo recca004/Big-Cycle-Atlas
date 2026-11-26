@@ -71,3 +71,23 @@ one recoverable historical-vintage source worth a future import.
   `with_release_evidence`, `with_retrieval_evidence`, `first_observed_at`,
   `strict_eligible` per indicator; `GET /api/research/execution-modes`
   documents the evidence-type matrix.
+
+## Phase-1 research update — 2026-11-25
+
+Two additional evidence classes are now explicit:
+
+| Source | Genuine historical version evidence | Atlas status |
+|---|---|---|
+| JST Macrohistory R6 | A dated dataset release (`R6`, July 2022) covering historical observations back to 1870 | Imported into `research_observations`; dataset-release date is **not** treated as each row's historical publication date |
+| ALFRED/FRED | `realtime_start`/`realtime_end` vintage intervals are genuine first-class release evidence | Adapter implemented; blocked pending a registered `BCA_FRED_API_KEY` |
+| IMF WEO edition archives | Distinct April/October database snapshots are genuine dataset vintages | Existing latest-WEO import remains; archive importer deferred |
+| IMF WP-2026-94 crisis bundle | Dataset release is dated May 2026 | Official ZIP URL returned 404; local-bundle importer implemented |
+
+The JST import is retrospective latest-dataset evidence. It expands
+historical outcome and predictor coverage but does **not** create strict
+as-of eligibility for ordinary provider observations.
+
+Strictly release-date-safe macro samples remain unavailable. The honest
+interpretation is unchanged: `retrieved_at` proves Atlas possessed a
+vintage by a timestamp; it does not prove the provider originally
+published that value then.

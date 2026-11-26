@@ -13,6 +13,7 @@ export interface Prefs {
   defaultWorkspace: string | null;
   portfolioCurrency: string;
   numberFormat: "en-US" | "de-CH" | "en-GB";
+  fullResearch: boolean;
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -25,6 +26,7 @@ export const DEFAULT_PREFS: Prefs = {
   defaultWorkspace: null,
   portfolioCurrency: "CHF",
   numberFormat: "en-US",
+  fullResearch: false,
 };
 
 const KEY = "bca:prefs:v1";
@@ -117,6 +119,8 @@ export function applyPrefsToDom(p: Prefs = loadPrefs()): void {
   else delete el.dataset.transparency;
   if (p.reducedMotion) el.dataset.motion = "reduced";
   else delete el.dataset.motion;
+  if (p.fullResearch) el.dataset.fullResearch = "true";
+  else delete el.dataset.fullResearch;
 }
 
 /** Number formatter honouring the locale preference. */

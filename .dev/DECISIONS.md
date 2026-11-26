@@ -5247,3 +5247,24 @@ Own-history productivity momentum implemented as a separate dimension: signed pe
 
 - **MILITARY_EXPENDITURE_USD RELATIVE_SHARE dimension** (delegated, documented working model): relative_score = country's share of the tracked-8 military-expenditure total at the same period (complete-universe rule, all 8 usable or no share). INPUT measure of resources absorbed — SIPRI explicitly does not measure capability. Level stays deferred; PARTIAL ceiling kept. New `DIMENSION_ONLY` aggregation mode; relative identity_copy no longer requires level identity (the INDICATORS_WITH_APPROVED_* gates remain the guard). normalization-v1.2 / force-aggregation-v0.8. Live: USA share 55.4.
 - **FORCE_DEPENDENCY_MAP.json** generated from live registries (no shared live indicators across forces).
+
+## DEC-043 — Scientific foundation separation and honest result states
+
+Date: 2026-11-25
+Status: IMPLEMENTED for Phase 1 research infrastructure
+
+- The 17 Atlas forces and eight Atlas stages are registered as Atlas
+  operational frameworks, not as quotations of Dalio's original stage
+  structure.
+- The approximately-75-year duration claim is a candidate hypothesis,
+  not a model constant, stage-advancement rule or countdown input.
+- Short, medium and long research clocks are candidate definitions; the
+  long clock may remain unclassified when evidence is insufficient.
+- JST R6 is a dated retrospective research dataset, not real-time
+  vintage evidence for its historical observation years.
+- H01 is a registered retrospective protocol. Its latest result,
+  `no_evidence_of_improved_predictive_value`, is preserved rather than
+  suppressed or recast as success.
+- ALFRED access is credential-blocked (`BCA_FRED_API_KEY` absent) and the
+  advertised IMF WP-2026-94 ZIP returned HTTP 404; both are explicit
+  blockers, not substituted with fabricated rows.

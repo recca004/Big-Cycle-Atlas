@@ -460,8 +460,17 @@ async def test_release_evidence_endpoint(client):
     body = r.json()
     keys = {p["source_key"] for p in body["providers"]}
     assert {"world_bank", "bis", "oecd", "imf_weo", "wid"} <= keys
-    # every provider honestly reports no release evidence today
-    assert all(p["has_release_dates"] is False for p in body["providers"])
+    # The existing macro providers still have no per-observation release
+    # evidence. New research providers may truthfully expose dataset or API
+    # vintage evidence.
+    assert all(
+        p["has_release_dates"] is False
+        for p in body["providers"]
+        if p["source_key"] in {"world_bank", "bis", "oecd", "imf_weo", "wid"}
+    )
+    by_key = {p["source_key"]: p for p in body["providers"]}
+    assert by_key["alfred_fred"]["has_release_dates"] is True
+    assert by_key["jst_macrohistory"]["has_release_dates"] is True
     assert "RESEARCH ASSUMPTIONS" in body["disclaimer"]
 
 

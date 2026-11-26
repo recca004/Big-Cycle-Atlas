@@ -1,0 +1,561 @@
+{
+  "count": 26,
+  "memberships": [
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "AUS",
+      "entity_name": "Australia",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "BEL",
+      "entity_name": "Belgium",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "CAN",
+      "entity_name": "Canada",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "CHE",
+      "entity_name": "Switzerland",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "DEU",
+      "entity_name": "Germany",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "DNK",
+      "entity_name": "Denmark",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "ESP",
+      "entity_name": "Spain",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "FIN",
+      "entity_name": "Finland",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "FRA",
+      "entity_name": "France",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "GBR",
+      "entity_name": "UK",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "IRL",
+      "entity_name": "Ireland",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "ITA",
+      "entity_name": "Italy",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "JPN",
+      "entity_name": "Japan",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "NLD",
+      "entity_name": "Netherlands",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "NOR",
+      "entity_name": "Norway",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "PRT",
+      "entity_name": "Portugal",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "SWE",
+      "entity_name": "Sweden",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "jst_extended_research_v1",
+      "population_version": "v1",
+      "entity_code": "USA",
+      "entity_name": "USA",
+      "entity_type": "country",
+      "eligibility_rule": "Pre-existing JST R6 advanced-economy panel; outcome values were not used to select entities.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Complete JST R6 country-year row coverage (1870-2020 where source rows exist).",
+      "source_requirements": {
+        "source_key": "jst_macrohistory",
+        "dataset_version": "R6"
+      },
+      "achieved_coverage": {
+        "source_rows": 151
+      },
+      "limitations": {
+        "scope": "advanced-economy historical panel",
+        "selection_bias_guard": "source-defined coverage"
+      },
+      "created_at": "2026-11-25T22:05:48.630811+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "CHE",
+      "entity_name": "Switzerland",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "CHN",
+      "entity_name": "China",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "DEU",
+      "entity_name": "Germany",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "FRA",
+      "entity_name": "France",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "GBR",
+      "entity_name": "United Kingdom",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "IND",
+      "entity_name": "India",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "JPN",
+      "entity_name": "Japan",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    },
+    {
+      "population_code": "primary_observatory_v1",
+      "population_version": "v1",
+      "entity_code": "USA",
+      "entity_name": "United States",
+      "entity_type": "country",
+      "eligibility_rule": "Canonical eight-country Observatory population preserved unchanged.",
+      "eligibility_status": "eligible",
+      "inclusion_reason": "Existing primary Observatory country.",
+      "source_requirements": {
+        "minimum": "current Atlas tracked observations"
+      },
+      "achieved_coverage": {
+        "tracked_country": true
+      },
+      "limitations": {
+        "note": "Primary interface population is not the full research universe."
+      },
+      "created_at": "2026-11-25T22:05:41.553114+00:00"
+    }
+  ]
+}

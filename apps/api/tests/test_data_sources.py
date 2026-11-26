@@ -11,6 +11,15 @@ EXPECTED_SOURCE_KEYS = {
     "ecb",
     "snb",
     "un_comtrade",
+    "alfred_fred",
+    "imf_laeven_valencia_banking_crises",
+    "jst_macrohistory",
+    "imf_cofer",
+    "bis_fx_turnover",
+    "bis_lbs",
+    "bis_credit_policy",
+    "pwt",
+    "maddison",
 }
 
 
@@ -20,7 +29,7 @@ async def test_list_sources(client):
     assert response.status_code == 200
     body = response.json()
     assert isinstance(body, list)
-    assert len(body) == 10
+    assert len(body) == len(EXPECTED_SOURCE_KEYS)
     keys = {source["key"] for source in body}
     assert keys == EXPECTED_SOURCE_KEYS
     for source in body:
@@ -46,7 +55,7 @@ async def test_get_source_by_key(client):
     body = response.json()
     assert body["key"] == "world_bank"
     assert body["name"] == "World Bank"
-    assert body["status"] == "planned"
+    assert body["status"] == "active"
 
 
 @pytest.mark.asyncio

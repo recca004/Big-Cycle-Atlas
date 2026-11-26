@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from sqlalchemy import select, func
 
 from app.db.session import get_sessionmaker
-from app.models import Observation, Indicator, SourceSeries, DataSource, IndicatorDiagnostic
+from app.models import Observation, Indicator, SourceSeries, DataSource, IndicatorDiagnostic, ResearchObservation, CrisisEvent, PredictionLedgerEntry, EvaluationResult
 
 
 async def main():
@@ -31,6 +31,18 @@ async def main():
         )).scalar_one()
         diag_count = (await session.execute(
             select(func.count()).select_from(IndicatorDiagnostic)
+        )).scalar_one()
+        research_obs_count = (await session.execute(
+            select(func.count()).select_from(ResearchObservation)
+        )).scalar_one()
+        crisis_count = (await session.execute(
+            select(func.count()).select_from(CrisisEvent)
+        )).scalar_one()
+        prediction_count = (await session.execute(
+            select(func.count()).select_from(PredictionLedgerEntry)
+        )).scalar_one()
+        evaluation_count = (await session.execute(
+            select(func.count()).select_from(EvaluationResult)
         )).scalar_one()
 
         # Per-source observation counts
@@ -66,6 +78,10 @@ async def main():
     print(f"SourceSeries: {ss_count}")
     print(f"DataSources: {ds_count}")
     print(f"IndicatorDiagnostics: {diag_count}")
+    print(f"ResearchObservations: {research_obs_count}")
+    print(f"CrisisEvents: {crisis_count}")
+    print(f"PredictionLedgerEntries: {prediction_count}")
+    print(f"EvaluationResults: {evaluation_count}")
     print()
     print("Per-source observation counts:")
     for key, cnt in per_source:

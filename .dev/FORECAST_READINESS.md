@@ -75,3 +75,22 @@ No endpoints are shipped. When evidence exists, the intended contract is:
 The correct Mission 4 output is this readiness report: the honest
 finding is that current data supports **diagnostics, not forecasts** —
 which is exactly the gate Mission 5 was designed to respect.
+
+## Phase-1 H01 research update — 2026-11-25
+
+The foundation now has an independently dated outcome registry and an
+immutable prediction/outcome ledger. JST R6 supplied 2,668 covered
+country-years and 88 systemic-banking-crisis onsets across 18 economies,
+which permits a retrospective benchmark evaluation even though strict
+provider release evidence remains absent.
+
+H01 `H01-P1.0` was executed under `retrospective_latest_vintage`, not as
+a historically pre-registered forecast. The latest registered result is
+`no_evidence_of_improved_predictive_value`: test AUC 0.363 / 0.381 /
+0.296 at 1/2/5 years, with top-quintile precision below the ~3.4% test
+base rate. This is a genuine negative research result.
+
+**Readiness verdict remains NOT READY.** JST improves outcome coverage
+and research breadth, but it does not provide real-time macro vintages,
+does not validate the Atlas stage classifier, and does not support
+publishing forecast probabilities.

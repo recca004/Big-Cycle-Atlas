@@ -714,3 +714,37 @@ export function searchEntities(
     opts,
   );
 }
+
+import type {
+  CurrencyPowerOverview,
+  DebtCycleOverview,
+  HistoricalPowerOverview,
+} from "@/types/research_modules";
+
+export function fetchDebtCycleOverview(
+  entities?: string[],
+  opts?: FetchOptions,
+): Promise<DebtCycleOverview> {
+  const q = entities?.length
+    ? `?entities=${encodeURIComponent(entities.join(","))}`
+    : "";
+  return request<DebtCycleOverview>(
+    `/api/research/foundation/debt-cycle/overview${q}`, opts,
+  );
+}
+
+export function fetchCurrencyPowerOverview(
+  opts?: FetchOptions,
+): Promise<CurrencyPowerOverview> {
+  return request<CurrencyPowerOverview>(
+    "/api/research/foundation/currency-power/overview", opts,
+  );
+}
+
+export function fetchHistoricalPowerOverview(
+  opts?: FetchOptions,
+): Promise<HistoricalPowerOverview> {
+  return request<HistoricalPowerOverview>(
+    "/api/research/foundation/historical-power/overview", opts,
+  );
+}

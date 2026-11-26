@@ -275,6 +275,26 @@ idempotently via `apps/api/scripts/import_economic_evidence.py`:
    honoured), 2 variables (`MPD_GDPPC_2011INTL` in 2011 international dollars
    and `MPD_POP_THOUSANDS`), 1500–2022.
 
+## Independent Outcome Registries — Licensing/Access Investigation (v1.2, NOT imported)
+
+Investigated under Workstream D §24. These registries would unlock the largest
+group of `currently_untestable` validation questions (internal conflict,
+external rivalry, currency/sovereign crises). None are imported; access and
+licensing were verified only — no substitute outcomes were generated.
+
+| Registry | Covers | Licence/access | Unblocks (examples) | Decision |
+|---|---|---|---|---|
+| **V-Dem** (Varieties of Democracy) | Institutional quality, elections, civil liberties 1789+ | Free download after account registration; attribution required | Q21–Q27 institutional-deterioration questions | Registration required — deferred; no bulk pull performed |
+| **UCDP** (Uppsala Conflict Data) | State-based conflict, one-sided violence, non-state conflict 1946+ | Free, CC-BY-like terms with citation | External-rivalry outcome labels (Q28–Q33) | Eligible pending adapter; JST-only crises remain the sole outcome family |
+| **Correlates of War (COW)** | NMC capabilities, war/militarized disputes 1816+ | Free, citation required | Military power + conflict outcomes (H03) | Candidate for next import — v6 NMC CSV publicly hosted |
+| **IMF WP/2026/094 (Laeven & Valencia)** | Systemic banking crises 1970–2025 | Restricted ZIP — HTTP 403/404 | Crisis coverage beyond 18 JST economies | Importer ready (`import_imf_banking_crises.py --file`); blocked on access |
+| **Reinhart-Rogoff / IMF sovereign-debt crises** | Default, inflation, currency crises | Publication supplements vary | Q15 external/FX debt, currency-crisis questions | Not yet sourced — research item |
+| **ALFRED real-time vintages** | As-reported historical series | Free with FRED API key | Release-date-safe scoring for all horizons | Adapter ready; `BCA_FRED_API_KEY` unset (see FRED/ALFRED above) |
+
+Until an independent second outcome family exists, questions gated on
+non-banking outcomes remain `currently_untestable` and H01B findings remain
+exploratory rather than confirmed.
+
 Planned sources and their adapter files:
 
 | Source | Adapter file | Indicators planned | Status |

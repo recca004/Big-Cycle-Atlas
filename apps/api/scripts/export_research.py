@@ -52,6 +52,7 @@ from app.models import (
     ValidationQuestion,
 )
 from app.research.composite import COMPOSITE_MODELS, run_composite
+from app.research.h01b import build_episode_registry
 from app.research.model_diagnostics import (
     actual_force_inclusion,
     all_semantic_force_matrices,
@@ -1182,6 +1183,199 @@ async def main() -> None:
 
     generated_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     head_commit = _git_commit()
+    # ----------------------------------------------------------------------
+    # v1.2 research-module exports (Workstream E).
+    # ----------------------------------------------------------------------
+    async def _research_rows(source_key: str, variables: tuple[str, ...],
+                             entities: tuple[str, ...] | None = None):
+        q = select(
+            ResearchObservation.entity_code, ResearchObservation.variable_code,
+            ResearchObservation.period_start, ResearchObservation.value,
+        ).where(
+            ResearchObservation.source_key == source_key,
+            ResearchObservation.variable_code.in_(list(variables)),
+        ).order_by(ResearchObservation.entity_code,
+                   ResearchObservation.variable_code,
+                   ResearchObservation.period_start)
+        if entities:
+            q = q.where(ResearchObservation.entity_code.in_(list(entities)))
+        return (await session.execute(q)).all()
+
+    # 1. debt_cycle_history.csv — JST long debt/money panel with derived ratios.
+    jst_entities = ("AUS", "BEL", "CAN", "CHE", "DEU", "DNK", "ESP", "FIN", "FRA",
+                    "GBR", "IRL", "ITA", "JPN", "NLD", "NOR", "PRT", "SWE", "USA")
+    debt_rows = await _research_rows(
+        "jst_macrohistory",
+        ("debtgdp", "tloans", "thh", "tbus", "tmort", "gdp", "stir", "ltrate",
+         "cpi", "money", "xrusd", "expenditure", "revenue", "ca"),
+        jst_entities)
+    debt_cycle_rows = []
+    for ent, var, start, val in debt_rows:
+        debt_cycle_rows.append({
+            "entity_code": ent, "year": start.year, "variable_code": var,
+            "value": val, "source_key": "jst_macrohistory", "dataset_version": "R6",
+        })
+    write_csv(EXPORT / "debt_cycle_history.csv", debt_cycle_rows,
+              ["entity_code", "year", "variable_code", "value", "source_key", "dataset_version"])
+
+    # 2. sectoral_credit_history.csv — BIS WS_TC_CBPOL.
+    sec_rows = await _research_rows(
+        "bis_credit_policy",
+        ("CREDIT_GOVT_NOMINAL_GDP", "CREDIT_GOVT_MARKET_GDP", "CREDIT_PRIVATE_NF_GDP",
+         "CREDIT_HOUSEHOLDS_GDP", "CREDIT_CORP_NF_GDP", "POLICY_RATE_PCT"))
+    write_csv(EXPORT / "sectoral_credit_history.csv",
+              [{"entity_code": e, "period": str(s.year if s.month == 1 else f"{s.year}-Q{(s.month-1)//3+1}"),
+                "variable_code": v, "value": val, "source_key": "bis_credit_policy",
+                "dataset_version": "WS_TC_CBPOL"} for e, v, s, val in sec_rows],
+              ["entity_code", "period", "variable_code", "value", "source_key", "dataset_version"])
+
+    # 3. monetary_conditions.csv — rates, inflation, money, exchange rates.
+    mon_rows = await _research_rows(
+        "jst_macrohistory", ("stir", "ltrate", "cpi", "money", "narrowm", "xrusd"), jst_entities)
+    write_csv(EXPORT / "monetary_conditions.csv",
+              [{"entity_code": e, "year": s.year, "variable_code": v, "value": val,
+                "source_key": "jst_macrohistory", "dataset_version": "R6"} for e, v, s, val in mon_rows]
+              + [{"entity_code": e, "period": str(s.year if s.month == 1 else f"{s.year}-Q{(s.month-1)//3+1}"),
+                  "variable_code": "POLICY_RATE_PCT", "value": val,
+                  "source_key": "bis_credit_policy", "dataset_version": "WS_TC_CBPOL"}
+                 for e, v, s, val in sec_rows if v == "POLICY_RATE_PCT"],
+              ["entity_code", "year", "period", "variable_code", "value", "source_key", "dataset_version"])
+
+    # 4-7. Currency power and financial-centre histories.
+    write_csv(EXPORT / "currency_reserve_history.csv",
+              [{"entity_code": e, "period": str(s.year if s.month == 1 else f"{s.year}-Q{(s.month-1)//3+1}"),
+                "variable_code": v, "value": val, "source_key": "imf_cofer",
+                "dataset_version": "COFER-SDMX-2.1"}
+               for e, v, s, val in await _research_rows(
+                   "imf_cofer", ("COFER_RESERVE_SHARE_PCT", "COFER_IMPUTED_SHARE_PCT",
+                                 "COFER_RESERVE_CLAIMS_USD"))],
+              ["entity_code", "period", "variable_code", "value", "source_key", "dataset_version"])
+    write_csv(EXPORT / "fx_turnover_history.csv",
+              [{"entity_code": e, "year": s.year, "variable_code": v, "value": val,
+                "source_key": "bis_fx_turnover", "dataset_version": "WS_DER_OTC_TOV"}
+               for e, v, s, val in await _research_rows(
+                   "bis_fx_turnover", ("FX_TURNOVER_SHARE_200PCT",
+                                       "FX_TURNOVER_DAILY_USD_MN"))],
+              ["entity_code", "year", "variable_code", "value", "source_key", "dataset_version"])
+    lbs_currency = ("USD", "EUR", "JPY", "GBP", "CHF", "ALL_CURRENCIES")
+    write_csv(EXPORT / "banking_currency_history.csv",
+              [{"entity_code": e, "period": str(s.year if s.month == 1 else f"{s.year}-Q{(s.month-1)//3+1}"),
+                "variable_code": v, "value": val, "source_key": "bis_lbs",
+                "dataset_version": "WS_LBS_D_PUB"}
+               for e, v, s, val in await _research_rows(
+                   "bis_lbs", ("LBS_CROSS_BORDER_CLAIMS_SHARE_PCT",
+                               "LBS_CROSS_BORDER_CLAIMS_USD_MN"), lbs_currency)],
+              ["entity_code", "period", "variable_code", "value", "source_key", "dataset_version"])
+    write_csv(EXPORT / "financial_centre_history.csv",
+              [{"entity_code": e, "period": str(s.year if s.month == 1 else f"{s.year}-Q{(s.month-1)//3+1}"),
+                "variable_code": v, "value": val, "source_key": "bis_lbs",
+                "dataset_version": "WS_LBS_D_PUB"}
+               for e, v, s, val in await _research_rows(
+                   "bis_lbs", ("LBS_REPORTING_CLAIMS_SHARE_PCT",
+                               "LBS_REPORTING_CLAIMS_USD_MN"))],
+              ["entity_code", "period", "variable_code", "value", "source_key", "dataset_version"])
+
+    # 8-9. Historical productivity + power entities.
+    write_csv(EXPORT / "historical_productivity_comparison.csv",
+              [{"entity_code": e, "year": s.year, "variable_code": v, "value": val,
+                "source_key": "pwt", "dataset_version": "11.0"}
+               for e, v, s, val in await _research_rows(
+                   "pwt", ("PWT_GDP_PER_WORKER_PPP2021", "PWT_GDP_PER_HOUR_PPP2021",
+                           "PWT_HUMAN_CAPITAL_INDEX", "PWT_CAPITAL_STOCK_CONST2021_MN",
+                           "PWT_RTFPNA_2021_1", "PWT_CTFP_USA1"))],
+              ["entity_code", "year", "variable_code", "value", "source_key", "dataset_version"])
+    write_csv(EXPORT / "historical_power_entities.csv",
+              [{"entity_code": e, "year": s.year, "variable_code": v, "value": val,
+                "source_key": "maddison", "dataset_version": "2023"}
+               for e, v, s, val in await _research_rows(
+                   "maddison", ("MPD_GDPPC_2011INTL", "MPD_POP_THOUSANDS"))],
+              ["entity_code", "year", "variable_code", "value", "source_key", "dataset_version"])
+
+    # 10. crisis_episode_registry.csv — globally co-moving onset episodes.
+    crisis_events = {
+        (r.entity_code, r.start_period.year)
+        for r in (await session.execute(select(CrisisEvent).where(
+            CrisisEvent.source_key == "jst_macrohistory",
+            CrisisEvent.dataset_version == "R6",
+            CrisisEvent.event_type == "banking_crisis",
+            CrisisEvent.event_state == "onset"))).scalars()
+    }
+    episodes = build_episode_registry(crisis_events)
+    ep_rows = []
+    for ep in episodes:
+        ep_rows.append({
+            "episode_id": ep["episode_id"], "start_year": ep["start_year"],
+            "end_year": ep["end_year"], "onset_years": ",".join(map(str, ep["onset_years"])),
+            "entity_count": ep["entity_count"], "event_count": ep["event_count"],
+            "entities": ",".join(ep["entities"]),
+        })
+    write_csv(EXPORT / "crisis_episode_registry.csv", ep_rows,
+              ["episode_id", "start_year", "end_year", "onset_years",
+               "entity_count", "event_count", "entities"])
+
+    # 11-12. Persisted H01B/H01T evaluation results (export what was registered).
+    eval_lookup = {
+        r.evaluation_key: r
+        for r in (await session.execute(select(EvaluationResult))).scalars()
+    }
+    h01b_eval = eval_lookup.get("H01B-P1.0:retrospective_clustered_diagnostic:1990:jst-r6:v1")
+    h01t_eval = eval_lookup.get("H01T-P1.0:retrospective_threshold_diagnostic:1990:jst-r6:v1")
+    if h01b_eval:
+        write_json(EXPORT / "private_credit_evaluation.json", {
+            "evaluation_key": h01b_eval.evaluation_key,
+            "hypothesis_code": h01b_eval.hypothesis_code,
+            "protocol_version": h01b_eval.protocol_version,
+            "evaluation_type": h01b_eval.evaluation_type,
+            "result_state": h01b_eval.result_state,
+            "sample_counts": h01b_eval.sample_counts,
+            "metrics": h01b_eval.metrics,
+            "dataset_versions": h01b_eval.dataset_versions,
+            "limitations": h01b_eval.limitations,
+        })
+        write_json(EXPORT / "clustered_evaluation_results.json", {
+            "episodes": h01b_eval.metrics.get("episodes"),
+            "post_split_episodes": h01b_eval.metrics.get("post_split_episodes"),
+            "clustered_diagnostics": {
+                name: spec["horizons"]
+                for name, spec in h01b_eval.metrics.get("predictors", {}).items()
+            },
+        })
+    if h01t_eval:
+        write_json(EXPORT / "threshold_heterogeneity_evaluation.json", {
+            "evaluation_key": h01t_eval.evaluation_key,
+            "hypothesis_code": h01t_eval.hypothesis_code,
+            "protocol_version": h01t_eval.protocol_version,
+            "evaluation_type": h01t_eval.evaluation_type,
+            "metrics": h01t_eval.metrics,
+        })
+
+    # 13. hypothesis_attribution_audit.json — v1.1 -> v1.2 corrections.
+    corrected_codes = ("Q08", "Q11", "Q14", "Q17")
+    q_rows = (await session.execute(select(ValidationQuestion).where(
+        ValidationQuestion.question_code.in_(corrected_codes),
+        ValidationQuestion.registry_version.in_(
+            ("validation-questions-v1.1", "validation-questions-v1.2")),
+    ).order_by(ValidationQuestion.question_code,
+               ValidationQuestion.registry_version))).scalars().all()
+    audit = {}
+    for r in q_rows:
+        audit.setdefault(r.question_code, {})[r.registry_version] = {
+            "validation_status": r.research_validation_status,
+            "implementation_status": r.implementation_status,
+            "current_answer": r.current_answer,
+            "related_hypotheses": r.related_hypotheses,
+        }
+    write_json(EXPORT / "hypothesis_attribution_audit.json", {
+        "purpose": "Attribution correction audit: preserves v1.1 registered records alongside v1.2 corrected assessments",
+        "corrections": {
+            "Q08": "v1.1 classified operational falsification machinery as 'exploratory_findings' (an empirical status); v1.2 separates research-method implementation from scientific findings -> insufficient_evidence",
+            "Q11": "v1.1 labelled the broad debt-burden claim inconsistent based on one public-debt operationalization; v1.2 scopes the negative result to the tested proposition (5y public debtgdp change) -> evaluated_with_no_clear_conclusion",
+            "Q14": "v1.1 status inherited from a change-based protocol that never tested level thresholds; v1.2 uses dedicated H01T-P1.0 level-threshold diagnostics -> evaluated_with_no_clear_conclusion",
+            "Q17": "v1.1 inherited contradictory status from a PUBLIC-debt protocol (attribution defect); v1.2 separates the public-debt experiment from the private-credit H01B-P1.0 exploratory diagnostic -> exploratory_findings",
+        },
+        "question_versions": audit,
+    })
+
     manifest = {
         "generated_at": generated_at,
         "information_cutoff": generated_at,

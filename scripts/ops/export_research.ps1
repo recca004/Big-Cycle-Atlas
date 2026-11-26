@@ -17,6 +17,12 @@ Push-Location $apiDir
 try {
   & $py "scripts\export_research.py" --from-year $FromYear
   if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+  & $py "scripts\generate_theory_validation_report.py"
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+  & $py "scripts\generate_debt_cycle_report.py"
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+  & $py "scripts\build_review_package.py"
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 } finally {
   Pop-Location
 }

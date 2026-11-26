@@ -13,7 +13,11 @@ from app.models import (
     PredictionLedgerEntry, ResearchObservation,
     ResearchPopulationMembership, TheoryRegistryEntry, ValidationQuestion,
 )
+from app.research.debt_cycle import (
+    currency_power_overview, debt_cycle_overview, historical_power_overview,
+)
 from app.research.h01 import evaluate_h01
+from app.research.h01b import evaluate_h01b, evaluate_threshold_heterogeneity
 from app.research.scientific_registry import TIMESCALES
 from app.research.validation_questions import VALIDATION_REGISTRY_VERSION
 from app.services.validation_questions import (
@@ -246,6 +250,35 @@ async def evaluations(session: AsyncSession = Depends(get_session)):
 @router.get("/h01")
 async def h01_live(session: AsyncSession = Depends(get_session)):
     return await evaluate_h01(session)
+
+
+@router.get("/h01b")
+async def h01b_live(session: AsyncSession = Depends(get_session)):
+    return await evaluate_h01b(session)
+
+
+@router.get("/thresholds")
+async def threshold_diagnostics(session: AsyncSession = Depends(get_session)):
+    return await evaluate_threshold_heterogeneity(session)
+
+
+@router.get("/debt-cycle/overview")
+async def debt_cycle_overview_route(
+    entities: Optional[str] = Query(None, description="comma-separated entity codes"),
+    session: AsyncSession = Depends(get_session),
+):
+    ents = [e.strip().upper() for e in entities.split(",")] if entities else None
+    return await debt_cycle_overview(session, ents)
+
+
+@router.get("/currency-power/overview")
+async def currency_power_overview_route(session: AsyncSession = Depends(get_session)):
+    return await currency_power_overview(session)
+
+
+@router.get("/historical-power/overview")
+async def historical_power_overview_route(session: AsyncSession = Depends(get_session)):
+    return await historical_power_overview(session)
 
 
 @router.get("/dataset-rights")

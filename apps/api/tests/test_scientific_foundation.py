@@ -43,7 +43,7 @@ async def test_scientific_registry_seed(client):
         rights = (await session.execute(select(DatasetRightsRegistry))).scalars().all()
         evidence = (await session.execute(select(EvidenceStatusEntry))).scalars().all()
     assert len(theories) == len(THEORY_ENTRIES)
-    assert {p.hypothesis_code for p in protocols} == {"H01", "H02", "H03", "H04"}
+    assert {p.hypothesis_code for p in protocols} == {"H01", "H01B", "H01T", "H02", "H03", "H04"}
     assert any(r.source_key == "jst_macrohistory" and r.share_alike for r in rights)
     assert any(e.evidence_status == "unavailable_research_result" for e in evidence)
 

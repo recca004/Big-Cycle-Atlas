@@ -12,12 +12,13 @@ not make the Observatory's stage labels validated historical facts.
 | Layer | Implementation | Status |
 |---|---|---|
 | Theory registry | `theory_registry_entries`; seeded `theory-registry-v1.0` | 7 entries |
-| Hypothesis protocols | `hypothesis_protocols`, unique on `hypothesis_code + protocol_version` | H01–H04 registered |
-| Research observations | `research_observations` | 111,546 JST R6 rows |
+| Hypothesis protocols | `hypothesis_protocols`, unique on `hypothesis_code + protocol_version` | H01–H04 + H01B/H01T registered (v1.2) |
+| Research observations | `research_observations` | 154,113 rows (JST R6 + COFER + BIS + PWT + Maddison) |
 | Independent outcomes | `crisis_events`, `crisis_coverage` | 88 systemic-banking-crisis onsets; 2,668 explicit covered country-years |
 | Research population | `research_population_memberships` | 8 primary + 18 JST entities (26 rows) |
 | Immutable ledger | `prediction_ledger_entries`, `prediction_outcomes` | 1,666 scored rows and outcomes |
-| Evaluation results | `evaluation_results` | H01 executed; latest result honestly negative |
+| Evaluation results | `evaluation_results` | 4 persisted: H01-P1.0 (negative), H01B-P1.0 private credit (exploratory), H01T-P1.0 thresholds, forecast-gate |
+| Validation registry | `validation_questions` | `v1.2` active (50 questions); v1.0/v1.1 preserved — 150 rows total |
 | Evidence status | `evidence_status_entries` | 6 public measurement classes |
 | Dataset rights | `dataset_rights_registry` | JST, ALFRED/FRED, IMF WP-2026-094 reviewed |
 | Research API | `/api/research-foundation/*` | Implemented |
@@ -88,6 +89,27 @@ scientific result and is preserved in the immutable evaluation registry.
 An earlier exploratory-state evaluation row is also preserved because the
 ledger is append-only; the `*:v2` evaluation is the current interpretation.
 
+## H01B and H01T protocols (v1.2)
+
+- `H01B-P1.0` — dedicated **private-credit** protocol (predictor family:
+  tloans/gdp level & 5y change, household/corporate/mortgage credit growth,
+  credit-to-GDP gap, derived debt-service proxy, real house-price growth, real
+  rates, public-debt controls, income-residualised credit). Evaluation is a
+  **retrospective clustered diagnostic**: the 1990–2020 holdout was already
+  used for predictor inspection, so results are exploratory, not confirmatory.
+  Diagnostics include episode clustering (10 episodes, gap ≤3y), leave-one-
+  episode-out, leave-one-country-out, decade blocks, ex-2007–2008 sensitivity
+  and year-block bootstrap intervals. Primary result: 1y ROC AUC `0.719`
+  (CI `0.52–0.85`), income-residualised `0.717`; public-debt control `0.363`.
+- `H01T-P1.0` — dedicated **level-threshold heterogeneity** protocol answering
+  Q14 directly: pooled vs within-country train-p80 level thresholds, pegged/
+  non-pegged regime split, gold/interwar/Bretton-Woods/fiat era split. Result:
+  no reproducible universal debt-to-GDP crisis threshold (per-country p80s
+  span ~5×).
+- Neither protocol appends prediction-ledger rows — the inspected holdout
+  produces no new information cutoff; only append-only `evaluation_results`
+  rows are persisted (`run_h01b_evaluation.py`, wired into `Update.bat -Historical`).
+
 ## Leakage and population controls
 
 - Predictor period must be before the outcome year.
@@ -126,7 +148,11 @@ Update.bat -Historical -ImfCrisisFile path\to\official-wp2694.zip
 .venv\Scripts\python.exe scripts\ingest_alfred.py --vintages 5 GDP CPIAUCSL UNRATE USREC
 .venv\Scripts\python.exe scripts\import_imf_banking_crises.py --file path\to\wp2694.zip
 .venv\Scripts\python.exe scripts\run_h01_evaluation.py
+.venv\Scripts\python.exe scripts\run_h01b_evaluation.py
 .venv\Scripts\python.exe scripts\export_research.py
+.venv\Scripts\python.exe scripts\generate_theory_validation_report.py
+.venv\Scripts\python.exe scripts\generate_debt_cycle_report.py
+.venv\Scripts\python.exe scripts\build_review_package.py
 ```
 
 `Update.bat -Historical` downloads the public JST R6 workbook when no

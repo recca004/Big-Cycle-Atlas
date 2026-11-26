@@ -28,6 +28,8 @@ const ROUTES = [
   "/methodology",
   "/progress",
   "/research/validation",
+  "/research/debt-cycle",
+  "/research/historical-power",
   "/settings",
 ];
 

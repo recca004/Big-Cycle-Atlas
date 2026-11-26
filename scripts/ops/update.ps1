@@ -230,6 +230,7 @@ $imfCrisisArgs = @("scripts\import_imf_banking_crises.py")
 if ($ImfCrisisFile) { $imfCrisisArgs += @("--file", (Resolve-Path $ImfCrisisFile).Path) }
 $alfredArgs = @("scripts\ingest_alfred.py", "--vintages", "5", "GDP", "CPIAUCSL", "UNRATE", "FEDFUNDS", "TOTALSL", "BAMLH0A0HYM2", "USREC")
 $h01Args = @("scripts\run_h01_evaluation.py")
+$h01bArgs = @("scripts\run_h01b_evaluation.py")
 if ($WidZip) { $widArgs += (Resolve-Path $WidZip).Path }
 
 $steps = @(switch ($mode) {
@@ -296,6 +297,7 @@ try {
         Write-Run "SKIP   IMF crisis bundle — pass -ImfCrisisFile after official download" "Yellow"
       }
       Invoke-Step "H01 evaluation registration" $h01Args @(2) | Out-Null
+      Invoke-Step "H01B/H01T evaluation registration" $h01bArgs @(2) | Out-Null
     }
     if ($mode -eq "full" -and $WidZip) {
       Invoke-Step "WID local archive import" $widArgs @(2) | Out-Null

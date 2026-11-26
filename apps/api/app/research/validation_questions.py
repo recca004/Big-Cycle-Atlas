@@ -10,8 +10,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Any
 
-VALIDATION_REGISTRY_VERSION = "validation-questions-v1.1"
-VALIDATION_METHODOLOGY_VERSION = "validation-methodology-v1.1"
+VALIDATION_REGISTRY_VERSION = "validation-questions-v1.2"
+VALIDATION_METHODOLOGY_VERSION = "validation-methodology-v1.2"
 
 IMPLEMENTATION_STATUSES = {
     "not_implemented",
@@ -282,8 +282,9 @@ VALIDATION_QUESTIONS: tuple[ValidationQuestionDef, ...] = (
       support=("H01 already preserves a negative evaluation instead of reclassifying it as success.",),
       contra=("Only one outcome family is populated, so broad theory falsification is impossible.",),
       alternatives=("Failure of one predictor does not falsify the full narrative theory.",),
-      implementation="research_method_implemented", validation="exploratory_findings",
-      answer="The falsification machinery exists, but only H01 has an evaluated result.", hypotheses=("H01", "H02", "H03", "H04")),
+      implementation="research_method_implemented", validation="insufficient_evidence",
+      answer="Research method is implemented (registered falsification criteria, append-only evaluations preserving negative results); H01-P1.0 and H01B-P1.0 have been executed. But a scientific answer to WHICH observations support or falsify the theory requires populated independent outcome registries beyond one banking-crisis family — operational machinery alone is not an empirical finding.",
+      hypotheses=("H01", "H01B", "H02", "H03", "H04")),
 
     q("Q09", "core_theory", "Are the Atlas force scores and experimental stage classifications suitable evidence for the historical Big Cycle claim?", "Atlas models as evidence",
       forces=("all_17_forces",), required=(_ds("force_methodology", "approved measurement methods", "features"), _ds("independent_outcomes", "external validation", "labels")),
@@ -323,9 +324,9 @@ VALIDATION_QUESTIONS: tuple[ValidationQuestionDef, ...] = (
       falsification="No improvement over the unconditional base rate or discrimination near/below random ordering is evidence inconsistent with predictive value.",
       limitations=("H01-P1.0 evaluated public debtgdp rather than private tloans/gdp; protocol is preserved unchanged.", "13 of 19 post-1990 test events cluster in 2007-2008 and 4 in 1991.", "Secular post-1990 debt drift pushed 35.1%-40.8% of test rows above the pre-1990 80th percentile."),
       refs=CORE_REFERENCES + (JST_REFERENCE, IMF_CRISIS_REFERENCE, ALFRED_REFERENCE),
-      implementation="evaluation_implemented", validation="evidence_inconsistent_with_registered_claim",
-      answer="H01-P1.0 found no predictive value in 5-year public-debt/GDP growth before banking crises (AUC 0.30-0.38); public and private debt behave differently around banking crises.",
-      hypotheses=("H01",), chart={"kind": "research_observation", "source_key": "jst_macrohistory", "dataset_version": "R6", "variable_code": "debtgdp", "entity_code": "USA", "label": "JST public debt / GDP — USA"}),
+      implementation="evaluation_implemented", validation="evaluated_with_no_clear_conclusion",
+      answer="Scoped correction (v1.2): the registered H01-P1.0 test contradicted one specific operationalized proposition — 5-year PUBLIC debt/GDP change as a crisis predictor (AUC 0.363/0.381/0.296). That negative result does not falsify the broader debt-cycle claim: H01B-P1.0 found positive retrospective discrimination for PRIVATE credit expansion (tloans/gdp 5y change AUC 0.719, income-residualised 0.717), and public debt characteristically surges AFTER crises via bailouts and automatic stabilisers. The broad registered claim remains only partially tested.",
+      hypotheses=("H01", "H01B"), chart={"kind": "research_observation", "source_key": "jst_macrohistory", "dataset_version": "R6", "variable_code": "debtgdp", "entity_code": "USA", "label": "JST public debt / GDP — USA"}),
 
     q("Q12", "debt_money", "Do public, private non-financial, household and corporate debt measures provide different warning signals?", "Debt composition",
       theories=("dalio_money_credit_debt_cycle",), forces=("indebtedness",),
@@ -357,17 +358,17 @@ VALIDATION_QUESTIONS: tuple[ValidationQuestionDef, ...] = (
     q("Q14", "debt_money", "Is there a reproducible debt-to-GDP threshold associated with later crises?", "Debt threshold",
       forces=("indebtedness",), required=(_ds("debt_threshold_panel", "pre-registered candidate thresholds", "features"), _ds("independent_crisis_outcomes", "crisis onsets", "labels")),
       available=JST_DATA + BIS_SECTOR_CREDIT_DATA + (_ds("imf", "government debt", "public debt"), _ds("world_bank", "domestic private credit", "private debt"), _ds("crisis_registry", "banking onsets", "outcomes")),
-      missing=(_missing("threshold_protocol", "registered threshold search", "not implemented"),),
+      missing=(_missing("untouched_threshold_holdout", "post-inspection confirmatory sample", "1990-2020 already used for diagnostics"),),
       history={"achieved": "JST 1870-2020; BIS WS_TC 1947-2026Q1; modern IMF/WB"},
       countries={"achieved": "18 JST + 8 primary"},
-      methods=("H01 univariate benchmark", "level-percentile diagnostic check", "base-rate comparison"),
-      support=("Both H01 change benchmarks and level diagnostics warn against universal crisis cutoffs.",),
-      contra=("Public debtgdp level held-out AUC is 0.365 (1y), 0.394 (2y), 0.440 (5y); private loan/GDP level 5y AUC is 0.502 and 82% of post-1990 observations exceed the pre-1990 80th percentile due to financial deepening.",),
-      alternatives=("Vulnerability varies with growth, interest rates, currency denomination, debt ownership and institutional capacity.",),
-      limitations=("H01-P1.0 formally tested 5-year changes rather than fixed level cutoffs.", "Ex-post threshold mining would introduce severe selection bias."),
-      implementation="partially_implemented", validation="evidence_inconsistent_with_registered_claim",
-      answer="Neither public-debt changes nor historical debt-to-GDP level percentiles provide a reproducible out-of-sample crisis threshold.",
-      hypotheses=("H01",)),
+      methods=("H01T-P1.0 dedicated threshold heterogeneity protocol", "pooled vs within-country train-p80 level thresholds", "peg/non-peg regime split", "gold/interwar/Bretton-Woods/fiat era split", "no ex-post threshold mining"),
+      support=("H01T-P1.0 ran dedicated level-threshold diagnostics instead of reusing change-based results.",),
+      contra=("Public debtgdp level held-out AUC is 0.365 with 35.5% of test years flagged above the pooled pre-1990 p80 (0.72); private tloans/gdp pooled p80 (0.68) flags 82.0% of test years at AUC 0.623; country-specific p80 values span 0.18-1.70 (public, CV 0.55) and 0.32-1.26 (private, CV 0.39), so no single level is portable.",),
+      alternatives=("Vulnerability varies with growth, interest rates, currency denomination, debt ownership, monetary regime and financial development.",),
+      limitations=("H01-P1.0 formally tested 5-year changes rather than fixed level cutoffs.", "Level thresholds are non-stationary across monetary eras (fiat-era tloans/gdp AUC 0.633 vs interwar 0.470).", "No untouched confirmatory holdout remains in JST R6."),
+      implementation="evaluation_implemented", validation="evaluated_with_no_clear_conclusion",
+      answer="H01T-P1.0 evaluated level thresholds directly: no reproducible UNIVERSAL debt-to-GDP crisis threshold exists — pooled p80 levels discriminate at/below chance for public debt and over-flag for private credit, while per-country thresholds differ by ~5x. Thresholds appear conditional on country, era and monetary regime; that heterogeneity, not a single cutoff, is the supported research direction.",
+      hypotheses=("H01", "H01T")),
 
     q("Q15", "debt_money", "Do external debt and foreign-currency debt create vulnerability beyond domestic debt?", "External and FX debt",
       theories=("dalio_money_credit_debt_cycle",), forces=("indebtedness", "trade_capital_flows"),
@@ -401,13 +402,13 @@ VALIDATION_QUESTIONS: tuple[ValidationQuestionDef, ...] = (
       missing=(_missing("real_time_credit_vintages", "release-safe credit revisions", "not available"),),
       history={"achieved": "JST 1870-2020; BIS WS_TC 1947-2026Q1; BIS credit-gap 1957-2026"},
       countries={"achieved": "18 JST + 8 modern"},
-      methods=("H01 debt-growth benchmark", "JST tloans/gdp diagnostic check", "BIS credit-gap import"),
-      support=("In diagnostic inspection on the 1990-2020 JST holdout, 5-year private bank-loan/GDP change (tloans/gdp) yields retrospective AUC 0.721 (1y), 0.702 (2y), 0.590 (5y).",),
-      contra=("The sole pre-registered evaluation (H01-P1.0) tested public debtgdp 5-year change rather than private tloans/gdp and failed (AUC 0.363/0.381/0.296); no separate private-credit protocol controlling for income growth and global crisis clustering has been pre-registered.",),
-      alternatives=("Credit growth can reflect financial deepening, denominator contractions or synchronized global credit waves (13/19 test crises occurred in 2007-2008).",),
-      limitations=("Contradictory status is preserved from H01-P1.0 because H01-P1.0 may not be rewritten ex-post; a dedicated private-credit protocol must be registered separately and tested against independent post-cutoff data."),
-      answer="Preserved contradictory H01-P1.0 benchmark reflects a variable mismatch (public debtgdp was tested instead of private tloans/gdp); exploratory tloans/gdp shows positive retrospective association but awaits an independent pre-registered protocol.",
-      implementation="evaluation_implemented", validation="evidence_inconsistent_with_registered_claim", hypotheses=("H01",)),
+      methods=("H01B-P1.0 dedicated private-credit protocol", "clustered diagnostics (LOEO/LOCO/time-blocks/ex-2007-08/year-block bootstrap)", "income-growth residualisation", "BIS credit-gap import"),
+      support=("H01B-P1.0 evaluated the tloans/gdp 5y change on the 1990-2020 holdout: AUC 0.719 (1y, year-block bootstrap CI 0.52-0.85), 0.702 (2y), 0.591 (5y); residualising on 5y real income growth leaves AUC 0.717, so the association is not merely an income-growth reflection. Household (0.723), corporate (0.677), mortgage (0.696) credit growth and the derived debt-service proxy (0.767) show consistent positive discrimination.",),
+      contra=("The pre-registered H01-P1.0 evaluation tested public debtgdp 5-year change rather than private tloans/gdp and failed (AUC 0.363/0.381/0.296) — that negative result belongs to public debt only. The 1990-2020 holdout was already used for predictor inspection, so H01B results are retrospective diagnostics, not confirmatory; only 3 independent post-1990 crisis episodes exist (1984-91, 1997, 2007-08).",),
+      alternatives=("Credit growth can reflect financial deepening, denominator contractions or synchronized global credit waves (13/19 test crises occurred in 2007-2008); ex-2007-08 and leave-one-episode-out diagnostics quantify this dependence.",),
+      limitations=("Attribution audit (v1.2): the prior contradictory status was inherited from a public-debt protocol — an attribution defect now corrected. The public-debt experiment (H01-P1.0) stands unchanged; the private-credit exploratory diagnostic and the dedicated H01B-P1.0 retrospective evaluation are reported separately. Confirmatory status requires an untouched outcome sample (post-2020 or an independent registry such as IMF WP-2026-094)."),
+      answer="Attribution corrected: H01-P1.0's negative result applies only to public debt. Under dedicated protocol H01B-P1.0, private-credit expansion shows positive retrospective association with banking-crisis onset that survives income-growth residualisation and clustered diagnostics — classified exploratory because the holdout is no longer untouched and only 3 independent episodes remain.",
+      implementation="evaluation_implemented", validation="exploratory_findings", hypotheses=("H01", "H01B")),
 
     q("Q18", "debt_money", "Do changes in short- and long-term interest rates predict debt stress or crisis onset?", "Interest-rate stress",
       forces=("indebtedness",), required=(_ds("rate_panel", "short/long rates", "predictors"), _ds("independent_crisis_outcomes", "crisis onsets", "labels")),

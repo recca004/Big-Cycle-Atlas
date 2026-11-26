@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const PAGES = ['/', '/research/validation', '/forecast', '/markets', '/strategies', '/portfolio', '/watchlist'];
+const PAGES = ['/', '/research/validation', '/research/debt-cycle', '/research/historical-power', '/forecast', '/markets', '/strategies', '/portfolio', '/watchlist'];
 
 for (const path of PAGES) {
   test(`a11y audit ${path}`, async ({ page }) => {
